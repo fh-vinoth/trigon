@@ -1,0 +1,217 @@
+{
+  "modules": [
+    {
+      "modulename": "Sheet1",
+      "authorname": "Automation",
+      "testdata": {
+        "amazonTest": [
+          {
+            "executeTest": "Yes",
+            "searchDropdown": "Books",
+            "searchBox": "science",
+            "Endpont2": "",
+            "HttpMethod": "",
+            "HDR#Content-Type": "",
+            "QP#api_token": "",
+            "FP#q": "",
+            "EXP#data[0].id": "",
+            "StatusCode": ""
+          },
+          {
+            "executeTest": "Yes",
+            "searchDropdown": "Books1",
+            "searchBox": "science1",
+            "Endpont2": "",
+            "HttpMethod": "",
+            "HDR#Content-Type": "",
+            "QP#api_token": "",
+            "FP#q": "",
+            "EXP#data[0].id": "",
+            "StatusCode": ""
+          }
+        ],
+        "amazonTest2": [
+          {
+            "executeTest": "Yes",
+            "searchDropdown3": "Books",
+            "searchBox3": "data",
+            "Endpont3": "",
+            "HttpMethod3": "",
+            "HDR#Content-Type3": "",
+            "QP#api_token3": "",
+            "FP#q 3": "",
+            "EXP#data[0].id 3": "",
+            "StatusCode3": ""
+          }
+        ],
+        "amazonTest3": [
+          {
+            "executeTest": "Yes",
+            "searchDropdown4": "Books",
+            "searchBox4": "data",
+            "Endpont4": "safsf",
+            "HttpMethod4": "awfsaf",
+            "HDR#Content-Type4": "wfaf",
+            "QP#api_token4": "asfasf",
+            "FP#q 4": "sfsaf",
+            "EXP#data[0].id 4": "saf",
+            "StatusCode4": "asfasf",
+            "StatusCode5": "safasf",
+            "StatusCode6": "asfsaf",
+            "StatusCode7": "safsf",
+            "StatusCode8": "asff",
+            "StatusCode9": "asfs",
+            "StatusCode10": "afasf"
+          },
+          {
+            "executeTest": "Yes",
+            "searchDropdown4": "Books",
+            "searchBox4": "data",
+            "Endpont4": "safsf",
+            "HttpMethod4": "awfsaf",
+            "HDR#Content-Type4": "wfaf",
+            "QP#api_token4": "asfasf",
+            "FP#q 4": "sfsaf",
+            "EXP#data[0].id 4": "saf",
+            "StatusCode4": "asfasf",
+            "StatusCode5": "safasf",
+            "StatusCode6": "asfsaf",
+            "StatusCode7": "safsf",
+            "StatusCode8": "asff",
+            "StatusCode9": "asfs",
+            "StatusCode10": "afasf"
+          },
+          {
+            "executeTest": "Yes",
+            "searchDropdown4": "Books",
+            "searchBox4": "data",
+            "Endpont4": "safsf",
+            "HttpMethod4": "awfsaf",
+            "HDR#Content-Type4": "wfaf",
+            "QP#api_token4": "asfasf",
+            "FP#q 4": "sfsaf",
+            "EXP#data[0].id 4": "saf",
+            "StatusCode4": "asfasf",
+            "StatusCode5": "safasf",
+            "StatusCode6": "asfsaf",
+            "StatusCode7": "safsf",
+            "StatusCode8": "asff",
+            "StatusCode9": "asfs",
+            "StatusCode10": "afasf"
+          },
+          {
+            "executeTest": "Yes",
+            "searchDropdown4": "Books",
+            "searchBox4": "data",
+            "Endpont4": "safsf",
+            "HttpMethod4": "awfsaf",
+            "HDR#Content-Type4": "wfaf",
+            "QP#api_token4": "asfasf",
+            "FP#q 4": "sfsaf",
+            "EXP#data[0].id 4": "saf",
+            "StatusCode4": "asfasf",
+            "StatusCode5": "safasf",
+            "StatusCode6": "asfsaf",
+            "StatusCode7": "safsf",
+            "StatusCode8": "asff",
+            "StatusCode9": "asfs",
+            "StatusCode10": "afasf"
+          },
+          {
+            "executeTest": "Yes",
+            "searchDropdown4": "Books",
+            "searchBox4": "data",
+            "Endpont4": "safsf",
+            "HttpMethod4": "awfsaf",
+            "HDR#Content-Type4": "wfaf",
+            "QP#api_token4": "asfasf",
+            "FP#q 4": "sfsaf",
+            "EXP#data[0].id 4": "saf",
+            "StatusCode4": "asfasf",
+            "StatusCode5": "safasf",
+            "StatusCode6": "asfsaf",
+            "StatusCode7": "safsf",
+            "StatusCode8": "asff",
+            "StatusCode9": "asfs",
+            "StatusCode10": "afasf"
+          },
+          {
+            "executeTest": "Yes",
+            "searchDropdown4": "Books",
+            "searchBox4": "data",
+            "Endpont4": "safsf",
+            "HttpMethod4": "awfsaf",
+            "HDR#Content-Type4": "wfaf",
+            "QP#api_token4": "asfasf",
+            "FP#q 4": "sfsaf",
+            "EXP#data[0].id 4": "saf",
+            "StatusCode4": "asfasf",
+            "StatusCode5": "safasf",
+            "StatusCode6": "asfsaf",
+            "StatusCode7": "safsf",
+            "StatusCode8": "asff",
+            "StatusCode9": "asfs",
+            "StatusCode10": "afasf"
+          },
+          {
+            "executeTest": "Yes",
+            "searchDropdown4": "Books",
+            "searchBox4": "data",
+            "Endpont4": "safsf",
+            "HttpMethod4": "awfsaf",
+            "HDR#Content-Type4": "wfaf",
+            "QP#api_token4": "asfasf",
+            "FP#q 4": "sfsaf",
+            "EXP#data[0].id 4": "saf",
+            "StatusCode4": "asfasf",
+            "StatusCode5": "safasf",
+            "StatusCode6": "asfsaf",
+            "StatusCode7": "safsf",
+            "StatusCode8": "asff",
+            "StatusCode9": "asfs",
+            "StatusCode10": "afasf"
+          }
+        ],
+        "C128494_verifyTakeAwaylistpage": [
+          {
+            "executeTest": "Yes",
+            "searchPostCodeTextBox": "ST66DX",
+            "order": "2",
+            "takeAwayName": "AUTOMATION – QA5",
+            "postCodeChange": "ST66DX"
+          }
+        ]
+      }
+    },
+    {
+      "modulename": "APITest",
+      "authorname": "Automation",
+      "testdata": {
+        "searchInvalidCategory_POST_Test": [
+          {
+            "executeTest": "Yes",
+            "categoryName": "FoodHubTestAutomation52229",
+            "ExpectedStatusCode": "200"
+          },
+          {
+            "executeTest": "No",
+            "categoryName": "FoodHubTestAutomation433339",
+            "ExpectedStatusCode": "200"
+          }
+        ],
+        "searchInvalidCategory_POST_JSONTest": [
+          {
+            "executeTest": "Yes",
+            "categoryName": "FoodHubTestAutomation52229",
+            "ExpectedStatusCode": "200"
+          },
+          {
+            "executeTest": "No",
+            "categoryName": "FoodHubTestAutomation433339",
+            "ExpectedStatusCode": "200"
+          }
+        ]
+      }
+    }
+  ]
+}

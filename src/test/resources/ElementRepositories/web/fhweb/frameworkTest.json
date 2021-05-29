@@ -1,0 +1,13 @@
+{
+  "AuthorName": "Bhaskar",
+  "pageTitle": "*************",
+  "elements": {
+    "searchTextBox": {
+      "Web": "xpath=(//*[@type=\"text\"])[1]",
+      "Android": "",
+      "IOS": "",
+      "actionevent": "enterText"
+    }
+
+  }
+}

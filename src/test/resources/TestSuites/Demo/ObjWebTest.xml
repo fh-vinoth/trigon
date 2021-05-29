@@ -1,0 +1,24 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="FHWeb_LoginTest" parallel="tests" thread-count="10">
+    <parameter name="testEnvPath" value="test-env.json"></parameter>
+    <test name="WebChromeTest">
+        <classes>
+            <class name="com.fh.unitests.frameworktest.FHLoginTest"/>
+        </classes>
+    </test>
+    <test name="WebFirefoxTest">
+        <parameter name="browser" value="firefox"></parameter>
+        <parameter name="browser_version" value="82"></parameter>
+        <groups>
+            <run>
+                <include name="sanity"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.fh.unitests.frameworktest.FHLoginTest"/>
+        </classes>
+        <classes>
+            <class name="com.fh.unitests.frameworktest.FHLoginTest"/>
+        </classes>
+    </test>
+</suite>

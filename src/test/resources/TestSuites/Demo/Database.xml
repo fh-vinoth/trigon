@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="API-Endpoint_Automation_Category" parallel="classes" thread-count="10">
+
+    <parameter name="testEnvPath" value="test-env.json"></parameter>
+
+    <test name="API-Endpoint_Automation_Category">
+        <classes>
+            <class name="com.fh.unitests.database.Queries"/>
+        </classes>
+    </test>
+</suite>
+

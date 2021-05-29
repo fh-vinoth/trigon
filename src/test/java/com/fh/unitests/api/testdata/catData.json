@@ -1,0 +1,46 @@
+{
+  "authorHistory": "Bhaskar",
+  "testMethodData": [
+    {
+      "testMethodName": "getCategoryListNew",
+      "apiInputData": [
+        {
+          "httpMethod": "GET",
+          "endPoint": "category",
+          "headers": {
+            "Store": "store",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "queryParams": {
+            "api_token": "token",
+            "limit": "1"
+          },
+          "expectedStatusCode": "200",
+          "expectedResponse": {
+            "data[0].host": "qa5.t2scdn.com"
+          }
+        }
+      ]
+    },
+    {
+      "testMethodName": "getCategoryListNew1",
+      "apiInputData": [
+        {
+          "httpMethod": "GET",
+          "endPoint": "category",
+          "headers": {
+            "Store": "store"
+          },
+          "queryParams": {
+            "api_token": "token",
+            "limit": "1"
+          },
+          "expectedStatusCode": "200",
+          "expectedResponse": {
+            "data[0].host": "qa5.t2scdn.com"
+          }
+        }
+      ]
+    }
+  ]
+}

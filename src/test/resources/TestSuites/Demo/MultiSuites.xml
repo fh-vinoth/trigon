@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="SuiteOfSuites">
+    <suite-files>
+        <suite-file path="src/test/resources/TestSuites/Demo/CategoryModule.xml"></suite-file>
+        <suite-file path="src/test/resources/TestSuites/Demo/CategoryModule_Package.xml"></suite-file>
+    </suite-files>
+</suite>
+

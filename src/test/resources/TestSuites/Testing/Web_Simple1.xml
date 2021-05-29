@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web Parallel Template1" parallel="classes" thread-count="4">
+
+    <parameter name="testType" value="web"></parameter>
+    <parameter name="testEnvPath" value="test-env.json"></parameter>
+
+    <test name="Web Parallel-Test1">
+        <classes>
+            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+        </classes>
+    </test>
+    <test name="Web Parallel Test2">
+        <classes>
+            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
+        </classes>
+    </test>
+    <test name="Web-Parallel Test3">
+        <classes>
+            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
+        </classes>
+    </test>
+    <test name="Web Parallel Test4">
+        <classes>
+            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass4"/>
+        </classes>
+    </test>
+</suite>

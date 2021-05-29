@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="API-Endpoint_Automation_Category_PackageSuite">
+
+    <test name="API-Endpoint_Category_Test">
+        <packages>
+            <package name="com.trigon.test.categorey.*"/>
+        </packages>
+    </test>
+
+</suite>
+

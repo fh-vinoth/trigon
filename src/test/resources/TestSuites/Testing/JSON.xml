@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web Parallel TestSuite" parallel="tests" thread-count="4">
+
+    <parameter name="testType" value="web"></parameter>
+    <parameter name="testEnvPath" value="test-env.json"></parameter>
+
+    <test name="Web Parallel Test1">
+        <classes>
+            <class name="com.fh.unitests.Json.GsonStreamApiWrite"/>
+        </classes>
+    </test>
+    <test name="Web Parallel Test2">
+        <parameter name="testType" value="web"></parameter>
+        <parameter name="testEnvPath" value="test-env.json"></parameter>
+
+        <classes>
+
+            <class name="com.fh.unitests.Json.GsonStreamApiWrite1"/>
+            <class name="com.fh.unitests.Json.GsonStreamApiWrite2"/>
+        </classes>
+    </test>
+    <test name="Web Parallel Test3">
+        <parameter name="testType" value="web"></parameter>
+        <parameter name="testEnvPath" value="test-env.json"></parameter>
+
+        <classes>
+
+            <class name="com.fh.unitests.Json.GsonStreamApiWrite3"/>
+            <class name="com.fh.unitests.Json.GsonStreamApiWrite4"/>
+        </classes>
+    </test>
+</suite>

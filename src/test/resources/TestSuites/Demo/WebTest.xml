@@ -1,0 +1,22 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web_FrameworkTest" parallel="tests" thread-count="10">
+
+    <test name="WebTest">
+        <groups>
+            <run>
+                <include name="sanity"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.fh.unitests.frameworktest.BrowserTest"/>
+        </classes>
+    </test>
+    <test name="WebTest1">
+        <parameter name="browser" value="firefox"></parameter>
+        <parameter name="browser_version" value="82"></parameter>
+        <classes>
+            <class name="com.fh.unitests.frameworktest.BrowserTest1"/>
+        </classes>
+    </test>
+</suite>
+

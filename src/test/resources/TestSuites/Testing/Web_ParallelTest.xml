@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web Parallel TestSuite" thread-count="4">
+
+
+    <parameter name="excelName" value="src/test/resources/TestData/TestNew.xlsx"/>
+    <parameter name="browser" value="chrome"/>
+    <parameter name="webURL" value="https://amazon.com/"/>
+    <parameter name="buildNumber" value="Build 67"/>
+    <parameter name="newSession" value="true"/>
+
+    <test name="Web Parallel Test1" thread-count="2">
+        <classes>
+            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+        </classes>
+    </test>
+
+    <test name="Web Parallel Test2" thread-count="2">
+        <parameter name="browser" value="firefox"/>
+        <parameter name="webURL" value="https://abc.com/"/>
+        <classes>
+            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
+        </classes>
+    </test>
+
+    <test name="Web Parallel Test3" thread-count="3">
+        <parameter name="browser" value="safari"/>
+        <parameter name="webURL" value="https://reddy.com/"/>
+
+        <classes>
+            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
+        </classes>
+    </test>
+
+    <test name="Web Parallel Test4" thread-count="4">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="webURL" value="https://bhaskar.com/"/>
+
+        <groups>
+            <run>
+                <include name="future"/>
+                <include name="Regression"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass4"/>
+        </classes>
+    </test>
+
+    <test name="Web Parallel Test5" thread-count="4">
+        <classes>
+            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
+            <class name="com.fh.unitests.paralleltest.ParallelClass4"/>
+        </classes>
+    </test>
+</suite>
