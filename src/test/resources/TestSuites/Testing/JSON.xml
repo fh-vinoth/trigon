@@ -7,7 +7,7 @@
 
     <test name="Web Parallel Test1">
         <classes>
-            <class name="com.fh.unitests.Json.GsonStreamApiWrite"/>
+            <class name="com.fh.unittests.Json.GsonStreamApiWrite"/>
         </classes>
     </test>
     <test name="Web Parallel Test2">
@@ -16,8 +16,8 @@
 
         <classes>
 
-            <class name="com.fh.unitests.Json.GsonStreamApiWrite1"/>
-            <class name="com.fh.unitests.Json.GsonStreamApiWrite2"/>
+            <class name="com.fh.unittests.Json.GsonStreamApiWrite1"/>
+            <class name="com.fh.unittests.Json.GsonStreamApiWrite2"/>
         </classes>
     </test>
     <test name="Web Parallel Test3">
@@ -26,8 +26,8 @@
 
         <classes>
 
-            <class name="com.fh.unitests.Json.GsonStreamApiWrite3"/>
-            <class name="com.fh.unitests.Json.GsonStreamApiWrite4"/>
+            <class name="com.fh.unittests.Json.GsonStreamApiWrite3"/>
+            <class name="com.fh.unittests.Json.GsonStreamApiWrite4"/>
         </classes>
     </test>
 </suite>

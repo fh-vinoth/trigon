@@ -11,7 +11,7 @@
 
     <test name="Web Parallel Test1" thread-count="2">
         <classes>
-            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass1"/>
         </classes>
     </test>
 
@@ -19,8 +19,8 @@
         <parameter name="browser" value="firefox"/>
         <parameter name="webURL" value="https://abc.com/"/>
         <classes>
-            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass2"/>
         </classes>
     </test>
 
@@ -29,9 +29,9 @@
         <parameter name="webURL" value="https://reddy.com/"/>
 
         <classes>
-            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass3"/>
         </classes>
     </test>
 
@@ -46,19 +46,19 @@
             </run>
         </groups>
         <classes>
-            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass4"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass3"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass4"/>
         </classes>
     </test>
 
     <test name="Web Parallel Test5" thread-count="4">
         <classes>
-            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass4"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass3"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass4"/>
         </classes>
     </test>
 </suite>

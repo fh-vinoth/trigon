@@ -63,5 +63,4 @@ backupLogs
 /backupLogs
 backupLogs/**
 /backupLogs/**
-/tenv/**
 reports-path.json

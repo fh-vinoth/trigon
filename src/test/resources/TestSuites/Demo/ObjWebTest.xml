@@ -3,7 +3,7 @@
     <parameter name="testEnvPath" value="test-env.json"></parameter>
     <test name="WebChromeTest">
         <classes>
-            <class name="com.fh.unitests.frameworktest.FHLoginTest"/>
+            <class name="com.fh.unittests.frameworktest.FHLoginTest"/>
         </classes>
     </test>
     <test name="WebFirefoxTest">
@@ -15,10 +15,10 @@
             </run>
         </groups>
         <classes>
-            <class name="com.fh.unitests.frameworktest.FHLoginTest"/>
+            <class name="com.fh.unittests.frameworktest.FHLoginTest"/>
         </classes>
         <classes>
-            <class name="com.fh.unitests.frameworktest.FHLoginTest"/>
+            <class name="com.fh.unittests.frameworktest.FHLoginTest"/>
         </classes>
     </test>
 </suite>

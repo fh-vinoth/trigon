@@ -5,19 +5,19 @@
     <test name="Web Parallel-FrameworkTest1">
 
         <classes>
-            <class name="com.fh.unitests.frameworktest.frameworkTest"/>
+            <class name="com.fh.unittests.frameworktest.frameworkTest"/>
         </classes>
     </test>
 <!--    <test name="Web Parallel FrameworkTest2">-->
 <!--        <classes>-->
-<!--            <class name="com.fh.unitests.frameworktest.frameworkTest"/>-->
-<!--            <class name="com.fh.unitests.frameworktest.frameworkTest2"/>-->
+<!--            <class name="com.fh.unittests.frameworktest.frameworkTest"/>-->
+<!--            <class name="com.fh.unittests.frameworktest.frameworkTest2"/>-->
 <!--        </classes>-->
 <!--    </test>-->
 <!--    <test name="Web Parallel FrameworkTest3">-->
 <!--        <classes>-->
-<!--            <class name="com.fh.unitests.frameworktest.frameworkTest"/>-->
-<!--            <class name="com.fh.unitests.frameworktest.frameworkTest2"/>-->
+<!--            <class name="com.fh.unittests.frameworktest.frameworkTest"/>-->
+<!--            <class name="com.fh.unittests.frameworktest.frameworkTest2"/>-->
 <!--        </classes>-->
 <!--    </test>-->
 

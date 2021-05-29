@@ -4,7 +4,7 @@
     <test name="com.FirstTest">
         <parameter name="browser" value="chrome"/>
         <classes>
-            <class name="com.fh.unitests.frameworktest.FirstTest">
+            <class name="com.fh.unittests.frameworktest.FirstTest">
                 <methods>
                     <include name="GOOGLE1"/>
                     <include name="GOOGLE2"/>
@@ -16,7 +16,7 @@
     <test name="com.SecondTest">
         <parameter name="browser" value="firefox"/>
         <classes>
-            <class name="com.fh.unitests.frameworktest.SecondTest">
+            <class name="com.fh.unittests.frameworktest.SecondTest">
                 <methods>
                     <include name="GOOGLE4"/>
                 </methods>

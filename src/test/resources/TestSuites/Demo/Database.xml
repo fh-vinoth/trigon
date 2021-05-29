@@ -5,7 +5,7 @@
 
     <test name="API-Endpoint_Automation_Category">
         <classes>
-            <class name="com.fh.unitests.database.Queries"/>
+            <class name="com.fh.unittests.database.Queries"/>
         </classes>
     </test>
 </suite>

@@ -1,0 +1,81 @@
+{
+  "execution_type": "local",
+  "jenkins_execution": "false",
+  "pipeline_execution": "false",
+  "test_region": "NZ1",
+  "app_reset": "NA",
+  "random_device": "",
+  "products": {
+    "D2S": {
+      "android": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      },
+      "ios": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      }
+    },
+    "MYT": {
+      "android": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      },
+      "ios": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      }
+    },
+    "MYPOS": {
+      "android": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      }
+    },
+    "APOS": {
+      "android": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      }
+    },
+    "FHApp": {
+      "android": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      },
+      "ios": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      }
+    },
+    "CAApp": {
+      "android": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      },
+      "ios": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      }
+    },
+    "FUSIONApp": {
+      "android": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      },
+      "ios": {
+        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "build_number": "1234"
+      }
+    }
+  },
+  "db_config": {
+    "dbHost": "sit-rds-writer.foodhub.local",
+    "dbUserName": "ssostag",
+    "dbPassword": "sskDwm8X",
+    "dbSSHHost": "bastion.stage.t2sonline.com",
+    "dbSSHUser": "qa",
+    "dbSSHFilePath": "",
+    "dbName": "sit_foxy_project56"
+  }
+}

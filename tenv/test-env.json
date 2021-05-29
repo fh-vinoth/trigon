@@ -1,0 +1,305 @@
+{
+  "api": {
+    "URI": "https://sit-api.t2scdn.com/",
+    "version": "V1.9"
+  },
+  "web": {
+    "system_os": "OS X",
+    "system_os_version": "Catalina",
+    "browser": "chrome",
+    "headless": "false",
+    "browser_version": "83",
+    "url": "https://amazon.com/",
+    "build_number": "pr-api-108"
+  },
+  "android": {
+    "app_package": "com.android.calculator2",
+    "app_activity": "com.android.calculator2.Calculator",
+    "device": "Google Pixel 4 XL",
+    "os": "11.0",
+    "region_android_devices": {
+      "UK1": {
+        "device": "Samsung Galaxy S20",
+        "os": "11.0"
+      },
+      "AUS1": {
+        "device": "OnePlus 7T",
+        "os": "10.0"
+      },
+      "US1": {
+        "device": "Samsung Galaxy S20 Plus",
+        "os": "10.0"
+      },
+      "NZ1": {
+        "device": "Google Pixel 5",
+        "os": "11"
+      },
+      "IRE1": {
+        "device": "Samsung Galaxy S20 Plus",
+        "os": "10.0"
+      },
+      "MX1": {
+        "device": "Samsung Galaxy S20",
+        "os": "11.0"
+      },
+      "GT1": {
+        "device": "OnePlus 7T",
+        "os": "10.0"
+      }
+    }
+  },
+  "ios": {
+    "bundleid": "com.ios",
+    "udid": "wrq435erq415553523qrwaf",
+    "device": "iPhone 11 Pro Max",
+    "os": "13.5",
+    "region_ios_devices": {
+      "UK2": {
+        "device": "iPhone 11",
+        "os": "13.5"
+      },
+      "AUS2": {
+        "device": "iPhone 11",
+        "os": "13"
+      },
+      "US2": {
+        "device": "iPhone 12",
+        "os": "12"
+      },
+      "NZ2": {
+        "device": "iPhone 12",
+        "os": "13.5"
+      },
+      "IRE2": {
+        "device": "iPhone 12",
+        "os": "13.5"
+      },
+      "MX3": {
+        "device": "iPhone XS",
+        "os": "13.5"
+      },
+      "GT3": {
+        "device": "iPhone XS",
+        "os": "12"
+      }
+    }
+  },
+  "region": {
+    "QA5": {
+      "locale": "united kingdom",
+      "region": "1",
+      "store": "802572",
+      "host": "qa5.t2scdn.com",
+      "token": "c0eddd85f54bb325847a1f298b29deb0",
+      "country": "UK",
+      "currency": "£",
+      "timezone": "GMT+1",
+      "phoneNumber": "07012345679",
+      "emailId": "teamautomation18@gmail.com"
+    },
+    "UK1": {
+      "locale": "united kingdom",
+      "region": "1",
+      "store": "8049332",
+      "host": "automation-uk1.t2scdn.com",
+      "token": "f92203e3387b308c7858e9bdd47143bd",
+      "country": "UK",
+      "currency": "£",
+      "timezone": "GMT+1",
+      "phoneNumber": "07012345679",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "UK2": {
+      "locale": "united kingdom",
+      "region": "1",
+      "store": "8049378",
+      "host": "automation-uk2.t2scdn.com",
+      "token": "7d86fa416ef0710f7d932e16b982f54f",
+      "country": "UK",
+      "currency": "£",
+      "timezone": "GMT+1",
+      "phoneNumber": "07032542435",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "UK5": {
+      "locale": "united kingdom",
+      "region": "1",
+      "store": "8049570",
+      "host": "automation-uk5.t2scdn.com",
+      "token": "17bf59066518dc243bc00135e893b8d4",
+      "country": "UK",
+      "currency": "£",
+      "timezone": "GMT+1",
+      "phoneNumber": "07032542435",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "QAWEB4": {
+      "locale": "united kingdom",
+      "region": "1",
+      "store": "794534",
+      "host": "qaweb4.t2scdn.com",
+      "token": "8e1551657a45014e81736293e63b84a1",
+      "country": "UK",
+      "currency": "£",
+      "timezone": "GMT+1",
+      "phoneNumber": "07032542435",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "QAWEB3": {
+      "locale": "united kingdom",
+      "region": "1",
+      "store": "794346",
+      "host": "qaweb3.t2scdn.com",
+      "token": "0cb93275cc43808175d89beac673ec3c",
+      "country": "UK",
+      "currency": "£",
+      "timezone": "GMT+1",
+      "phoneNumber": "07476562689",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "AUS1": {
+      "locale": "australia",
+      "region": "3",
+      "store": "8049435",
+      "host": "automation-aus1.t2scdn.com",
+      "token": "585dcbf26bbf74b1ac11ced42dacc8f4",
+      "country": "AUS",
+      "currency": "$",
+      "timezone": "GMT+10",
+      "phoneNumber": "07012345679",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "AUS2": {
+      "locale": "australia",
+      "region": "3",
+      "store": "8049391",
+      "host": "automation-aus2.t2scdn.com",
+      "token": "1f5a19849e6dce1a9b58c3fc8f382354",
+      "country": "AUS",
+      "currency": "$",
+      "timezone": "GMT+10",
+      "phoneNumber": "07012345019",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "US1": {
+      "locale": "united states",
+      "region": "48",
+      "store": "8049416",
+      "host": "automation-us1.t2scdn.com",
+      "token": "e3aff10bcdd9c87b32a674af25942729",
+      "country": "US",
+      "currency": "$",
+      "timezone": "GMT-5",
+      "phoneNumber": "2027514444",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "US2": {
+      "locale": "united states",
+      "region": "48",
+      "store": "8049432",
+      "host": "automation-us2.t2scdn.com",
+      "token": "82a938de7797ff3a9d8b5cfb7aa4d75c",
+      "country": "US",
+      "currency": "$",
+      "timezone": "GMT-5",
+      "phoneNumber": "2034567853",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "NZ1": {
+      "locale": "newzealand",
+      "region": "10",
+      "store": "8049434",
+      "host": "automation-nz1.t2scdn.com",
+      "token": "097bb703604d87f33ae82d4a21a79818",
+      "country": "NZ",
+      "currency": "$",
+      "timezone": "GMT+12",
+      "phoneNumber": "0211004548",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "NZ2": {
+      "locale": "newzealand",
+      "region": "10",
+      "token": "97ae8b1969da5d5f39dda7643308c1a7",
+      "store": "8049385",
+      "host": "automation-nz2.t2scdn.com",
+      "country": "NZ",
+      "currency": "$",
+      "timezone": "GMT+12",
+      "phoneNumber": "0211044545",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "IRE1": {
+      "locale": "ireland",
+      "region": "2",
+      "store": "8049433",
+      "host": "automation-ire1.t2scdn.com",
+      "token": "8e1551657a45014e81736293e63b84a1",
+      "country": "IRE",
+      "currency": "€",
+      "timezone": "GMT+1",
+      "phoneNumber": "0812345006",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "IRE2": {
+      "locale": "ireland",
+      "region": "2",
+      "store": "8049403",
+      "host": "automation-ire2.t2scdn.com",
+      "token": "90774bfb16d1f6adabe31b0ab776d5db",
+      "country": "IRE",
+      "currency": "€",
+      "timezone": "GMT+1",
+      "phoneNumber": "07065432109",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "GT1": {
+      "locale": "guatemala",
+      "region": "111",
+      "store": "8049587",
+      "host": "automation-gt1.t2scdn.com",
+      "token": "c1309d3d5fca763f0d0b6b47e01f2bd8",
+      "country": "GT",
+      "currency": "Q",
+      "timezone": "GMT-6",
+      "phoneNumber": "5024564567",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "GT3": {
+      "locale": "guatemala",
+      "region": "111",
+      "store": "8049588",
+      "host": "automation-gt3.t2scdn.com",
+      "token": "8f4ac59e6857b5df096a034c9529e813",
+      "country": "GT",
+      "currency": "Q",
+      "timezone": "GMT-6",
+      "phoneNumber": "5023455432",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "MX1": {
+      "locale": "mexico",
+      "region": "87",
+      "store": "8049584",
+      "host": "automation-mx1.t2scdn.com",
+      "token": "773d750978151ea3df0944a5a077a92c",
+      "country": "MX",
+      "currency": "$",
+      "timezone": "GMT-5",
+      "phoneNumber": "5156167177",
+      "emailId": "teamautomation16@gmail.com"
+    },
+    "MX3": {
+      "locale": "mexico",
+      "region": "87",
+      "store": "8049585",
+      "host": "automation-mx1.t2scdn.com",
+      "token": "b1b06cb1f408064f846de67d04bac500",
+      "country": "MX",
+      "currency": "$",
+      "timezone": "GMT-5",
+      "phoneNumber": "5134567699",
+      "emailId": "teamautomation16@gmail.com"
+    }
+  }
+}

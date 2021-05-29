@@ -8,14 +8,14 @@
             </run>
         </groups>
         <classes>
-            <class name="com.fh.unitests.frameworktest.BrowserTest"/>
+            <class name="com.fh.unittests.frameworktest.BrowserTest"/>
         </classes>
     </test>
     <test name="WebTest1">
         <parameter name="browser" value="firefox"></parameter>
         <parameter name="browser_version" value="82"></parameter>
         <classes>
-            <class name="com.fh.unitests.frameworktest.BrowserTest1"/>
+            <class name="com.fh.unittests.frameworktest.BrowserTest1"/>
         </classes>
     </test>
 </suite>

@@ -7,28 +7,28 @@
 
     <test name="Web Parallel-Test1">
         <classes>
-            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass1"/>
         </classes>
     </test>
     <test name="Web Parallel Test2">
         <classes>
-            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass2"/>
         </classes>
     </test>
     <test name="Web-Parallel Test3">
         <classes>
-            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass3"/>
         </classes>
     </test>
     <test name="Web Parallel Test4">
         <classes>
-            <class name="com.fh.unitests.paralleltest.ParallelClass1"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass2"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass3"/>
-            <class name="com.fh.unitests.paralleltest.ParallelClass4"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass1"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass2"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass3"/>
+            <class name="com.fh.unittests.paralleltest.ParallelClass4"/>
         </classes>
     </test>
 </suite>

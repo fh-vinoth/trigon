@@ -3,13 +3,13 @@
 
     <test name="API-Endpoint_Automation_Category">
         <classes>
-            <class name="com.fh.unitests.api.CatArray"/>
+            <class name="com.fh.unittests.api.CatArray"/>
         </classes>
     </test>
     <test name="API-Endpoint_Automation_Category  212  ">
 
         <classes>
-            <class name="com.fh.unitests.api.CatArray"/>
+            <class name="com.fh.unittests.api.CatArray"/>
         </classes>
     </test>
 </suite>
