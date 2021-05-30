@@ -23,7 +23,9 @@ import org.testng.xml.XmlTest;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 
 public class TestController extends TestInitialization {
@@ -31,9 +33,11 @@ public class TestController extends TestInitialization {
     private static RemoteEnvPojo tre;
 
 
+
     @BeforeSuite(alwaysRun = true)
     protected void suiteInitialization(ITestContext iTestContext, XmlTest xmlTest) {
         try {
+
 
             File file = new File("errors");
             if (!file.exists()) {

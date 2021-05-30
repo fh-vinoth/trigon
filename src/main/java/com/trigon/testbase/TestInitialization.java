@@ -35,6 +35,9 @@ public class TestInitialization extends Browsers {
     protected static ThreadLocal<JsonWriter> testSuiteWriter = new ThreadLocal<>();
     protected static ThreadLocal<JsonWriter> testModuleWriter = new ThreadLocal<>();
 
+    public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp");
+    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative");
+
     protected static String runId = null;
     protected static long suiteStartTime;
 
@@ -44,25 +47,14 @@ public class TestInitialization extends Browsers {
         String[] tType = suiteNameReplaced.split("_");
         if (tType.length > 0) {
             if (tType[0].equalsIgnoreCase("API") ||
-                    tType[0].equalsIgnoreCase("WEB") ||
-                    tType[0].equalsIgnoreCase("MOBILE") ||
-                    tType[0].equalsIgnoreCase("MYT") ||
-                    tType[0].equalsIgnoreCase("D2S") ||
-                    tType[0].equalsIgnoreCase("FHAPP") ||
-                    tType[0].equalsIgnoreCase("CAApp") ||
-                    tType[0].equalsIgnoreCase("CAWeb") ||
-                    tType[0].equalsIgnoreCase("FHWeb") ||
-                    tType[0].equalsIgnoreCase("FHNative") ||
-                    tType[0].equalsIgnoreCase("MYPOS") ||
-                    tType[0].equalsIgnoreCase("APOS") ||
-                    tType[0].equalsIgnoreCase("FUSIONApp")
-            ) {
+                    mobileApps.contains(tType[0].toLowerCase()) ||webApps.contains(tType[0].toLowerCase()))
+            {
                 platformType = tType[0];
             } else {
-                Assert.fail("Modify Your SuiteName as per standard structure : Example: API_/WEB_/MOBILE_/MYT_/D2S_/FHAPP_/CAApp_/FHWeb_/FHNative_/MYPOS_/APOS_/FUSIONApp_ ");
+                Assert.fail("Modify Your SuiteName as per standard structure : Example: API_"+webApps+mobileApps+"");
                 System.exit(0);
             }
-            if (platformType.equalsIgnoreCase("MOBILE") || platformType.equalsIgnoreCase("MYT") || platformType.equalsIgnoreCase("D2S") || platformType.equalsIgnoreCase("FHAPP") || platformType.equalsIgnoreCase("CAApp") || platformType.equalsIgnoreCase("FUSIONApp") || platformType.equalsIgnoreCase("MYPOS") || platformType.equalsIgnoreCase("APOS")) {
+            if (mobileApps.contains(platformType)) {
                 if (tType[1].equalsIgnoreCase("Android") || tType[1].equalsIgnoreCase("IOS")) {
                     appType = tType[1].toLowerCase();
                 } else {
@@ -72,7 +64,7 @@ public class TestInitialization extends Browsers {
             }
 
         } else {
-            Assert.fail("Modify Your SuiteName as per standard structure : Example: API_/WEB_/MOBILE_/MYT_/D2S_/FHAPP_/CA_/FHWeb_/FHNative_ ");
+            Assert.fail("Modify Your SuiteName as per standard structure : Example: API_"+webApps+mobileApps+"");
             System.exit(0);
         }
         String suiteNameWithTime = suiteNameReplaced + "_" + cUtils().getCurrentTimeStamp();
@@ -87,17 +79,15 @@ public class TestInitialization extends Browsers {
         trigonPaths.setSupportFileHTMLPath(cUtils().createFolder(supportFilePath, "HTML", ""));
         trigonPaths.setScreenShotsPath(cUtils().createFolder(testResultsPath, "ScreenShots", ""));
 
-        if (platformType.equalsIgnoreCase("WEB") || platformType.equalsIgnoreCase("MOBILE") || platformType.equalsIgnoreCase("MYT") || platformType.equalsIgnoreCase("D2S") || platformType.equalsIgnoreCase("FHAPP") || platformType.equalsIgnoreCase("CA") || platformType.equalsIgnoreCase("FHWeb") || platformType.equalsIgnoreCase("FHNative")) {
-            //extentReportInitialization();
-        }
-
         File file2 = new File("reports-path.json");
         if (file2.exists()) {
             file2.delete();
         }
         try {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter("reports-path.json", false)));
-            writer.beginObject().name("path").value(testResultsPath).endObject().flush();
+            writer.beginObject().name("path").value(testResultsPath);
+            writer.name("testType").value(platformType);
+            writer.name("platformType").value(appType).endObject().flush();
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -346,7 +336,7 @@ public class TestInitialization extends Browsers {
 
     protected void remoteBrowserInit(ITestContext context, XmlTest xmlTest) {
         try {
-            if (tEnv().getTestType().equalsIgnoreCase("web") || tEnv().getTestType().equalsIgnoreCase("FHWeb") || tEnv().getTestType().equalsIgnoreCase("FHNative")) {
+            if (webApps.contains(tEnv().getTestType())) {
                 tEnv().setElementLocator("Web");
                 createBrowserInstance(context, xmlTest);
             }
@@ -359,9 +349,7 @@ public class TestInitialization extends Browsers {
     protected void remoteMobileInit(ITestContext context, XmlTest xmlTest) {
         try {
 
-            String testType = tEnv().getTestType();
-
-            if (testType.equalsIgnoreCase("MOBILE") || testType.equalsIgnoreCase("MYT") || testType.equalsIgnoreCase("D2S") || testType.equalsIgnoreCase("FHAPP") || testType.equalsIgnoreCase("CAApp") || testType.equalsIgnoreCase("FUSIONApp") || testType.equalsIgnoreCase("MYPOS") || testType.equalsIgnoreCase("APOS")) {
+            if (mobileApps.contains(tEnv().getTestType())) {
                 if (!executionType.equalsIgnoreCase("remote")) {
                     AppiumManager appiumManager = new AppiumManager();
                     appiumManager.startAppium();
@@ -382,8 +370,7 @@ public class TestInitialization extends Browsers {
 
     protected void setMobileLocator() {
         try {
-            String testType = tEnv().getTestType();
-            if (testType.equalsIgnoreCase("MOBILE") || testType.equalsIgnoreCase("MYT") || testType.equalsIgnoreCase("D2S") || testType.equalsIgnoreCase("FHAPP") || testType.equalsIgnoreCase("CAApp") || testType.equalsIgnoreCase("FUSIONApp") || testType.equalsIgnoreCase("MYPOS") || testType.equalsIgnoreCase("APOS")) {
+            if (mobileApps.contains(tEnv().getTestType())) {
                 if (tEnv().getAppType().equalsIgnoreCase("Android")) {
                     tEnv().setElementLocator("Android");
                 }
@@ -397,7 +384,7 @@ public class TestInitialization extends Browsers {
     }
     protected void setWebLocator() {
         try {
-            if (tEnv().getTestType().equalsIgnoreCase("web") || tEnv().getTestType().equalsIgnoreCase("FHWeb") || tEnv().getTestType().equalsIgnoreCase("FHNative")) {
+            if (webApps.contains(tEnv().getTestType())) {
                 tEnv().setElementLocator("Web");
             }
         } catch (Exception e) {
