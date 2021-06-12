@@ -5,6 +5,7 @@ import com.trigon.mobile.AppiumManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -125,14 +126,18 @@ public class Browsers extends Android {
         }
     }
 
-
     protected void closeMobileClassLevel() {
-
-        String testType = tEnv().getTestType();
-
-        if (testType.equalsIgnoreCase("MOBILE") || testType.equalsIgnoreCase("MYT") || testType.equalsIgnoreCase("D2S") || testType.equalsIgnoreCase("FHAPP") || testType.equalsIgnoreCase("CAApp") || testType.equalsIgnoreCase("FUSIONApp") || testType.equalsIgnoreCase("MYPOS") || testType.equalsIgnoreCase("APOS")) {
+        if (webApps.contains(tEnv().getTestType())) {
             try {
                 if (ios() != null) {
+                    ios().getSessionId();
+                    JavascriptExecutor jse = ios();
+                    if(classFailAnalysisThread.get().size()>0){
+                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+
+                    }else {
+                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
+                    }
                     ios().quit();
                     logger.info("IOS App Quit Successful");
                 }
@@ -142,6 +147,14 @@ public class Browsers extends Android {
             }
             try {
                 if (android() != null) {
+                    android().getSessionId();
+                    JavascriptExecutor jse = android();
+                    if(classFailAnalysisThread.get().size()>0){
+                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+
+                    }else {
+                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
+                    }
                     android().quit();
                     logger.info("Android App Quit Successful");
                 }
@@ -162,12 +175,22 @@ public class Browsers extends Android {
     }
 
     protected void closeBrowserClassLevel() {
-        if (tEnv().getTestType().equalsIgnoreCase("web") || tEnv().getTestType().equalsIgnoreCase("FHWeb") || tEnv().getTestType().equalsIgnoreCase("FHNative")) {
+        if (webApps.contains(tEnv().getTestType())) {
             try {
                 if (browser() != null) {
-                    browser().close();
-                    //browser().quit();
-                    logger.info("The opened browser is closed");
+                    //browser().close();
+                    browser().getSessionId();
+                    JavascriptExecutor jse = browser();
+                    logger.info("Browser Session is closed");
+                    if(classFailAnalysisThread.get().size()>0){
+                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+
+                    }else {
+                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
+
+                    }
+
+                    browser().quit();
                 }
             } catch (Exception e) {
                 captureException(e);

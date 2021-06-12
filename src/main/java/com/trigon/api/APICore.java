@@ -15,8 +15,6 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static com.trigon.testbase.TestUtilities.cUtils;
-import static com.trigon.testbase.TestUtilities.tEnv;
 
 public class APICore extends ReportManager {
     private static final Logger logger = LogManager.getLogger(APICore.class);

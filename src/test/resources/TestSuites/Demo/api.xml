@@ -1,16 +1,21 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="API-Endpoint_Automation_Category" parallel="tests" thread-count="10">
-
+<suite name="API_Endpoint_Automation_Category" parallel="tests">
+<!--    <test name="API-Endpoint_Automation_Category">-->
+<!--        <classes>-->
+<!--            <class name="com.fh.api.CatArray"/>-->
+<!--        </classes>-->
+<!--    </test>-->
     <test name="API-Endpoint_Automation_Category">
         <classes>
-            <class name="com.fh.unittests.api.CatArray"/>
+            <class name="com.fh.unittests.database.Queries"/>
         </classes>
     </test>
-    <test name="API-Endpoint_Automation_Category  212  ">
 
+    <test name="API-Endpoint_Automation_Category1">
         <classes>
-            <class name="com.fh.unittests.api.CatArray"/>
+            <class name="com.fh.unittests.database.Queries1"/>
         </classes>
     </test>
+
 </suite>
 

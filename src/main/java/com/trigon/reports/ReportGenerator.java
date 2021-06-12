@@ -81,12 +81,13 @@ public class ReportGenerator {
                 writer.close();
 
                 processData(Path, pGson, passed, failed, skipped, failedSummary, totalEndpoints, buildNumber, classMap);
-
+                logger.info("Successfully Generated HTML Reports Refer to the path:" + path);
             } catch (Exception ioException) {
                 ioException.printStackTrace();
             }
 
         }
+
     }
 
     private void processJSONFiles(Path reportPath, Gson pGson, Map<String, String> lisOfModulesPath, List<String> lisOfClassPath, String[] buildNumber, HashMap<String, Map<TestModuleData, List<TestClassData>>> classMap) {
@@ -95,6 +96,7 @@ public class ReportGenerator {
             try {
                 JsonElement element = JsonParser.parseReader(new FileReader(reportPath + "/" + classPath));
                 TestClassData tcd = pGson.fromJson(element, TestClassData.class);
+
                 classMap.computeIfAbsent(tcd.getTestModuleName(), key -> {
                     TestModuleData tmd = new TestModuleData();
                     List<TestClassData> ltcd = new ArrayList<>();
@@ -103,6 +105,7 @@ public class ReportGenerator {
                     return tmMap;
                 });
                 classMap.computeIfPresent(tcd.getTestModuleName(), (key, value) -> {
+
                     TestModuleData tmd1 = null;
                     List<TestClassData> ltcd1 = null;
                     for (Map.Entry<TestModuleData, List<TestClassData>> modEntry : value.entrySet()) {
@@ -138,7 +141,8 @@ public class ReportGenerator {
                     f.renameTo(new File(reportPath + "/" + "PASS-" + modifiedClassFile));
                 }
                 getStatusForRename.clear();
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
+                System.out.println(" Issue with Class file "+ classPath);
                 e.printStackTrace();
             }
         });
@@ -180,12 +184,14 @@ public class ReportGenerator {
                             tfail.setTestStatus("FAILED");
                             tfail.setTestMethod(tmd3.getTestMethodName());
                             tfail.setTestAnalysis(tmd3.getTestMethodAnalysis());
+                            tfail.setTestModule(tmd1.getTestModuleName());
                             failedSummary.add(tfail);
                         } else if (tmd3.getTestMethodStatus().equals("SKIPPED")) {
                             failed.add("SKIPPED");
                             tfail.setTestStatus("SKIPPED");
                             tfail.setTestMethod(tmd3.getTestMethodName());
                             tfail.setTestAnalysis(tmd3.getTestMethodAnalysis());
+                            tfail.setTestModule(tmd1.getTestModuleName());
                             failedSummary.add(tfail);
                         }
                         tmd3.getApiTableData().forEach(apiData -> {
@@ -216,22 +222,28 @@ public class ReportGenerator {
 
         if (tsd.getTestType().equalsIgnoreCase("api")) {
             tsd.setApiVersion(buildNumber[0]);
+            BufferedWriter bw = null;
+            try{
+                Configuration cfg = new Configuration(Configuration.VERSION_2_3_30);
+                Template template;
+                cfg.setClassForTemplateLoading(ReportGenerator.class, "/templates");
+                cfg.setDefaultEncoding("UTF-8");
+                generateEmailBody(path, failed, failedSummary, tsd, "api_email.ftl", "api_failed_summary.ftl", "APIEmailReport", "API_Fail_Summary_Report");
+                template = cfg.getTemplate("api.ftl");
+                Writer fileWriter = new FileWriter(new File(path + "/APIDetailedReport.html"));
+                bw = new BufferedWriter(fileWriter);
+                template.process(tsd, bw);
+                bw.flush();
 
-            Configuration cfg = new Configuration(Configuration.VERSION_2_3_30);
-            Template template;
-            cfg.setClassForTemplateLoading(ReportGenerator.class, "/templates");
-            cfg.setDefaultEncoding("UTF-8");
-            template = cfg.getTemplate("api.ftl");
-            Writer fileWriter = new FileWriter(new File(path + "/APIDetailedReport.html"));
-            BufferedWriter bw = new BufferedWriter(fileWriter);
-            template.process(tsd, bw);
-            bw.flush();
-            generateEmailBody(path, failed, failedSummary, tsd, "api_email.ftl", "api_failed_summary.ftl", "APIEmailReport", "API_Fail_Summary_Report");
-        }
+            }catch (Exception e){
+                bw.flush();
+                //e.printStackTrace();
+            }
+         }
         if (tsd.getTestType().equalsIgnoreCase("web") || tsd.getTestType().equalsIgnoreCase("FHWeb") || tsd.getTestType().equalsIgnoreCase("FHNative")) {
             generateEmailBody(path, failed, failedSummary, tsd, "web_email.ftl", "web_failed_summary.ftl", "WebEmailReport", "Web_Fail_Summary_Report");
         }
-        if (tsd.getTestType().equalsIgnoreCase("MOBILE") || tsd.getTestType().equalsIgnoreCase("MYT") || tsd.getTestType().equalsIgnoreCase("D2S") || tsd.getTestType().equalsIgnoreCase("FHAPP")) {
+        if (tsd.getTestType().equalsIgnoreCase("MOBILE") || tsd.getTestType().equalsIgnoreCase("MYT") || tsd.getTestType().equalsIgnoreCase("D2S") || tsd.getTestType().equalsIgnoreCase("FHAPP")||tsd.getTestType().equalsIgnoreCase("fusionapp")||tsd.getTestType().equalsIgnoreCase("mypos")||tsd.getTestType().equalsIgnoreCase("apos")||tsd.getTestType().equalsIgnoreCase("digitalboard")) {
             generateEmailBody(path, failed, failedSummary, tsd, "mobile_email.ftl", "mobile_failed_summary.ftl", "MobileEmailReport", "Mobile_Fail_Summary_Report");
         }
 
@@ -239,6 +251,8 @@ public class ReportGenerator {
 
     private static void generateEmailBody(String path, List<String> failed, List<TestFailedSummary> failedSummary, TestSuiteData tsd, String emailTemp1, String emailTemp2, String htmlName1, String htmlName2) throws IOException, TemplateException {
         tsd.setFailSummary(failedSummary);
+        BufferedWriter bw1=null;
+        BufferedWriter bw2 = null;
         try{
             Configuration cfg1 = new Configuration(Configuration.VERSION_2_3_30);
             Template template1;
@@ -246,14 +260,18 @@ public class ReportGenerator {
             cfg1.setDefaultEncoding("UTF-8");
             template1 = cfg1.getTemplate(emailTemp1);
             Writer fileWriter1 = new FileWriter(new File(path + "/" + htmlName1 + ".html"));
-            BufferedWriter bw1 = new BufferedWriter(fileWriter1);
+            bw1 = new BufferedWriter(fileWriter1);
             template1.process(tsd, bw1);
             bw1.flush();
-            LinkedHashMap<String, Object> emailData = new LinkedHashMap<>();
-            emailData.put("subject", tsd.getTestSuiteName() + " | Passed : " + tsd.getPassPercentage() + "%" + " | Failed : " + tsd.getFailPercentage() + "% | " + tsd.getTimeTaken());
-            String content = new String(Files.readAllBytes(Paths.get(path + "/" + htmlName1 + ".html")));
-            emailData.put("body", content);
+        }catch (InvalidReferenceException ir){
+            bw1.flush();
+        }
 
+        LinkedHashMap<String, Object> emailData = new LinkedHashMap<>();
+        emailData.put("subject", tsd.getTestSuiteName() + " | Passed : " + tsd.getPassPercentage() + "%" + " | Failed : " + tsd.getFailPercentage() + "% | " + tsd.getTimeTaken());
+        String content = new String(Files.readAllBytes(Paths.get(path + "/" + htmlName1 + ".html")));
+        emailData.put("body", content);
+        try{
             if (failed.size() > 0) {
                 Configuration cfg2 = new Configuration(Configuration.VERSION_2_3_30);
                 Template template2;
@@ -261,7 +279,7 @@ public class ReportGenerator {
                 cfg2.setDefaultEncoding("UTF-8");
                 template2 = cfg2.getTemplate(emailTemp2);
                 Writer fileWriter2 = new FileWriter(new File(path + "/" + htmlName2 + ".html"));
-                BufferedWriter bw2 = new BufferedWriter(fileWriter2);
+                bw2 = new BufferedWriter(fileWriter2);
                 template2.process(tsd, bw2);
                 bw2.flush();
                 String content2 = new String(Files.readAllBytes(Paths.get(path + "/" + htmlName2 + ".html")));
@@ -272,8 +290,14 @@ public class ReportGenerator {
             String data = pGson1.toJson(emailData);
             JsonWriter jw = new JsonWriter(new BufferedWriter(new FileWriter(path + "/SupportFiles/HTML/emailBody.json")));
             jw.jsonValue(data).flush();
-        }catch (InvalidReferenceException ir){
-
+        }catch (Exception ir){
+            bw2.flush();
+            String content2 = new String(Files.readAllBytes(Paths.get(path + "/" + htmlName2 + ".html")));
+            emailData.put("failedData", content2);
+            Gson pGson1 = new GsonBuilder().setPrettyPrinting().create();
+            String data = pGson1.toJson(emailData);
+            JsonWriter jw = new JsonWriter(new BufferedWriter(new FileWriter(path + "/SupportFiles/HTML/emailBody.json")));
+            jw.jsonValue(data).flush();
         }
 
     }

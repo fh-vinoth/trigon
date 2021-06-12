@@ -16,9 +16,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
-import static com.trigon.testbase.TestUtilities.cUtils;
-import static com.trigon.testbase.TestUtilities.tEnv;
-
 public class APIController extends APICore {
     private static final Logger logger = LogManager.getLogger(APIController.class);
 

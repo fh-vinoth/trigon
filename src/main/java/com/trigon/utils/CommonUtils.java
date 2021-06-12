@@ -361,13 +361,13 @@ public class CommonUtils {
     }
 
     public static void fileOrFolderDelete(File dir) {
-        logger.info("Entering FileorFolderDelete...");
+        //logger.info("Entering FileorFolderDelete...");
         boolean deleted;
         if (dir.isDirectory()) {
             File[] files = dir.listFiles();
             if (files != null && files.length > 0) {
                 for (File aFile : files) {
-                    logger.info("File " + aFile.getName() + " is deleted");
+                    //logger.info("File " + aFile.getName() + " is deleted");
                     fileOrFolderDelete(aFile);
                 }
             }

@@ -5,7 +5,7 @@ import com.trigon.reports.ReportManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.trigon.testbase.TestUtilities.cUtils;
+import static com.trigon.reports.ReportManager.cUtils;
 
 
 /**

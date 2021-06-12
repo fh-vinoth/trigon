@@ -1,7 +1,6 @@
 package com.trigon.elements;
 
 import com.trigon.constants.Message;
-import com.trigon.testbase.TestUtilities;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.ios.IOSElement;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.trigon.reports.ReportManager.browser;
 import static io.appium.java_client.touch.offset.PointOption.point;
 
 public class PerformElementAction extends ElementStrategyImpl {
@@ -42,7 +42,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                             }
                         } catch (WebDriverException e) {
                             logReport("INFO", "Element NOT intractable Hence Scrolling" + locatorString);
-                            logger.info("Element NOT intractable Hence Scrolling...");
+                            logger.error("Element NOT intractable Hence Scrolling...");
                             try {
                                 scrollToElement(webElement);
                                 hardWait(1000);
@@ -53,7 +53,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                             } catch (WebDriverException e1) {
                                 for (int b = 0; b < 10; b++) {
                                     try {
-                                        JavascriptExecutor js = (JavascriptExecutor) TestUtilities.browser();
+                                        JavascriptExecutor js = (JavascriptExecutor) browser();
                                         js.executeScript("window.scrollBy(0,-450)", "");
                                         // WebElement webElement1 = wait.until(ExpectedConditions.elementToBeClickable(webElement));
                                         if (webElement.isEnabled()) {
@@ -66,7 +66,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                                 }
                             }
                         }
-                        TestUtilities.browser().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+                        browser().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
                         logReportWithScreenShot("PASS",
                                 Message.CLICKED + locatorString);
                     }
@@ -146,7 +146,7 @@ public class PerformElementAction extends ElementStrategyImpl {
             case "enterText":
                 try {
                     if (webElement != null) {
-                        WebDriverWait wait = new WebDriverWait(TestUtilities.browser(), 20);
+                        WebDriverWait wait = new WebDriverWait(browser(), 20);
                         try {
                             //WebElement webElement1 = wait.until(ExpectedConditions.visibilityOf(webElement));
                             if (webElement.isEnabled()) {
@@ -166,7 +166,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                             } catch (WebDriverException e1) {
                                 for (int b = 0; b < 10; b++) {
                                     try {
-                                        JavascriptExecutor js = (JavascriptExecutor) TestUtilities.browser();
+                                        JavascriptExecutor js = (JavascriptExecutor) browser();
                                         js.executeScript("window.scrollBy(0,-450)", "");
                                         webElement.clear();
                                         webElement.sendKeys(getElementValue);
@@ -190,7 +190,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                     logReportWithScreenShot("PASS",
                             getElementValue + " is Entered in : " + locatorString);
                     long endTime5 = System.currentTimeMillis();
-                    logger.info(Message.TIME_TAKEN_TO_PERFORM_ACTION_ELEMENT + locatorString + " : " + TestUtilities.cUtils().getRunDuration(startTime5, endTime5));
+                    logger.info(Message.TIME_TAKEN_TO_PERFORM_ACTION_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
 
                     // logTimeReport("PASS","Testing Time Taken ",cUtils().getRunDuration(startTime5, endTime5));
                 } catch (WebDriverException |NoClassDefFoundError e) {
@@ -340,7 +340,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                 break;
         }
         long endTime5 = System.currentTimeMillis();
-        logger.info(Message.TIME_TAKEN_TO_PERFORM_ACTION_ELEMENT + locatorString + " : " + TestUtilities.cUtils().getRunDuration(startTime5, endTime5));
+        logger.info(Message.TIME_TAKEN_TO_PERFORM_ACTION_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
 
         return returnvalue;
     }
@@ -394,7 +394,7 @@ public class PerformElementAction extends ElementStrategyImpl {
         }
 
         long endTime5 = System.currentTimeMillis();
-        logger.info(Message.TIME_TAKEN_TO_PERFORM_ACTION_ELEMENT + locatorString + " : " + TestUtilities.cUtils().getRunDuration(startTime5, endTime5));
+        logger.info(Message.TIME_TAKEN_TO_PERFORM_ACTION_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
         return Values;
     }
 
@@ -462,16 +462,16 @@ public class PerformElementAction extends ElementStrategyImpl {
     public void hideKeyBorad() {
         //long startTime3 = System.currentTimeMillis();
         try {
-            if (TestUtilities.android() != null) {
-                TestUtilities.android().hideKeyboard();
+            if (android() != null) {
+                android().hideKeyboard();
 
-                if (TestUtilities.android().getKeyboard() != null) {
-                    TestUtilities.android().hideKeyboard();
+                if (android().getKeyboard() != null) {
+                    android().hideKeyboard();
                 }
             }
-            if (TestUtilities.ios() != null) {
-                if (TestUtilities.ios().getKeyboard() != null) {
-                    TestUtilities.ios().hideKeyboard();
+            if (ios() != null) {
+                if (ios().getKeyboard() != null) {
+                    ios().hideKeyboard();
                 }
             }
         } catch (WebDriverException we) {

@@ -5,6 +5,7 @@ import java.util.List;
 public class TestFailedSummary {
     private String testStatus;
     private String testMethod;
+    private String testModule;
     private List testAnalysis;
 
     public String getTestStatus() {
@@ -29,5 +30,13 @@ public class TestFailedSummary {
 
     public void setTestAnalysis(List testAnalysis) {
         this.testAnalysis = testAnalysis;
+    }
+
+    public String getTestModule() {
+        return testModule;
+    }
+
+    public void setTestModule(String testModule) {
+        this.testModule = testModule;
     }
 }

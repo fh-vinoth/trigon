@@ -6,7 +6,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.trigon.bean.ElementRepoPojo;
 import com.trigon.exceptions.RetryOnException;
-import com.trigon.testbase.TestUtilities;
+
+import com.trigon.reports.ReportManager;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
@@ -29,7 +30,7 @@ import static io.appium.java_client.touch.WaitOptions.waitOptions;
 import static io.appium.java_client.touch.offset.PointOption.point;
 import static java.time.Duration.ofMillis;
 
-public class TestModelCore extends TestUtilities {
+public class TestModelCore extends ReportManager {
 
     private static final Logger logger = LogManager.getLogger(TestModelCore.class);
     protected long startTime;

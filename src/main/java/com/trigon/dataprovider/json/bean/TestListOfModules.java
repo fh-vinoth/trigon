@@ -1,12 +1,23 @@
 package com.trigon.dataprovider.json.bean;
 
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class TestListOfModules {
 
+    @SerializedName("modulename")
+    @Expose
     private String modulename;
+    @SerializedName("authorname")
+    @Expose
     private String authorname;
+    @SerializedName("testdata")
+    @Expose
     private JsonObject testdata;
+
 
     public String getAuthorname() {
         return authorname;

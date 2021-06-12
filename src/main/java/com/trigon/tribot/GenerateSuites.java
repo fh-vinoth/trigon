@@ -14,7 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.trigon.testbase.TestUtilities.cUtils;
+import static com.trigon.reports.ReportManager.cUtils;
+
 
 public class GenerateSuites {
 

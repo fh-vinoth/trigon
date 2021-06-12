@@ -8,8 +8,13 @@ import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.TestMethodReporter;
 import com.trigon.bean.TestModuleReporter;
 import com.trigon.bean.testenv.TestEnv;
+import com.trigon.database.Database;
 import com.trigon.exceptions.TrigonAsserts;
-import com.trigon.testbase.TestUtilities;
+import com.trigon.utils.CommonUtils;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.AndroidElement;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.ios.IOSElement;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -17,6 +22,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 
 import java.awt.*;
@@ -27,8 +33,6 @@ import java.util.List;
 import java.util.*;
 
 import static com.trigon.testbase.TestInitialization.trigonPaths;
-import static com.trigon.testbase.TestUtilities.cUtils;
-import static com.trigon.testbase.TestUtilities.tEnv;
 import static java.awt.Toolkit.getDefaultToolkit;
 import static javax.imageio.ImageIO.write;
 import static org.apache.commons.io.FileUtils.copyFile;
@@ -50,9 +54,89 @@ public class ReportManager {
     protected TrigonAsserts sAssert = new TrigonAsserts();
     protected TestModuleReporter moduleReporter;
     protected static ThreadLocal<JsonWriter> errorWriter = new ThreadLocal<>();
-
-
     protected static String executionType = "local";
+
+    public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
+    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative");
+
+    protected static ThreadLocal<AndroidDriver<AndroidElement>> androidDriverThreadLocal = new ThreadLocal<>();
+    protected static ThreadLocal<IOSDriver<IOSElement>> iosDriverThreadLocal = new ThreadLocal<>();
+    protected static ThreadLocal<RemoteWebDriver> webDriverThreadLocal = new ThreadLocal<>();
+    protected static CommonUtils commonUtils = new CommonUtils();
+    protected static String getSuiteNameWithTime;
+    protected static String platformType;
+    protected static String appType;
+    protected static String suiteParallel;
+    protected static int totalTestModules;
+    protected static String email_receipients=null;
+
+    public static RemoteWebDriver browser() {
+        return webDriverThreadLocal.get();
+    }
+
+    public static AndroidDriver<AndroidElement> android() {
+        return androidDriverThreadLocal.get();
+    }
+
+    public static IOSDriver<IOSElement> ios() {
+        return iosDriverThreadLocal.get();
+    }
+
+    public static TestEnv tEnv() {
+        return envThreadLocal.get();
+    }
+
+    public static CommonUtils cUtils() {
+        return commonUtils;
+    }
+
+    public static Database db;
+
+    public void author_ScenarioName(String author, String scenario) {
+        try{
+            testThreadMethodReporter.get().setTestAuthor(author);
+            testThreadMethodReporter.get().setTestScenarioName(scenario);
+        }catch (Exception e){
+            captureException(e);
+        }
+    }
+    public void author_ScenarioName(String author, String scenario, String verificationPoint) {
+        try{
+            testThreadMethodReporter.get().setTestAuthor(author);
+            testThreadMethodReporter.get().setTestScenarioName(scenario);
+            testThreadMethodReporter.get().setTestVerificationPoint(verificationPoint);
+        }catch (Exception e){
+            captureException(e);
+        }
+    }
+    public void author_ScenarioName(String author, LinkedHashMap tData) {
+        try{
+            testThreadMethodReporter.get().setTestAuthor(author);
+            testThreadMethodReporter.get().setTestScenarioName(tData.get("Scenario").toString());
+        }catch (Exception e){
+            captureException(e);
+        }
+    }
+
+    public void testStatus(String status, String message) {
+        try{
+            testThreadMethodReporter.get().setTestStatus(status);
+            if (status.equalsIgnoreCase("FAIL")) {
+                failAnalysisThread.get().add(message);
+            } else {
+
+            }
+        }catch (Exception e){
+            captureException(e);
+        }
+    }
+
+    public void testTearDown() {
+        if (failAnalysisThread.get().size() > 0) {
+            hardFail("Test Failed !! Fix above failures!! ");
+        }
+    }
+    
     
     public Map<String, Object> createJiraTicket(String bugSummary, String description) {
         String URI = "https://touch2success.atlassian.net/";
@@ -173,8 +257,7 @@ public class ReportManager {
                         classWriter.get().name("testMethodStatus").value("FAILED");
                     }
                     //classWriter.get().name("Step_"+System.nanoTime()).value("PASS:"+message);
-//                    testAction.add("count");
-//                    individualTestStatus.add("PASSED");
+
                 } else if (status.equalsIgnoreCase("FAIL")) {
                     //testStatus1.add(message);
                     logger.error("****FAILED MESSAGE******" + message);
@@ -201,9 +284,6 @@ public class ReportManager {
                     } else {
                         classFailAnalysisThread.get().add(message);
                     }
-                    //Assert.fail(message);
-//                    testStatus1.add("<br/>");
-//                    testAction.add("count");
                 } else if (status.equalsIgnoreCase("INFO")) {
                     logger.info(message);
                     //classWriter.get().name("Step_"+System.nanoTime()).value("INFO:"+message);
@@ -365,14 +445,14 @@ public class ReportManager {
         File screenshot = null;
         String path = null;
         try {
-            if (TestUtilities.browser() != null) {
-                screenshot = ((TakesScreenshot) TestUtilities.browser())
+            if (browser() != null) {
+                screenshot = ((TakesScreenshot) browser())
                         .getScreenshotAs(FILE);
-            } else if (TestUtilities.android() != null) {
-                screenshot = ((TakesScreenshot) TestUtilities.android())
+            } else if (android() != null) {
+                screenshot = ((TakesScreenshot) android())
                         .getScreenshotAs(FILE);
-            } else if (TestUtilities.ios() != null) {
-                screenshot = ((TakesScreenshot) TestUtilities.ios())
+            } else if (ios() != null) {
+                screenshot = ((TakesScreenshot) ios())
                         .getScreenshotAs(FILE);
             }
             StackTraceElement[] stackTrace = Thread.currentThread()
@@ -381,7 +461,6 @@ public class ReportManager {
             tEnv().setScreenshotPath(new File(methodScreeenShotPath));
 
             path = methodScreeenShotPath + "/" + testThreadMethodReporter.get().getTestMethodName() + "" + "_" + "" + stackTrace[5].getMethodName() + "" + "_" + "[" + cUtils().getDateTimeStamp() + "]" + ".png";
-
             copyFile(screenshot, new File((path)));
         } catch (IOException e) {
             captureException(e);
@@ -407,6 +486,8 @@ public class ReportManager {
     }
     
     public void logStepAction(String message) {
+
+        dataToJSONStep("INFO",message);
         logger.info("=================================================================================");
         logger.info("STEP : " + message);
         logger.info("=================================================================================");
@@ -414,6 +495,7 @@ public class ReportManager {
     
 
     public void logScenario(String ScenarioName) {
+        // Create child node
         logger.info("*********************************************************************************");
         logger.info("Scenario : " + ScenarioName);
         logger.info("*********************************************************************************");
@@ -503,7 +585,7 @@ public class ReportManager {
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched"  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "Expected Exact Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched "  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "Expected Exact Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -534,7 +616,7 @@ public class ReportManager {
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched"  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected Partial Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched "  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected Partial Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -565,7 +647,7 @@ public class ReportManager {
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched"  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched "  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -873,6 +955,21 @@ public class ReportManager {
             String data = pGson.toJson(value);
             logger.info("\n" + name + ": \n" + data);
             dataTableMapApi.get().put(name, value);
+        } catch (Exception e) {
+            captureException(e);
+        }
+    }
+
+    protected void dataToJSONStep(String stepStatus, String stepDetails) {
+        try {
+            LinkedHashMap<String, Object> dataMap = new LinkedHashMap<>();
+            dataMap.put("status", stepStatus);
+            dataMap.put("timeStamp", cUtils().getCurrentTimeinMilliSecondsWithColon());
+            dataMap.put("stepDetails", stepDetails);
+            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            String data = pGson.toJson(dataMap);
+            logger.info("\n" + "step" + ": \n" + data);
+            dataTableMapApi.get().put("step", data);
         } catch (Exception e) {
             captureException(e);
         }

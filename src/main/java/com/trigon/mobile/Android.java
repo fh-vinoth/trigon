@@ -1,7 +1,6 @@
 package com.trigon.mobile;
 
 import com.trigon.appcenter.AppCenterBS;
-import com.trigon.testbase.TestUtilities;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +45,7 @@ public class Android extends IOS {
                 androidCaps.setCapability("browserstack.networkLogs", "true");
                 androidCaps.setCapability("browserstack.appiumLogs", "true");
                 //androidCaps.setCapability("browserstack.networkProfile", "4g-lte-good");
-                TestUtilities.androidDriverThreadLocal.set(new AndroidDriver<>(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), androidCaps));
+                androidDriverThreadLocal.set(new AndroidDriver<>(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), androidCaps));
 
             } else {
                 androidCaps.setCapability(MobileCapabilityType.PLATFORM_NAME, ANDROID);
@@ -58,8 +57,8 @@ public class Android extends IOS {
                 androidCaps.setCapability("appActivity",tEnv().getAndroidAppActivity());
                 androidCaps.setCapability("autoDismissAlerts", true);
                 androidCaps.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "10000");
-/*                if (TestUtilities.tEnv().getAndroidLocalAppPath() != null) {
-                    File app = new File(TestUtilities.tEnv().getAndroidLocalAppPath());
+/*                if (tEnv().getAndroidLocalAppPath() != null) {
+                    File app = new File(tEnv().getAndroidLocalAppPath());
                     // androidCaps.setCapability("app", app.getAbsolutePath());
                 }*/
                 if (tEnv().getApp_reset() != null) {
@@ -83,12 +82,12 @@ public class Android extends IOS {
                 }
                 androidDriverThreadLocal.set(new AndroidDriver<>(new URL(tEnv().getAppiumURL()), androidCaps));
             }
-            TestUtilities.android().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+            android().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
             logger.info("*****************************************");
             logger.info("Android Native App Launched Successfully in Device " + tEnv().getAndroidDevice());
             logger.info("*****************************************");
             long endTime = System.currentTimeMillis();
-            logger.info("Time Taken to Launch Android Native App: : " + TestUtilities.cUtils().getRunDuration(startTime, endTime));
+            logger.info("Time Taken to Launch Android Native App: : " + cUtils().getRunDuration(startTime, endTime));
         } catch (Exception e) {
             captureException(e);
             hardFail("Failed to Launch Android Device : "+tEnv().getAndroidDevice() +" Check your Test Parameters");        }
@@ -122,5 +121,8 @@ public class Android extends IOS {
         return buildData;
     }
 
+    private void getAndroidRandomDevice(){
+
+    }
 
 }

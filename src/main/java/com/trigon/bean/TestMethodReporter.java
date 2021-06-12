@@ -10,6 +10,7 @@ public class TestMethodReporter implements Serializable {
 
 
     private String testScenarioName = "Positive Scenario";
+    private String testVerificationPoint = "Not Provided";
     private String testAuthor = "Automation";
     private String testExecutionTime = "None";
     private String testStatus = "SKIPPED";
@@ -80,5 +81,13 @@ public class TestMethodReporter implements Serializable {
 
     public void setTestSteps(List<JsonObject> testSteps) {
         this.testSteps = testSteps;
+    }
+
+    public String getTestVerificationPoint() {
+        return testVerificationPoint;
+    }
+
+    public void setTestVerificationPoint(String testVerificationPoint) {
+        this.testVerificationPoint = testVerificationPoint;
     }
 }

@@ -70,10 +70,10 @@
     }
   },
   "db_config": {
-    "dbHost": "sit-rds-writer.foodhub.local",
+    "dbHost": "nonprod-rds-writer.foodhub.local",
     "dbUserName": "ssostag",
     "dbPassword": "sskDwm8X",
-    "dbSSHHost": "bastion.stage.t2sonline.com",
+    "dbSSHHost": "us-east-1-bastion.stage.t2sonline.com",
     "dbSSHUser": "qa",
     "dbSSHFilePath": "",
     "dbName": "sit_foxy_project56"

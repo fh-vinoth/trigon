@@ -8,7 +8,7 @@ import com.google.gson.stream.JsonWriter;
 import com.trigon.bean.TestMethodReporter;
 import com.trigon.bean.TestModuleReporter;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
-import com.trigon.database.SSHSQLConnection;
+import com.trigon.email.SendEmail;
 import com.trigon.email.TriggerEmailImpl;
 import com.trigon.reports.ReportGenerator;
 import com.trigon.testrail.BaseMethods;
@@ -23,9 +23,7 @@ import org.testng.xml.XmlTest;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 
 public class TestController extends TestInitialization {
@@ -80,14 +78,15 @@ public class TestController extends TestInitialization {
                                          @Optional String URI, @Optional String version, @Optional String token,
                                          @Optional String store, @Optional String host, @Optional String locale,
                                          @Optional String region, @Optional String country, @Optional String currency,
-                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId) {
+                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId ,@Optional String test_region) {
         try {
             if (platformType != null) {
-                dBThreadLocal.set(new SSHSQLConnection());
+
+
                 moduleReporter = new TestModuleReporter();
                 moduleReporter.setTestModuleStartTime(System.currentTimeMillis());
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
-                setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId);
+                setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region);
                 testModuleCollection(Thread.currentThread().getId(), xmlTest.getName(), testEnvPath);
             }
 
@@ -103,21 +102,18 @@ public class TestController extends TestInitialization {
                                        @Optional String URI, @Optional String version, @Optional String token,
                                        @Optional String store, @Optional String host, @Optional String locale,
                                        @Optional String region, @Optional String country, @Optional String currency,
-                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId) {
+                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region) {
         try {
-            dBThreadLocal.set(new SSHSQLConnection());
             errorWriter.set(new JsonWriter(new BufferedWriter(new FileWriter("errors/errors_" + System.getProperty("user.name") + "_" + System.getProperty("os.name"), true))));
             errorWriter.get().setLenient(true);
             errorWriter.get().setIndent(" ");
             errorWriter.get().beginArray();
             classFailAnalysisThread.set(new ArrayList<>());
             logger.info("Test Execution Started for Class  : " + getClass().getSimpleName());
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId);
+            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region);
             classCollection(getClass().getName(), xmlTest.getName(), testEnvPath);
-            //createClassNodes(context, xmlTest);
             remoteBrowserInit(context, xmlTest);
             remoteMobileInit(context, xmlTest);
-
         } catch (Exception e) {
             captureException(e);
         }
@@ -130,13 +126,13 @@ public class TestController extends TestInitialization {
                          @Optional String URI, @Optional String version, @Optional String token,
                          @Optional String store, @Optional String host, @Optional String locale,
                          @Optional String region, @Optional String country, @Optional String currency,
-                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId) {
+                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region) {
         logger.info("Test Execution Started for Method : " + method.getName());
         try {
-            dBThreadLocal.set(new SSHSQLConnection());
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId);
+            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region);
+            //dBThreadLocal.set(new SSHSQLConnection());
             setMobileLocator();
             setWebLocator();
             failAnalysisThread.set(new ArrayList<>());
@@ -160,14 +156,9 @@ public class TestController extends TestInitialization {
                 String clsReplaced = cls.replaceAll("\\.","/");
                 String finalPath = "src/test/java/"+clsReplaced;
                 logger.info("testdata path is identified as "+finalPath);
-                apiInputData = getApiInputs(finalPath);
+                //apiInputData = getApiInputs(finalPath);
             }
 
-//            if (context.getIncludedGroups().length > 0) {
-//                for (String abc : context.getIncludedGroups()) {
-//                    parentTest.get().assignCategory(abc);
-//                }
-//            }
 
         } catch (Exception e) {
             captureException(e);
@@ -204,6 +195,7 @@ public class TestController extends TestInitialization {
             testThreadMethodReporter.get().setTestAnalysis(failAnalysisThread.get());
             classWriter.get().name("testMethodAuthorName").value(testThreadMethodReporter.get().getTestAuthor());
             classWriter.get().name("testMethodScenario").value(testThreadMethodReporter.get().getTestScenarioName());
+            classWriter.get().name("testVerificationPoint").value(testThreadMethodReporter.get().getTestVerificationPoint());
             classWriter.get().name("testMethodStatus").value(testThreadMethodReporter.get().getTestStatus());
             if (testThreadMethodReporter.get().getTestAnalysis().size() > 0) {
                 classWriter.get().name("testMethodAnalysis").beginArray();
@@ -233,7 +225,7 @@ public class TestController extends TestInitialization {
             classWriter.get().name("testMethodDuration").value(cUtils().getRunDuration(testThreadMethodReporter.get().getTestMethodStartTime(), System.currentTimeMillis()));
             classWriter.get().endObject().flush();
             logger.info("Test Execution Finished for Method : " + method.getName());
-            //flushAll();
+
             failAnalysisThread.remove();
         } catch (Exception e) {
             captureException(e);
@@ -247,10 +239,11 @@ public class TestController extends TestInitialization {
             classWriter.get().endArray().endObject().flush();
             classWriter.get().close();
             logger.info("Test Execution Finished for Class  : " + getClass().getSimpleName());
-            //flushAll();
+
             closeBrowserClassLevel();
             closeMobileClassLevel();
             classWriter.remove();
+            classFailAnalysisThread.remove();
             errorWriter.get().endArray().flush();
         } catch (Exception e) {
             captureException(e);
@@ -297,9 +290,11 @@ public class TestController extends TestInitialization {
         } finally {
             ReportGenerator rg = new ReportGenerator();
             rg.generateHTMLReports(trigonPaths.getTestResultsPath());
-//            SendEmail sendEmail = new SendEmail();
-//            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(),"automation@touch2success.com","true","false","false");
-            logger.info("Successfully Generated HTML Reports Refer to the path:" + trigonPaths.getTestResultsPath());
+            if(email_receipients!=null){
+                SendEmail sendEmail = new SendEmail();
+                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(),email_receipients,"false","false","false");
+
+            }
 
             TriggerEmailImpl TriggerEmailImpl = new  TriggerEmailImpl();
             TriggerEmailImpl.uploadErrorsToAWS();

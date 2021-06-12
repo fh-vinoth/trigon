@@ -33,7 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static com.trigon.testbase.TestUtilities.cUtils;
+import static com.trigon.reports.ReportManager.cUtils;
+
 
 public class TriggerEmailImpl implements ITriggerEmail {
 
@@ -261,7 +262,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
 
         JSONParser parser = new JSONParser();
-        Map<String, Object> obj = (HashMap) parser.parse(new FileReader(reportPath + File.separator + "SupportFiles" + "/" + "EmailBodyReport.json"));
+        Map<String, Object> obj = (HashMap) parser.parse(new FileReader(reportPath + File.separator + "SupportFiles/HTML" + "/" + "emailBody.json"));
 
         JSONObject jsonObject = (JSONObject) obj;
 
@@ -305,13 +306,13 @@ public class TriggerEmailImpl implements ITriggerEmail {
             e.printStackTrace();
         }
 
-        if(uploadToAWS.equalsIgnoreCase("true")) {
+//        if(uploadToAWS.equalsIgnoreCase("true")) {
+//            writer.append(String.valueOf(jsonObject.get("body")));
+//        }
+
+        if (jsonObject.get("body") != null) {
+
             writer.append(String.valueOf(jsonObject.get("body")));
-        }
-
-        if (jsonObject.get("emailReport") != null) {
-
-            writer.append(String.valueOf(jsonObject.get("emailReport")));
         }
 
 
@@ -324,7 +325,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
         try {
             if(uploadToAWS.equalsIgnoreCase("true")){
-                if ((jsonObject.get("emailReport") != null)){
+                if ((jsonObject.get("body") != null)){
                     TransferManager xfer_mgr = TransferManagerBuilder.standard().withS3Client(s3Client).build();
                     String[] folderName = reportPath.split("/");
                     int folderlength = folderName.length;
@@ -334,20 +335,19 @@ public class TriggerEmailImpl implements ITriggerEmail {
                             folderName[folderlength - 1], new File(reportPath), true);
                     XferMgrProgress.showTransferProgress(xfer);
                     XferMgrProgress.waitForCompletion(xfer);
-                    String attachment = reportPath +"/DetailedReport/index.html";
-                    System.out.println("Reports are Picked from " + reportPath);
+//                    String attachment = reportPath +"/DetailedReport/index.html";
+//                    System.out.println("Reports are Picked from " + reportPath);
                     System.out.println("Pushed Reports to S3 Bucket successfully....");
-                    System.out.println("File adding to Attachment "+attachment);
                     System.out.println("Started Sending Email to "+recipients+" !! Please wait.. It takes a while based on your Network");
 
 
-                    File f = new File(attachment);
-                    long fileSize = f.length();
-                    if(fileSize<=24000000){
-                        addAttachment(multipart,attachment);
-                    }else{
-                        System.out.println("Detailed Report Size is greater than 24MB! Hence Skipping attachment");
-                    }
+//                    File f = new File(attachment);
+//                    long fileSize = f.length();
+//                    if(fileSize<=24000000){
+//                        addAttachment(multipart,attachment);
+//                    }else{
+//                        System.out.println("Detailed Report Size is greater than 24MB! Hence Skipping attachment");
+//                    }
 
 
                     Transport.send(message);
@@ -356,18 +356,18 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
 
             }else{
-                if ((jsonObject.get("emailReport") != null)){
+                if ((jsonObject.get("body") != null)){
                     System.out.println("Alert!!!!! uploadToAWS is Configured as false!!!!");
-                    String attachment = reportPath +"/DetailedReport/index.html";
-                    System.out.println("File adding to Attachment "+attachment);
-                    System.out.println("Started Sending Email to "+recipients+" !! Please wait.. It takes a while based on your Network");
-                    File f = new File(attachment);
-                    long fileSize = f.length();
-                    if(fileSize<=24000000){
-                        addAttachment(multipart,attachment);
-                    }else{
-                        System.out.println("Detailed Report Size is greater than 24MB! Hence Skipping attachment");
-                    }
+//                    String attachment = reportPath +"/DetailedReport/index.html";
+//                    System.out.println("File adding to Attachment "+attachment);
+//                    System.out.println("Started Sending Email to "+recipients+" !! Please wait.. It takes a while based on your Network");
+//                    File f = new File(attachment);
+//                    long fileSize = f.length();
+//                    if(fileSize<=24000000){
+//                        addAttachment(multipart,attachment);
+//                    }else{
+//                        System.out.println("Detailed Report Size is greater than 24MB! Hence Skipping attachment");
+//                    }
                     Transport.send(message);
                     System.out.println("Email Triggered successfully to Recipients " + recipients);
                 }
@@ -409,7 +409,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
 
         JSONParser parser = new JSONParser();
-        Map<String, Object> obj = (HashMap) parser.parse(new FileReader(reportPath + File.separator + "SupportFiles" + "/" + "CustomReport.json"));
+        Map<String, Object> obj = (HashMap) parser.parse(new FileReader(reportPath + File.separator + "SupportFiles/HTML" + "/" + "CustomReport.json"));
 
         JSONObject jsonObject = (JSONObject) obj;
 

@@ -31,6 +31,7 @@ public class TestEnv {
     private String webBuildNumber;
 
     private String app_reset;
+    private String random_device;
     private String androidAppPackage;
     private String androidAppActivity;
     private String androidDevice;
@@ -71,6 +72,7 @@ public class TestEnv {
     private File pagesJsonFile;
     private String currentTestMethodName;
     private File screenshotPath;
+
 
     public String getTestType() {
         return testType;
@@ -246,6 +248,14 @@ public class TestEnv {
 
     public void setApp_reset(String app_reset) {
         this.app_reset = app_reset;
+    }
+
+    public String getRandom_device() {
+        return random_device;
+    }
+
+    public void setRandom_device(String random_device) {
+        this.random_device = random_device;
     }
 
     public String getAndroidAppPackage() {
@@ -498,4 +508,7 @@ public class TestEnv {
     public void setScreenshotPath(File screenshotPath) {
         this.screenshotPath = screenshotPath;
     }
+
+
+
 }

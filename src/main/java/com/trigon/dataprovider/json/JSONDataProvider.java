@@ -12,8 +12,6 @@ import java.io.FileReader;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static com.trigon.testbase.TestUtilities.cUtils;
-import static com.trigon.testbase.TestUtilities.tEnv;
 
 public class JSONDataProvider extends ReportManager {
     private static final Logger logger = LogManager.getLogger(JSONDataProvider.class);
@@ -22,19 +20,23 @@ public class JSONDataProvider extends ReportManager {
     public Object[][] getJsonData(String methodName) {
         Object[][] dataProvider = null;
         try {
-            System.out.println(tEnv().getJsonDirectory());
-            List<File> allFiles = cUtils().listAllFiles(new File(tEnv().getJsonDirectory()));
-            for (File file : allFiles) {
-                if (!file.isDirectory()) {
-                    if (file.getName().contains(".json")) {
-                        dataProvider = searchForMethod(methodName, String.valueOf(file));
-                        if (dataProvider != null) {
-                            logger.info("Identified Method " + methodName + " in File " + file);
-                            break;
+            if(tEnv().getJsonFilePath() == null){
+                List<File> allFiles = cUtils().listAllFiles(new File(tEnv().getJsonDirectory()));
+                for (File file : allFiles) {
+                    if (!file.isDirectory()) {
+                        if (file.getName().contains(".json")) {
+                            dataProvider = searchForMethod(methodName, String.valueOf(file));
+                            if (dataProvider != null) {
+                                logger.info("Identified Method " + methodName + " in File " + file);
+                                break;
+                            }
                         }
                     }
                 }
+            }else{
+                dataProvider = searchForMethod(methodName, tEnv().getJsonFilePath());
             }
+
 
         } catch (Exception e) {
             captureException(e);
@@ -55,8 +57,11 @@ public class JSONDataProvider extends ReportManager {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
             JsonElement jsonElement = JsonParser.parseReader(new FileReader(path));
+            System.out.println(jsonElement);
             TestModules bean = gson.fromJson(jsonElement, TestModules.class);
+            System.out.println(bean.getModules().size());
             JsonArray executableCases = new JsonArray();
+            System.out.println(bean.getModules());
             if (bean.getModules().size() > 0) {
                 for (int i = 0; i < bean.getModules().size(); i++) {
                     if ((counter == 0) && bean.getModules().get(i).getTestdata().getAsJsonObject().has(methodName)) {

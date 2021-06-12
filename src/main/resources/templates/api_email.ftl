@@ -113,16 +113,13 @@
                         <#list failSummary as fsummary>
                             <tr style="text-align: center">
                                 <#if fsummary.testStatus == "FAILED">
-                                    <td style="width: 8%;"><span
-                                                style="display: block;width: 50px;height: 50px;border-radius: 50%;border: 2px;background: #FF0000;margin-left: 30px;"></span>
-                                    </td>
+                                    <td style="width: 8%;"><div><img src="https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png" height="60" width="60" alt="fail"></div></td>
                                 <#else>
-                                    <td style="width: 8%;"><span
-                                                style="display: block;width: 50px;height: 50px;border-radius: 50%;border: 2px;background: #6849a0;margin-left: 30px;"></span>
-                                    </td>
+                                    <td style="width: 8%;"><div><img src="https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/skip.png" height="60" width="60" alt="skip"></div></td>
                                 </#if>
                                 <td style="word-break: break-all; width: 30%;">
                                     ${fsummary.testMethod}
+                                    <div>${fsummary.testModule}</div>
                                 </td>
                                 <td colspan="3"
                                     style="word-break: break-word; width: 60%;padding-left: 15px;text-align: justify; text-justify: inter-word;">
@@ -178,17 +175,11 @@
                                                 <table style="width: 95%;border-radius: 10px;background: #314e4e;overflow: hidden;border-collapse: collapse;table-layout: auto;overflow-x:auto;  margin-left: auto; margin-right: auto;">
                                                     <tr style="padding-top: 15px;">
                                                         <#if tMethodData.testMethodStatus == "FAILED">
-                                                            <td style="width: 8%;"><span
-                                                                        style="display: block;width: 50px;height: 50px;border-radius: 50%;border: 2px ;background: #FF0000;margin-left: 30px;"></span>
-                                                            </td>
+                                                            <td style="width: 8%;"><div><img src="https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png" height="60" width="60" alt="fail"></div></td>
                                                         <#elseif tMethodData.testMethodStatus == "SKIPPED">
-                                                            <td style="width: 8%;"><span
-                                                                        style="display: block;width: 50px;height: 50px;border-radius: 50%;border: 2px ;background: #6849a0;margin-left: 30px;"></span>
-                                                            </td>
+                                                            <td style="width: 8%;"><div><img src="https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/skip.png" height="60" width="60" alt="skip"></div></td>
                                                         <#else>
-                                                            <td style="width: 8%;"><span
-                                                                        style="display: block;width: 50px;height: 50px;border-radius: 50%;border: 2px ;background: #17ce17;margin-left: 30px;"></span>
-                                                            </td>
+                                                            <td style="width: 8%;"><div><img src="https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/pass.png" height="60" width="60" alt="pass"></div></td>
                                                         </#if>
                                                         <td style="width: 32%;word-break: break-all;text-align: justify; text-justify: inter-word;">
                                                             <div style="font-weight: bold;font-size: 14px;">Method :
@@ -201,6 +192,7 @@
                                                                 <div style="font-weight: bold;color: #e9e6e6">Module
                                                                     Under Test:
                                                                 </div>
+
                                                                 <div>${tclassData.testClassName}</div>
                                                             </div>
 

@@ -1,4 +1,4 @@
-package com.fh.unittests.api;
+package com.fh.api;
 
 import com.fh.core.TestLocalController;
 import org.testng.annotations.Test;

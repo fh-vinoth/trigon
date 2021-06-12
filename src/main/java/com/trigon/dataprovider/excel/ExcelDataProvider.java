@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.trigon.testbase.TestUtilities.cUtils;
-import static com.trigon.testbase.TestUtilities.tEnv;
+
 
 public class ExcelDataProvider extends ReportManager {
     private static final Logger logger = LogManager.getLogger(ExcelDataProvider.class);

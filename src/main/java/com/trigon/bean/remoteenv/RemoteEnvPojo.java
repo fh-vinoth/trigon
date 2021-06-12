@@ -25,6 +25,12 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("app_reset")
     @Expose
     private String app_reset;
+    @SerializedName("random_device")
+    @Expose
+    private String random_device;
+    @SerializedName("email_recipients")
+    @Expose
+    private String email_recipients;
     @SerializedName("products")
     @Expose
     private JsonObject products;
@@ -94,5 +100,21 @@ public class RemoteEnvPojo implements Serializable {
 
     public void setDb_config(JsonObject db_config) {
         this.db_config = db_config;
+    }
+
+    public String getRandom_device() {
+        return random_device;
+    }
+
+    public void setRandom_device(String random_device) {
+        this.random_device = random_device;
+    }
+
+    public String getEmail_recipients() {
+        return email_recipients;
+    }
+
+    public void setEmail_recipients(String email_recipients) {
+        this.email_recipients = email_recipients;
     }
 }

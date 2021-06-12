@@ -1,7 +1,7 @@
 package com.trigon.mobile;
 
 import com.trigon.appcenter.AppCenterBS;
-import com.trigon.testbase.TestUtilities;
+import com.trigon.reports.ReportManager;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 
-public class IOS extends TestUtilities {
+public class IOS extends ReportManager {
     private static final Logger logger = LogManager.getLogger(IOS.class);
 
     protected void nativeiOS(ITestContext context, XmlTest xmlTest) {

@@ -2,7 +2,7 @@ package com.trigon.mobile;
 
 
 import com.trigon.bean.PropertiesPojo;
-import com.trigon.testbase.TestUtilities;
+
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
@@ -12,6 +12,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
 
 import java.io.File;
+
+import static com.trigon.reports.ReportManager.cUtils;
+import static com.trigon.reports.ReportManager.tEnv;
 
 
 public class AppiumManager {
@@ -40,7 +43,7 @@ public class AppiumManager {
             builder.withCapabilities(cap);
             builder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
             builder.withArgument(GeneralServerFlag.LOG_LEVEL, "error");
-            if (TestUtilities.tEnv().getAppType().equalsIgnoreCase("ios")) {
+            if (tEnv().getAppType().equalsIgnoreCase("ios")) {
                 // builder.withEnvironment(env);
                 builder.usingDriverExecutable(new File("/usr/local/bin/node"));
                 builder.withAppiumJS(new File("/Applications/Appium.app/Contents/Resources/app/node_modules/appium/build/lib/main.js"));
@@ -64,9 +67,9 @@ public class AppiumManager {
 
             long endTime1 = System.currentTimeMillis();
             logger.info("******************************************************");
-            logger.info("STARTED APPIUM SUCCESSFULLY in " + TestUtilities.cUtils().getRunDuration(startTime1, endTime1));
+            logger.info("STARTED APPIUM SUCCESSFULLY in " + cUtils().getRunDuration(startTime1, endTime1));
             logger.info("APPIUM STARTED AT URL : " + service.getUrl().toString());
-            TestUtilities.tEnv().setAppiumURL(service.getUrl().toString());
+            tEnv().setAppiumURL(service.getUrl().toString());
             logger.info("******************************************************");
 
         } catch (Exception e) {
@@ -147,7 +150,7 @@ public class AppiumManager {
                 service.stop();
                 long endTime2 = System.currentTimeMillis();
                 logger.info("******************************************************");
-                logger.info("Appium Stopped Successfully in " + TestUtilities.cUtils().getRunDuration(startTime2, endTime2));
+                logger.info("Appium Stopped Successfully in " + cUtils().getRunDuration(startTime2, endTime2));
                 logger.info("******************************************************");
             } catch (Exception e) {
                 if (service.isRunning()) {
