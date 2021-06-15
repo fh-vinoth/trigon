@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="GenerateHTMLReports">
+    <test name="GenerateHTMLReportsUtility">
+        <parameter name="path"
+                   value="src/test/resources/TestResults/API_Common_2021-06-10-163106"></parameter>
+        <classes>
+            <class name="com.trigon.reports.ReportGenerator"/>
+        </classes>
+    </test>
+</suite>

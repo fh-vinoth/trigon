@@ -104,6 +104,8 @@ public class Browsers extends Android {
         caps.setCapability("browserstack.console", "errors");
         caps.setCapability("browserstack.idleTimeout", "300");
         caps.setCapability("browserstack.autoWait", "50");
+        caps.setCapability("language", "en");
+        caps.setCapability("locale", "en");
         try {
             webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), caps));
         } catch (Exception e) {

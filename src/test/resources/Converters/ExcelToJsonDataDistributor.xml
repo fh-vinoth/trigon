@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="ExcelToJsonToSplitDataProvider">
+    <test name="ExcelToJsonToSplitDataProvider">
+        <!-- Ensure that TestName and ExecuteTest is added to Spreadsheet in first row -->
+        <parameter name="path" value="src/test/resources/TestData/consumermenuset1.xlsx"></parameter>
+        <parameter name="distributeCount" value="1"></parameter>
+        <parameter name="testType" value="API"></parameter>
+        <parameter name="classNameWithPackage" value="com.fh.api.integrationtests.FalconAPI.consumermenu.GetConsumerMenu"></parameter>
+        <classes>
+            <class name="com.trigon.dataprovider.json.ExcelToJsonDataDistributor"/>
+        </classes>
+    </test>
+</suite>

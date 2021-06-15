@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="GetListOfProjectIds_Suite">
+    <test name="GetListOfProjectIds_Test">
+        <classes>
+            <class name="com.trigon.testrail.GetListOfProjects"/>
+        </classes>
+    </test>
+</suite>

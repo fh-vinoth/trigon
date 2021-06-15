@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="DownloadDrivers">
+    <test name="DownloadDrivers">
+        <classes>
+            <class name="com.trigon.utils.DownloadWebDrivers"/>
+        </classes>
+    </test>
+</suite>

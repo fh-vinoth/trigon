@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="SendOfflineReports">
+    <test name="SendOfflineReportsToEmail">
+        <!-- Add recipients as comma separated -->
+        <parameter name="recipients"
+                          value="bhaskar.marrikunta@foodhub.com"></parameter>
+                <!-- Dont Include Sub folder path in reportsPath-->
+        <parameter name="reportPath"
+                   value="/Users/bhaskarreddy/Desktop/Data/Automation/Development/trigon/src/test/resources/TestResults/Web_FrameworkTest_2021-06-01-131957"/>
+        <parameter name="uploadToAWS" value="false"/>
+        <parameter name="regenerateTestReport" value="false"/>
+        <parameter name="sendFailedReport" value="false"/>
+        <classes>
+            <class name="com.trigon.email.SendEmail"/>
+        </classes>
+    </test>
+</suite>

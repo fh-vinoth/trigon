@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="ExcelToJson">
+    <test name="ExcelToJsonModule">
+        <!-- Add either Directory Or Single File -->
+        <parameter name="path"
+                   value="src/test/resources/TestData"></parameter>
+        <classes>
+            <class name="com.trigon.dataprovider.json.ExcelToJsonConverter"/>
+        </classes>
+    </test>
+</suite>

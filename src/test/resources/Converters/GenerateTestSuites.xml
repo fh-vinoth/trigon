@@ -1,0 +1,23 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="GenerateTestSuites">
+    <test name="MYT_IOS_Suite1">
+<!--        Provide the tests Path where you have includes all your test modules-->
+        <parameter name="path" value="src/test/java/com/fh/api"></parameter>
+        <parameter name="suiteName" value="MYT_IOS_Test1"></parameter>
+<!--        The Parameter includeGroups is Optional, If you want to run all tests remove this parameter while generating suites-->
+        <parameter name="includeGroups" value="sanity"></parameter>
+        <classes>
+            <class name="com.trigon.tribot.GenerateSuites"/>
+        </classes>
+    </test>
+    <test name="MYT_Android_Suite1">
+        <!--        Provide the tests Path where you have includes all your test modules-->
+        <parameter name="path" value="src/test/java/com/fh/api"></parameter>
+        <parameter name="suiteName" value="MYT_Android_Test1"></parameter>
+        <!--        The Parameter includeGroups is Optional, If you want to run all tests remove this parameter while generating suites-->
+
+        <classes>
+            <class name="com.trigon.tribot.GenerateSuites"/>
+        </classes>
+    </test>
+</suite>
