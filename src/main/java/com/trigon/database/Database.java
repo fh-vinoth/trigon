@@ -108,9 +108,11 @@ public class Database extends TrigonUtils {
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             logger.info("Executed Query Statement " + query);
+            logger.info("The Result Set is  " + rs.toString());
             while (rs.next()) {
                 resultArray = rs.getString(value);
             }
+            logger.info("The Result Array is  " + resultArray);
         } catch (Exception var6) {
             var6.printStackTrace();
 
@@ -118,9 +120,11 @@ public class Database extends TrigonUtils {
             try {
                 if (stmt != null) {
                     stmt.close();
+                    logger.info("Closing Statement");
                 }
                 if (connection != null && !connection.isClosed()) {
                     connection.close();
+                    logger.info("Closing DB Connection");
                 }
                 if (session != null && session.isConnected()) {
                     logger.info("Closing SSH Connection");

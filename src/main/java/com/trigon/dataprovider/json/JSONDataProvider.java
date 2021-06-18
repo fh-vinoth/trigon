@@ -57,9 +57,7 @@ public class JSONDataProvider extends ReportManager {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
             JsonElement jsonElement = JsonParser.parseReader(new FileReader(path));
-            System.out.println(jsonElement);
             TestModules bean = gson.fromJson(jsonElement, TestModules.class);
-            System.out.println(bean.getModules().size());
             JsonArray executableCases = new JsonArray();
             System.out.println(bean.getModules());
             if (bean.getModules().size() > 0) {

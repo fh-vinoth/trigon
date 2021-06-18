@@ -129,16 +129,19 @@ public class Browsers extends Android {
     }
 
     protected void closeMobileClassLevel() {
-        if (webApps.contains(tEnv().getTestType())) {
+        if (mobileApps.contains(tEnv().getTestType())) {
             try {
                 if (ios() != null) {
                     ios().getSessionId();
+                    logger.info("IOS Session ID"+ ios().getSessionId());
                     JavascriptExecutor jse = ios();
-                    if(classFailAnalysisThread.get().size()>0){
-                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                    if (executionType.equalsIgnoreCase("remote")) {
+                        if (classFailAnalysisThread.get().size() > 0) {
+                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
 
-                    }else {
-                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
+                        } else {
+                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
+                        }
                     }
                     ios().quit();
                     logger.info("IOS App Quit Successful");
@@ -150,12 +153,15 @@ public class Browsers extends Android {
             try {
                 if (android() != null) {
                     android().getSessionId();
+                    logger.info("Android Session ID"+ android().getSessionId());
                     JavascriptExecutor jse = android();
-                    if(classFailAnalysisThread.get().size()>0){
-                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                    if (executionType.equalsIgnoreCase("remote")) {
+                        if (classFailAnalysisThread.get().size() > 0) {
+                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
 
-                    }else {
-                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
+                        } else {
+                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
+                        }
                     }
                     android().quit();
                     logger.info("Android App Quit Successful");
@@ -183,16 +189,18 @@ public class Browsers extends Android {
                     //browser().close();
                     browser().getSessionId();
                     JavascriptExecutor jse = browser();
-                    logger.info("Browser Session is closed");
-                    if(classFailAnalysisThread.get().size()>0){
-                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
 
-                    }else {
-                        jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
+                    if (executionType.equalsIgnoreCase("remote")){
+                        if(classFailAnalysisThread.get().size()>0){
+                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
 
+                        }else {
+                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
+
+                        }
                     }
-
                     browser().quit();
+                    logger.info("Browser Session is closed");
                 }
             } catch (Exception e) {
                 captureException(e);

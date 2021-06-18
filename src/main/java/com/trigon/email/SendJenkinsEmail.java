@@ -22,7 +22,7 @@ public class SendJenkinsEmail {
         }
 
         if(reportPath != null){
-            email.triggerEmail(reportPath, "automation@touch2success.com","true","NA","true");
+            email.triggerEmail(reportPath, "srikrishna.n@foodhub.com,bhaskar.marrikunta@foodhub.com,arun.m@foodhub.com","true","NA","true");
         }
 
     }

@@ -69,6 +69,8 @@ public class ReportManager {
     protected static String suiteParallel;
     protected static int totalTestModules;
     protected static String email_receipients=null;
+    protected static String error_email_receipients=null;
+    protected static String failure_email_receipients=null;
 
     public static RemoteWebDriver browser() {
         return webDriverThreadLocal.get();

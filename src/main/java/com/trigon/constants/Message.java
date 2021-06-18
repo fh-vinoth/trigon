@@ -1,7 +1,7 @@
 package com.trigon.constants;
 
 public class Message {
-    public static final String ELEMENT_NOT_FOUND = "Element Not Found in the page/screen !! Check TestCase Flow and Previous Step Once : ";
+    public static final String ELEMENT_NOT_FOUND = "Failed at element : ";
     public static final String TIME_TAKEN_TO_IDENTIFY_ELEMENT = "Time Taken to Identify a element : ";
     public static final String TIME_TAKEN_TO_PERFORM_ACTION_ELEMENT = "Time Taken to Perform Action to a element : ";
     public static final String ELEMENT_WAIT_0 = "Element Wait Configured as 0: Recheck wait if it is intended as 0 or not";
