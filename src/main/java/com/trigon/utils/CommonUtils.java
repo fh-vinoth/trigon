@@ -372,10 +372,10 @@ public class CommonUtils {
                 }
             }
             deleted = dir.delete();
-            logger.info(deleted ? "Folder Deleted Successfully" : "Folder Delete was unsuccessful");
+          //  logger.info(deleted ? "Folder Deleted Successfully" : "Folder Delete was unsuccessful");
         } else {
             deleted = dir.delete();
-            logger.info(deleted ? "File Deleted Successfully" : "File Delete was unsuccessful");
+           // logger.info(deleted ? "File Deleted Successfully" : "File Delete was unsuccessful");
 
         }
     }

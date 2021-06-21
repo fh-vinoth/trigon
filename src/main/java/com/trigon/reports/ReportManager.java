@@ -135,7 +135,7 @@ public class ReportManager {
 
     public void testTearDown() {
         if (failAnalysisThread.get().size() > 0) {
-            hardFail("Test Failed !! Fix above failures!! ");
+            Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
         }
     }
     
@@ -490,17 +490,17 @@ public class ReportManager {
     public void logStepAction(String message) {
 
         dataToJSONStep("INFO",message);
-        logger.info("=================================================================================");
+        //logger.info("=================================================================================");
         logger.info("STEP : " + message);
-        logger.info("=================================================================================");
+        //logger.info("=================================================================================");
     }
     
 
     public void logScenario(String ScenarioName) {
         // Create child node
-        logger.info("*********************************************************************************");
+        //logger.info("*********************************************************************************");
         logger.info("Scenario : " + ScenarioName);
-        logger.info("*********************************************************************************");
+        //logger.info("*********************************************************************************");
     }
 
     protected void customAssertEqualsApi(String actual, String expected, String testType) {
@@ -887,10 +887,10 @@ public class ReportManager {
         Assert.fail(message);
     }
 
-    protected void hardFail(Exception message) {
-        message.printStackTrace();
-        logReport("FAIL", message.getMessage());
-        Assert.fail(message.getMessage());
+    protected void hardFail(Exception e) {
+        logReport("FAIL", e.getMessage());
+        e.printStackTrace();
+        Assert.fail(e.getMessage());
     }
 
     protected void hardFail() {
@@ -940,7 +940,10 @@ public class ReportManager {
             if (value.equals("FAILED")) {
                 logger.error(name + " : " + value);
             } else {
-                logger.info(name + " : " + value);
+
+                if(tEnv().getTestType().equalsIgnoreCase("API")){
+                    logger.info(name + " : " + value);
+                }
             }
             if(dataTableMapApi.get()!=null){
                 dataTableMapApi.get().put(name, value);
@@ -970,7 +973,7 @@ public class ReportManager {
             dataMap.put("stepDetails", stepDetails);
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             String data = pGson.toJson(dataMap);
-            logger.info("\n" + "step" + ": \n" + data);
+            //logger.info("\n" + "step" + ": \n" + data);
             dataTableMapApi.get().put("step", data);
         } catch (Exception e) {
             captureException(e);

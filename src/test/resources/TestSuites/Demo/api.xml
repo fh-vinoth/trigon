@@ -11,11 +11,7 @@
         </classes>
     </test>
 
-    <test name="API-Endpoint_Automation_Category1">
-        <classes>
-            <class name="com.fh.unittests.database.Queries1"/>
-        </classes>
-    </test>
+
 
 </suite>
 

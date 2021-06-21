@@ -40,7 +40,6 @@ public class TestModelCore extends ReportManager {
     private String locatorString(String s) {
         String locator = s;
         try {
-            long startTime5 = System.currentTimeMillis();
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
             ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
@@ -55,9 +54,6 @@ public class TestModelCore extends ReportManager {
 //            }
 //
 //            locator = jsonArray.get(0).toString();
-
-            logger.info("Picked locator for the element : " + s + " : " + locator);
-            logger.info("Time taken to pick element from JSON" + cUtils().getRunDuration(startTime5, System.currentTimeMillis()));
         } catch (Exception e) {
             captureException(e);
         }

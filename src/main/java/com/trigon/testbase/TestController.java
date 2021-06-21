@@ -290,10 +290,15 @@ public class TestController extends TestInitialization {
         } finally {
             ReportGenerator rg = new ReportGenerator();
             rg.generateHTMLReports(trigonPaths.getTestResultsPath());
-            if(email_receipients!=null){
-                SendEmail sendEmail = new SendEmail();
-                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(),email_receipients,"false","false","false");
-
+            if(executionType.equalsIgnoreCase("remote"))
+            {
+                if(System.getProperty("user.name").equalsIgnoreCase("root"))
+                {
+                    if(email_receipients!=null){
+                        SendEmail sendEmail = new SendEmail();
+                        sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(),email_receipients,"true","false","false");
+                    }
+                }
             }
 
             TriggerEmailImpl TriggerEmailImpl = new  TriggerEmailImpl();

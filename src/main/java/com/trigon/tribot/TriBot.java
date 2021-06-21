@@ -337,7 +337,7 @@ public class TriBot {
     public void objectRepo(List<String> objList, List<String> objImportList, String objFactoryPath, String className, String commonPath) throws IOException {
 
         if(!className.equals(".DS_Store")){
-        System.out.println("Creating Java file for class : " + className);
+       // System.out.println("Creating Java file for class : " + className);
         File AUTO_JAVA_OBJECTS_PATH = cUtils().createOrReadFile(null, "", objFactoryPath);
 
         File file = cUtils().createOrReadFile(AUTO_JAVA_OBJECTS_PATH, "",
@@ -460,28 +460,30 @@ public class TriBot {
 
     private void locatorList() {
 
-        System.out.println("\n\n*********** Please follow below Locators as  per priority ********");
-        System.out.println("==================================================================");
-        System.out.println("|   Priority    |       Web     |    Android     |       IOS     |");
-        System.out.println("==================================================================");
-        System.out.println("|       1       |	    id	    |accessibilityid |accessibilityid|");
-        System.out.println("|       2	    |       name	|       id	     |       id      |");
-        System.out.println("|       3	    |    classname  |   uiautomator  |	  predicate  |");
-        System.out.println("|       4	    |    linktext	|      name	     |      name     |");
-        System.out.println("|       5	    |       css	    |     xpath	     |      xpath    |");
-        System.out.println("|       6	    |       xpath	|    datamatcher |    classchain |");
-        System.out.println("|       7	    |partiallinktext|    classname	 |     classname |");
-        System.out.println("|       8	    |    tagname    |    viewtag     |      viewtag  |");
-        System.out.println("|       9	    |	            |     image      |	    image    |");
-        System.out.println("|       10	    |	            |     custom	 |      custom   |");
-        System.out.println("|       11	    |	            |partiallinktext |partiallinktext|");
-        System.out.println("|       12	    |	            |     linktext   |	    linktext |");
-        System.out.println("|       13	    |	            |      tagname   |	    tagname  |");
-        System.out.println("|       14  	|	            |        css     |	    css      |");
-        System.out.println("==================================================================");
+        System.out.println(" Please check ReadMe File or Confluence Pge for Locatiors and Matching Method names to add in JSON files");
 
-        System.out.println("\n*********** Please follow below Action Events ****************");
-        listOfActionEvents();
+//        System.out.println("\n\n*********** Please follow below Locators as  per priority ********");
+//        System.out.println("==================================================================");
+//        System.out.println("|   Priority    |       Web     |    Android     |       IOS     |");
+//        System.out.println("==================================================================");
+//        System.out.println("|       1       |	    id	    |accessibilityid |accessibilityid|");
+//        System.out.println("|       2	    |       name	|       id	     |       id      |");
+//        System.out.println("|       3	    |    classname  |   uiautomator  |	  predicate  |");
+//        System.out.println("|       4	    |    linktext	|      name	     |      name     |");
+//        System.out.println("|       5	    |       css	    |     xpath	     |      xpath    |");
+//        System.out.println("|       6	    |       xpath	|    datamatcher |    classchain |");
+//        System.out.println("|       7	    |partiallinktext|    classname	 |     classname |");
+//        System.out.println("|       8	    |    tagname    |    viewtag     |      viewtag  |");
+//        System.out.println("|       9	    |	            |     image      |	    image    |");
+//        System.out.println("|       10	    |	            |     custom	 |      custom   |");
+//        System.out.println("|       11	    |	            |partiallinktext |partiallinktext|");
+//        System.out.println("|       12	    |	            |     linktext   |	    linktext |");
+//        System.out.println("|       13	    |	            |      tagname   |	    tagname  |");
+//        System.out.println("|       14  	|	            |        css     |	    css      |");
+//        System.out.println("==================================================================");
+//
+//        System.out.println("\n*********** Please follow below Action Events ****************");
+//        listOfActionEvents();
     }
 
 
@@ -512,16 +514,16 @@ public class TriBot {
                     }
                     if (filePath.toFile().getName().contains(".java") && ((filePath.toFile().getName().contains("common")) || (filePath.toFile().getName().contains("Common")) || (filePath.toFile().getName().contains("Util")) || (filePath.toFile().getName().contains("util")))) {
                         String removeExtn = filePath.toFile().getName().substring(0, filePath.toFile().getName().lastIndexOf('.'));
-                        System.out.println("--------------------------------------------------------------------");
+                        //System.out.println("--------------------------------------------------------------------");
                         try {
                             String s1 = fPath.toString() + removeExtn;
-                            System.out.println(s1);
+                            //System.out.println(s1);
                             if (packageBuffer != null) {
                                 packageBuffer.append("import " + fPath.toString() + removeExtn + ";\n");
-                                System.out.println("Identified Common Package Name: " + fPath.toString() + removeExtn);
+                                //System.out.println("Identified Common Package Name: " + fPath.toString() + removeExtn);
                             }
 
-                            System.out.println("Identified Common Method to add package:" + removeExtn);
+                            //System.out.println("Identified Common Method to add package:" + removeExtn);
                             String methodNameLower = Character.toLowerCase(removeExtn.charAt(0)) + removeExtn.substring(1);
                             if (methodBuffer != null) {
                                 methodBuffer.append("    public " + removeExtn + " " + methodNameLower + "() {\n" +

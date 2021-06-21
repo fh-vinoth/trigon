@@ -26,12 +26,12 @@ public class Database extends TrigonUtils {
 
     private Database() {
         try {
-            String sshHost = tEnv().getDbSSHHost();
-            String sshuser = tEnv().getDbSSHUser();
-            String SshKeyFilepath;
-            int localPort = ap.getPort();
+            MysqlDataSource dataSource = new MysqlDataSource();
             if (tEnv().getJenkins_execution().equalsIgnoreCase("false") && tEnv().getPipeline_execution().equalsIgnoreCase("false")) {
-
+                String sshHost = tEnv().getDbSSHHost();
+                String sshuser = tEnv().getDbSSHUser();
+                String SshKeyFilepath;
+                int localPort = ap.getPort();
                 try {
                     if (System.getProperty("os.name").toLowerCase().contains("mac")) {
                         SshKeyFilepath = "/Users/" + System.getProperty("user.name") + "/.ssh/id_rsa";
@@ -61,33 +61,23 @@ public class Database extends TrigonUtils {
                 int assinged_port = session.setPortForwardingL(localPort, remoteHost, remotePort);
                 logger.info("localhost:" + assinged_port + " -> " + remoteHost + ":" + remotePort);
                 logger.info("Port Forward Successful");
-            }
-
-            if (tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) {
-                System.out.println("Connecting to DBHost : " + tEnv().getDbHost());
-                connectionUrl = tEnv().getDbHost();
-                connectionPort = 3306;
-            }
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String localSSHUrl = "localhost";
-            MysqlDataSource dataSource = new MysqlDataSource();
-            if(tEnv().getJenkins_execution().equalsIgnoreCase("false")){
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                String localSSHUrl = "localhost";
                 dataSource.setServerName(localSSHUrl);
                 dataSource.setPortNumber(localPort);
-            }
-
-            if(tEnv().getJenkins_execution().equalsIgnoreCase("true")||tEnv().getPipeline_execution().equalsIgnoreCase("true")){
+            }else{
+                connectionUrl = tEnv().getDbHost();
                 System.out.println("Connection URL is : "+connectionUrl);
+                Class.forName("com.mysql.cj.jdbc.Driver");
                 dataSource.setServerName(connectionUrl);
                 dataSource.setPortNumber(connectionPort);
             }
-
             dataSource.setUser(tEnv().getDbUserName());
             dataSource.setAllowMultiQueries(true);
             dataSource.setPassword(tEnv().getDbPassword());
             dataSource.setDatabaseName(tEnv().getDbName());
             connection = dataSource.getConnection();
-            System.out.print("Connection to server successful!:" + connection + "\n\n");
+            logger.info("Connection to server successful!:" + connection + "\n\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,7 +89,7 @@ public class Database extends TrigonUtils {
     }
 
     public static synchronized  String connecttodatabaseString(String query, String value) {
-        String resultArray = "null";
+        String resultArray = null;
         Connection connection = null;
         Statement stmt = null;
         try {
@@ -113,8 +103,8 @@ public class Database extends TrigonUtils {
                 resultArray = rs.getString(value);
             }
             logger.info("The Result Array is  " + resultArray);
-        } catch (Exception var6) {
-            var6.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 
         } finally {
             try {
@@ -131,7 +121,7 @@ public class Database extends TrigonUtils {
                     session.disconnect();
                 }
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         }
         return resultArray;
@@ -148,8 +138,8 @@ public class Database extends TrigonUtils {
             stmt = connection.createStatement();
             resultSet = stmt.executeQuery(query);
             logger.info("Executed Query Statement " + query);
-        } catch (Exception var6) {
-            var6.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 
         } finally {
             try {
@@ -186,8 +176,8 @@ public class Database extends TrigonUtils {
                 resultArray.add(rs.getString(value));
             }
 
-        } catch (Exception var6) {
-            var6.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 
         } finally {
             try {
@@ -221,8 +211,8 @@ public class Database extends TrigonUtils {
             logger.info("Executed Query Statement " + query);
             logger.info(rs);
 
-        } catch (Exception var6) {
-            var6.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 
         } finally {
             try {
@@ -258,8 +248,8 @@ public class Database extends TrigonUtils {
                 rs1 = rs.getString(1);
             }
 
-        } catch (Exception var6) {
-            var6.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if (stmt != null) {
@@ -294,8 +284,8 @@ public class Database extends TrigonUtils {
                 id = rs.getInt("id");
                 logger.info(id);
             }
-        } catch (Exception var6) {
-            var6.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 
         } finally {
             try {

@@ -31,12 +31,12 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("email_recipients")
     @Expose
     private String email_recipients;
-    @SerializedName("error_email_receipients")
+    @SerializedName("error_email_recipients")
     @Expose
-    private String error_email_receipients;
-    @SerializedName("failure_email_receipients")
+    private String error_email_recipients;
+    @SerializedName("failure_email_recipients")
     @Expose
-    private String failure_email_receipients;
+    private String failure_email_recipients;
     @SerializedName("products")
     @Expose
     private JsonObject products;
@@ -124,19 +124,19 @@ public class RemoteEnvPojo implements Serializable {
         this.email_recipients = email_recipients;
     }
 
-    public String getError_email_receipients() {
-        return error_email_receipients;
+    public String getError_email_recipients() {
+        return error_email_recipients;
     }
 
-    public void setError_email_receipients(String error_email_receipients) {
-        this.error_email_receipients = error_email_receipients;
+    public void setError_email_recipients(String error_email_recipients) {
+        this.error_email_recipients = error_email_recipients;
     }
 
-    public String getFailure_email_receipients() {
-        return failure_email_receipients;
+    public String getFailure_email_recipients() {
+        return failure_email_recipients;
     }
 
-    public void setFailure_email_receipients(String failure_email_receipients) {
-        this.failure_email_receipients = failure_email_receipients;
+    public void setFailure_email_recipients(String failure_email_recipients) {
+        this.failure_email_recipients = failure_email_recipients;
     }
 }

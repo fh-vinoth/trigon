@@ -5,9 +5,9 @@
   "test_region": "NZ1",
   "app_reset": "NA",
   "random_device": "",
-  "email_receipients":"",
-  "error_email_receipients":"",
-  "failure_email_receipients":"",
+  "email_recipients":"",
+  "error_email_recipients":"",
+  "failure_email_recipients":"",
   "products": {
     "D2S": {
       "android": {

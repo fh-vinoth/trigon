@@ -65,7 +65,7 @@ public class ConfigReader {
             fis = new FileInputStream(propFilePath);
             prop = new Properties();
             prop.load(fis);
-            logger.info("Loaded file: " + propFilePath + " successfully.");
+            //logger.info("Loaded file: " + propFilePath + " successfully.");
         } catch (FileNotFoundException e) {
             logger.error(propFilePath + " file Not Found, check the fileName or path" + e);
             System.exit(0);

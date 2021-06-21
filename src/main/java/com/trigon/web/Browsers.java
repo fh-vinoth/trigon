@@ -120,7 +120,8 @@ public class Browsers extends Android {
             } else {
                 browser().manage().window().maximize();
                 browser().get(tEnv().getWebUrl());
-                browser().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+                browser().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                browser().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
             }
         } catch (Exception e) {
             captureException(e);

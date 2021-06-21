@@ -620,8 +620,6 @@ public class TestInitialization extends Browsers {
             }
 
 
-
-
         } catch (Exception e) {
             captureException(e);
         }

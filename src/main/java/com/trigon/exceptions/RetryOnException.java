@@ -59,8 +59,6 @@ public class RetryOnException {
      * @throws Exception
      */
     public boolean exceptionOccurred(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        long startTime5 = System.currentTimeMillis();
-
         Boolean isPresentStatus = false;
         --numRetries;
         if (!shouldRetry()) {
@@ -68,10 +66,6 @@ public class RetryOnException {
             isPresentStatus = true;
         }
         waitUntilNextTry();
-
-        long endTime5 = System.currentTimeMillis();
-        logger.info("Element " + locatorString + " Not found, attempting to retry : Retrying Count" + numRetries + " Time Taken : " + cUtils().getRunDuration(startTime5, endTime5));
-
         return isPresentStatus;
     }
 

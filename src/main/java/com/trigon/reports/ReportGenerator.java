@@ -82,8 +82,8 @@ public class ReportGenerator {
 
                 processData(Path, pGson, passed, failed, skipped, failedSummary, totalEndpoints, buildNumber, classMap);
                 logger.info("Successfully Generated HTML Reports Refer to the path:" + path);
-            } catch (Exception ioException) {
-                ioException.printStackTrace();
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
 
         }

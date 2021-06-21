@@ -92,7 +92,8 @@ public class IOS extends ReportManager {
                 }*/
                     iosDriverThreadLocal.set(new IOSDriver<>(new URL(tEnv().getAppiumURL()), iosCaps));
             }
-            ios().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+            ios().manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
+            ios().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
             logger.info("*****************************************");
             logger.info("IOS Native App Launched Successfully in Device " + tEnv().getIosDevice());
             logger.info("*****************************************");

@@ -27,7 +27,7 @@ public class Android extends IOS {
             if (executionType.equalsIgnoreCase("remote")) {
                 androidCaps.setCapability("os_version", tEnv().getAndroidOSVersion());
                 androidCaps.setCapability("device", tEnv().getAndroidDevice());
-                logger.info("Setting Android Native capabilities in BrowserStack Device : " + tEnv().getAndroidDevice());
+                //logger.info("Setting Android Native capabilities in BrowserStack Device : " + tEnv().getAndroidDevice());
 
                 //HashMap<String,String> buildData = get_bs_android_app_url();
 
@@ -51,7 +51,7 @@ public class Android extends IOS {
                 androidCaps.setCapability(MobileCapabilityType.PLATFORM_NAME, ANDROID);
                 androidCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getAndroidOSVersion());
                 androidCaps.setCapability(MobileCapabilityType.DEVICE_NAME, tEnv().getAndroidDevice());
-                logger.info("Setting Android Native capabilities in Local Device :: " + tEnv().getAndroidDevice());
+                //logger.info("Setting Android Native capabilities in Local Device :: " + tEnv().getAndroidDevice());
 
                 androidCaps.setCapability("appPackage", tEnv().getAndroidAppPackage());
                 androidCaps.setCapability("appActivity",tEnv().getAndroidAppActivity());
@@ -82,7 +82,8 @@ public class Android extends IOS {
                 }
                 androidDriverThreadLocal.set(new AndroidDriver<>(new URL(tEnv().getAppiumURL()), androidCaps));
             }
-            android().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+            android().manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
+            android().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
             logger.info("*****************************************");
             logger.info("Android Native App Launched Successfully in Device " + tEnv().getAndroidDevice());
             logger.info("*****************************************");
