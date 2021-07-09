@@ -16,8 +16,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
-public class APIController extends APICore {
-    private static final Logger logger = LogManager.getLogger(APIController.class);
+public class APICoreController extends APICore {
+    private static final Logger logger = LogManager.getLogger(APICoreController.class);
 
     public static APIInputData apiInputData = null;
     protected Map<String, Object> sendRequestWithOutReportImpl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse) {

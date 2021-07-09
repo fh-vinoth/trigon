@@ -6,10 +6,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
@@ -19,6 +21,8 @@ import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -36,7 +40,19 @@ public class Browsers extends Android {
                     if (executionType.equalsIgnoreCase("local")) {
                         WebDriverManager.chromedriver().setup();
                         //System.setProperty("webdriver.chrome.driver", "src/test/resources/Utilities/chromedriver");
+                        Map < String, Object > prefs = new HashMap < String, Object > ();
+                        Map < String, Object > profile = new HashMap < String, Object > ();
+                        Map< String, Object > contentSettings = new HashMap< String, Object >();
                         ChromeOptions options = new ChromeOptions();
+                        options.addArguments("disable-geolocation");
+
+                        // SET CHROME OPTIONS
+                        // 0 - Default, 1 - Allow, 2 - Block
+                        contentSettings.put("geolocation", 1);
+                        profile.put("managed_default_content_settings", contentSettings);
+                        prefs.put("profile", profile);
+                        options.setExperimentalOption("prefs", prefs);
+
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
                             options.setHeadless(true);
                         }
@@ -57,6 +73,16 @@ public class Browsers extends Android {
                         WebDriverManager.firefoxdriver().setup();
                         //System.setProperty("webdriver.gecko.driver", "src/test/resources/Utilities/geckodriver");
                         FirefoxOptions options = new FirefoxOptions();
+                        Map < String, Object > prefs = new HashMap < String, Object > ();
+                        Map < String, Object > profile = new HashMap < String, Object > ();
+                        Map< String, Object > contentSettings = new HashMap< String, Object >();
+                        // SET CHROME OPTIONS
+                        // 0 - Default, 1 - Allow, 2 - Block
+                        contentSettings.put("geolocation", 1);
+                        profile.put("managed_default_content_settings", contentSettings);
+                        prefs.put("profile", profile);
+                        options.setCapability("prefs", prefs);
+
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
                             options.setHeadless(true);
                         }
@@ -94,18 +120,21 @@ public class Browsers extends Android {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("project", context.getSuite().getName());
         caps.setCapability("os", tEnv().getWebSystemOS());
-        caps.setCapability("build", tEnv().getWebBuildNumber());
+        caps.setCapability("build", tEnv().getWebBuildNumber()+"_"+tEnv().getTest_region());
         caps.setCapability("os_version", tEnv().getWebSystemOSVersion());
         caps.setCapability("browser", tEnv().getWebBrowser());
         caps.setCapability("browser_version", tEnv().getWebBrowserVersion());
-        caps.setCapability("name", xmlTest.getName());
+        caps.setCapability("name", xmlTest.getName()+"_"+tEnv().getCurrentTestClassName());
        // caps.setCapability("browserstack.selenium_version", "4.0.0-alpha-7");
         caps.setCapability("browserstack.networkLogs", true);
         caps.setCapability("browserstack.console", "errors");
         caps.setCapability("browserstack.idleTimeout", "300");
         caps.setCapability("browserstack.autoWait", "50");
         caps.setCapability("language", "en");
-        caps.setCapability("locale", "en");
+        caps.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
+        caps.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
+
+
         try {
             webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), caps));
         } catch (Exception e) {

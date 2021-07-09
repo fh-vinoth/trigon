@@ -68,9 +68,12 @@ public class ReportManager {
     protected static String appType;
     protected static String suiteParallel;
     protected static int totalTestModules;
-    protected static String email_receipients=null;
-    protected static String error_email_receipients=null;
-    protected static String failure_email_receipients=null;
+    protected static String email_recipients =null;
+    protected static String error_email_recipients =null;
+    protected static String failure_email_recipients =null;
+    protected static boolean failStatus = false;
+    protected static boolean exceptionStatus = false;
+
 
     public static RemoteWebDriver browser() {
         return webDriverThreadLocal.get();
@@ -262,7 +265,7 @@ public class ReportManager {
 
                 } else if (status.equalsIgnoreCase("FAIL")) {
                     //testStatus1.add(message);
-                    logger.error("****FAILED MESSAGE******" + message);
+                    logger.error(message);
                     if (testThreadMethodReporter.get() != null) {
                         testThreadMethodReporter.get().setTestStatus("FAILED");
                     } else {

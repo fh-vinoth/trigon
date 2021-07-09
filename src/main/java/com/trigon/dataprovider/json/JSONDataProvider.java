@@ -59,7 +59,6 @@ public class JSONDataProvider extends ReportManager {
             JsonElement jsonElement = JsonParser.parseReader(new FileReader(path));
             TestModules bean = gson.fromJson(jsonElement, TestModules.class);
             JsonArray executableCases = new JsonArray();
-            System.out.println(bean.getModules());
             if (bean.getModules().size() > 0) {
                 for (int i = 0; i < bean.getModules().size(); i++) {
                     if ((counter == 0) && bean.getModules().get(i).getTestdata().getAsJsonObject().has(methodName)) {

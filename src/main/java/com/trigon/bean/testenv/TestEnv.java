@@ -71,6 +71,7 @@ public class TestEnv {
 
     private File pagesJsonFile;
     private String currentTestMethodName;
+    private String currentTestClassName;
     private File screenshotPath;
 
 
@@ -499,6 +500,14 @@ public class TestEnv {
 
     public void setCurrentTestMethodName(String currentTestMethodName) {
         this.currentTestMethodName = currentTestMethodName;
+    }
+
+    public String getCurrentTestClassName() {
+        return currentTestClassName;
+    }
+
+    public void setCurrentTestClassName(String currentTestClassName) {
+        this.currentTestClassName = currentTestClassName;
     }
 
     public File getScreenshotPath() {

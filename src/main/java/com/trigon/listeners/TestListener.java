@@ -1,5 +1,6 @@
 package com.trigon.listeners;
 
+import com.trigon.reports.ReportManager;
 import org.testng.*;
 import org.testng.annotations.ITestAnnotation;
 
@@ -7,7 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-public class TestListener implements IAnnotationTransformer, ITestListener, IRetryAnalyzer {
+public class TestListener extends ReportManager implements IAnnotationTransformer, ITestListener, IRetryAnalyzer  {
     int counter = 0;
     int retryLimit = 2;
 
@@ -54,6 +55,7 @@ public class TestListener implements IAnnotationTransformer, ITestListener, IRet
 
         if (counter < retryLimit) {
             counter++;
+            testThreadMethodReporter.get().setTestRetry(String.valueOf(counter));
             return true;
         }
         return false;

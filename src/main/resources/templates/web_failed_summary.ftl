@@ -72,27 +72,31 @@
                     <tr style="height: 55px;text-align: center">
                         <td colspan="5">
                             <div style="padding-top: 10px">
-                                <a href="https://s3.amazonaws.com/t2s-staging-automation/TestResults/${testSuiteNameWithTime}/Index.html"
-                                   style="width:32%;box-sizing: border-box;color: #fff;text-decoration: none;background-color: #007bff;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .2rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;border-color: #689b3c;">Detailed
-                                    Report</a>
+<#--                                <a href="https://s3.amazonaws.com/t2s-staging-automation/TestResults/${testSuiteNameWithTime}/Index.html"-->
+<#--                                   style="width:32%;box-sizing: border-box;color: #fff;text-decoration: none;background-color: #007bff;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .2rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;border-color: #689b3c;">Detailed-->
+<#--                                    Report</a>-->
                                 <a href="https://s3.amazonaws.com/t2s-staging-automation/TestResults/${testSuiteNameWithTime}/EmailReport.html"
                                    style="width:32%;box-sizing: border-box;color: #fff;text-decoration: none;background-color: #007bff;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .2rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;border-color: #689b3c;">Summary
                                     Report</a>
-                            </div>
-                            <div style="padding-top: 10px;padding-bottom: 10px"><a
+                                <a
                                         href="https://s3.amazonaws.com/t2s-staging-automation/TestResults/${testSuiteNameWithTime}/RunTimeLogs/RunTimeExecutionLog.html"
                                         style="width:32%;box-sizing: border-box;color: #fff;text-decoration: none;background-color: #007bff;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .2rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;border-color: #689b3c;">Detailed
                                     Logs</a>
-                                <#if testRailProjectID??>
-                                    <a href="https://touch2success.testrail.com/index.php?/projects/overview/${testRailProjectID!}"
-                                       style="width:32%;box-sizing: border-box;color: #fff;text-decoration: none;background-color: #007bff;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .2rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;border-color: #689b3c;">TestRail
-                                        Report</a>
-                                <#else>
-                                    <a href="https://touch2success.testrail.com/index.php?/projects/overview"
-                                       style="width:32%;box-sizing: border-box;color: #fff;text-decoration: none;background-color: #007bff;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .2rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;border-color: #689b3c;">TestRail
-                                        Report</a>
-                                </#if>
                             </div>
+<#--                            <div style="padding-top: 10px;padding-bottom: 10px"><a-->
+<#--                                        href="https://s3.amazonaws.com/t2s-staging-automation/TestResults/${testSuiteNameWithTime}/RunTimeLogs/RunTimeExecutionLog.html"-->
+<#--                                        style="width:32%;box-sizing: border-box;color: #fff;text-decoration: none;background-color: #007bff;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .2rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;border-color: #689b3c;">Detailed-->
+<#--                                    Logs</a>-->
+<#--                                <#if testRailProjectID??>-->
+<#--                                    <a href="https://touch2success.testrail.com/index.php?/projects/overview/${testRailProjectID!}"-->
+<#--                                       style="width:32%;box-sizing: border-box;color: #fff;text-decoration: none;background-color: #007bff;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .2rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;border-color: #689b3c;">TestRail-->
+<#--                                        Report</a>-->
+<#--                                <#else>-->
+<#--                                    <a href="https://touch2success.testrail.com/index.php?/projects/overview"-->
+<#--                                       style="width:32%;box-sizing: border-box;color: #fff;text-decoration: none;background-color: #007bff;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .2rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;border-color: #689b3c;">TestRail-->
+<#--                                        Report</a>-->
+<#--                                </#if>-->
+<#--                            </div>-->
                         </td>
                     </tr>
                 </table>

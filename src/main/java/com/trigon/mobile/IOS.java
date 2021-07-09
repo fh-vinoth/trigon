@@ -31,8 +31,8 @@ public class IOS extends ReportManager {
 
                 iosCaps.setCapability("app", tEnv().getIosBSAppPath());
                 iosCaps.setCapability("project", context.getSuite().getName());
-                iosCaps.setCapability("build", tEnv().getIosBuildNumber());
-                iosCaps.setCapability("name", xmlTest.getName());
+                iosCaps.setCapability("build", tEnv().getIosBuildNumber()+"_"+tEnv().getTest_region());
+                iosCaps.setCapability("name", xmlTest.getName()+"_"+tEnv().getCurrentTestClassName());
                 //iosCaps.setCapability("browserstack.appium_version", "1.17.0");
                 iosCaps.setCapability("browserstack.acceptInsecureCerts", "true");
                 iosCaps.setCapability("browserstack.networkLogs",true);

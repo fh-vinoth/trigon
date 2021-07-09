@@ -18,7 +18,7 @@ public class TestMethodReporter implements Serializable {
     private long testMethodStartTime;
     private String testMethodName;
     private List<JsonObject> testSteps = new ArrayList<>();
-
+    private String testRetry = "NA";
     public String getTestScenarioName() {
         return testScenarioName;
     }
@@ -89,5 +89,13 @@ public class TestMethodReporter implements Serializable {
 
     public void setTestVerificationPoint(String testVerificationPoint) {
         this.testVerificationPoint = testVerificationPoint;
+    }
+
+    public String getTestRetry() {
+        return testRetry;
+    }
+
+    public void setTestRetry(String testRetry) {
+        this.testRetry = testRetry;
     }
 }

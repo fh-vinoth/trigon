@@ -1,13 +1,13 @@
 package com.fh.core;
 
-import com.trigon.api.APIController;
+import com.trigon.api.APICoreController;
 import io.restassured.response.Response;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LocalAPIController extends APIController {
+public class LocalAPIController extends APICoreController {
     /**
      *  Use this method when ever you are hitting endpoint in a Loop, This will help to avoid adding huge data to report
      * @param HttpMethod : You can pass parameter based on your request [POST,GET,PUT,DELETE,PATCH]

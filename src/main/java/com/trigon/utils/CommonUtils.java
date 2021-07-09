@@ -225,9 +225,10 @@ public class CommonUtils {
         }
     }
 
-    public int getRandomNumber(int min, int max) throws Exception {
+    public int getRandomNumber(int min, int max)  {
         if (min > max) {
-            throw new Exception("Enter minimum number less than maximum number");
+            logger.error("Enter minimum number less than maximum number: Hence setting Maximum number");
+            min = max-1;
         }
 
         int random = 0;

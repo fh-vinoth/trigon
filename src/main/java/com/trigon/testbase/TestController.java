@@ -73,7 +73,7 @@ public class TestController extends TestInitialization {
 
 
     protected void moduleInitilalization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath,@Optional String excelFilePath,
-                                         @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String browser,
+                                         @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType,@Optional String url, @Optional String browser,
                                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
                                          @Optional String URI, @Optional String version, @Optional String token,
                                          @Optional String store, @Optional String host, @Optional String locale,
@@ -86,7 +86,7 @@ public class TestController extends TestInitialization {
                 moduleReporter = new TestModuleReporter();
                 moduleReporter.setTestModuleStartTime(System.currentTimeMillis());
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
-                setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region);
+                setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,getClass().getSimpleName());
                 testModuleCollection(Thread.currentThread().getId(), xmlTest.getName(), testEnvPath);
             }
 
@@ -97,7 +97,7 @@ public class TestController extends TestInitialization {
     }
 
     protected void classInitialization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
-                                       @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType,@Optional String browser,
+                                       @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType,@Optional String url,@Optional String browser,
                                        @Optional String browserVersion, @Optional String device, @Optional String os_version,
                                        @Optional String URI, @Optional String version, @Optional String token,
                                        @Optional String store, @Optional String host, @Optional String locale,
@@ -110,7 +110,7 @@ public class TestController extends TestInitialization {
             errorWriter.get().beginArray();
             classFailAnalysisThread.set(new ArrayList<>());
             logger.info("Test Execution Started for Class  : " + getClass().getSimpleName());
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region);
+            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,getClass().getSimpleName());
             classCollection(getClass().getName(), xmlTest.getName(), testEnvPath);
             remoteBrowserInit(context, xmlTest);
             remoteMobileInit(context, xmlTest);
@@ -121,7 +121,7 @@ public class TestController extends TestInitialization {
 
 
     protected void setUp(ITestContext context, XmlTest xmlTest, Method method, @Optional String testEnvPath,@Optional String excelFilePath,
-                         @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String browser,
+                         @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType,@Optional String url, @Optional String browser,
                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
                          @Optional String URI, @Optional String version, @Optional String token,
                          @Optional String store, @Optional String host, @Optional String locale,
@@ -131,7 +131,7 @@ public class TestController extends TestInitialization {
         try {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region);
+            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,getClass().getSimpleName());
             //dBThreadLocal.set(new SSHSQLConnection());
             setMobileLocator();
             setWebLocator();
@@ -178,6 +178,7 @@ public class TestController extends TestInitialization {
                 if (propertiesPojo.getEnable_jira().equalsIgnoreCase("true")) {
                     createJiraTicket(method.getName() + " Test failed !! validate Issue ", testThreadMethodReporter.get().getTestAnalysis().toString());
                 }
+                failStatus = true;
             }else{
                 if(tEnv().getScreenshotPath()!=null){
                     CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
@@ -201,7 +202,12 @@ public class TestController extends TestInitialization {
                 classWriter.get().name("testMethodAnalysis").beginArray();
                 testThreadMethodReporter.get().getTestAnalysis().forEach(item -> {
                     try {
-                        classWriter.get().value(item);
+                        if((item!=null)||!item.equals("null")){
+                            classWriter.get().value(item);
+                        }else{
+                            logger.error("Failed Analsis data returned as null: Check your testcase data");
+                        }
+
                     } catch (IOException e) {
                         captureException(e);
                     }
@@ -221,6 +227,7 @@ public class TestController extends TestInitialization {
                 }
 
             }
+            classWriter.get().name("testRetryCount").value(testThreadMethodReporter.get().getTestRetry());
             classWriter.get().name("testMethodEndTime").value(cUtils().getCurrentTimeStamp());
             classWriter.get().name("testMethodDuration").value(cUtils().getRunDuration(testThreadMethodReporter.get().getTestMethodStartTime(), System.currentTimeMillis()));
             classWriter.get().endObject().flush();
@@ -294,9 +301,21 @@ public class TestController extends TestInitialization {
             {
                 if(System.getProperty("user.name").equalsIgnoreCase("root"))
                 {
-                    if(email_receipients!=null){
-                        SendEmail sendEmail = new SendEmail();
-                        sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(),email_receipients,"true","false","false");
+                    SendEmail sendEmail = new SendEmail();
+                    if(email_recipients !=null){
+                        if(!failStatus){
+                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients,"true","false","false");
+                        }
+                    }
+                    if(failure_email_recipients !=null){
+                        if(failStatus){
+                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), failure_email_recipients,"true","false","false");
+                        }
+                    }
+                    if(error_email_recipients !=null){
+                        if(exceptionStatus){
+                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients,"true","false","false");
+                        }
                     }
                 }
             }

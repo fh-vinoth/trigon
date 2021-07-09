@@ -114,6 +114,7 @@ public class ReportGenerator {
                     }
                     if (!Optional.ofNullable(tmd1.getTestEnvFile()).isPresent()) {
                         String pathOfModule = lisOfModulesPath.get(tcd.getTestModuleName());
+                        System.out.println(pathOfModule);
                         try {
                             JsonElement element1 = JsonParser.parseReader(new FileReader(pathOfModule));
                             tmd1 = pGson.fromJson(element1, TestModuleData.class);
