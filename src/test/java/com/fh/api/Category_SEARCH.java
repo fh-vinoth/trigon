@@ -36,6 +36,7 @@ public class Category_SEARCH extends TestLocalController {
     }
 
     public String createCategory() {
+        logScenario("Creating Categorey");
         Map<String, Object> headers = new HashMap<>();
         Map<String, Object> formparams = new HashMap<>();
         Map<String, Object> queryparams = new HashMap<>();

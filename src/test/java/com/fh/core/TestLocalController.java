@@ -13,7 +13,6 @@ public class TestLocalController extends TestController {
     }
 
 
-
     @BeforeTest(alwaysRun = true)
     @Parameters({"testEnvPath", "excelFilePath", "jsonFilePath", "jsonDirectory", "applicationType","url", "browser", "browser_version", "device", "os_version", "URI", "version", "token", "store", "host", "locale", "region", "country", "currency", "timezone", "phoneNumber", "emailId","test_region"})
     public void moduleInit(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
@@ -36,6 +35,7 @@ public class TestLocalController extends TestController {
                           @Optional String region, @Optional String country, @Optional String currency,
                           @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region) {
         classInitialization(context, xmlTest, testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region);
+
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -47,6 +47,7 @@ public class TestLocalController extends TestController {
                            @Optional String store, @Optional String host, @Optional String locale,
                            @Optional String region, @Optional String country, @Optional String currency,
                            @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region) {
+        tEnv().setTestType("API");
         setUp(context, xmlTest, method, testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url,browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region);
     }
 }

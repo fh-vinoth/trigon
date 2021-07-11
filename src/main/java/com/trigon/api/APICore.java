@@ -96,11 +96,6 @@ public class APICore extends ReportManager {
             //logger.info("info", "Executing API: " + Thread.currentThread().getStackTrace()[3].getMethodName() + "  and  " + Thread.currentThread().getStackTrace()[4].getMethodName());
             String URI = tEnv().getApiURI();
             RestAssured.baseURI = URI;
-            LinkedHashMap<String, Object> dataMap = new LinkedHashMap<>();
-            dataMap.put("status", "INFO");
-            dataMap.put("time", cUtils().getCurrentTimeinMilliSecondsWithColon());
-            dataMap.put("URI", URI);
-            dataToJSON("URI1", dataMap);
             dataToJSON("URI", URI);
         } catch (Exception e) {
             captureException(e);
@@ -579,7 +574,7 @@ public class APICore extends ReportManager {
                 dataTableCollectionApi.get().forEach(item -> {
                     try {
                         Gson pGson = new GsonBuilder().setPrettyPrinting().create();
-                        classWriter.get().jsonValue(pGson.toJson(item)).flush();
+                        //logReport("INFO",pGson.toJson(item));
                     } catch (Exception e) {
                         captureException(e);
                     }

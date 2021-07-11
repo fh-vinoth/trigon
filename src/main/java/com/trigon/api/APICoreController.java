@@ -24,9 +24,6 @@ public class APICoreController extends APICore {
 
         Map<String, Object> responseMapActualExpanded = null;
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            dataToJSON("Step", stackTrace[2].getMethodName());
             Response response = plainRequest(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, expectedStatusCode, expectedResponse);
             responseMapActualExpanded = customResponseValidation(response, expectedStatusCode, expectedResponse, null);
             apiTearDown(headers, cookies, queryParams, formParams, pathParams, requestBody, expectedResponse);
@@ -57,9 +54,6 @@ public class APICoreController extends APICore {
     protected Map<String, Object> validateMultiPartResponseImpl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse, Map<String, Object> multiPartMap) {
         Map<String, Object> responseMapActualExpanded = null;
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            dataToJSON("Step", stackTrace[2].getMethodName());
             Response resp = customRequest(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, multiPartMap);
             responseMapActualExpanded = customResponseValidation(resp, expectedStatusCode, expectedResponse, null);
             apiTearDown(headers, cookies, queryParams, formParams, pathParams, requestBody, expectedResponse);
@@ -76,9 +70,6 @@ public class APICoreController extends APICore {
     protected Map<String, Object> validateStaticResponseImpl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse) {
         Map<String, Object> responseMapActualExpanded = null;
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            dataToJSON("Step", stackTrace[2].getMethodName());
             Response resp = customRequest(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, null);
             responseMapActualExpanded = customResponseValidation(resp, expectedStatusCode, expectedResponse, null);
             apiTearDown(headers, cookies, queryParams, formParams, pathParams, requestBody, expectedResponse);
@@ -95,9 +86,6 @@ public class APICoreController extends APICore {
     protected Response validateStaticRespImpl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse) {
         Response responseMapActualExpanded = null;
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            dataToJSON("Step", stackTrace[2].getMethodName());
             responseMapActualExpanded = customRequest(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, null);
             customResponseValidation(responseMapActualExpanded, expectedStatusCode, expectedResponse, null);
             apiTearDown(headers, cookies, queryParams, formParams, pathParams, requestBody, expectedResponse);
@@ -115,10 +103,7 @@ public class APICoreController extends APICore {
         APIInputData apiInputData = null;
         boolean methodStatus = false;
         try{
-
             try {
-
-
 
                 List<File> allFiles = cUtils().listAllFiles(new File(path));
                 for (File file : allFiles) {
@@ -159,8 +144,6 @@ public class APICoreController extends APICore {
                // logger.error("Matching method name " + tEnv().getCurrentTestMethodName() + " is not found in testdata or Directory ");
             }
 
-
-
         }catch (Exception e){
 
             e.printStackTrace();
@@ -171,12 +154,7 @@ public class APICoreController extends APICore {
 
     protected Response validateStaticRespImpl() {
         Response responseMapActualExpanded = null;
-
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            dataToJSON("Step", stackTrace[2].getMethodName());
-
             HashMap headers = apiInputData.getHeaders();
             HashMap cookies = apiInputData.getCookies();
             HashMap queryParams = apiInputData.getQueryParams();
@@ -186,7 +164,6 @@ public class APICoreController extends APICore {
             responseMapActualExpanded = customRequest(apiInputData.getHttpMethod(), apiInputData.getEndPoint(), headers, cookies, queryParams, formParams, pathParams, apiInputData.getRequestBody(), null);
             customResponseValidation(responseMapActualExpanded, apiInputData.getExpectedStatusCode(), apiInputData.getExpectedResponse(), null);
             apiTearDown(headers, cookies, queryParams, formParams, pathParams, apiInputData.getRequestBody(), expectedResponse);
-
 
         } catch (Exception e) {
             captureException(e);
@@ -202,9 +179,6 @@ public class APICoreController extends APICore {
     protected Map<String, Object> validateStaticResponseKeysImpl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse) {
         Map<String, Object> responseMapActualExpanded = null;
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            dataToJSON("Step", stackTrace[2].getMethodName());
             Response resp = customRequest(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, null);
             responseMapActualExpanded = customResponseValidation(resp, expectedStatusCode, expectedResponse, null);
             HashSet<Object> unionKeys = new HashSet<>(responseMapActualExpanded.keySet());
@@ -230,9 +204,6 @@ public class APICoreController extends APICore {
     protected Map<String, Object> validateDynamicResponseImpl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String knownKey, String knownValue, String expectedStatusCode, Map<String, Object> expectedResponse) {
         Map<String, Object> responseMapActualExpanded = null;
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            dataToJSON("Step", stackTrace[2].getMethodName());
             Response response = customRequest(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, null);
             Map<String, Object> flattenMap = JsonFlattener.flattenAsMap(response.asString());
             responseMapActualExpanded = customResponseValidation(response, expectedStatusCode, expectedResponse, replaceWithDynamicKeys(flattenMap, expectedResponse, knownKey, knownValue));
@@ -251,9 +222,6 @@ public class APICoreController extends APICore {
 
         Map<String, Object> responseMapActualExpanded = null;
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            dataToJSON("Step", stackTrace[2].getMethodName());
             Response response = plainRequest(HttpMethod, URI, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, expectedStatusCode, expectedResponse);
             responseMapActualExpanded = customResponseValidation(response, expectedStatusCode, expectedResponse, null);
             apiTearDown(headers, cookies, queryParams, formParams, pathParams, requestBody, expectedResponse);
@@ -271,9 +239,6 @@ public class APICoreController extends APICore {
     protected List<Object> getStaticResponseListImpl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, String expectedKeyFromList) {
         List<Object> responseDataAsList = new ArrayList<>();
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            dataToJSON("Step", stackTrace[2].getMethodName());
             Response resp = customRequest(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, null);
             responseDataAsList = resp.jsonPath().getList(expectedKeyFromList);
             customResponseValidation(resp, expectedStatusCode, null, null);

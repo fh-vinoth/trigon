@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.trigon'
-version '1.0.8'
+version '2.0'
 
 repositories {
     mavenCentral()
@@ -39,6 +39,7 @@ dependencies {
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
     implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
     implementation group: 'com.twilio.sdk', name: 'twilio', version: '8.13.0'
+    implementation group: 'com.aventstack', name: 'extentreports', version: '5.0.8'
 
 }
 

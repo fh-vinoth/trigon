@@ -22,6 +22,7 @@ public class IOS extends ReportManager {
         MutableCapabilities iosCaps = new MutableCapabilities();
         long startTime = System.currentTimeMillis();
         try {
+            extentClassNode.get().assignDevice(tEnv().getIosDevice());
             if (executionType.equalsIgnoreCase("remote")) {
                 iosCaps.setCapability("os_version", tEnv().getIosOSVersion());
                 iosCaps.setCapability("deviceName", tEnv().getIosDevice());

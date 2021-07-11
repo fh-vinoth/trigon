@@ -1,12 +1,13 @@
 package com.trigon.reports;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonWriter;
+import com.trigon.bean.ExtentPojo;
 import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.TestMethodReporter;
-import com.trigon.bean.TestModuleReporter;
 import com.trigon.bean.testenv.TestEnv;
 import com.trigon.database.Database;
 import com.trigon.exceptions.TrigonAsserts;
@@ -46,18 +47,23 @@ public class ReportManager {
     protected static ThreadLocal<TestMethodReporter> testThreadMethodReporter = new ThreadLocal<>();
     protected static ThreadLocal<List<String>> failAnalysisThread = new ThreadLocal<>();
     protected static ThreadLocal<List<String>> classFailAnalysisThread = new ThreadLocal<>();
-    protected static ThreadLocal<LinkedHashMap<String, String>> testSteps = new ThreadLocal<>();
-    protected static ThreadLocal<JsonWriter> classWriter = new ThreadLocal<>();
     protected static ThreadLocal<TestEnv> envThreadLocal = new ThreadLocal<>();
     protected static ThreadLocal<List<LinkedHashMap<String, Object>>> dataTableCollectionApi = new ThreadLocal<>();
     protected static ThreadLocal<LinkedHashMap<String, Object>> dataTableMapApi = new ThreadLocal<>();
     protected TrigonAsserts sAssert = new TrigonAsserts();
-    protected TestModuleReporter moduleReporter;
-    protected static ThreadLocal<JsonWriter> errorWriter = new ThreadLocal<>();
     protected static String executionType = "local";
 
     public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
     public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative");
+
+    public static ExtentReports extent = null;
+    public static ThreadLocal<ExtentTest> extentTestNode = new ThreadLocal<>();
+    public static ThreadLocal<ExtentTest> extentClassNode = new ThreadLocal<>();
+    public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
+    public static ThreadLocal<ExtentTest> extentScenarioNode = new ThreadLocal<>();
+    public static ExtentPojo extentPojo = null;
+    public ExtentTest extentTest = null;
+
 
     protected static ThreadLocal<AndroidDriver<AndroidElement>> androidDriverThreadLocal = new ThreadLocal<>();
     protected static ThreadLocal<IOSDriver<IOSElement>> iosDriverThreadLocal = new ThreadLocal<>();
@@ -101,6 +107,8 @@ public class ReportManager {
         try{
             testThreadMethodReporter.get().setTestAuthor(author);
             testThreadMethodReporter.get().setTestScenarioName(scenario);
+            extentMethodNode.get().assignAuthor(author);
+
         }catch (Exception e){
             captureException(e);
         }
@@ -110,6 +118,7 @@ public class ReportManager {
             testThreadMethodReporter.get().setTestAuthor(author);
             testThreadMethodReporter.get().setTestScenarioName(scenario);
             testThreadMethodReporter.get().setTestVerificationPoint(verificationPoint);
+            extentMethodNode.get().assignAuthor(author);
         }catch (Exception e){
             captureException(e);
         }
@@ -118,6 +127,7 @@ public class ReportManager {
         try{
             testThreadMethodReporter.get().setTestAuthor(author);
             testThreadMethodReporter.get().setTestScenarioName(tData.get("Scenario").toString());
+            extentMethodNode.get().assignAuthor(author);
         }catch (Exception e){
             captureException(e);
         }
@@ -253,37 +263,26 @@ public class ReportManager {
     public void logReport(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         if (!elementReportCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
             try {
-
                 if (status.equalsIgnoreCase("PASS")) {
                     logger.info(message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().pass(message);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().pass(message);
+                    }
                     if (testThreadMethodReporter.get() != null) {
                         testThreadMethodReporter.get().setTestStatus("PASSED");
-                    } else {
-                        classWriter.get().name("testMethodStatus").value("FAILED");
                     }
-                    //classWriter.get().name("Step_"+System.nanoTime()).value("PASS:"+message);
-
                 } else if (status.equalsIgnoreCase("FAIL")) {
-                    //testStatus1.add(message);
                     logger.error(message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().fail(message);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().fail(message);
+                    }
                     if (testThreadMethodReporter.get() != null) {
                         testThreadMethodReporter.get().setTestStatus("FAILED");
-                    } else {
-//                        classWriter.get().beginObject();
-//                        classWriter.get().name("threadId").value(Thread.currentThread().getId());
-//                        classWriter.get().name("testMethodName").value("SKIPPED Method");
-//                        classWriter.get().name("testMethodAuthorName").value("NA");
-//                        classWriter.get().name("testMethodScenario").value("NA");
-//                        classWriter.get().name("testMethodStartTime").value(cUtils().getCurrentTimeStamp());
-//                        classWriter.get().name("testMethodStatus").value("SKIPPED");
-//                        classWriter.get().name("testMethodAnalysis").beginArray().value(message).endArray();
-//                        classWriter.get().name("testMethodEndTime").value(cUtils().getCurrentTimeStamp());
-//                        classWriter.get().name("testMethodDuration").value("0:0:0ms");
-//                        classWriter.get().endObject().flush();
-
                     }
-                    // classWriter.get().name("Step_"+System.nanoTime()).value("FAIL:"+message);
-
                     if (failAnalysisThread.get() != null) {
                         failAnalysisThread.get().add(message);
                     } else {
@@ -291,19 +290,30 @@ public class ReportManager {
                     }
                 } else if (status.equalsIgnoreCase("INFO")) {
                     logger.info(message);
-                    //classWriter.get().name("Step_"+System.nanoTime()).value("INFO:"+message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().info(message);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().info(message);
+                    }
                 } else if (status.equalsIgnoreCase("SKIP")) {
                     logger.warn(message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().skip(message);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().skip(message);
+                    }
                     if (testThreadMethodReporter.get() != null) {
                         testThreadMethodReporter.get().setTestStatus("SKIPPED");
                     } else {
-                        classWriter.get().name("testMethodStatus").value("SKIPPED");
                     }
 
-                    // classWriter.get().name("Step_"+System.nanoTime()).value("SKIP:"+message);
                 } else if (status.equalsIgnoreCase("WARN")) {
                     logger.warn(message);
-                    // classWriter.get().name("Step_"+System.nanoTime()).value("SKIP:"+message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().warning(message);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().warning(message);
+                    }
                 } else {
                     logger.error("Report Initialization is Failed");
                 }
@@ -435,7 +445,6 @@ public class ReportManager {
         try {
             if (!elementReportCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
                 String Screenshot = screenshotDriver();
-
                 if ((Screenshot != null)) {
                     logReport(status, message);
                 }
@@ -491,19 +500,14 @@ public class ReportManager {
     }
     
     public void logStepAction(String message) {
-
-        dataToJSONStep("INFO",message);
-        //logger.info("=================================================================================");
-        logger.info("STEP : " + message);
-        //logger.info("=================================================================================");
+       // dataToJSONStep("INFO",message);
+        logReport("INFO",message);
     }
-    
+
 
     public void logScenario(String ScenarioName) {
-        // Create child node
-        //logger.info("*********************************************************************************");
         logger.info("Scenario : " + ScenarioName);
-        //logger.info("*********************************************************************************");
+        extentScenarioNode.set(extentMethodNode.get().createNode("<font color=\"#d0b2e6\">" + ScenarioName + "</font>"));
     }
 
     protected void customAssertEqualsApi(String actual, String expected, String testType) {
@@ -542,9 +546,9 @@ public class ReportManager {
         try {
             logger.info("Verifying NOT Equals Actual : " + actual + " with Expected : " + expected + "");
             if (!(expected.equals(actual))) {
-                logReport("PASS", "Actual Text:" + actual  + "Expected NOT EQUALS Text:" + expected);
+                logReport("PASS", "Actual Text:" + actual  + " Expected NOT EQUALS Text:" + expected);
             } else {
-                logReport("FAIL", "Actual Text:" + actual  + "Expected NOT EQUALS Text:" + expected);
+                logReport("FAIL", "Actual Text:" + actual  + " Expected NOT EQUALS Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -643,16 +647,16 @@ public class ReportManager {
             }
             if (expectedValueSize == actualValueSize) {
                 if (!(expectedlist.equals(actuallist))) {
-                    logReport("PASS", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + "ExpectedSize :" + expectedValueSize);
+                    logReport("PASS", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + " ExpectedSize :" + expectedValueSize);
                 } else {
                     actuallist.removeAll(expectedlist);
                     expectedlist.removeAll(actuallist);
-                    logReport("FAIL", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
+                    logReport("FAIL", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + " ExpectedSize :" + expectedValueSize  + " Additional values in Actual List" + actuallist  + " Additional values in Expected List" + expectedlist);
                 }
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched "  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched "  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + " ExpectedSize :" + expectedValueSize  + " Additional values in Actual List" + actuallist  + " Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -904,7 +908,6 @@ public class ReportManager {
 
     protected void captureException(Exception e) {
         try {
-            errorWriter.get().value(ExceptionUtils.getStackTrace(e));
             logger.error(ExceptionUtils.getStackTrace(e));
         } catch (Exception e1) {
             e1.printStackTrace();
@@ -942,10 +945,12 @@ public class ReportManager {
         try {
             if (value.equals("FAILED")) {
                 logger.error(name + " : " + value);
+                logReport("FAIL",name +" : "+value);
             } else {
 
                 if(tEnv().getTestType().equalsIgnoreCase("API")){
                     logger.info(name + " : " + value);
+                    logReport("INFO",name +" : "+value);
                 }
             }
             if(dataTableMapApi.get()!=null){
@@ -961,7 +966,8 @@ public class ReportManager {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             String data = pGson.toJson(value);
-            logger.info("\n" + name + ": \n" + data);
+           // logger.info("\n" + name + ": \n" + data);
+            logReport("INFO",name +" : "+data);
             dataTableMapApi.get().put(name, value);
         } catch (Exception e) {
             captureException(e);

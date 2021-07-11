@@ -7,7 +7,7 @@
 <!--    </test>-->
     <test name="API-Endpoint_Automation_Category">
         <classes>
-            <class name="com.fh.unittests.database.Queries"/>
+            <class name="com.fh.api.Category_SEARCH"/>
         </classes>
     </test>
 

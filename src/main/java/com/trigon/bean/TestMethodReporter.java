@@ -1,6 +1,7 @@
 package com.trigon.bean;
 
 import com.google.gson.JsonObject;
+import org.testng.ITestContext;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,14 +16,13 @@ public class TestMethodReporter implements Serializable {
     private String testExecutionTime = "None";
     private String testStatus = "SKIPPED";
     private List<String> testAnalysis = new ArrayList<>();
-    private long testMethodStartTime;
     private String testMethodName;
-    private List<JsonObject> testSteps = new ArrayList<>();
     private String testRetry = "NA";
+    private ITestContext context;
+
     public String getTestScenarioName() {
         return testScenarioName;
     }
-
     public void setTestScenarioName(String testScenarioName) {
         this.testScenarioName = testScenarioName;
     }
@@ -59,28 +59,12 @@ public class TestMethodReporter implements Serializable {
         this.testAnalysis = testAnalysis;
     }
 
-    public long getTestMethodStartTime() {
-        return testMethodStartTime;
-    }
-
-    public void setTestMethodStartTime(long testMethodStartTime) {
-        this.testMethodStartTime = testMethodStartTime;
-    }
-
     public String getTestMethodName() {
         return testMethodName;
     }
 
     public void setTestMethodName(String testMethodName) {
         this.testMethodName = testMethodName;
-    }
-
-    public List<JsonObject> getTestSteps() {
-        return testSteps;
-    }
-
-    public void setTestSteps(List<JsonObject> testSteps) {
-        this.testSteps = testSteps;
     }
 
     public String getTestVerificationPoint() {
@@ -97,5 +81,13 @@ public class TestMethodReporter implements Serializable {
 
     public void setTestRetry(String testRetry) {
         this.testRetry = testRetry;
+    }
+
+    public ITestContext getContext() {
+        return context;
+    }
+
+    public void setContext(ITestContext context) {
+        this.context = context;
     }
 }

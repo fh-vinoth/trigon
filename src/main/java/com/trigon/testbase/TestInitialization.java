@@ -1,10 +1,17 @@
 package com.trigon.testbase;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.aventstack.extentreports.reporter.JsonFormatter;
+import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
+import com.trigon.bean.ExtentPojo;
 import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.TrigonPaths;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
@@ -23,8 +30,10 @@ import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 
@@ -32,9 +41,6 @@ public class TestInitialization extends Browsers {
 
     private static final Logger logger = LogManager.getLogger(TestInitialization.class);
     public static TrigonPaths trigonPaths;
-    protected static ThreadLocal<JsonWriter> testSuiteWriter = new ThreadLocal<>();
-    protected static ThreadLocal<JsonWriter> testModuleWriter = new ThreadLocal<>();
-
 
     protected static String runId = null;
     protected static long suiteStartTime;
@@ -89,7 +95,77 @@ public class TestInitialization extends Browsers {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        initializeExtentReport(testResultsPath, suiteNameWithTime);
 
+    }
+
+
+
+    private void initializeExtentReport(String testResultsPath, String suiteNameWithTime) {
+        extent = new ExtentReports();
+        ExtentSparkReporter sparkFail = new ExtentSparkReporter(testResultsPath +"/"+ suiteNameWithTime+"_Failed.html")
+                .filter()
+                .statusFilter()
+                .as(new Status[] { Status.FAIL })
+                .apply();
+
+        ExtentSparkReporter sparkAll = new ExtentSparkReporter(testResultsPath +"/"+ suiteNameWithTime+".html");
+        JsonFormatter json = new JsonFormatter(testResultsPath +"/"+ suiteNameWithTime+".json");
+        sparkFail.config().setReportName(suiteNameWithTime);
+        sparkFail.config().setTimelineEnabled(false);
+        sparkAll.config().setReportName(suiteNameWithTime);
+        sparkAll.config().setTimelineEnabled(false);
+        //htmlReporter.config().enableOfflineMode(true);
+        //spark.config().setTheme(Theme.DARK);
+        extent.attachReporter(json,sparkFail, sparkAll);
+        extent.setSystemInfo("frameworkVersion", getFrameworkVersion());
+        extent.setSystemInfo("SuiteName", suiteNameWithTime);
+    }
+
+    public void createExtentClassName(XmlTest xmlTest) {
+        if (xmlTest.getParallel().toString().equals("classes")) {
+            if (extentPojo == null) {
+                createExtentTest(xmlTest.getName(), "");
+            }
+            extentClassNode.set(extentPojo.getExtentTest().createNode(getClass().getSimpleName()));
+        } else if (xmlTest.getParallel().toString().equals("tests")) {
+            if (extentTestNode.get() == null) {
+                createExtentTest(xmlTest.getName(), "");
+            }
+            extentClassNode.set(extentTestNode.get().createNode(getClass().getSimpleName()));
+        } else {
+            if (extentPojo == null) {
+                createExtentTest(xmlTest.getName(), "");
+            }
+            extentClassNode.set(extentPojo.getExtentTest().createNode(getClass().getSimpleName()));
+        }
+    }
+
+    public void createExtentMethod(ITestContext context,XmlTest xmlTest,Method method) {
+        if (extentClassNode.get() == null) {
+            createExtentClassName(xmlTest);
+        }
+        if (extentClassNode.get() != null) {
+            extentMethodNode.set(extentClassNode.get().createNode(method.getName() + "<div style=\"color: #9a8989;font-size: 12px\">Scenario : "+testThreadMethodReporter.get().getTestScenarioName()+"</div>"));
+        }
+        if (testThreadMethodReporter.get().getContext().getIncludedGroups().length > 0) {
+            for (String abc : context.getIncludedGroups()) {
+                extentClassNode.get().assignCategory(abc);
+            }
+        }
+    }
+
+    public void extentFlush() {
+        try {
+            extent.flush();
+        } catch (ConcurrentModificationException c) {
+            try {
+                Thread.sleep(100);
+                extent.flush();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void testRailInit() {
@@ -131,7 +207,7 @@ public class TestInitialization extends Browsers {
                     Runs r = new Runs();
                     try {
                         runId = r.createRunAndGetRunId(projectId, getSuiteNameWithTime);
-                        testSuiteWriter.get().name("testRailProjectID").value(projectId);
+                        extent.setSystemInfo("testRailProjectID", projectId);
                     } catch (IOException e) {
                         captureException(e);
                     } catch (APIException e) {
@@ -172,7 +248,6 @@ public class TestInitialization extends Browsers {
             propertiesPojo.setJira_fhweb_proj(testConfig.getProperty("jira_FHWeb_ProjectName"));
             propertiesPojo.setJira_fhnative_proj(testConfig.getProperty("jira_FHNative_ProjectName"));
 
-
             propertiesPojo.setBrowserStack_UserName(testConfig.getProperty("browserStack_UserName"));
             propertiesPojo.setBrowserStack_Password(testConfig.getProperty("browserStack_Password"));
             propertiesPojo.setBrowserStack_URI(testConfig.getProperty("browserStack_URI"));
@@ -201,124 +276,72 @@ public class TestInitialization extends Browsers {
         return propertiesPojo;
     }
 
-
     public void testSuiteCollectionBeforeSuite(ITestContext iTestContext) {
-        try {
-            String testType = platformType;
-            suiteParallel = iTestContext.getSuite().getParallel();
-            totalTestModules = iTestContext.getSuite().getXmlSuite().getTests().size() - 1;
-            testSuiteWriter.set(new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportSubSuiteFilePath() + "/TestSuite.json"))));
-            testSuiteWriter.get().setLenient(true);
-            testSuiteWriter.get().setIndent(" ");
-            testSuiteWriter.get().beginObject();
-            testSuiteWriter.get().name("testType").value(testType);
-            if (mobileApps.contains(testType)) {
-                testSuiteWriter.get().name("testAppType").value(appType);
-            }
-            testSuiteWriter.get().name("testSuiteName").value(iTestContext.getSuite().getName());
-            testSuiteWriter.get().name("testSuiteNameWithTime").value(getSuiteNameWithTime);
-            testSuiteWriter.get().name("frameworkVersion").value(getFrameworkVersion());
-            testSuiteWriter.get().name("testStartTime").value(cUtils().getCurrentTimeStamp());
-            testSuiteWriter.get().name("executedBy").value(System.getProperty("user.name"));
-            testSuiteWriter.get().name("executedSystemOS").value(System.getProperty("os.name"));
-            testSuiteWriter.get().name("parallel").value(suiteParallel);
-            testSuiteWriter.get().name("totalTestModules").value(totalTestModules);
-            testSuiteWriter.get().flush();
-
-
-        } catch (IOException e) {
-            captureException(e);
-        }
+        String testType = platformType;
+        suiteParallel = iTestContext.getSuite().getParallel();
+        totalTestModules = iTestContext.getSuite().getXmlSuite().getTests().size() - 1;
+        extent.setSystemInfo("testType", testType);
+        extent.setSystemInfo("testAppType", appType);
+        extent.setSystemInfo("executedBy", System.getProperty("user.name"));
+        extent.setSystemInfo("executedSystemOS", System.getProperty("os.name"));
+        extent.setSystemInfo("parallel", suiteParallel);
+        extent.setSystemInfo("totalTestModules", String.valueOf(totalTestModules));
     }
 
-    public void testSuiteCollectionAfterSuite() {
-        try {
-            testSuiteWriter.get().name("testEndTime").value(cUtils().getCurrentTimeStamp());
-            testSuiteWriter.get().name("timeTaken").value(cUtils().getRunDuration(suiteStartTime, System.currentTimeMillis()));
-            testSuiteWriter.get().endObject();
-            testSuiteWriter.get().flush();
-            testSuiteWriter.get().close();
-        } catch (IOException e) {
-            captureException(e);
-        }
-    }
-
-    public void testModuleCollection(long threadId, String testModuleName, String testEnvPath) {
+    public void testModuleCollection(String testModuleName) {
         try {
             String testType = tEnv().getTestType();
             String moduleNameReplaced = testModuleName.replaceAll(" ", "_").replaceAll("-", "_").trim();
-            testModuleWriter.set(new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportSubSuiteFilePath() + "/TestModule-" + moduleNameReplaced + ".json"))));
-            testModuleWriter.get().setLenient(true);
-            testModuleWriter.get().setIndent(" ");
-            testModuleWriter.get().beginObject();
-            if (testEnvPath == null) {
-                testEnvPath = "test-env.json";
-            }
-            testModuleWriter.get().name("testEnvFile").value(testEnvPath);
-            testModuleWriter.get().name("testModuleStartTime").value(cUtils().getCurrentTimeStamp());
-            testModuleWriter.get().name("threadId").value(threadId);
-            testModuleWriter.get().name("testExecutionType").value(executionType);
-            testModuleWriter.get().name("testModuleName").value(moduleNameReplaced);
+            String testEnvVariables = "NA";
+            extent.setSystemInfo("testExecutionType", executionType);
             if (testType.equalsIgnoreCase("API")) {
-                testModuleWriter.get().name("testApiURL").value(tEnv().getApiURI());
-                testModuleWriter.get().name("testApiHost").value(tEnv().getApiHost());
-                testModuleWriter.get().name("testApiCountry").value(tEnv().getApiHost());
-                testModuleWriter.get().name("testApiVersion").value(tEnv().getApiVersion());
+              //  testEnvVariables = "<div>" + tEnv().getApiURI() + "</div><div>" + tEnv().getApiHost() + "</div><div>" + tEnv().getApiCountry() + "</div>";
+                testEnvVariables = tEnv().getApiURI() + " : " + tEnv().getApiHost() + " : " + tEnv().getApiCountry();
             }
-
             if (webApps.contains(testType)) {
-                testModuleWriter.get().name("testSystemOS").value(tEnv().getWebSystemOS());
-                testModuleWriter.get().name("testSystemOSVersion").value(tEnv().getWebSystemOSVersion());
-                testModuleWriter.get().name("testBrowser").value(tEnv().getWebBrowser());
-                testModuleWriter.get().name("testBrowserVersion").value(tEnv().getWebBrowserVersion());
-                testModuleWriter.get().name("testWebUrl").value(tEnv().getWebUrl());
-                testModuleWriter.get().name("testWebBuildNumber").value(tEnv().getWebBuildNumber());
+               // testEnvVariables = "<div>" + tEnv().getWebBrowser() + "</div><div>" + tEnv().getWebBrowserVersion() + "</div><div>" + tEnv().getWebUrl() + "</div>";
+                testEnvVariables = tEnv().getWebBrowser() + " : " + tEnv().getWebBrowserVersion() + " : " + tEnv().getWebUrl();
+
             }
             if (mobileApps.contains(testType)) {
                 if (appType.equalsIgnoreCase("android")) {
-                    testModuleWriter.get().name("testAndroidDevice").value(tEnv().getAndroidDevice());
-                    testModuleWriter.get().name("testAndroidVersion").value(tEnv().getAndroidOSVersion());
-                    testModuleWriter.get().name("testAndroidBuildNumber").value(tEnv().getAndroidBuildNumber());
+                    //testEnvVariables = "<div>" + tEnv().getAndroidDevice() + "</div><div>" + tEnv().getAndroidOSVersion() + "</div><div>" + tEnv().getAndroidBuildNumber() + "</div>";
+                    testEnvVariables = tEnv().getAndroidDevice() + " : " + tEnv().getAndroidOSVersion() + " : " + tEnv().getAndroidBuildNumber();
                 }
                 try {
                     if (tEnv().getIosDevice() != null) {
                         if (appType.equalsIgnoreCase("ios")) {
-                            testModuleWriter.get().name("testIosDevice").value(tEnv().getIosDevice());
-                            testModuleWriter.get().name("testIosVersion").value(tEnv().getIosOSVersion());
-                            testModuleWriter.get().name("testIosBuildNumber").value(tEnv().getIosBuildNumber());
+                           // testEnvVariables = "<div>" + tEnv().getIosDevice() + "</div><div>" + tEnv().getIosOSVersion() + "</div><div>" + tEnv().getIosBuildNumber() + "</div>";
+                            testEnvVariables = tEnv().getIosDevice() + " : " + tEnv().getIosOSVersion() + " : " + tEnv().getIosBuildNumber();
+
                         }
                     }
                 } catch (NullPointerException ne) {
 
                 }
             }
-            testModuleWriter.get().flush();
+            createExtentTest(moduleNameReplaced, testEnvVariables);
         } catch (Exception e) {
             captureException(e);
         }
-
     }
 
-    public void classCollection(String ClassName, String testModuleName, String testEnvPath) {
-        try {
-            String classData = null;
-            String moduleNameReplaced = testModuleName.replaceAll(" ", "_").replaceAll("-", "_").trim();
-            String[] classNameReplaced = ClassName.replaceAll("-", "_").split("\\.");
-            if (classNameReplaced.length > 1) {
-                classData = classNameReplaced[classNameReplaced.length - 2] + "_" + classNameReplaced[classNameReplaced.length - 1];
-            } else {
-                classData = ClassName;
-            }
-            classWriter.set(new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportSubSuiteFilePath() + "/TestClass-" + moduleNameReplaced + "-" + classData + ".json"))));
-            classWriter.get().setLenient(true);
-            classWriter.get().setIndent(" ");
-            classWriter.get().beginObject();
-            classWriter.get().name("testEnvPath").value(testEnvPath);
-            classWriter.get().name("testModuleName").value(moduleNameReplaced);
-            classWriter.get().name("testClassName").value(ClassName);
-            classWriter.get().name("testMethodData").beginArray().flush();
-        } catch (IOException e) {
-            captureException(e);
+    public void createExtentTest(String moduleNameReplaced, String testEnvVariables) {
+        extentTest = extent.createTest(moduleNameReplaced + "<div style=\"color: #635959;font-size: 12px;\">" + testEnvVariables + "</div>");
+        extentPojo = new ExtentPojo();
+        extentPojo.setExtentTest(extentTest);
+        extentTestNode.set(extentTest);
+    }
+
+
+    public void classCollection(String ClassName, String testModuleName) {
+        String classData = null;
+        String moduleNameReplaced = testModuleName.replaceAll(" ", "_").replaceAll("-", "_").trim();
+        String[] classNameReplaced = ClassName.replaceAll("-", "_").split("\\.");
+        if (classNameReplaced.length > 1) {
+            classData = classNameReplaced[classNameReplaced.length - 2] + "_" + classNameReplaced[classNameReplaced.length - 1];
+        } else {
+            classData = ClassName;
         }
     }
 
@@ -399,7 +422,7 @@ public class TestInitialization extends Browsers {
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version, String URI, String version, String token,
                                       String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region,String class_name) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String class_name) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
