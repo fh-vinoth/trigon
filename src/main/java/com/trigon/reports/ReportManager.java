@@ -57,7 +57,7 @@ public class ReportManager {
     protected static String executionType = "local";
 
     public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
-    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative");
+    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy");
 
     protected static ThreadLocal<AndroidDriver<AndroidElement>> androidDriverThreadLocal = new ThreadLocal<>();
     protected static ThreadLocal<IOSDriver<IOSElement>> iosDriverThreadLocal = new ThreadLocal<>();
