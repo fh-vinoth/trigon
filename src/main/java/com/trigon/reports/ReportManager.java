@@ -54,7 +54,7 @@ public class ReportManager {
     protected static String executionType = "local";
 
     public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
-    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative");
+    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy");
 
     public static ExtentReports extent = null;
     public static ThreadLocal<ExtentTest> extentTestNode = new ThreadLocal<>();
