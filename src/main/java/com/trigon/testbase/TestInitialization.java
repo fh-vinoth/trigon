@@ -110,11 +110,12 @@ public class TestInitialization extends Browsers {
                 .apply();
 
         ExtentSparkReporter sparkAll = new ExtentSparkReporter(testResultsPath +"/"+ suiteNameWithTime+".html");
-        JsonFormatter json = new JsonFormatter(testResultsPath +"/"+ suiteNameWithTime+".json");
+        JsonFormatter json = new JsonFormatter(trigonPaths.getSupportSubSuiteFilePath() +"/"+ suiteNameWithTime+".json");
         sparkFail.config().setReportName(suiteNameWithTime);
         sparkFail.config().setTimelineEnabled(false);
         sparkAll.config().setReportName(suiteNameWithTime);
         sparkAll.config().setTimelineEnabled(false);
+        sparkAll.config().setCss(".card {border-radius: 13px;}");
         //htmlReporter.config().enableOfflineMode(true);
         //spark.config().setTheme(Theme.DARK);
         extent.attachReporter(json,sparkFail, sparkAll);
@@ -148,11 +149,14 @@ public class TestInitialization extends Browsers {
         if (extentClassNode.get() != null) {
             extentMethodNode.set(extentClassNode.get().createNode(method.getName() + "<div style=\"color: #9a8989;font-size: 12px\">Scenario : "+testThreadMethodReporter.get().getTestScenarioName()+"</div>"));
         }
-        if (testThreadMethodReporter.get().getContext().getIncludedGroups().length > 0) {
-            for (String abc : context.getIncludedGroups()) {
-                extentClassNode.get().assignCategory(abc);
+        if(testThreadMethodReporter.get()!=null){
+            if (testThreadMethodReporter.get().getContext().getIncludedGroups().length > 0) {
+                for (String abc : context.getIncludedGroups()) {
+                    extentClassNode.get().assignCategory(abc);
+                }
             }
         }
+
     }
 
     public void extentFlush() {

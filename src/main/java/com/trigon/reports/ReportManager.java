@@ -2,6 +2,9 @@ package com.trigon.reports;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.markuputils.CodeLanguage;
+import com.aventstack.extentreports.markuputils.Markup;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -320,31 +323,73 @@ public class ReportManager {
             } catch (Exception e) {
                 captureException(e);
             }
-
         }
     }
 
-    protected void logJSON(String status, String message) {
-        try {
-            if ("api".equalsIgnoreCase(tEnv().getTestType())) {
-
+    public void logJSON(String status, String message) {
+        Markup m = MarkupHelper.createCodeBlock(message, CodeLanguage.JSON);
+            try {
                 if (status.equalsIgnoreCase("PASS")) {
-                    testThreadMethodReporter.get().setTestStatus("PASSED");
-                    //classWriter.get().name("Step_"+System.nanoTime()).value("PASS:"+message);
+                    logger.info(message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().pass(m);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().pass(m);
+                    }
+                    if (testThreadMethodReporter.get() != null) {
+                        testThreadMethodReporter.get().setTestStatus("PASSED");
+                    }
                 } else if (status.equalsIgnoreCase("FAIL")) {
-                    testThreadMethodReporter.get().setTestStatus("FAILED");
-                    // classWriter.get().name("Step_"+System.nanoTime()).value("FAIL:"+message);
+                    logger.error(message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().fail(m);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().fail(m);
+                    }
+                    if (testThreadMethodReporter.get() != null) {
+                        testThreadMethodReporter.get().setTestStatus("FAILED");
+                    }
+                    if (failAnalysisThread.get() != null) {
+                        failAnalysisThread.get().add(message);
+                    } else {
+                        classFailAnalysisThread.get().add(message);
+                    }
                 } else if (status.equalsIgnoreCase("INFO")) {
-                    //classWriter.get().name("Step_"+System.nanoTime()).value("INFO:"+message);
+                    logger.info(message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().info(m);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().info(m);
+                    }
+                } else if (status.equalsIgnoreCase("SKIP")) {
+                    logger.warn(message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().skip(m);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().skip(m);
+                    }
+                    if (testThreadMethodReporter.get() != null) {
+                        testThreadMethodReporter.get().setTestStatus("SKIPPED");
+                    } else {
+                    }
+
+                } else if (status.equalsIgnoreCase("WARN")) {
+                    logger.warn(message);
+                    if(extentScenarioNode.get()!=null){
+                        extentScenarioNode.get().warning(m);
+                    }else if (extentMethodNode.get() != null) {
+                        extentMethodNode.get().warning(m);
+                    }
                 } else {
-                    hardFail("Error!! Report Initialization failed!! please Set setScenarioName in Test");
+                    logger.error("Report Initialization is Failed");
                 }
+            } catch (Exception e) {
+                captureException(e);
             }
 
-        } catch (Exception e) {
-            captureException(e);
-        }
     }
+
+
 /*    protected void logJSON(String status, String message) {
 
         Markup type = MarkupHelper.createCodeBlock(message, CodeLanguage.JSON);
@@ -944,12 +989,10 @@ public class ReportManager {
     protected void dataToJSON(String name, String value) {
         try {
             if (value.equals("FAILED")) {
-                logger.error(name + " : " + value);
                 logReport("FAIL",name +" : "+value);
             } else {
 
                 if(tEnv().getTestType().equalsIgnoreCase("API")){
-                    logger.info(name + " : " + value);
                     logReport("INFO",name +" : "+value);
                 }
             }

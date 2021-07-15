@@ -194,13 +194,12 @@ public class APICore extends ReportManager {
                 if (!StatusCode.equals(String.valueOf(response.getStatusCode()))) {
                     failStatus.add("FAILED");
                     failAnalysisThread.get().add("[ACT : " + response.getStatusCode() + "] " + " [EXP : " + StatusCode + "]");
-                    dataToJSON("responseJSON", response.getBody().asString());
-                    dataToJSON("subTestStatus", "FAILED");
+                    logJSON("INFO", response.getBody().asString());
+                    //dataToJSON("subTestStatus", "FAILED");
                 } else {
                     flattenMap = JsonFlattener.flattenAsMap(response.asString());
                     flattenMap.put("actualStatusCode", response.getStatusCode());
-                    dataToJSON("responseJSON", response.getBody().asString());
-                    logJSON("PASS", response.getBody().asString());
+                    logJSON("INFO", response.getBody().asString());
                     if (expectedResponse != null) {
                         if (modifiedExpectedResponse != null) {
                             validateResponseFromMap(flattenMap, modifiedExpectedResponse, failStatus);
@@ -209,17 +208,17 @@ public class APICore extends ReportManager {
                         }
                     } else {
                         if (failStatus.size() > 0) {
-                            dataToJSON("subTestStatus", "FAILED");
+                            //dataToJSON("subTestStatus", "FAILED");
                         } else {
-                            dataToJSON("subTestStatus", "PASSED");
+                            //dataToJSON("subTestStatus", "PASSED");
                         }
                     }
                 }
             } else {
-                dataToJSON("subTestStatus", "PASSED");
+                //dataToJSON("subTestStatus", "PASSED");
             }
         } catch (Exception e) {
-            dataToJSON("subTestStatus", "FAILED");
+            //dataToJSON("subTestStatus", "FAILED");
             captureException(e);
         }
         return flattenMap;
@@ -253,9 +252,9 @@ public class APICore extends ReportManager {
             dataToJSON("expectedResponse", new HashMap<>(expectedResponse));
             dataToJSON("actualResponse", actualResponse);
             if (failStatus.size() > 0) {
-                dataToJSON("subTestStatus", "FAILED");
+                //dataToJSON("subTestStatus", "FAILED");
             } else {
-                dataToJSON("subTestStatus", "PASSED");
+                //dataToJSON("subTestStatus", "PASSED");
             }
         } catch (Exception e) {
             captureException(e);
@@ -292,7 +291,7 @@ public class APICore extends ReportManager {
                 }
 
             } catch (Exception e) {
-                dataToJSON("subTestStatus", "FAILED");
+                //dataToJSON("subTestStatus", "FAILED");
                 failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
                 apiTearDown(null, null, null, null, null, null, null);
             }

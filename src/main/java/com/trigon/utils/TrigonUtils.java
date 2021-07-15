@@ -38,7 +38,7 @@ public class TrigonUtils extends ReportManager {
     }
 
     @Override
-    protected void logJSON(String status, String message) {
+    public void logJSON(String status, String message) {
         super.logJSON(status, message);
     }
 
