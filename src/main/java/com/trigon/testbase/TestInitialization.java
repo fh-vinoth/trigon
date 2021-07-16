@@ -147,7 +147,7 @@ public class TestInitialization extends Browsers {
             createExtentClassName(xmlTest);
         }
         if (extentClassNode.get() != null) {
-            extentMethodNode.set(extentClassNode.get().createNode(method.getName() + "<div style=\"color: #9a8989;font-size: 12px\">Scenario : "+testThreadMethodReporter.get().getTestScenarioName()+"</div>"));
+            extentMethodNode.set(extentClassNode.get().createNode(method.getName()));
         }
         if(testThreadMethodReporter.get()!=null){
             if (testThreadMethodReporter.get().getContext().getIncludedGroups().length > 0) {

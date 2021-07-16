@@ -111,7 +111,7 @@ public class ReportManager {
             testThreadMethodReporter.get().setTestAuthor(author);
             testThreadMethodReporter.get().setTestScenarioName(scenario);
             extentMethodNode.get().assignAuthor(author);
-
+            extentMethodNode.get().getModel().setDescription(scenario);
         }catch (Exception e){
             captureException(e);
         }
@@ -122,6 +122,7 @@ public class ReportManager {
             testThreadMethodReporter.get().setTestScenarioName(scenario);
             testThreadMethodReporter.get().setTestVerificationPoint(verificationPoint);
             extentMethodNode.get().assignAuthor(author);
+
         }catch (Exception e){
             captureException(e);
         }
@@ -327,8 +328,17 @@ public class ReportManager {
     }
 
     public void logJSON(String status, String message) {
-        Markup m = MarkupHelper.createCodeBlock(message, CodeLanguage.JSON);
-            try {
+
+    }
+
+    public void logMultipleJSON(String status, String message,String responseJSON) {
+
+        String apiName = "API : "+getAPIMethodName();
+        Markup m1 = MarkupHelper.createCodeBlock(message, CodeLanguage.JSON);
+        Markup m2 = MarkupHelper.createCodeBlock(responseJSON, CodeLanguage.JSON);
+        String m = "<details><summary><font color=\"green\"><b>"+apiName+"</b></font></summary> <table><tr><td>"+ m1.getMarkup() +" </td><td>"+ m2.getMarkup() + "</td></tr></table></details>";
+
+        try {
                 if (status.equalsIgnoreCase("PASS")) {
                     logger.info(message);
                     if(extentScenarioNode.get()!=null){
@@ -389,6 +399,24 @@ public class ReportManager {
 
     }
 
+    private String getAPIMethodName(){
+        String apiName;
+        int getIndex=0;
+        for(int i = 0;i<15;i++){
+            System.out.println(i+" : "+Thread.currentThread().getStackTrace()[i].getMethodName());
+            if(Thread.currentThread().getStackTrace()[i].getMethodName().contains("validate")){
+                getIndex = i;
+                getIndex++;
+                if(Thread.currentThread().getStackTrace()[getIndex].getMethodName().contains("validate")){
+                    getIndex++;
+                }
+                break;
+            }
+        }
+        apiName = Thread.currentThread().getStackTrace()[getIndex].getMethodName();
+        return apiName;
+    }
+
 
 /*    protected void logJSON(String status, String message) {
 
@@ -429,8 +457,21 @@ public class ReportManager {
 
 
     public void logApiReport(String status, String message) {
-        if ("api".equalsIgnoreCase(tEnv().getTestType())) {
-            logReport(status, message);
+        String apiName = "Failed API : "+getAPIMethodName();
+        String failMessage = "<div style=\"color: #e50909;font-weight:bold;\"> "+apiName+" due to "+message+"</div>";
+        logger.error(message);
+        if(extentScenarioNode.get()!=null){
+            extentScenarioNode.get().fail(failMessage);
+        }else if (extentMethodNode.get() != null) {
+            extentMethodNode.get().fail(failMessage);
+        }
+        if (testThreadMethodReporter.get() != null) {
+            testThreadMethodReporter.get().setTestStatus("FAILED");
+        }
+        if (failAnalysisThread.get() != null) {
+            failAnalysisThread.get().add(message);
+        } else {
+            classFailAnalysisThread.get().add(message);
         }
     }
 
@@ -988,14 +1029,15 @@ public class ReportManager {
 
     protected void dataToJSON(String name, String value) {
         try {
-            if (value.equals("FAILED")) {
-                logReport("FAIL",name +" : "+value);
-            } else {
-
-                if(tEnv().getTestType().equalsIgnoreCase("API")){
-                    logReport("INFO",name +" : "+value);
-                }
-            }
+//            if (value.equals("FAILED")) {
+//                logReport("FAIL",name +" : "+value);
+//            }
+//            else {
+//
+//                if(tEnv().getTestType().equalsIgnoreCase("API")){
+//                    logReport("INFO",name +" : "+value);
+//                }
+//            }
             if(dataTableMapApi.get()!=null){
                 dataTableMapApi.get().put(name, value);
             }
@@ -1010,7 +1052,7 @@ public class ReportManager {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             String data = pGson.toJson(value);
            // logger.info("\n" + name + ": \n" + data);
-            logReport("INFO",name +" : "+data);
+            //logReport("INFO",name +" : "+data);
             dataTableMapApi.get().put(name, value);
         } catch (Exception e) {
             captureException(e);

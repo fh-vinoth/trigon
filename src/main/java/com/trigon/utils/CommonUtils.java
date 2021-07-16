@@ -160,6 +160,16 @@ public class CommonUtils {
         return hours + "h " + mins + "m " + secs + "s+" + millis + "ms";
     }
 
+    public String getRunDuration(long duration) {
+        long secs = duration / 1000L;
+        long millis = duration % 1000L;
+        long mins = secs / 60L;
+        secs %= 60L;
+        long hours = mins / 60L;
+        mins %= 60L;
+        return hours + "h " + mins + "m " + secs + "s+" + millis + "ms";
+    }
+
     public void writefile(String filename, List<String> valuetoType) {
         String filepath = CurrentWorkingDir + File.separator + "src" + File.separator + "WorkDir" + File.separator + filename + ".txt";
         String newline = System.getProperty("line.separator");

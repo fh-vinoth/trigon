@@ -43,7 +43,7 @@ public class TestAPIData implements Serializable {
     @Expose
     private LinkedHashMap actualResponse;
 
-    @SerializedName("subTestStatus")
+    @SerializedName("apiTestStatus")
     @Expose
     private String subTestStatus;
 

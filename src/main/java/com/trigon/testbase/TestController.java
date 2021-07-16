@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.trigon.bean.TestMethodReporter;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
 import com.trigon.email.SendEmail;
+import com.trigon.reports.EmailReport;
 import com.trigon.reports.ReportGenerator;
 import com.trigon.testrail.BaseMethods;
 import com.trigon.testrail.Runs;
@@ -102,6 +103,7 @@ public class TestController extends TestInitialization {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
             testThreadMethodReporter.set(new TestMethodReporter());
+            testThreadMethodReporter.get().setContext(context);
             setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,getClass().getSimpleName());
             setMobileLocator();
             setWebLocator();
@@ -183,8 +185,9 @@ public class TestController extends TestInitialization {
         } catch (Exception e) {
             captureException(e);
         } finally {
-//            ReportGenerator rg = new ReportGenerator();
-//            rg.generateHTMLReports(trigonPaths.getTestResultsPath());
+
+            EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent);
+
             if(executionType.equalsIgnoreCase("remote"))
             {
                 if(System.getProperty("user.name").equalsIgnoreCase("root"))
