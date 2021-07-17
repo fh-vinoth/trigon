@@ -6,8 +6,6 @@ import com.aventstack.extentreports.markuputils.CodeLanguage;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.github.wnameless.json.flattener.JsonFlattener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.trigon.bean.ExtentPojo;
 import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.TestMethodReporter;
@@ -137,19 +135,6 @@ public class ReportManager {
         }
     }
 
-    public void testStatus(String status, String message) {
-        try{
-            testThreadMethodReporter.get().setTestStatus(status);
-            if (status.equalsIgnoreCase("FAIL")) {
-                failAnalysisThread.get().add(message);
-            } else {
-
-            }
-        }catch (Exception e){
-            captureException(e);
-        }
-    }
-
     public void testTearDown() {
         if (failAnalysisThread.get().size() > 0) {
             Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
@@ -216,53 +201,6 @@ public class ReportManager {
         }
         return rep;
     }
-
-/*    public void logReport(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        if (!elementReportCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-            try {
-                if (extentTestThreadLocal.get() != null) {
-                    if (status.equalsIgnoreCase("PASS")) {
-                        extentTestThreadLocal.get().pass(message);
-                        logger.info(message);
-                        testThreadMethodReporter.get().setTestStatus("PASSED");
-                        //classWriter.get().name("Step_"+System.nanoTime()).value("PASS:"+message);
-//                    testAction.add("count");
-//                    individualTestStatus.add("PASSED");
-                    } else if (status.equalsIgnoreCase("FAIL")) {
-                        extentTestThreadLocal.get().fail(badge2 + message + badge5);
-                        //testStatus1.add(message);
-                        logger.error("****FAILED MESSAGE******" + message);
-                        testThreadMethodReporter.get().setTestStatus("FAILED");
-                        // classWriter.get().name("Step_"+System.nanoTime()).value("FAIL:"+message);
-                        failAnalysisThread.get().add(message);
-                        Assert.fail(message);
-//                    testStatus1.add("<br/>");
-//                    testAction.add("count");
-                    } else if (status.equalsIgnoreCase("INFO")) {
-                        extentTestThreadLocal.get().info(message);
-                        logger.info(message);
-                        //classWriter.get().name("Step_"+System.nanoTime()).value("INFO:"+message);
-                    } else if (status.equalsIgnoreCase("SKIP")) {
-                        extentTestThreadLocal.get().skip(message);
-                        logger.warn(message);
-                        testThreadMethodReporter.get().setTestStatus("SKIPPED");
-                        // classWriter.get().name("Step_"+System.nanoTime()).value("SKIP:"+message);
-                    }  else if (status.equalsIgnoreCase("WARN")) {
-                        extentTestThreadLocal.get().warning(message);
-                        logger.warn(message);
-                        // classWriter.get().name("Step_"+System.nanoTime()).value("SKIP:"+message);
-                    }else {
-                        logger.error("Report Initialization is Failed");
-                    }
-                } else {
-                    Assert.fail("Error!! Report Initialization failed!! please Set setScenarioName in Test");
-                }
-            } catch (Exception ie) {
-                icaptureException(e);
-            }
-
-        }
-    }*/
 
     public void logReport(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         if (!elementReportCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
@@ -418,44 +356,6 @@ public class ReportManager {
     }
 
 
-/*    protected void logJSON(String status, String message) {
-
-        Markup type = MarkupHelper.createCodeBlock(message, CodeLanguage.JSON);
-//        if (message.startsWith("{") || message.startsWith("[")) {
-//            type = MarkupHelper.createCodeBlock(message, CodeLanguage.JSON);
-//        }
-        try {
-            if ("api".equalsIgnoreCase(tEnv().getTestType())) {
-                if (extentTestThreadLocal.get() != null) {
-                    if (status.equalsIgnoreCase("PASS")) {
-                        extentTestThreadLocal.get().pass("<details><summary><font color=\"green\"><b>Click to open Response JSON</b></font></summary> " + type.getMarkup() + "</details>");
-                        testThreadMethodReporter.get().setTestStatus("PASSED");
-                        //classWriter.get().name("Step_"+System.nanoTime()).value("PASS:"+message);
-                    } else if (status.equalsIgnoreCase("FAIL")) {
-                        extentTestThreadLocal.get().fail("<details><summary><font color=\"green\"><b>Click to open Response JSON</b></font></summary>" + type.getMarkup() + "</details>");
-                        testThreadMethodReporter.get().setTestStatus("FAILED");
-                        // classWriter.get().name("Step_"+System.nanoTime()).value("FAIL:"+message);
-                    } else if (status.equalsIgnoreCase("INFO")) {
-                        extentTestThreadLocal.get().info("<details><summary><font color=\"green\"><b>Click to open Response JSON</b></font></summary> " + type.getMarkup() + "</details>");
-                        //classWriter.get().name("Step_"+System.nanoTime()).value("INFO:"+message);
-                    } else {
-                        Assert.fail("Error!! Report Initialization failed!! please Set setScenarioName in Test");
-                    }
-                }
-            }
-
-            if (("web".equalsIgnoreCase(tEnv().getTestType())) || ("mobile".equalsIgnoreCase(tEnv().getTestType()))) {
-
-//            apiLogStatus.add(status);
-//            apiLogForWeb.add("<details><summary><font color=\"green\"><b>Click to open Response JSON</b></font></summary>" + type.getMarkup() + "</details>");
-
-            }
-        } catch (Exception e) {
-            captureException(e);
-        }
-    }*/
-
-
     public void logApiReport(String status, String message) {
         String apiName = "Failed API : "+getAPIMethodName();
         String failMessage = "<div style=\"color: #e50909;font-weight:bold;\"> "+apiName+" due to "+message+"</div>";
@@ -569,27 +469,10 @@ public class ReportManager {
         return path;
     }
 
-    private void fullScreenshot() {
-        try {
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            String path = trigonPaths.getScreenShotsPath() + "/" + testThreadMethodReporter.get().getTestMethodName() + "" + "_" + "" + stackTrace[5].getMethodName() + "" + "_" + "[" + cUtils().getDateTimeStamp() + "]" + ".png";
-            Robot robot = null;
-            robot = new Robot();
-            Rectangle captureSize = new Rectangle(
-                    getDefaultToolkit().getScreenSize());
-            BufferedImage capture = robot.createScreenCapture(captureSize);
-            write(capture, "png", new File(path));
-        } catch (Exception e) {
-            captureException(e);
-        }
-    }
     
     public void logStepAction(String message) {
-       // dataToJSONStep("INFO",message);
         logReport("INFO",message);
     }
-
 
     public void logScenario(String ScenarioName) {
         logger.info("Scenario : " + ScenarioName);
@@ -1029,19 +912,9 @@ public class ReportManager {
 
     protected void dataToJSON(String name, String value) {
         try {
-//            if (value.equals("FAILED")) {
-//                logReport("FAIL",name +" : "+value);
-//            }
-//            else {
-//
-//                if(tEnv().getTestType().equalsIgnoreCase("API")){
-//                    logReport("INFO",name +" : "+value);
-//                }
-//            }
             if(dataTableMapApi.get()!=null){
                 dataTableMapApi.get().put(name, value);
             }
-
         } catch (Exception e) {
             captureException(e);
         }
@@ -1049,33 +922,12 @@ public class ReportManager {
 
     protected void dataToJSON(String name, Map<String, Object> value) {
         try {
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
-            String data = pGson.toJson(value);
-           // logger.info("\n" + name + ": \n" + data);
-            //logReport("INFO",name +" : "+data);
-            dataTableMapApi.get().put(name, value);
+            if(dataTableMapApi.get()!=null){
+                dataTableMapApi.get().put(name, value);
+            }
         } catch (Exception e) {
             captureException(e);
         }
-    }
-
-    protected void dataToJSONStep(String stepStatus, String stepDetails) {
-        try {
-            LinkedHashMap<String, Object> dataMap = new LinkedHashMap<>();
-            dataMap.put("status", stepStatus);
-            dataMap.put("timeStamp", cUtils().getCurrentTimeinMilliSecondsWithColon());
-            dataMap.put("stepDetails", stepDetails);
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
-            String data = pGson.toJson(dataMap);
-            //logger.info("\n" + "step" + ": \n" + data);
-            dataTableMapApi.get().put("step", data);
-        } catch (Exception e) {
-            captureException(e);
-        }
-    }
-
-    public void step(String stepDetails) {
-        dataToJSON("NewStep", stepDetails);
     }
 
 }

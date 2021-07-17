@@ -19,7 +19,7 @@ public class ParallelClass1 extends TestController {
         logger.error("Executing parallelClass1_Method1");
         logger.debug("Executing parallelClass1_Method1");
         author_ScenarioName("bhaskar_parallelClass1_Method1", "parallelClass1_Method1 scenario");
-        testStatus("PASS", "parallelClass1_Method1 PASSED");
+        logReport("PASS", "parallelClass1_Method1 PASSED");
         parallelClass1_parallelMethod1_SubMethod();
         Assert.fail("u r wrong");
 
@@ -28,6 +28,6 @@ public class ParallelClass1 extends TestController {
 
     public void parallelClass1_parallelMethod1_SubMethod() {
         logger.info("Executing parallelClass1_parallelMethod1_SubMethod");
-        testStatus("PASS", "parallelClass1_parallelMethod1_SubMethod FAILED");
+        logReport("PASS", "parallelClass1_parallelMethod1_SubMethod FAILED");
     }
 }

@@ -67,6 +67,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                             }
                         }
                         browser().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+                        browser().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
                         logReportWithScreenShot("PASS",
                                 Message.CLICKED + locatorString);
                     }

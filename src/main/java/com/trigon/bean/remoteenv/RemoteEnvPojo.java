@@ -10,6 +10,9 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("execution_type")
     @Expose
     private String execution_type;
+    @SerializedName("browserstack_execution_local")
+    @Expose
+    private String browserstack_execution_local;
     @SerializedName("jenkins_execution")
     @Expose
     private String jenkins_execution;
@@ -50,6 +53,14 @@ public class RemoteEnvPojo implements Serializable {
 
     public void setExecution_type(String execution_type) {
         this.execution_type = execution_type;
+    }
+
+    public String getBrowserstack_execution_local() {
+        return browserstack_execution_local;
+    }
+
+    public void setBrowserstack_execution_local(String browserstack_execution_local) {
+        this.browserstack_execution_local = browserstack_execution_local;
     }
 
     public String getJenkins_execution() {

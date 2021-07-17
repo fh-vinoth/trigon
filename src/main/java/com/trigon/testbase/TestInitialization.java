@@ -27,6 +27,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.testng.Assert;
 import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
+import org.testng.internal.annotations.IBeforeTest;
 import org.testng.xml.XmlTest;
 
 import java.io.*;
@@ -116,6 +118,9 @@ public class TestInitialization extends Browsers {
         sparkAll.config().setReportName(suiteNameWithTime);
         sparkAll.config().setTimelineEnabled(false);
         sparkAll.config().setCss(".card {border-radius: 13px;}");
+        sparkAll.config().setJs("$('.test-item').click(function() {\n" +
+                "    $('.test-content').scrollTop(0);\n" +
+                "});");
         //htmlReporter.config().enableOfflineMode(true);
         //spark.config().setTheme(Theme.DARK);
         extent.attachReporter(json,sparkFail, sparkAll);
@@ -142,7 +147,7 @@ public class TestInitialization extends Browsers {
         }
     }
 
-    public void createExtentMethod(ITestContext context,XmlTest xmlTest,Method method) {
+    public void createExtentMethod(ITestContext context, XmlTest xmlTest, Method method) {
         if (extentClassNode.get() == null) {
             createExtentClassName(xmlTest);
         }
@@ -426,7 +431,7 @@ public class TestInitialization extends Browsers {
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version, String URI, String version, String token,
                                       String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String class_name) {
+                                      String timezone, String phoneNumber, String emailId, String test_region,String browserstack_execution_local, String class_name) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -652,7 +657,12 @@ public class TestInitialization extends Browsers {
             if (tRemoteEnv.getFailure_email_recipients() != null) {
                 failure_email_recipients = tRemoteEnv.getFailure_email_recipients();
             }
-
+            if(tRemoteEnv.getBrowserstack_execution_local()!=null){
+                tEnv().setBrowserstack_execution_local(tRemoteEnv.getBrowserstack_execution_local());
+            }
+            if(browserstack_execution_local!=null){
+                tEnv().setBrowserstack_execution_local(browserstack_execution_local);
+            }
             tEnv().setCurrentTestClassName(class_name);
 
         } catch (Exception e) {

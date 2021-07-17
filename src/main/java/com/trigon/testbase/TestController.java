@@ -15,7 +15,9 @@ import com.trigon.utils.CommonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
 import org.testng.annotations.*;
+import org.testng.internal.annotations.IBeforeTest;
 import org.testng.xml.XmlTest;
 
 import java.io.FileNotFoundException;
@@ -60,11 +62,11 @@ public class TestController extends TestInitialization {
                                          @Optional String URI, @Optional String version, @Optional String token,
                                          @Optional String store, @Optional String host, @Optional String locale,
                                          @Optional String region, @Optional String country, @Optional String currency,
-                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId ,@Optional String test_region) {
+                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId ,@Optional String test_region,@Optional String browserstack_execution_local) {
         try {
             if (platformType != null) {
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
-                setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,getClass().getSimpleName());
+                setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
                 testModuleCollection(xmlTest.getName());
             }
         } catch (Exception e) {
@@ -78,11 +80,11 @@ public class TestController extends TestInitialization {
                                        @Optional String URI, @Optional String version, @Optional String token,
                                        @Optional String store, @Optional String host, @Optional String locale,
                                        @Optional String region, @Optional String country, @Optional String currency,
-                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region) {
+                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region,@Optional String browserstack_execution_local) {
         try {
             logger.info("Test Execution Started for Class  : " + getClass().getSimpleName());
             classFailAnalysisThread.set(new ArrayList<>());
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,getClass().getSimpleName());
+            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
             createExtentClassName(xmlTest);
             remoteBrowserInit(context, xmlTest);
             remoteMobileInit(context, xmlTest);
@@ -91,20 +93,20 @@ public class TestController extends TestInitialization {
         }
     }
 
-    protected void setUp(ITestContext context, XmlTest xmlTest, Method method, @Optional String testEnvPath,@Optional String excelFilePath,
-                         @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType,@Optional String url, @Optional String browser,
+    protected void setUp(ITestContext context, XmlTest xmlTest, Method method, @Optional String testEnvPath, @Optional String excelFilePath,
+                         @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
                          @Optional String URI, @Optional String version, @Optional String token,
                          @Optional String store, @Optional String host, @Optional String locale,
                          @Optional String region, @Optional String country, @Optional String currency,
-                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region) {
+                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local) {
         logger.info("Test Execution Started for Method : " + method.getName());
         try {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
             testThreadMethodReporter.set(new TestMethodReporter());
             testThreadMethodReporter.get().setContext(context);
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,getClass().getSimpleName());
+            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
             setMobileLocator();
             setWebLocator();
             failAnalysisThread.set(new ArrayList<>());

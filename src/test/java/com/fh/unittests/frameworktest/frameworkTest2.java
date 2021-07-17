@@ -13,6 +13,6 @@ public class frameworkTest2 extends TestLocalController {
         browser().findElement(By.id("twotabsearchtextbox")).sendKeys("iphone");
 //        browser().quit();
         author_ScenarioName("bhaskar_parallelClass1_Method3", "parallelClass1_Method3 scenario");
-        testStatus("FAIL", "parallelClass1_Method3 PASSED");
+        logReport("FAIL", "parallelClass1_Method3 PASSED");
     }
 }

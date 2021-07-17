@@ -73,7 +73,7 @@ public class TestEnv {
     private String currentTestMethodName;
     private String currentTestClassName;
     private File screenshotPath;
-
+    private String browserstack_execution_local;
 
     public String getTestType() {
         return testType;
@@ -518,6 +518,11 @@ public class TestEnv {
         this.screenshotPath = screenshotPath;
     }
 
+    public String getBrowserstack_execution_local() {
+        return browserstack_execution_local;
+    }
 
-
+    public void setBrowserstack_execution_local(String browserstack_execution_local) {
+        this.browserstack_execution_local = browserstack_execution_local;
+    }
 }
