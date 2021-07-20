@@ -17,6 +17,7 @@ public class BrowserTest extends TestLocalController {
             logStepAction("Creating category and getting the category id");
             String category_id = createCategory();
             System.out.println(category_id);
+
 //            browser().findElement(By.xpath("//input[@id=\"twotabsearchtextbox\"]")).sendKeys("iphone");
 //            logStepAction(" Performing Search click");
 //            browser().findElement(By.xpath("(//input[@type=\"submit\"])[1]")).click();

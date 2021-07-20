@@ -98,26 +98,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                                 break;
                         }
                     } catch (WebDriverException e) {
-                        if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) == 0) {
-                            logger.warn(Message.ELEMENT_WAIT_0);
-                            elementStatus = false;
-                        } else {
-                            if (scrollDownCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                verticalSwipe(0.6, 0.3, 0.5);
-                            }
-                            if (scrollUpCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                verticalSwipe(-0.6, -0.3, -0.5);
-                            }
-                            if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) > 0) {
-                                if (retryHandler1.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                    elementStatus = false;
-                                }
-                            } else {
-                                if (retryHandler.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                    elementStatus = false;
-                                }
-                            }
-                        }
+                        elementStatus = isElementStatus(locatorString, retryHandler, retryHandler1, elementStatus, wait_logReport_isPresent_Up_Down_XpathValues);
                     }
 
                 }
@@ -302,26 +283,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                                 break;
                         }
                     } catch (WebDriverException e) {
-                        if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) == 0) {
-                            logger.warn(Message.ELEMENT_WAIT_0);
-                            elementStatus = false;
-                        } else {
-                            if (scrollDownCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                verticalSwipe(0.6, 0.3, 0.5);
-                            }
-                            if (scrollUpCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                verticalSwipe(-0.6, -0.3, -0.5);
-                            }
-                            if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) > 0) {
-                                if (retryHandler1.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                    elementStatus = false;
-                                }
-                            } else {
-                                if (retryHandler.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                    elementStatus = false;
-                                }
-                            }
-                        }
+                        elementStatus = isElementStatus(locatorString, retryHandler, retryHandler1, elementStatus, wait_logReport_isPresent_Up_Down_XpathValues);
                     }
                 }
                 long endTime5 = System.currentTimeMillis();
@@ -416,26 +378,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                                 break;
                         }
                     } catch (WebDriverException e) {
-                        if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) == 0) {
-                            logger.warn(Message.ELEMENT_WAIT_0);
-                            elementStatus = false;
-                        } else {
-                            if (scrollDownCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                verticalSwipe(0.6, 0.3, 0.5);
-                            }
-                            if (scrollUpCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                verticalSwipe(-0.6, -0.3, -0.5);
-                            }
-                            if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) > 0) {
-                                if (retryHandler1.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                    elementStatus = false;
-                                }
-                            } else {
-                                if (retryHandler.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                    elementStatus = false;
-                                }
-                            }
-                        }
+                        elementStatus = isElementStatus(locatorString, retryHandler, retryHandler1, elementStatus, wait_logReport_isPresent_Up_Down_XpathValues);
                     }
 
                 }
@@ -622,26 +565,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                                 break;
                         }
                     } catch (WebDriverException e) {
-                        if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) == 0) {
-                            logger.warn(Message.ELEMENT_WAIT_0);
-                            elementStatus = false;
-                        } else {
-                            if (scrollDownCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                verticalSwipe(0.6, 0.3, 0.5);
-                            }
-                            if (scrollUpCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                verticalSwipe(-0.6, -0.3, -0.5);
-                            }
-                            if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) > 0) {
-                                if (retryHandler1.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                    elementStatus = false;
-                                }
-                            } else {
-                                if (retryHandler.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
-                                    elementStatus = false;
-                                }
-                            }
-                        }
+                        elementStatus = isElementStatus(locatorString, retryHandler, retryHandler1, elementStatus, wait_logReport_isPresent_Up_Down_XpathValues);
                     }
 
                 }
@@ -657,6 +581,30 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
             captureException(e);
         }
         return result;
+    }
+
+    private boolean isElementStatus(String locatorString, RetryOnException retryHandler, RetryOnException retryHandler1, boolean elementStatus, String[] wait_logReport_isPresent_Up_Down_XpathValues) {
+        if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) == 0) {
+            logger.warn(Message.ELEMENT_WAIT_0);
+            elementStatus = false;
+        } else {
+            if (scrollDownCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
+                verticalSwipe(0.6, 0.3, 0.5);
+            }
+            if (scrollUpCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
+                verticalSwipe(-0.6, -0.3, -0.5);
+            }
+            if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) > 0) {
+                if (retryHandler1.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
+                    elementStatus = false;
+                }
+            } else {
+                if (retryHandler.exceptionOccurred(locatorString, wait_logReport_isPresent_Up_Down_XpathValues)) {
+                    elementStatus = false;
+                }
+            }
+        }
+        return elementStatus;
     }
 
 }

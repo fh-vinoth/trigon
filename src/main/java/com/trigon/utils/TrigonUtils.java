@@ -37,9 +37,5 @@ public class TrigonUtils extends ReportManager {
         super.logReport(status, message, wait_logReport_isPresent_Up_Down_XpathValues);
     }
 
-    @Override
-    public void logJSON(String status, String message) {
-        super.logJSON(status, message);
-    }
 
 }

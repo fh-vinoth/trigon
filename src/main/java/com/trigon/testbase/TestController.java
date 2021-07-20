@@ -4,20 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.trigon.bean.TestMethodReporter;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
 import com.trigon.email.SendEmail;
 import com.trigon.reports.EmailReport;
-import com.trigon.reports.ReportGenerator;
 import com.trigon.testrail.BaseMethods;
 import com.trigon.testrail.Runs;
 import com.trigon.utils.CommonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
-import org.testng.ITestNGMethod;
 import org.testng.annotations.*;
-import org.testng.internal.annotations.IBeforeTest;
 import org.testng.xml.XmlTest;
 
 import java.io.FileNotFoundException;
@@ -40,7 +36,6 @@ public class TestController extends TestInitialization {
             tre = pGson.fromJson(element1, RemoteEnvPojo.class);
             executionType = tre.getExecution_type();
             propertiesPojo = setProperties();
-            suiteStartTime = System.currentTimeMillis();
             reportsInitialization(iTestContext.getSuite().getName());
             logInitialization();
             testSuiteCollectionBeforeSuite(iTestContext);
@@ -48,6 +43,7 @@ public class TestController extends TestInitialization {
             if (executionType == null) {
                 executionType = "local";
             }
+            extent.setSystemInfo("testExecutionType", executionType);
         } catch (FileNotFoundException fe){
             captureException(fe);
         }catch (Exception e) {
@@ -104,12 +100,11 @@ public class TestController extends TestInitialization {
         try {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
-            testThreadMethodReporter.set(new TestMethodReporter());
-            testThreadMethodReporter.get().setContext(context);
             setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
             setMobileLocator();
             setWebLocator();
             failAnalysisThread.set(new ArrayList<>());
+            tEnv().setContext(context);
             tEnv().setCurrentTestMethodName(method.getName());
             createExtentMethod(context,xmlTest,method);
 
@@ -187,8 +182,10 @@ public class TestController extends TestInitialization {
         } catch (Exception e) {
             captureException(e);
         } finally {
-
-            EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent);
+            EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType);
+            if(apiCoverage.size()>0){
+                getAPICoverage(apiCoverage);
+            }
 
             if(executionType.equalsIgnoreCase("remote"))
             {
@@ -197,17 +194,17 @@ public class TestController extends TestInitialization {
                     SendEmail sendEmail = new SendEmail();
                     if(email_recipients !=null){
                         if(!failStatus){
-                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients,"true","false","false");
+                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients,"true","false");
                         }
                     }
                     if(failure_email_recipients !=null){
                         if(failStatus){
-                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), failure_email_recipients,"true","false","false");
+                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), failure_email_recipients,"true","false");
                         }
                     }
                     if(error_email_recipients !=null){
                         if(exceptionStatus){
-                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients,"true","false","false");
+                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients,"true","false");
                         }
                     }
                 }

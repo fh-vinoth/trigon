@@ -9,13 +9,8 @@ public class Queries extends TestLocalController {
     @Test
     public void queries(){
 
-        String OTPMessage = db.SelectTableInDB("select count(*) from config where contact_no = '07032542435'");
-        System.out.println(OTPMessage);
     }
     @Test
     public void queries1(){
-
-        String OTPMessage = db.SelectTableInDB("select count(*) from config where contact_no = '07032542435'");
-        System.out.println(OTPMessage);
     }
 }

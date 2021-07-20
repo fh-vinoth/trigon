@@ -33,10 +33,7 @@ import org.testng.xml.XmlTest;
 
 import java.io.*;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.ConcurrentModificationException;
-import java.util.List;
+import java.util.*;
 
 
 public class TestInitialization extends Browsers {
@@ -101,7 +98,23 @@ public class TestInitialization extends Browsers {
 
     }
 
-
+protected void getAPICoverage(TreeSet<String> apiCoverage){
+    try {
+        JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath()+"/TestResultJSON/apiCoverage.json", false)));
+        writer.beginArray();
+        apiCoverage.forEach(ep->{
+            try {
+                writer.value(ep);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        writer.endArray().flush();
+        writer.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
 
     private void initializeExtentReport(String testResultsPath, String suiteNameWithTime) {
         extent = new ExtentReports();
@@ -154,13 +167,11 @@ public class TestInitialization extends Browsers {
         if (extentClassNode.get() != null) {
             extentMethodNode.set(extentClassNode.get().createNode(method.getName()));
         }
-        if(testThreadMethodReporter.get()!=null){
-            if (testThreadMethodReporter.get().getContext().getIncludedGroups().length > 0) {
-                for (String abc : context.getIncludedGroups()) {
-                    extentClassNode.get().assignCategory(abc);
+            if (tEnv().getContext().getIncludedGroups().length > 0) {
+                for (String cat : context.getIncludedGroups()) {
+                    extentClassNode.get().assignCategory(cat);
                 }
             }
-        }
 
     }
 
@@ -302,7 +313,7 @@ public class TestInitialization extends Browsers {
             String testType = tEnv().getTestType();
             String moduleNameReplaced = testModuleName.replaceAll(" ", "_").replaceAll("-", "_").trim();
             String testEnvVariables = "NA";
-            extent.setSystemInfo("testExecutionType", executionType);
+
             if (testType.equalsIgnoreCase("API")) {
               //  testEnvVariables = "<div>" + tEnv().getApiURI() + "</div><div>" + tEnv().getApiHost() + "</div><div>" + tEnv().getApiCountry() + "</div>";
                 testEnvVariables = tEnv().getApiURI() + " : " + tEnv().getApiHost() + " : " + tEnv().getApiCountry();

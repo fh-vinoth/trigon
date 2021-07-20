@@ -55,7 +55,6 @@ public class TestListener extends ReportManager implements IAnnotationTransforme
 
         if (counter < retryLimit) {
             counter++;
-            testThreadMethodReporter.get().setTestRetry(String.valueOf(counter));
             return true;
         }
         return false;

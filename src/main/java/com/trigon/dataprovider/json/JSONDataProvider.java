@@ -79,9 +79,7 @@ public class JSONDataProvider extends ReportManager {
                             dataProvider[j][0] = data;
                         }
                     } else if ((counter > 0) && bean.getModules().get(i).getTestdata().getAsJsonObject().has(methodName)) {
-
                         logger.error("Your json has two modules with the same methodName :: " + methodName + " , Please rename the specific testcase.");
-
                     }
                 }
             }

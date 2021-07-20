@@ -1,5 +1,7 @@
 package com.trigon.bean.testenv;
 
+import org.testng.ITestContext;
+
 import java.io.File;
 
 public class TestEnv {
@@ -71,6 +73,7 @@ public class TestEnv {
 
     private File pagesJsonFile;
     private String currentTestMethodName;
+    private ITestContext context;
     private String currentTestClassName;
     private File screenshotPath;
     private String browserstack_execution_local;
@@ -524,5 +527,13 @@ public class TestEnv {
 
     public void setBrowserstack_execution_local(String browserstack_execution_local) {
         this.browserstack_execution_local = browserstack_execution_local;
+    }
+
+    public ITestContext getContext() {
+        return context;
+    }
+
+    public void setContext(ITestContext context) {
+        this.context = context;
     }
 }

@@ -1,22 +1,11 @@
 package com.trigon.reports;
 
-import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.markuputils.CodeLanguage;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.github.wnameless.json.flattener.JsonFlattener;
-import com.trigon.bean.ExtentPojo;
-import com.trigon.bean.PropertiesPojo;
-import com.trigon.bean.TestMethodReporter;
-import com.trigon.bean.testenv.TestEnv;
-import com.trigon.database.Database;
-import com.trigon.exceptions.TrigonAsserts;
-import com.trigon.utils.CommonUtils;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidElement;
-import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.ios.IOSElement;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -24,113 +13,33 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
 
 import static com.trigon.testbase.TestInitialization.trigonPaths;
-import static java.awt.Toolkit.getDefaultToolkit;
-import static javax.imageio.ImageIO.write;
 import static org.apache.commons.io.FileUtils.copyFile;
 import static org.openqa.selenium.OutputType.FILE;
 
 
-public class ReportManager {
+public class ReportManager extends Initializers {
 
     private static final Logger logger = LogManager.getLogger(ReportManager.class);
-    public static PropertiesPojo propertiesPojo = new PropertiesPojo();
-    protected static ThreadLocal<TestMethodReporter> testThreadMethodReporter = new ThreadLocal<>();
-    protected static ThreadLocal<List<String>> failAnalysisThread = new ThreadLocal<>();
-    protected static ThreadLocal<List<String>> classFailAnalysisThread = new ThreadLocal<>();
-    protected static ThreadLocal<TestEnv> envThreadLocal = new ThreadLocal<>();
-    protected static ThreadLocal<List<LinkedHashMap<String, Object>>> dataTableCollectionApi = new ThreadLocal<>();
-    protected static ThreadLocal<LinkedHashMap<String, Object>> dataTableMapApi = new ThreadLocal<>();
-    protected TrigonAsserts sAssert = new TrigonAsserts();
-    protected static String executionType = "local";
-
-    public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
-    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy");
-
-    public static ExtentReports extent = null;
-    public static ThreadLocal<ExtentTest> extentTestNode = new ThreadLocal<>();
-    public static ThreadLocal<ExtentTest> extentClassNode = new ThreadLocal<>();
-    public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
-    public static ThreadLocal<ExtentTest> extentScenarioNode = new ThreadLocal<>();
-    public static ExtentPojo extentPojo = null;
-    public ExtentTest extentTest = null;
-
-
-    protected static ThreadLocal<AndroidDriver<AndroidElement>> androidDriverThreadLocal = new ThreadLocal<>();
-    protected static ThreadLocal<IOSDriver<IOSElement>> iosDriverThreadLocal = new ThreadLocal<>();
-    protected static ThreadLocal<RemoteWebDriver> webDriverThreadLocal = new ThreadLocal<>();
-    protected static CommonUtils commonUtils = new CommonUtils();
-    protected static String getSuiteNameWithTime;
-    protected static String platformType;
-    protected static String appType;
-    protected static String suiteParallel;
-    protected static int totalTestModules;
-    protected static String email_recipients =null;
-    protected static String error_email_recipients =null;
-    protected static String failure_email_recipients =null;
-    protected static boolean failStatus = false;
-    protected static boolean exceptionStatus = false;
-
-
-    public static RemoteWebDriver browser() {
-        return webDriverThreadLocal.get();
-    }
-
-    public static AndroidDriver<AndroidElement> android() {
-        return androidDriverThreadLocal.get();
-    }
-
-    public static IOSDriver<IOSElement> ios() {
-        return iosDriverThreadLocal.get();
-    }
-
-    public static TestEnv tEnv() {
-        return envThreadLocal.get();
-    }
-
-    public static CommonUtils cUtils() {
-        return commonUtils;
-    }
-
-    public static Database db;
 
     public void author_ScenarioName(String author, String scenario) {
-        try{
-            testThreadMethodReporter.get().setTestAuthor(author);
-            testThreadMethodReporter.get().setTestScenarioName(scenario);
-            extentMethodNode.get().assignAuthor(author);
-            extentMethodNode.get().getModel().setDescription(scenario);
-        }catch (Exception e){
+        try {
+            captureScenarioAndAuthor(author, scenario);
+        } catch (Exception e) {
             captureException(e);
         }
     }
-    public void author_ScenarioName(String author, String scenario, String verificationPoint) {
-        try{
-            testThreadMethodReporter.get().setTestAuthor(author);
-            testThreadMethodReporter.get().setTestScenarioName(scenario);
-            testThreadMethodReporter.get().setTestVerificationPoint(verificationPoint);
-            extentMethodNode.get().assignAuthor(author);
 
-        }catch (Exception e){
-            captureException(e);
-        }
-    }
     public void author_ScenarioName(String author, LinkedHashMap tData) {
-        try{
-            testThreadMethodReporter.get().setTestAuthor(author);
-            testThreadMethodReporter.get().setTestScenarioName(tData.get("Scenario").toString());
-            extentMethodNode.get().assignAuthor(author);
-        }catch (Exception e){
+        try {
+            captureScenarioAndAuthor(author, tData.get("Scenario").toString());
+        } catch (Exception e) {
             captureException(e);
         }
     }
@@ -140,124 +49,22 @@ public class ReportManager {
             Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
         }
     }
-    
-    
-    public Map<String, Object> createJiraTicket(String bugSummary, String description) {
-        String URI = "https://touch2success.atlassian.net/";
-        Map<String, Object> headers = new HashMap<>();
-
-        headers.put("Content-Type", "application/json");
-        headers.put("Accept", "application/json");
-        headers.put("Authorization", "Basic ZnVzaW9uYm90QHRvdWNoMnN1Y2Nlc3MuY29tOnQ2TmVYem9QanBiTGczVko0V1ZPNDExMQ==");
-
-        String projectId = "AUTOMATION";
-        if (tEnv().getTestType().equalsIgnoreCase("API")) {
-            projectId = propertiesPojo.getJira_api_proj();
-        }
-        if (tEnv().getTestType().equalsIgnoreCase("MYT")) {
-            projectId = propertiesPojo.getJira_myt_proj();
-        }
-        if (tEnv().getTestType().equalsIgnoreCase("D2S")) {
-            projectId = propertiesPojo.getJira_d2s_proj();
-        }
-        if (tEnv().getTestType().equalsIgnoreCase("FHApp")) {
-            projectId = propertiesPojo.getJira_fhapp_proj();
-        }
-        if (tEnv().getTestType().equalsIgnoreCase("CA")) {
-            projectId = propertiesPojo.getJira_ca_proj();
-        }
-        if (tEnv().getTestType().equalsIgnoreCase("FHWeb")) {
-            projectId = propertiesPojo.getJira_fhweb_proj();
-        }
-        if (tEnv().getTestType().equalsIgnoreCase("FHNative")) {
-            projectId = propertiesPojo.getJira_fhnative_proj();
-        }
-
-        String body = "{\n" +
-                "    \"fields\": {\n" +
-                "       \"project\":\n" +
-                "       {\n" +
-                "          \"key\": \"" + projectId + "\"\n" +
-                "       },\n" +
-                "       \"summary\": \"" + bugSummary + "\",\n" +
-                "       \"description\": \"" + description + "\",\n" +
-                "       \"issuetype\": {\n" +
-                "          \"name\": \"Task\"\n" +
-                "       }\n" +
-                "   }\n" +
-                "}";
-        Map<String, Object> rep = new HashMap<>();
-        try {
-            RestAssured.baseURI = URI;
-            RestAssured.useRelaxedHTTPSValidation();
-            RequestSpecification requestSpecification = RestAssured.given().request().headers(headers).body(body);
-            Response response = requestSpecification.post("rest/api/2/issue/").then().extract().response();
-            rep = JsonFlattener.flattenAsMap(response.asString());
-            logger.error("Jira Ticket Created , TicketID : " + rep.get("self").toString());
-            failAnalysisThread.get().add("JIRA ID: +" + rep.get("self").toString() + "");
-        } catch (Exception e) {
-            logger.error("Failed to create Jira Ticket");
-            captureException(e);
-        }
-        return rep;
-    }
 
     public void logReport(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         if (!elementReportCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
             try {
                 if (status.equalsIgnoreCase("PASS")) {
-                    logger.info(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().pass(message);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().pass(message);
-                    }
-                    if (testThreadMethodReporter.get() != null) {
-                        testThreadMethodReporter.get().setTestStatus("PASSED");
-                    }
+                    logPass(message, false);
                 } else if (status.equalsIgnoreCase("FAIL")) {
-                    logger.error(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().fail(message);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().fail(message);
-                    }
-                    if (testThreadMethodReporter.get() != null) {
-                        testThreadMethodReporter.get().setTestStatus("FAILED");
-                    }
-                    if (failAnalysisThread.get() != null) {
-                        failAnalysisThread.get().add(message);
-                    } else {
-                        classFailAnalysisThread.get().add(message);
-                    }
+                    logFail(message, false);
                 } else if (status.equalsIgnoreCase("INFO")) {
-                    logger.info(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().info(message);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().info(message);
-                    }
+                    logInfo(message, false);
                 } else if (status.equalsIgnoreCase("SKIP")) {
-                    logger.warn(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().skip(message);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().skip(message);
-                    }
-                    if (testThreadMethodReporter.get() != null) {
-                        testThreadMethodReporter.get().setTestStatus("SKIPPED");
-                    } else {
-                    }
-
+                    logSkip(message, false);
                 } else if (status.equalsIgnoreCase("WARN")) {
-                    logger.warn(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().warning(message);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().warning(message);
-                    }
+                    logWarn(message, false);
                 } else {
-                    logger.error("Report Initialization is Failed");
+                    logInfo(message, false);
                 }
             } catch (Exception e) {
                 captureException(e);
@@ -265,213 +72,93 @@ public class ReportManager {
         }
     }
 
-    public void logJSON(String status, String message) {
-
-    }
-
-    public void logMultipleJSON(String status, String message,String responseJSON) {
-
-        String apiName = "API : "+getAPIMethodName();
+    public void logMultipleJSON(String status, String message, String responseJSON) {
+        String apiName = "API : " + getAPIMethodName();
         Markup m1 = MarkupHelper.createCodeBlock(message, CodeLanguage.JSON);
         Markup m2 = MarkupHelper.createCodeBlock(responseJSON, CodeLanguage.JSON);
-        String m = "<details><summary><font color=\"green\"><b>"+apiName+"</b></font></summary> <table><tr><td>"+ m1.getMarkup() +" </td><td>"+ m2.getMarkup() + "</td></tr></table></details>";
-
+        String m = "<details><summary><font color=\"green\"><b>" + apiName + "</b></font></summary> <table><tr><td>" + m1.getMarkup() + " </td><td>" + m2.getMarkup() + "</td></tr></table></details>";
         try {
-                if (status.equalsIgnoreCase("PASS")) {
+            if (status.equalsIgnoreCase("PASS")) {
+                if (extentScenarioNode.get() != null) {
+                    extentScenarioNode.get().pass(m);
+                } else if (extentMethodNode.get() != null) {
+                    extentMethodNode.get().pass(m);
+                }
+                if (tEnv().getTestType().equalsIgnoreCase("api")) {
                     logger.info(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().pass(m);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().pass(m);
-                    }
-                    if (testThreadMethodReporter.get() != null) {
-                        testThreadMethodReporter.get().setTestStatus("PASSED");
-                    }
-                } else if (status.equalsIgnoreCase("FAIL")) {
-                    logger.error(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().fail(m);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().fail(m);
-                    }
-                    if (testThreadMethodReporter.get() != null) {
-                        testThreadMethodReporter.get().setTestStatus("FAILED");
-                    }
-                    if (failAnalysisThread.get() != null) {
-                        failAnalysisThread.get().add(message);
-                    } else {
-                        classFailAnalysisThread.get().add(message);
-                    }
-                } else if (status.equalsIgnoreCase("INFO")) {
-                    logger.info(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().info(m);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().info(m);
-                    }
-                } else if (status.equalsIgnoreCase("SKIP")) {
-                    logger.warn(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().skip(m);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().skip(m);
-                    }
-                    if (testThreadMethodReporter.get() != null) {
-                        testThreadMethodReporter.get().setTestStatus("SKIPPED");
-                    } else {
-                    }
-
-                } else if (status.equalsIgnoreCase("WARN")) {
-                    logger.warn(message);
-                    if(extentScenarioNode.get()!=null){
-                        extentScenarioNode.get().warning(m);
-                    }else if (extentMethodNode.get() != null) {
-                        extentMethodNode.get().warning(m);
-                    }
+                    logger.info(apiName + " is PASSED");
                 } else {
-                    logger.error("Report Initialization is Failed");
+                    logger.info(apiName + " is PASSED");
                 }
-            } catch (Exception e) {
-                captureException(e);
-            }
 
-    }
-
-    private String getAPIMethodName(){
-        String apiName;
-        int getIndex=0;
-        for(int i = 0;i<15;i++){
-            System.out.println(i+" : "+Thread.currentThread().getStackTrace()[i].getMethodName());
-            if(Thread.currentThread().getStackTrace()[i].getMethodName().contains("validate")){
-                getIndex = i;
-                getIndex++;
-                if(Thread.currentThread().getStackTrace()[getIndex].getMethodName().contains("validate")){
-                    getIndex++;
+            } else if (status.equalsIgnoreCase("FAIL")) {
+                logger.error(message);
+                if (extentScenarioNode.get() != null) {
+                    extentScenarioNode.get().fail(m);
+                } else if (extentMethodNode.get() != null) {
+                    extentMethodNode.get().fail(m);
                 }
-                break;
+                if (failAnalysisThread.get() != null) {
+                    failAnalysisThread.get().add(message);
+                }
+                logger.error(apiName + " is FAILED !! Check your API Parameters ");
             }
+        } catch (Exception e) {
+            captureException(e);
         }
-        apiName = Thread.currentThread().getStackTrace()[getIndex].getMethodName();
-        return apiName;
-    }
 
+    }
 
     public void logApiReport(String status, String message) {
-        String apiName = "Failed API : "+getAPIMethodName();
-        String failMessage = "<div style=\"color: #e50909;font-weight:bold;\"> "+apiName+" due to "+message+"</div>";
-        logger.error(message);
-        if(extentScenarioNode.get()!=null){
-            extentScenarioNode.get().fail(failMessage);
-        }else if (extentMethodNode.get() != null) {
-            extentMethodNode.get().fail(failMessage);
-        }
-        if (testThreadMethodReporter.get() != null) {
-            testThreadMethodReporter.get().setTestStatus("FAILED");
-        }
-        if (failAnalysisThread.get() != null) {
-            failAnalysisThread.get().add(message);
-        } else {
-            classFailAnalysisThread.get().add(message);
-        }
-    }
-
-
-/*
-    public void logReportWithScreenShot(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-
-        if (!elementReportCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-            if (screenshot_on_failure.equalsIgnoreCase("true")) {
-                if (status.equalsIgnoreCase("FAIL")) {
-                    String Screenshot = screenshotDriver();
-                    extentTestThreadLocal.get().fail(badge2 + message + badge5, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
-//                        testStatus1.add(message);
-//                        testStatus1.add("<br/>");
-//                        testAction.add("count");
-                    logger.error("****FAILED MESSAGE******" + message);
-//                        individualTestStatus.add("FAILED");
-                } else {
-                    logReport(status, message);
-                }
-
-            } else if (screenshot_on_failure.equalsIgnoreCase("false")) {
-
-                String Screenshot = screenshotDriver();
-
-                if ((extentTestThreadLocal.get() != null) && (Screenshot != null)) {
-                    if (status.equalsIgnoreCase("PASS")) {
-                        extentTestThreadLocal.get().pass(message, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
-                        //                            testAction.add("count");
-//                            individualTestStatus.add("PASSED");
-                    } else if (status.equalsIgnoreCase("FAIL")) {
-                        extentTestThreadLocal.get().fail(badge2 + message + badge5, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
-                        //                            testStatus1.add(message);
-//                            testStatus1.add("<br/>");
-//                            testAction.add("count");
-//                            logger.error("****FAILED MESSAGE******" + message);
-//                            individualTestStatus.add("FAILED");
-
-
-                    } else if (status.equalsIgnoreCase("INFO")) {
-                        extentTestThreadLocal.get().info(message).addScreenCaptureFromPath(Screenshot);
-                    } else if (status.equalsIgnoreCase("SKIP")) {
-                        extentTestThreadLocal.get().skip(message, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
-                    } else {
-                        Assert.fail("Error!! Report Initialization failed!! please Set setScenarioName in Test");
-                    }
-                }
-            }
-        }
-
-    }
-*/
-
-
-
-    public void logReportWithScreenShot(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         try {
-            if (!elementReportCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
-                String Screenshot = screenshotDriver();
-                if ((Screenshot != null)) {
-                    logReport(status, message);
-                }
+            if (status.equalsIgnoreCase("PASS")) {
+                logPass(message, false);
+            } else if (status.equalsIgnoreCase("FAIL")) {
+                String apiName = "Failed API : " + getAPIMethodName();
+                String failMessage = "<div style=\"color: #e50909;font-weight:bold;\"> " + apiName + " due to " + message + "</div>";
+                logFail(failMessage, false);
+            } else if (status.equalsIgnoreCase("INFO")) {
+                logInfo(message, false);
+            } else if (status.equalsIgnoreCase("SKIP")) {
+                logSkip(message, false);
+            } else if (status.equalsIgnoreCase("WARN")) {
+                logWarn(message, false);
+            } else {
+                logInfo(message, false);
             }
         } catch (Exception e) {
             captureException(e);
         }
     }
 
-
-    private String screenshotDriver() {
-        File screenshot = null;
-        String path = null;
-        try {
-            if (browser() != null) {
-                screenshot = ((TakesScreenshot) browser())
-                        .getScreenshotAs(FILE);
-            } else if (android() != null) {
-                screenshot = ((TakesScreenshot) android())
-                        .getScreenshotAs(FILE);
-            } else if (ios() != null) {
-                screenshot = ((TakesScreenshot) ios())
-                        .getScreenshotAs(FILE);
+    protected void logReportWithScreenShot(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
+        if (!elementReportCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
+            try {
+                if (status.equalsIgnoreCase("PASS")) {
+                    logPass(message, true);
+                } else if (status.equalsIgnoreCase("FAIL")) {
+                    logFail(message, true);
+                } else if (status.equalsIgnoreCase("INFO")) {
+                    logInfo(message, true);
+                } else if (status.equalsIgnoreCase("SKIP")) {
+                    logSkip(message, true);
+                } else if (status.equalsIgnoreCase("WARN")) {
+                    logWarn(message, true);
+                } else {
+                    logInfo(message, true);
+                }
+            } catch (Exception e) {
+                captureException(e);
             }
-            StackTraceElement[] stackTrace = Thread.currentThread()
-                    .getStackTrace();
-            String methodScreeenShotPath = trigonPaths.getScreenShotsPath()+ tEnv().getCurrentTestMethodName();
-            tEnv().setScreenshotPath(new File(methodScreeenShotPath));
-
-            path = methodScreeenShotPath + "/" + testThreadMethodReporter.get().getTestMethodName() + "" + "_" + "" + stackTrace[5].getMethodName() + "" + "_" + "[" + cUtils().getDateTimeStamp() + "]" + ".png";
-            copyFile(screenshot, new File((path)));
-        } catch (IOException e) {
-            captureException(e);
         }
-
-        return path;
     }
 
-    
     public void logStepAction(String message) {
-        logReport("INFO",message);
+        if(extentScenarioNode.get()!=null){
+            extentScenarioNode.get().info("<font style=\"color: #366792;font-weight:bold;\"> STEP : </font>"+message);
+        }else{
+            extentMethodNode.get().info("<font style=\"color: #366792;font-weight:bold;\"> STEP : </font>"+message);
+        }
     }
 
     public void logScenario(String ScenarioName) {
@@ -479,32 +166,14 @@ public class ReportManager {
         extentScenarioNode.set(extentMethodNode.get().createNode("<font color=\"#d0b2e6\">" + ScenarioName + "</font>"));
     }
 
-    protected void customAssertEqualsApi(String actual, String expected, String testType) {
-        try {
-            if ("api".equalsIgnoreCase(testType)) {
-                customAssertEquals(actual, expected);
-            }
-            if (("web".equalsIgnoreCase(testType)) || ("mobile".equalsIgnoreCase(testType))) {
-
-                if (expected.equals(actual)) {
-
-                } else {
-                    sAssert.assertEquals(actual, expected);
-               }
-            }
-        } catch (Exception e) {
-            captureException(e);
-        }
-    }
-
     protected void customAssertEquals(String actual, String expected) {
         try {
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
             if (expected.equals(actual)) {
-                logReport("PASS", "Actual Text:" + actual  + "Expected Exact Text:" + expected);
+                logReport("PASS", "Actual Text:" + actual + "Expected Exact Text:" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReport("FAIL", "Actual Text:" + actual  + "Expected Exact Text:" + expected);
+                logReport("FAIL", "Actual Text:" + actual + "Expected Exact Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -515,9 +184,9 @@ public class ReportManager {
         try {
             logger.info("Verifying NOT Equals Actual : " + actual + " with Expected : " + expected + "");
             if (!(expected.equals(actual))) {
-                logReport("PASS", "Actual Text:" + actual  + " Expected NOT EQUALS Text:" + expected);
+                logReport("PASS", "Actual Text:" + actual + " Expected NOT EQUALS Text:" + expected);
             } else {
-                logReport("FAIL", "Actual Text:" + actual  + " Expected NOT EQUALS Text:" + expected);
+                logReport("FAIL", "Actual Text:" + actual + " Expected NOT EQUALS Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -528,10 +197,10 @@ public class ReportManager {
         logger.info("Verifying Partial Equals Actual : " + actual + " with Expected : " + expected + "");
         try {
             if (actual.contains(expected)) {
-                logReport("PASS", "Actual Text:" + actual  + "Expected Partial Text:" + expected);
+                logReport("PASS", "Actual Text:" + actual + "Expected Partial Text:" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReport("FAIL", "Actual Text:" + actual  + "Expected Partial Text:" + expected);
+                logReport("FAIL", "Actual Text:" + actual + "Expected Partial Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -554,16 +223,16 @@ public class ReportManager {
             }
             if (expectedValueSize == actualValueSize) {
                 if ((expectedlist.equals(actuallist))) {
-                    logReport("PASS", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "Expected Exact Text:" + expected  + "ExpectedSize :" + expectedValueSize);
+                    logReport("PASS", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Exact Text:" + expected + "ExpectedSize :" + expectedValueSize);
                 } else {
                     actuallist.removeAll(expectedlist);
                     expectedlist.removeAll(actuallist);
-                    logReport("FAIL", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "Expected Exact Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
+                    logReport("FAIL", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Exact Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
                 }
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched "  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "Expected Exact Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched " + "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Exact Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -585,16 +254,16 @@ public class ReportManager {
             }
             if (expectedValueSize == actualValueSize) {
                 if ((expectedlist.contains(actuallist))) {
-                    logReport("PASS", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "Expected Partial Text:" + expected  + "ExpectedSize :" + expectedValueSize);
+                    logReport("PASS", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Partial Text:" + expected + "ExpectedSize :" + expectedValueSize);
                 } else {
                     actuallist.removeAll(expectedlist);
                     expectedlist.removeAll(actuallist);
-                    logReport("FAIL", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "Expected Partial Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
+                    logReport("FAIL", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Partial Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
                 }
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched "  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected Partial Text:" + expected  + "ExpectedSize :" + expectedValueSize  + "Additional values in Actual List" + actuallist  + "Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched " + "Actual Text:" + actual + "ActualSize :" + actualValueSize + "  Expected Partial Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -616,16 +285,16 @@ public class ReportManager {
             }
             if (expectedValueSize == actualValueSize) {
                 if (!(expectedlist.equals(actuallist))) {
-                    logReport("PASS", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + " ExpectedSize :" + expectedValueSize);
+                    logReport("PASS", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "  Expected NOT EQUALS Text:" + expected + " ExpectedSize :" + expectedValueSize);
                 } else {
                     actuallist.removeAll(expectedlist);
                     expectedlist.removeAll(actuallist);
-                    logReport("FAIL", "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + " ExpectedSize :" + expectedValueSize  + " Additional values in Actual List" + actuallist  + " Additional values in Expected List" + expectedlist);
+                    logReport("FAIL", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "  Expected NOT EQUALS Text:" + expected + " ExpectedSize :" + expectedValueSize + " Additional values in Actual List" + actuallist + " Additional values in Expected List" + expectedlist);
                 }
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched "  + "Actual Text:" + actual  + "ActualSize :" + actualValueSize  + "  Expected NOT EQUALS Text:" + expected  + " ExpectedSize :" + expectedValueSize  + " Additional values in Actual List" + actuallist  + " Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched " + "Actual Text:" + actual + "ActualSize :" + actualValueSize + "  Expected NOT EQUALS Text:" + expected + " ExpectedSize :" + expectedValueSize + " Additional values in Actual List" + actuallist + " Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -636,10 +305,10 @@ public class ReportManager {
         logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
         try {
             if (expected.equals(actual)) {
-                logReportWithScreenShot("PASS", "Actual Text:" + actual  + "Expected Exact Text:" + expected);
+                logReportWithScreenShot("PASS", "Actual Text:" + actual + "Expected Exact Text:" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReportWithScreenShot("FAIL", "Actual Text:" + actual  + "Expected Exact Text:" + expected);
+                logReportWithScreenShot("FAIL", "Actual Text:" + actual + "Expected Exact Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -650,9 +319,9 @@ public class ReportManager {
         try {
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
             if (actual.contains(expected)) {
-                logReportWithScreenShot("PASS", "Actual Text:" + actual  + "Expected Partial Text:" + expected);
+                logReportWithScreenShot("PASS", "Actual Text:" + actual + "Expected Partial Text:" + expected);
             } else {
-                logReportWithScreenShot("FAIL", "Actual Text:" + actual  + "Expected Partial Text:" + expected);
+                logReportWithScreenShot("FAIL", "Actual Text:" + actual + "Expected Partial Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -912,7 +581,7 @@ public class ReportManager {
 
     protected void dataToJSON(String name, String value) {
         try {
-            if(dataTableMapApi.get()!=null){
+            if (dataTableMapApi.get() != null) {
                 dataTableMapApi.get().put(name, value);
             }
         } catch (Exception e) {
@@ -922,7 +591,7 @@ public class ReportManager {
 
     protected void dataToJSON(String name, Map<String, Object> value) {
         try {
-            if(dataTableMapApi.get()!=null){
+            if (dataTableMapApi.get() != null) {
                 dataTableMapApi.get().put(name, value);
             }
         } catch (Exception e) {
@@ -930,4 +599,219 @@ public class ReportManager {
         }
     }
 
+    protected Map<String, Object> createJiraTicket(String bugSummary, String description) {
+        String URI = "https://touch2success.atlassian.net/";
+        Map<String, Object> headers = new HashMap<>();
+
+        headers.put("Content-Type", "application/json");
+        headers.put("Accept", "application/json");
+        headers.put("Authorization", "Basic ZnVzaW9uYm90QHRvdWNoMnN1Y2Nlc3MuY29tOnQ2TmVYem9QanBiTGczVko0V1ZPNDExMQ==");
+
+        String projectId = "AUTOMATION";
+        if (tEnv().getTestType().equalsIgnoreCase("API")) {
+            projectId = propertiesPojo.getJira_api_proj();
+        }
+        if (tEnv().getTestType().equalsIgnoreCase("MYT")) {
+            projectId = propertiesPojo.getJira_myt_proj();
+        }
+        if (tEnv().getTestType().equalsIgnoreCase("D2S")) {
+            projectId = propertiesPojo.getJira_d2s_proj();
+        }
+        if (tEnv().getTestType().equalsIgnoreCase("FHApp")) {
+            projectId = propertiesPojo.getJira_fhapp_proj();
+        }
+        if (tEnv().getTestType().equalsIgnoreCase("CA")) {
+            projectId = propertiesPojo.getJira_ca_proj();
+        }
+        if (tEnv().getTestType().equalsIgnoreCase("FHWeb")) {
+            projectId = propertiesPojo.getJira_fhweb_proj();
+        }
+        if (tEnv().getTestType().equalsIgnoreCase("FHNative")) {
+            projectId = propertiesPojo.getJira_fhnative_proj();
+        }
+
+        String body = "{\n" +
+                "    \"fields\": {\n" +
+                "       \"project\":\n" +
+                "       {\n" +
+                "          \"key\": \"" + projectId + "\"\n" +
+                "       },\n" +
+                "       \"summary\": \"" + bugSummary + "\",\n" +
+                "       \"description\": \"" + description + "\",\n" +
+                "       \"issuetype\": {\n" +
+                "          \"name\": \"Task\"\n" +
+                "       }\n" +
+                "   }\n" +
+                "}";
+        Map<String, Object> rep = new HashMap<>();
+        try {
+            RestAssured.baseURI = URI;
+            RestAssured.useRelaxedHTTPSValidation();
+            RequestSpecification requestSpecification = RestAssured.given().request().headers(headers).body(body);
+            Response response = requestSpecification.post("rest/api/2/issue/").then().extract().response();
+            rep = JsonFlattener.flattenAsMap(response.asString());
+            logger.error("Jira Ticket Created , TicketID : " + rep.get("self").toString());
+            failAnalysisThread.get().add("JIRA ID: +" + rep.get("self").toString() + "");
+        } catch (Exception e) {
+            logger.error("Failed to create Jira Ticket");
+            captureException(e);
+        }
+        return rep;
+    }
+
+    private void captureScenarioAndAuthor(String author, String scenario) {
+        if(extentMethodNode.get()!=null){
+            extentMethodNode.get().assignAuthor(author);
+            extentMethodNode.get().getModel().setDescription(scenario);
+            extentMethodNode.get().info("<font style=\"color: #3cbb2d;font-weight:bold;\"> SCENARIO : </font>"+scenario);
+        }
+        if(extentScenarioNode.get()!=null){
+            extentScenarioNode.get().assignAuthor(author);
+            extentScenarioNode.get().getModel().setDescription(scenario);
+            extentScenarioNode.get().info("<font style=\"color: #3cbb2d;font-weight:bold;\"> SCENARIO : </font>"+scenario);
+        }
+    }
+
+    private String screenshotDriver() {
+        File screenshot = null;
+        String path = null;
+        String newPath = null;
+        try {
+            if (browser() != null) {
+                screenshot = ((TakesScreenshot) browser())
+                        .getScreenshotAs(FILE);
+            } else if (android() != null) {
+                screenshot = ((TakesScreenshot) android())
+                        .getScreenshotAs(FILE);
+            } else if (ios() != null) {
+                screenshot = ((TakesScreenshot) ios())
+                        .getScreenshotAs(FILE);
+            }
+            StackTraceElement[] stackTrace = Thread.currentThread()
+                    .getStackTrace();
+            String methodScreeenShotPath = trigonPaths.getScreenShotsPath() + tEnv().getCurrentTestMethodName();
+            tEnv().setScreenshotPath(new File(methodScreeenShotPath));
+
+            String dateTime = cUtils().getDateTimeStamp();
+
+            path = methodScreeenShotPath + "/" + "" + stackTrace[7].getMethodName() + "" + "_" + "[" + dateTime + "]" + ".png";
+            copyFile(screenshot, new File((path)));
+            newPath = "ScreenShots" + "/" + tEnv().getCurrentTestMethodName() + "" + "/" + "" + stackTrace[7].getMethodName() + "" + "_" + "[" + dateTime + "]" + ".png";
+
+        } catch (IOException e) {
+            captureException(e);
+        }
+
+        return newPath;
+    }
+
+    private String getAPIMethodName() {
+        String apiName;
+        int getIndex = 0;
+        for (int i = 0; i < 15; i++) {
+            if (Thread.currentThread().getStackTrace()[i].getMethodName().contains("validate")) {
+                getIndex = i;
+                getIndex++;
+                if (Thread.currentThread().getStackTrace()[getIndex].getMethodName().contains("validate")) {
+                    getIndex++;
+                }
+                break;
+            }
+        }
+        apiName = Thread.currentThread().getStackTrace()[getIndex].getMethodName();
+        return apiName;
+    }
+
+    private void logWarn(String message, boolean screenshotMode) {
+        logger.warn(message);
+        if (extentScenarioNode.get() != null) {
+            screenshotInfo(extentScenarioNode.get(), message, screenshotMode);
+        } else if (extentMethodNode.get() != null) {
+            screenshotInfo(extentMethodNode.get(), message, screenshotMode);
+        }
+    }
+
+    private void screenshotWarn(ExtentTest node, String message, boolean screenshotMode) {
+        if (screenshotMode) {
+            String Screenshot = screenshotDriver();
+            node.warning(message, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
+        } else {
+            node.warning(message);
+        }
+    }
+
+    private void logSkip(String message, boolean screenshotMode) {
+        logger.warn(message);
+        if (extentScenarioNode.get() != null) {
+            screenshotSkip(extentScenarioNode.get(), message, screenshotMode);
+        } else if (extentMethodNode.get() != null) {
+            screenshotSkip(extentMethodNode.get(), message, screenshotMode);
+        }
+    }
+
+    private void screenshotSkip(ExtentTest node, String message, boolean screenshotMode) {
+        if (screenshotMode) {
+            String Screenshot = screenshotDriver();
+            node.skip(message, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
+        } else {
+            node.skip(message);
+        }
+    }
+
+    private void logInfo(String message, boolean screenshotMode) {
+        logger.info(message);
+        if (extentScenarioNode.get() != null) {
+            screenshotInfo(extentScenarioNode.get(), message, screenshotMode);
+        } else if (extentMethodNode.get() != null) {
+            screenshotInfo(extentMethodNode.get(), message, screenshotMode);
+        }
+    }
+
+    private void screenshotInfo(ExtentTest node, String message, boolean screenshotMode) {
+        if (screenshotMode) {
+            String Screenshot = screenshotDriver();
+            node.info(message, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
+        } else {
+            node.info(message);
+        }
+    }
+
+    private void logFail(String message, boolean screenshotMode) {
+        logger.error(message);
+        if (extentScenarioNode.get() != null) {
+            screenshotFail(extentScenarioNode.get(), message, screenshotMode);
+        } else if (extentMethodNode.get() != null) {
+            screenshotFail(extentMethodNode.get(), message, screenshotMode);
+        }
+        if (failAnalysisThread.get() != null) {
+            failAnalysisThread.get().add(message);
+        }
+    }
+
+    private void screenshotFail(ExtentTest node, String message, boolean screenshotMode) {
+        if (screenshotMode) {
+            String Screenshot = screenshotDriver();
+            node.fail(message, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
+        } else {
+            node.fail(message);
+        }
+    }
+
+    private void logPass(String message, boolean screenshotMode) {
+        logger.info(message);
+        if (extentScenarioNode.get() != null) {
+            screenshotPass(extentScenarioNode.get(), message, screenshotMode);
+        } else if (extentMethodNode.get() != null) {
+            screenshotPass(extentMethodNode.get(), message, screenshotMode);
+        }
+    }
+
+    private void screenshotPass(ExtentTest node, String message, boolean screenshotMode) {
+        if (screenshotMode) {
+            String Screenshot = screenshotDriver();
+            node.pass(message, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
+        } else {
+            node.pass(message);
+        }
+    }
 }

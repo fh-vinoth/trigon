@@ -258,13 +258,14 @@ public class Browsers extends Android {
                     }
                     browser().quit();
                     logger.info("Browser Session is closed");
-                    if(tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")){
-                        if(bsLocal!=null){
-                            bsLocal.stop();
-                            logger.info("BrowserStack Local Instance Stopped");
+                    if(tEnv().getBrowserstack_execution_local()!=null){
+                        if(tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")){
+                            if(bsLocal!=null){
+                                bsLocal.stop();
+                                logger.info("BrowserStack Local Instance Stopped");
+                            }
                         }
                     }
-
                 }
             } catch (Exception e) {
                 captureException(e);

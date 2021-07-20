@@ -93,7 +93,6 @@ public class APICore extends ReportManager {
 
     protected Response customRequest(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, Map<String, Object> multiPartMap) {
         try {
-            //logger.info("info", "Executing API: " + Thread.currentThread().getStackTrace()[3].getMethodName() + "  and  " + Thread.currentThread().getStackTrace()[4].getMethodName());
             String URI = tEnv().getApiURI();
             RestAssured.baseURI = URI;
             dataToJSON("URI", URI);
@@ -267,6 +266,7 @@ public class APICore extends ReportManager {
         try {
             dataToJSON("httpMethod", HttpMethod);
             dataToJSON("endPoint", Endpoint);
+            apiCoverage.add(Endpoint);
             double respTime;
             try {
                 switch (HttpMethod) {
@@ -316,6 +316,7 @@ public class APICore extends ReportManager {
             dataMap.put("URI", tEnv().getApiURI());
             dataMap.put("HTTPMethod", HttpMethod);
             dataMap.put("Endpoint", Endpoint);
+            apiCoverage.add(Endpoint);
             dataMap.put("Expected Status Code", expectedStatusCode);
 
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
@@ -367,6 +368,7 @@ public class APICore extends ReportManager {
             dataMap.put("URI", URI);
             dataMap.put("HTTPMethod", HttpMethod);
             dataMap.put("Endpoint", Endpoint);
+            apiCoverage.add(Endpoint);
             dataMap.put("Expected Status Code", expectedStatusCode);
 
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
@@ -537,7 +539,6 @@ public class APICore extends ReportManager {
 
             }
 
-
         }
         return map;
     }
@@ -565,11 +566,9 @@ public class APICore extends ReportManager {
             if (requestBody != null) {
                 requestBody = null;
             }
-
             if (expectedResponse != null) {
                 expectedResponse.clear();
             }
-
             if (dataTableCollectionApi.get().size() > 0) {
                 Gson pGson = new GsonBuilder().setPrettyPrinting().create();
                 String responseJSON = dataTableCollectionApi.get().get(0).get("responseJSON").toString();
