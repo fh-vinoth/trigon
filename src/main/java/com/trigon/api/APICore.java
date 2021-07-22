@@ -572,6 +572,7 @@ public class APICore extends ReportManager {
             if (dataTableCollectionApi.get().size() > 0) {
                 Gson pGson = new GsonBuilder().setPrettyPrinting().create();
                 String responseJSON = dataTableCollectionApi.get().get(0).get("responseJSON").toString();
+
                 dataTableCollectionApi.get().get(0).remove("responseJSON");
 
                 if(dataTableCollectionApi.get().get(0).get("apiTestStatus").equals("FAILED")){
@@ -579,6 +580,9 @@ public class APICore extends ReportManager {
                     logApiReport("FAIL",dataTableCollectionApi.get().get(0).get("failReason").toString());
                 }else{
                     logMultipleJSON("PASS",pGson.toJson(dataTableCollectionApi.get()),responseJSON);
+                }
+                if(tEnv().getTestType().equalsIgnoreCase("api")){
+                    logger.info(responseJSON);
                 }
             }
             dataTableCollectionApi.get().clear();

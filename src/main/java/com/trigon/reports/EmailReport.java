@@ -3,13 +3,12 @@ package com.trigon.reports;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
 import com.google.gson.stream.JsonWriter;
-import com.trigon.bean.testenv.TestEnv;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.trigon.reports.Initializers.tEnv;
 import static com.trigon.reports.ReportManager.cUtils;
 
 public class EmailReport {
@@ -17,33 +16,46 @@ public class EmailReport {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
             StringBuffer bf = new StringBuffer();
-            bf.append(header(report,suiteName));
-            bf.append(reportLinks(report));
-            bf.append(body(report));
-            bf.append(footers());
+            StringBuffer bfFailure = new StringBuffer();
+            String headers = header(report, suiteName);
+            String reportLinks = reportLinks(report);
+            String failureData = failureData(report);
+            String body = body(report);
+            String footers = footers();
+            bf.append(headers);
+            bf.append(reportLinks);
+            bf.append(failureData);
+            bf.append(body);
+            bf.append(footers);
             bw.write(bf.toString());
             bw.flush();
             bw.close();
-            generateEmailBody(reportPath,report,bf.toString(),"",suiteName,testType,executionType);
+
+            bfFailure.append(headers);
+            bfFailure.append(reportLinks);
+            bfFailure.append(failureData);
+            bfFailure.append(footers);
+
+            generateEmailBody(reportPath, report, bf.toString(), bfFailure.toString(), suiteName, testType, executionType);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void generateEmailBody(String reportPath, ExtentReports stats, String body, String failedData, String suiteName,String testType, String executionType) {
+    private static void generateEmailBody(String reportPath, ExtentReports stats, String body, String failedData, String suiteName, String testType, String executionType) {
         try {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(reportPath + "/SupportFiles/HTML/emailBody.json", false)));
             int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
             int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
             String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
 
-            String subject = ""+suiteName+" | Pass : "+passPercentage+"% | Fail : "+failPercentage+"% | "+timeTaken+"";
+            String subject = "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
 
             writer.beginObject();
             writer.name("subject").value(subject);
             writer.name("suiteName").value(suiteName);
-            writer.name("body").value(body.replace("width: 80%","width: 100%"));
-            writer.name("failedData").value(failedData);
+            writer.name("body").value(body.replace("width: 80%", "width: 100%"));
+            writer.name("failedData").value(failedData.replace("width: 80%", "width: 100%"));
             writer.name("testType").value(testType);
             writer.name("executionType").value(executionType);
             writer.name("apiCoverage").value("70%");
@@ -186,7 +198,7 @@ public class EmailReport {
                 "    </tr>";
     }
 
-    private static String reportLinks(ExtentReports stats){
+    private static String reportLinks(ExtentReports stats) {
 
         String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
 
@@ -199,14 +211,14 @@ public class EmailReport {
                 "                        <td colspan=\"2\">Detailed Analysis Reports</td>\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/"+suiteWithTime+"/"+suiteWithTime+".html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
                 "                                style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Report</a></td>\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/"+suiteWithTime+"/EmailReport.html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/" + suiteWithTime + "/EmailReport.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Summary Report</a></td>\n" +
                 "\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/"+suiteWithTime+"/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Logs</a></td>\n" +
                 "                        <td><a href=\"https://touch2success.testrail.com/index.php?/projects/overview\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">TestRail Report</a></td>\n" +
@@ -333,5 +345,100 @@ public class EmailReport {
                 "</body>\n" +
                 "</html>";
     }
+
+    private static String failureData(ExtentReports stats) {
+        StringBuffer bf = new StringBuffer();
+
+        // Fixed body Top
+        AtomicBoolean failData = new AtomicBoolean(false);
+
+        stats.getReport().getTestList().forEach(module -> {
+            String moduleName = module.getName();
+            module.getChildren().forEach(testClass -> {
+                String className = testClass.getName();
+                testClass.getChildren().forEach(method -> {
+                    String methodName = method.getName();
+                    String description = method.getDescription();
+                    // If Test Fails
+                    if (method.getStatus().getName().equals("Fail")) {
+                        if (!failData.get()) {
+                            bf.append("    <tr>\n" +
+                                    "        <td>\n" +
+                                    "            <div style=\"margin: 10px\">\n" +
+                                    "                <table style=\"background-color: #fcf8f8;border: 1px solid #EEEEEE;width: 98%;border-radius: 10px;margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse\">\n" +
+                                    "                    <tbody>\n");
+
+                            bf.append("<tr style=\"background: #f24354;height: 50px\">\n" +
+                                    "                        <td colspan=\"3\" style=\"color: #fff;\">\n" +
+                                    "                            Test Failures Summary \n" +
+                                    "                        </td>\n" +
+                                    "                    </tr>\n");
+                            bf.append("                    <tr style=\"background: #F3F3F3;height: 40px;text-align: left\">\n" +
+                                    "                        <td style=\"width: 10%;padding-left: 30px\">Status</td>\n" +
+                                    "                        <td style=\"width: 40%\">Test Details</td>\n" +
+                                    "                        <td style=\"width: 50%;\">Test Features & Failures</td>\n" +
+                                    "                    </tr>\n");
+                            failData.set(true);
+                        }
+
+                        String StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png";
+
+                        bf.append("<tr style=\"text-align: left\">\n" +
+                                "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
+                                "                            <div>\n" +
+                                "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"pass\">\n" +
+                                "                            </div>\n" +
+                                "                        </td>\n" +
+                                "                        <td style=\"padding-top:10px\">\n" +
+                                "                            <div>\n" +
+                                "                                <div style=\"word-break:break-all\">" + methodName + "</div>\n" +
+                                "                                <div style=\"padding-top: 5px;font-size: 11px;color: #928383\">\n" +
+                                "                                <div style=\"word-break:break-all\"><b>Module : </b>" + moduleName + "</div>\n" +
+                                "                                <div style=\"word-break:break-all\"><b>Class : </b>" + className + "</div>\n" +
+                                "                                </div>\n" +
+                                "                            </div>\n" +
+                                "                        </td>\n" +
+                                "                        <td>\n" +
+                                "                            <div style=\"word-break:break-all\">\n" +
+                                "                                <b>Scenario :</b> " + description + "\n" +
+                                "                            </div>\n");
+                        bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
+                        method.getLogs().forEach(log -> {
+                            if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
+                                if (!log.getDetails().startsWith("<details><summary>")) {
+                                    bf.append("<div>" + log.getDetails() + "</div>");
+                                }
+                            }
+                        });
+                        if (method.hasChildren()) {
+                            method.getChildren().forEach(child -> {
+                                child.getLogs().forEach(log -> {
+                                    if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
+                                        if (!log.getDetails().startsWith("<details><summary>")) {
+                                            bf.append("<div>" + log.getDetails() + "</div>");
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                        bf.append("                            </div>\n");
+                    }
+                });
+            });
+        });
+
+        if (failData.get()) {
+            bf.append("                        </td>\n" +
+                    "                    </tr>\n" +
+                    "                    </tbody>\n" +
+                    "                </table>\n" +
+                    "            </div>\n" +
+                    "        </td>\n" +
+                    "    </tr>");
+        }
+
+        return bf.toString();
+    }
+
 
 }

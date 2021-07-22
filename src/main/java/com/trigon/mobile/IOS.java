@@ -43,7 +43,9 @@ public class IOS extends ReportManager {
                 iosCaps.setCapability("browserstack.debug", "true");
                 iosCaps.setCapability("browserstack.networkLogs", "true");
                 iosCaps.setCapability("browserstack.appiumLogs", "true");
-
+                //iosCaps.setCapability("browserstack.geoLocation","NZ");
+                //iosCaps.setCapability("autoAcceptAlerts", "true");
+                //iosCaps.setCapability("autoDissmissAlerts", "true");
                 iosDriverThreadLocal.set(new IOSDriver<>(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), iosCaps));
 
             } else {

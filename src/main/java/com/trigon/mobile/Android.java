@@ -45,6 +45,7 @@ public class Android extends IOS {
                 androidCaps.setCapability("browserstack.debug", "true");
                 androidCaps.setCapability("browserstack.networkLogs", "true");
                 androidCaps.setCapability("browserstack.appiumLogs", "true");
+                androidCaps.setCapability("autoGrantPermissions","true");
                 //androidCaps.setCapability("browserstack.networkProfile", "4g-lte-good");
                 androidDriverThreadLocal.set(new AndroidDriver<>(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), androidCaps));
 

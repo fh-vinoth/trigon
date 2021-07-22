@@ -12,7 +12,7 @@ public class Category_SEARCH extends TestLocalController {
 
     private static final Logger logger = LogManager.getLogger(Category_SEARCH.class);
 
-    @Test
+    @Test (enabled = true)
     public void searchCategory_test() {
         try{
             author_ScenarioName("Bhaskar", "Searching the particular category from category/search endpoint");
@@ -60,6 +60,28 @@ public class Category_SEARCH extends TestLocalController {
             logStepAction("Creating category and getting the category id");
             String category_id = createCategory();
             logger.info("Created category_id: " + category_id);
+
+        }catch (Exception e){
+            hardFail(e);
+        }finally {
+            testTearDown();
+        }
+
+    }
+    @Test(enabled = true)
+    public void searchCategory_test4() {
+        try{
+            author_ScenarioName("Bhaskar", "Searching the particular category from category/search endpoint");
+
+            logStepAction("Creating category and getting the category id");
+            String category_id = createCategory();
+            logger.info("Created category_id: " + category_id);
+
+            logStepAction("Searching the created category");
+            searchCategory(category_id);
+
+            logStepAction("Deleting the created category");
+            deleteCategory(category_id);
 
         }catch (Exception e){
             hardFail(e);

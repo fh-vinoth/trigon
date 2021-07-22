@@ -6,9 +6,9 @@
                           value="bhaskar.marrikunta@foodhub.com"></parameter>
                 <!-- Dont Include Sub folder path in reportsPath-->
         <parameter name="reportPath"
-                   value="/Users/bhaskarreddy/Desktop/Data/Automation/Development/trigon/src/test/resources/TestResults/API_Endpoint_Automation_Category_2021-07-19-215327"/>
+                   value="/Users/bhaskarreddy/Desktop/Data/Automation/Development/trigon/src/test/resources/TestResults/API_Endpoint_Automation_Category_2021-07-22-005944"/>
 <!--        <parameter name="uploadToAWS" value="false"/>-->
-<!--        <parameter name="sendFailedReport" value="false"/>-->
+        <parameter name="sendFailedReport" value="true"/>
         <classes>
             <class name="com.trigon.email.SendEmail"/>
         </classes>
