@@ -24,16 +24,13 @@ public class BaseMethods {
     //8 - Automation -Yet to Start
      */
 
-    public void setTestCaseFinalStatus(String runId, int result, String comment, String methodName, ThreadLocal<JsonWriter> classWriter) {
+    public void setTestCaseFinalStatus(String runId, int result, String comment, String methodName) {
         try {
             String testCaseId = getTestCaseIdByMethodName(runId, methodName);
             if (testCaseId != null) {
                 reportTestCaseStatus(result, comment, runId, testCaseId);
-                classWriter.get().name("testRail_Update_Satus").value("Success");
             } else {
-                classWriter.get().name("testRail_Update_Satus").value("Fail");
                 logger.error("The Test Method Not found in TestRail" + methodName);
-
             }
 
         } catch (IOException | APIException e) {

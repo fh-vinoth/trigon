@@ -21,4 +21,18 @@ public class DataProviders {
         Object[][] dataProvider = excelDataProvider.getExcelData(method);
         return dataProvider;
     }
+
+    @DataProvider(name = "getDataFromJsonParallel", parallel = true)
+    public Object[][] jsonDataProviderParallel(Method method) {
+        JSONDataProvider jsonDataProvider = new JSONDataProvider();
+        Object[][] dataProvider = jsonDataProvider.getJsonData(method.getName());
+        return dataProvider;
+    }
+
+    @DataProvider(name = "getDataFromExcelParallel", parallel = true)
+    public Object[][] excelDataProviderParallel(Method method) {
+        ExcelDataProvider excelDataProvider = new ExcelDataProvider();
+        Object[][] dataProvider = excelDataProvider.getExcelData(method);
+        return dataProvider;
+    }
 }

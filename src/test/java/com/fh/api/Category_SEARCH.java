@@ -12,7 +12,7 @@ public class Category_SEARCH extends TestLocalController {
 
     private static final Logger logger = LogManager.getLogger(Category_SEARCH.class);
 
-    @Test
+    @Test (enabled = true)
     public void searchCategory_test() {
         try{
             author_ScenarioName("Bhaskar", "Searching the particular category from category/search endpoint");
@@ -35,7 +35,64 @@ public class Category_SEARCH extends TestLocalController {
 
     }
 
+    @Test
+    public void searchCategory_test2() {
+        try{
+            author_ScenarioName("Reddy", "Searching the particular category from category/search endpoint2");
+
+            logStepAction("Creating category and getting the category id");
+            String category_id = createCategory();
+            logger.info("Created category_id: " + category_id);
+
+        }catch (Exception e){
+            hardFail(e);
+        }finally {
+            testTearDown();
+        }
+
+    }
+
+    @Test
+    public void searchCategory_test3() {
+        try{
+            author_ScenarioName("Reddy", "Searching the particular category from category/search endpoint3");
+
+            logStepAction("Creating category and getting the category id");
+            String category_id = createCategory();
+            logger.info("Created category_id: " + category_id);
+
+        }catch (Exception e){
+            hardFail(e);
+        }finally {
+            testTearDown();
+        }
+
+    }
+    @Test(enabled = true)
+    public void searchCategory_test4() {
+        try{
+            author_ScenarioName("Bhaskar", "Searching the particular category from category/search endpoint");
+
+            logStepAction("Creating category and getting the category id");
+            String category_id = createCategory();
+            logger.info("Created category_id: " + category_id);
+
+            logStepAction("Searching the created category");
+            searchCategory(category_id);
+
+            logStepAction("Deleting the created category");
+            deleteCategory(category_id);
+
+        }catch (Exception e){
+            hardFail(e);
+        }finally {
+            testTearDown();
+        }
+
+    }
+
     public String createCategory() {
+        //logScenario("Creating Categorey");
         Map<String, Object> headers = new HashMap<>();
         Map<String, Object> formparams = new HashMap<>();
         Map<String, Object> queryparams = new HashMap<>();
@@ -73,7 +130,7 @@ public class Category_SEARCH extends TestLocalController {
         formparams.put("q", category_id);
 
         try {
-            api().validateStaticResponse("POST", endPoint, headers, null, queryparams, formparams, null, null, "200", null);
+            api().validateStaticResponse("POST", endPoint, headers, null, queryparams, formparams, null, null, "201", null);
         } catch (Exception e) {
             hardFail("Searching Category is not found");
         }
@@ -82,15 +139,16 @@ public class Category_SEARCH extends TestLocalController {
     public void deleteCategory(String category_id) {
         Map<String, Object> headers = new HashMap<>();
         Map<String, Object> queryparams = new HashMap<>();
+        Map<String, Object> expectedResponse = new HashMap<>();
 
         headers.put("Content-Type", "application/x-www-form-urlencoded");
         headers.put("Store", tEnv().getApiStore());
         queryparams.put("api_token", tEnv().getApiToken());
 
         String endpoint = "category/" + category_id;
-
+        expectedResponse.put("outcome","success2");
         try {
-            api().validateStaticResponse("DELETE", endpoint, headers, null, queryparams, null, null, null, "200", null);
+            api().validateStaticResponse("DELETE", endpoint, headers, null, queryparams, null, null, null, "200", expectedResponse);
         } catch (Exception e) {
             hardFail("Category is not deleted.");
         }

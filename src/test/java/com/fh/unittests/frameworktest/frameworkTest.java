@@ -14,7 +14,7 @@ public class frameworkTest extends TestLocalController {
     public void unitTest() {
         browser().findElement(By.id("twotabsearchtextbox")).sendKeys("iphone");
         author_ScenarioName("bhaskar_parallelClass1_Method1", "parallelClass1_Method1 scenario");
-        testStatus("PASS", "parallelClass1_Method1 PASSED");
+        logReport("PASS", "parallelClass1_Method1 PASSED");
     }
 
     @Test
@@ -25,7 +25,7 @@ public class frameworkTest extends TestLocalController {
         //browser().findElement(By.linkText("Web")).click();
         //tObj().frameworkTest().searchTextBox_enterText("bhaskar");
         author_ScenarioName("bhaskar_parallelClass1_Method2", "parallelClass1_Method2 scenario");
-        testStatus("PASS", "parallelClass1_Method2 PASSED");
+        logReport("PASS", "parallelClass1_Method2 PASSED");
 
     }
 }

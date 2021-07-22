@@ -1,5 +1,6 @@
 package com.trigon.web;
 
+import com.browserstack.local.Local;
 import com.trigon.mobile.Android;
 import com.trigon.mobile.AppiumManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -28,12 +29,14 @@ import java.util.concurrent.TimeUnit;
 
 public class Browsers extends Android {
     private static final Logger logger = LogManager.getLogger(Browsers.class);
+    Local bsLocal = null;
 
     protected void createBrowserInstance(ITestContext context, XmlTest xmlTest) {
         String browserType = "chrome";
         if ((tEnv().getWebBrowser() != null) || tEnv().getWebBrowser().isEmpty()) {
             browserType = tEnv().getWebBrowser();
         }
+        extentClassNode.get().assignDevice(browserType);
         switch (browserType) {
             case "chrome":
                 try {
@@ -133,12 +136,36 @@ public class Browsers extends Android {
         caps.setCapability("language", "en");
         caps.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
         caps.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
-
-
-        try {
-            webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), caps));
-        } catch (Exception e) {
-            captureException(e);
+        if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
+            caps.setCapability("browserstack.local", true);
+            caps.setCapability("forcelocal", "true");
+            caps.setCapability("acceptSslCert", "true");
+            bsLocal = new Local();
+            HashMap<String, String> bsLocalArgs = new HashMap<String, String>();
+            bsLocalArgs.put("key", propertiesPojo.getBrowserStack_Password());
+            try {
+                bsLocal.start(bsLocalArgs);
+                logger.info("BrowserStack local Instance Started");
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    bsLocal.stop();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+            try {
+                webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub.browserstack.com/wd/hub"), caps));
+            } catch (Exception e) {
+                captureException(e);
+            }
+        }else
+        {
+            try {
+                webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), caps));
+            } catch (Exception e) {
+                captureException(e);
+            }
         }
     }
 
@@ -231,6 +258,14 @@ public class Browsers extends Android {
                     }
                     browser().quit();
                     logger.info("Browser Session is closed");
+                    if(tEnv().getBrowserstack_execution_local()!=null){
+                        if(tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")){
+                            if(bsLocal!=null){
+                                bsLocal.stop();
+                                logger.info("BrowserStack Local Instance Stopped");
+                            }
+                        }
+                    }
                 }
             } catch (Exception e) {
                 captureException(e);

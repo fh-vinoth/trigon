@@ -44,16 +44,6 @@ public class TestModelCore extends ReportManager {
             JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
             ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
             locator = eRepo.getElements().get(s).getAsJsonObject().get(tEnv().getElementLocator()).getAsString();
-
-//            String p = tEnv().getElementLocator();
-//            JSONArray jsonArray = JsonPath.read(tEnv().getPagesJsonFile(), "$.." + s + ".*." + tEnv().getElementLocator());
-//            if (jsonArray.size() == 0) {
-//
-//
-//                jsonArray = JsonPath.read(tEnv().getPagesJsonFile(), "$.." + s + "." + p);
-//            }
-//
-//            locator = jsonArray.get(0).toString();
         } catch (Exception e) {
             captureException(e);
         }

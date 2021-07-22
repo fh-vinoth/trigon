@@ -9,7 +9,5 @@ public class Queries1 extends TestLocalController {
     @Test
     public void queries(){
 
-        String OTPMessage = db.SelectTableInDB("select * from config where host = 'automation-uk1.t2scdn.com'");
-        System.out.println(OTPMessage);
     }
 }

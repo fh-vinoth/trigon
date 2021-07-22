@@ -22,6 +22,7 @@ public class IOS extends ReportManager {
         MutableCapabilities iosCaps = new MutableCapabilities();
         long startTime = System.currentTimeMillis();
         try {
+            extentClassNode.get().assignDevice(tEnv().getIosDevice());
             if (executionType.equalsIgnoreCase("remote")) {
                 iosCaps.setCapability("os_version", tEnv().getIosOSVersion());
                 iosCaps.setCapability("deviceName", tEnv().getIosDevice());
@@ -42,7 +43,9 @@ public class IOS extends ReportManager {
                 iosCaps.setCapability("browserstack.debug", "true");
                 iosCaps.setCapability("browserstack.networkLogs", "true");
                 iosCaps.setCapability("browserstack.appiumLogs", "true");
-
+                //iosCaps.setCapability("browserstack.geoLocation","NZ");
+                //iosCaps.setCapability("autoAcceptAlerts", "true");
+                //iosCaps.setCapability("autoDissmissAlerts", "true");
                 iosDriverThreadLocal.set(new IOSDriver<>(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), iosCaps));
 
             } else {

@@ -531,7 +531,12 @@ public class TriBot {
             paths.forEach(filePath -> {
                 StringBuffer fPath = new StringBuffer();
                 if (!filePath.toFile().isDirectory()) {
-                    List<String> pathEx = Arrays.asList(filePath.toString().split("/"));
+                    List<String> pathEx;
+                    if(System.getProperty("os.name").contains("Windows")||System.getProperty("os.name").contains("windows")){
+                        pathEx= Arrays.asList(filePath.toString().split("\\\\"));
+                    }else{
+                        pathEx= Arrays.asList(filePath.toString().split("/"));
+                    }
                     int j = 0;
                     for (int i = 0; i < pathEx.size(); i++) {
                         if (pathEx.get(i).equalsIgnoreCase("com")) {

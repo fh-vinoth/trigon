@@ -88,7 +88,7 @@ public class Database extends TrigonUtils {
         return connection;
     }
 
-    public static synchronized  String connecttodatabaseString(String query, String value) {
+    public static synchronized String sendQuery(String query, String columnLabel) {
         String resultArray = null;
         Connection connection = null;
         Statement stmt = null;
@@ -98,11 +98,9 @@ public class Database extends TrigonUtils {
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             logger.info("Executed Query Statement " + query);
-            logger.info("The Result Set is  " + rs.toString());
             while (rs.next()) {
-                resultArray = rs.getString(value);
+                resultArray = rs.getString(columnLabel);
             }
-            logger.info("The Result Array is  " + resultArray);
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -127,40 +125,7 @@ public class Database extends TrigonUtils {
         return resultArray;
     }
 
-
-    private static synchronized ResultSet executeMyQuery(String query) {
-        ResultSet resultSet = null;
-        Connection connection = null;
-        Statement stmt = null;
-        try {
-            connection = connect();
-            logger.info("Database connection success");
-            stmt = connection.createStatement();
-            resultSet = stmt.executeQuery(query);
-            logger.info("Executed Query Statement " + query);
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (connection != null && !connection.isClosed()) {
-                    connection.close();
-                }
-                if (session != null && session.isConnected()) {
-                    logger.info("Closing SSH Connection");
-                    session.disconnect();
-                }
-            } catch (Exception e) {
-
-            }
-        }
-        return resultSet;
-    }
-
-    public static synchronized ArrayList<String> connecttodatabase(String query, String value) {
+    public static synchronized ArrayList<String> sendQueryReturnList(String query, String value) {
         ArrayList resultArray = new ArrayList();
 
         Connection connection = null;
@@ -199,21 +164,17 @@ public class Database extends TrigonUtils {
         return resultArray;
     }
 
-
-    public static synchronized String UpdateTableInDB(String query) {
+    public static synchronized String updateQuery(String query) {
         Connection connection = null;
         Statement stmt = null;
         try {
             connection = connect();
             logger.info("Database connection success");
             stmt = connection.createStatement();
-            int rs = stmt.executeUpdate(query);
+            stmt.executeUpdate(query);
             logger.info("Executed Query Statement " + query);
-            logger.info(rs);
-
         } catch (Exception e) {
             e.printStackTrace();
-
         } finally {
             try {
                 if (stmt != null) {
@@ -230,11 +191,10 @@ public class Database extends TrigonUtils {
 
             }
         }
-
         return query;
     }
 
-    public static synchronized String SelectTableInDB(String query) {
+    public static synchronized String sendQuery(String query,int columnIndex) {
         String rs1 = null;
         Connection connection = null;
         Statement stmt = null;
@@ -245,9 +205,8 @@ public class Database extends TrigonUtils {
             ResultSet rs = stmt.executeQuery(query);
             logger.info("Executed Query Statement " + query);
             if (rs.next()) {
-                rs1 = rs.getString(1);
+                rs1 = rs.getString(columnIndex);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -268,43 +227,5 @@ public class Database extends TrigonUtils {
         }
         return rs1;
     }
-
-    public static synchronized int GetDBvalues(String query) {
-        int id = 0;
-        Connection connection = null;
-        Statement stmt = null;
-        try {
-            connection = connect();
-            logger.info("Database connection success");
-            stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            logger.info("Executed Query Statement " + query);
-
-            while (rs.next()) {
-                id = rs.getInt("id");
-                logger.info(id);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (connection != null && !connection.isClosed()) {
-                    connection.close();
-                }
-                if (session != null && session.isConnected()) {
-                    logger.info("Closing SSH Connection");
-                    session.disconnect();
-                }
-            } catch (Exception e) {
-
-            }
-        }
-        return id;
-    }
-
 
 }

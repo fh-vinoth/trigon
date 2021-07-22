@@ -93,14 +93,8 @@ public class APICore extends ReportManager {
 
     protected Response customRequest(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, Map<String, Object> multiPartMap) {
         try {
-            //logger.info("info", "Executing API: " + Thread.currentThread().getStackTrace()[3].getMethodName() + "  and  " + Thread.currentThread().getStackTrace()[4].getMethodName());
             String URI = tEnv().getApiURI();
             RestAssured.baseURI = URI;
-            LinkedHashMap<String, Object> dataMap = new LinkedHashMap<>();
-            dataMap.put("status", "INFO");
-            dataMap.put("time", cUtils().getCurrentTimeinMilliSecondsWithColon());
-            dataMap.put("URI", URI);
-            dataToJSON("URI1", dataMap);
             dataToJSON("URI", URI);
         } catch (Exception e) {
             captureException(e);
@@ -200,12 +194,12 @@ public class APICore extends ReportManager {
                     failStatus.add("FAILED");
                     failAnalysisThread.get().add("[ACT : " + response.getStatusCode() + "] " + " [EXP : " + StatusCode + "]");
                     dataToJSON("responseJSON", response.getBody().asString());
-                    dataToJSON("subTestStatus", "FAILED");
+                    dataToJSON("apiTestStatus", "FAILED");
+                    dataToJSON("failReason","[ACT : " + response.getStatusCode() + "] " + " [EXP : " + StatusCode + "]");
                 } else {
                     flattenMap = JsonFlattener.flattenAsMap(response.asString());
                     flattenMap.put("actualStatusCode", response.getStatusCode());
                     dataToJSON("responseJSON", response.getBody().asString());
-                    logJSON("PASS", response.getBody().asString());
                     if (expectedResponse != null) {
                         if (modifiedExpectedResponse != null) {
                             validateResponseFromMap(flattenMap, modifiedExpectedResponse, failStatus);
@@ -214,17 +208,17 @@ public class APICore extends ReportManager {
                         }
                     } else {
                         if (failStatus.size() > 0) {
-                            dataToJSON("subTestStatus", "FAILED");
+                            dataToJSON("apiTestStatus", "FAILED");
                         } else {
-                            dataToJSON("subTestStatus", "PASSED");
+                            dataToJSON("apiTestStatus", "PASSED");
                         }
                     }
                 }
             } else {
-                dataToJSON("subTestStatus", "PASSED");
+                dataToJSON("apiTestStatus", "PASSED");
             }
         } catch (Exception e) {
-            dataToJSON("subTestStatus", "FAILED");
+            dataToJSON("apiTestStatus", "FAILED");
             captureException(e);
         }
         return flattenMap;
@@ -243,24 +237,24 @@ public class APICore extends ReportManager {
                             failStatus.add("FAILED");
                             failAnalysisThread.get().add("[Actual value : " + actual.get(k).toString() + "] " + " [Expected Value : " + expectedResponse.get(k).toString() + "]");
                             actualResponse.put(k, actual.get(k).toString());
-                            logger.error("Actual Text:" + actual.get(k).toString() + " Expected Exact Text:" + expectedResponse.get(k).toString());
+                            dataToJSON("failReason","Actual Text:" + actual.get(k).toString() + " Expected Exact Text:" + expectedResponse.get(k).toString());
                             sAssert.assertEquals(actual.get(k).toString(), expectedResponse.get(k).toString());
                         }
                     } catch (NullPointerException e) {
                         failStatus.add("FAILED");
                         failAnalysisThread.get().add("Expected or Actual Response Key " + k + " NOT Found");
-                        logger.error("Expected or Actual Response Key " + k + " NOT Found");
+                        dataToJSON("failReason","Expected or Actual Response Key " + k + " NOT Found");
                     }
                 }
             } else {
-                logger.error("Expected or Actual Response Map is Empty or null");
+                dataToJSON("failReason","Expected or Actual Response Map is Empty or null");
             }
             dataToJSON("expectedResponse", new HashMap<>(expectedResponse));
             dataToJSON("actualResponse", actualResponse);
             if (failStatus.size() > 0) {
-                dataToJSON("subTestStatus", "FAILED");
+                dataToJSON("apiTestStatus", "FAILED");
             } else {
-                dataToJSON("subTestStatus", "PASSED");
+               dataToJSON("apiTestStatus", "PASSED");
             }
         } catch (Exception e) {
             captureException(e);
@@ -272,6 +266,7 @@ public class APICore extends ReportManager {
         try {
             dataToJSON("httpMethod", HttpMethod);
             dataToJSON("endPoint", Endpoint);
+            apiCoverage.add(Endpoint);
             double respTime;
             try {
                 switch (HttpMethod) {
@@ -297,7 +292,7 @@ public class APICore extends ReportManager {
                 }
 
             } catch (Exception e) {
-                dataToJSON("subTestStatus", "FAILED");
+                dataToJSON("apiTestStatus", "FAILED");
                 failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
                 apiTearDown(null, null, null, null, null, null, null);
             }
@@ -321,6 +316,7 @@ public class APICore extends ReportManager {
             dataMap.put("URI", tEnv().getApiURI());
             dataMap.put("HTTPMethod", HttpMethod);
             dataMap.put("Endpoint", Endpoint);
+            apiCoverage.add(Endpoint);
             dataMap.put("Expected Status Code", expectedStatusCode);
 
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
@@ -372,6 +368,7 @@ public class APICore extends ReportManager {
             dataMap.put("URI", URI);
             dataMap.put("HTTPMethod", HttpMethod);
             dataMap.put("Endpoint", Endpoint);
+            apiCoverage.add(Endpoint);
             dataMap.put("Expected Status Code", expectedStatusCode);
 
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
@@ -542,7 +539,6 @@ public class APICore extends ReportManager {
 
             }
 
-
         }
         return map;
     }
@@ -570,21 +566,24 @@ public class APICore extends ReportManager {
             if (requestBody != null) {
                 requestBody = null;
             }
-
             if (expectedResponse != null) {
                 expectedResponse.clear();
             }
-
             if (dataTableCollectionApi.get().size() > 0) {
-                dataTableCollectionApi.get().forEach(item -> {
-                    try {
-                        Gson pGson = new GsonBuilder().setPrettyPrinting().create();
-                        classWriter.get().jsonValue(pGson.toJson(item)).flush();
-                    } catch (Exception e) {
-                        captureException(e);
-                    }
-                });
+                Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+                String responseJSON = dataTableCollectionApi.get().get(0).get("responseJSON").toString();
 
+                dataTableCollectionApi.get().get(0).remove("responseJSON");
+
+                if(dataTableCollectionApi.get().get(0).get("apiTestStatus").equals("FAILED")){
+                    logMultipleJSON("FAIL",pGson.toJson(dataTableCollectionApi.get()),responseJSON);
+                    logApiReport("FAIL",dataTableCollectionApi.get().get(0).get("failReason").toString());
+                }else{
+                    logMultipleJSON("PASS",pGson.toJson(dataTableCollectionApi.get()),responseJSON);
+                }
+                if(tEnv().getTestType().equalsIgnoreCase("api")){
+                    logger.info(responseJSON);
+                }
             }
             dataTableCollectionApi.get().clear();
         } catch (Exception e) {
