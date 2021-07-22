@@ -368,7 +368,7 @@ public class EmailReport {
                                     "                <table style=\"background-color: #fcf8f8;border: 1px solid #EEEEEE;width: 98%;border-radius: 10px;margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse\">\n" +
                                     "                    <tbody>\n");
 
-                            bf.append("<tr style=\"background: #f24354;height: 50px\">\n" +
+                            bf.append("<tr style=\"background: #f24354;height: 40px\">\n" +
                                     "                        <td colspan=\"3\" style=\"color: #fff;\">\n" +
                                     "                            Test Failures Summary \n" +
                                     "                        </td>\n" +
@@ -393,7 +393,6 @@ public class EmailReport {
                                 "                            <div>\n" +
                                 "                                <div style=\"word-break:break-all\">" + methodName + "</div>\n" +
                                 "                                <div style=\"padding-top: 5px;font-size: 11px;color: #928383\">\n" +
-                                "                                <div style=\"word-break:break-all\"><b>Module : </b>" + moduleName + "</div>\n" +
                                 "                                <div style=\"word-break:break-all\"><b>Class : </b>" + className + "</div>\n" +
                                 "                                </div>\n" +
                                 "                            </div>\n" +
