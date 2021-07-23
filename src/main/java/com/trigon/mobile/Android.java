@@ -50,8 +50,6 @@ public class Android extends IOS {
                     androidCaps.setCapability("orientation", "landscape");
                 }
 
-
-
                 //androidCaps.setCapability("browserstack.networkProfile", "4g-lte-good");
                 androidDriverThreadLocal.set(new AndroidDriver<>(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), androidCaps));
 
@@ -128,10 +126,6 @@ public class Android extends IOS {
             hardFail("Issue with Browserstack/Appcenter Configurations");
         }
         return buildData;
-    }
-
-    private void getAndroidRandomDevice(){
-
     }
 
 }

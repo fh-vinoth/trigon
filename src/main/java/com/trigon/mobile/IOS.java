@@ -111,31 +111,5 @@ public class IOS extends ReportManager {
         }
     }
 
-    private HashMap<String,String> get_bs_ios_app_url() {
-        AppCenterBS appCenter = new AppCenterBS();
-
-        HashMap<String,String> buildData=new HashMap<>();
-        if(platformType.equalsIgnoreCase("D2S")){
-            buildData = appCenter.getBSAppURL(propertiesPojo.getD2S_Appcenter_IOS_ProjectName(),propertiesPojo.getD2S_Automation_Branch_Name());
-        }else if(platformType.equalsIgnoreCase("MYT")){
-            buildData = appCenter.getBSAppURL(propertiesPojo.getMYT_Appcenter_IOS_ProjectName(),propertiesPojo.getMYT_Automation_Branch_Name());
-        }else if(platformType.equalsIgnoreCase("FHAPP")){
-            buildData = appCenter.getBSAppURL(propertiesPojo.getFHApp_Appcenter_IOS_ProjectName(),propertiesPojo.getFHApp_Automation_Branch_Name());
-        }else if(platformType.equalsIgnoreCase("CA")){
-            buildData = appCenter.getBSAppURL(propertiesPojo.getCA_Appcenter_IOS_ProjectName(),propertiesPojo.getCA_Automation_Branch_Name());
-        }else if(platformType.equalsIgnoreCase("MOBILE")){
-            if(tEnv().getIosBSAppPath()!=null){
-                buildData.put("app_url",tEnv().getIosBSAppPath());
-                buildData.put("releaseId",tEnv().getIosBuildNumber());
-            }else{
-                hardFail("Add App URL in TestEnv JSON file");
-            }
-        }
-
-        if(buildData.size()==0){
-            hardFail("Issue with Browserstack/Appcenter Configurations");
-        }
-        return buildData;
-    }
 
 }

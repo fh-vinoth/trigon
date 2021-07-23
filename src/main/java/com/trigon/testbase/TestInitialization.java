@@ -1,11 +1,9 @@
 package com.trigon.testbase;
 
 import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.JsonFormatter;
-import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -27,8 +25,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.testng.Assert;
 import org.testng.ITestContext;
-import org.testng.ITestNGMethod;
-import org.testng.internal.annotations.IBeforeTest;
 import org.testng.xml.XmlTest;
 
 import java.io.*;
@@ -98,34 +94,34 @@ public class TestInitialization extends Browsers {
 
     }
 
-protected void getAPICoverage(TreeSet<String> apiCoverage){
-    try {
-        JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath()+"/TestResultJSON/apiCoverage.json", false)));
-        writer.beginArray();
-        apiCoverage.forEach(ep->{
-            try {
-                writer.value(ep);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        writer.endArray().flush();
-        writer.close();
-    } catch (IOException e) {
-        e.printStackTrace();
+    protected void getAPICoverage(TreeSet<String> apiCoverage) {
+        try {
+            JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/TestResultJSON/apiCoverage.json", false)));
+            writer.beginArray();
+            apiCoverage.forEach(ep -> {
+                try {
+                    writer.value(ep);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            writer.endArray().flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
 
     private void initializeExtentReport(String testResultsPath, String suiteNameWithTime) {
         extent = new ExtentReports();
-        ExtentSparkReporter sparkFail = new ExtentSparkReporter(testResultsPath +"/"+ suiteNameWithTime+"_Failed.html")
+        ExtentSparkReporter sparkFail = new ExtentSparkReporter(testResultsPath + "/" + suiteNameWithTime + "_Failed.html")
                 .filter()
                 .statusFilter()
-                .as(new Status[] { Status.FAIL })
+                .as(new Status[]{Status.FAIL})
                 .apply();
 
-        ExtentSparkReporter sparkAll = new ExtentSparkReporter(testResultsPath +"/"+ suiteNameWithTime+".html");
-        JsonFormatter json = new JsonFormatter(trigonPaths.getSupportSubSuiteFilePath() +"/"+ suiteNameWithTime+".json");
+        ExtentSparkReporter sparkAll = new ExtentSparkReporter(testResultsPath + "/" + suiteNameWithTime + ".html");
+        JsonFormatter json = new JsonFormatter(trigonPaths.getSupportSubSuiteFilePath() + "/" + suiteNameWithTime + ".json");
         sparkFail.config().setReportName(suiteNameWithTime);
         sparkFail.config().setTimelineEnabled(false);
         sparkAll.config().setReportName(suiteNameWithTime);
@@ -136,7 +132,7 @@ protected void getAPICoverage(TreeSet<String> apiCoverage){
                 "});");
         //htmlReporter.config().enableOfflineMode(true);
         //spark.config().setTheme(Theme.DARK);
-        extent.attachReporter(json,sparkFail, sparkAll);
+        extent.attachReporter(json, sparkFail, sparkAll);
         extent.setSystemInfo("frameworkVersion", getFrameworkVersion());
         extent.setSystemInfo("SuiteName", suiteNameWithTime);
     }
@@ -167,11 +163,11 @@ protected void getAPICoverage(TreeSet<String> apiCoverage){
         if (extentClassNode.get() != null) {
             extentMethodNode.set(extentClassNode.get().createNode(method.getName()));
         }
-            if (tEnv().getContext().getIncludedGroups().length > 0) {
-                for (String cat : context.getIncludedGroups()) {
-                    extentClassNode.get().assignCategory(cat);
-                }
+        if (tEnv().getContext().getIncludedGroups().length > 0) {
+            for (String cat : context.getIncludedGroups()) {
+                extentClassNode.get().assignCategory(cat);
             }
+        }
 
     }
 
@@ -315,11 +311,11 @@ protected void getAPICoverage(TreeSet<String> apiCoverage){
             String testEnvVariables = "NA";
 
             if (testType.equalsIgnoreCase("API")) {
-              //  testEnvVariables = "<div>" + tEnv().getApiURI() + "</div><div>" + tEnv().getApiHost() + "</div><div>" + tEnv().getApiCountry() + "</div>";
+                //  testEnvVariables = "<div>" + tEnv().getApiURI() + "</div><div>" + tEnv().getApiHost() + "</div><div>" + tEnv().getApiCountry() + "</div>";
                 testEnvVariables = tEnv().getApiURI() + " : " + tEnv().getApiHost() + " : " + tEnv().getApiCountry();
             }
             if (webApps.contains(testType)) {
-               // testEnvVariables = "<div>" + tEnv().getWebBrowser() + "</div><div>" + tEnv().getWebBrowserVersion() + "</div><div>" + tEnv().getWebUrl() + "</div>";
+                // testEnvVariables = "<div>" + tEnv().getWebBrowser() + "</div><div>" + tEnv().getWebBrowserVersion() + "</div><div>" + tEnv().getWebUrl() + "</div>";
                 testEnvVariables = tEnv().getWebBrowser() + " : " + tEnv().getWebBrowserVersion() + " : " + tEnv().getWebUrl();
 
             }
@@ -331,7 +327,7 @@ protected void getAPICoverage(TreeSet<String> apiCoverage){
                 try {
                     if (tEnv().getIosDevice() != null) {
                         if (appType.equalsIgnoreCase("ios")) {
-                           // testEnvVariables = "<div>" + tEnv().getIosDevice() + "</div><div>" + tEnv().getIosOSVersion() + "</div><div>" + tEnv().getIosBuildNumber() + "</div>";
+                            // testEnvVariables = "<div>" + tEnv().getIosDevice() + "</div><div>" + tEnv().getIosOSVersion() + "</div><div>" + tEnv().getIosBuildNumber() + "</div>";
                             testEnvVariables = tEnv().getIosDevice() + " : " + tEnv().getIosOSVersion() + " : " + tEnv().getIosBuildNumber();
 
                         }
@@ -442,7 +438,7 @@ protected void getAPICoverage(TreeSet<String> apiCoverage){
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version, String URI, String version, String token,
                                       String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region,String browserstack_execution_local, String class_name) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -668,10 +664,10 @@ protected void getAPICoverage(TreeSet<String> apiCoverage){
             if (tRemoteEnv.getFailure_email_recipients() != null) {
                 failure_email_recipients = tRemoteEnv.getFailure_email_recipients();
             }
-            if(tRemoteEnv.getBrowserstack_execution_local()!=null){
+            if (tRemoteEnv.getBrowserstack_execution_local() != null) {
                 tEnv().setBrowserstack_execution_local(tRemoteEnv.getBrowserstack_execution_local());
             }
-            if(browserstack_execution_local!=null){
+            if (browserstack_execution_local != null) {
                 tEnv().setBrowserstack_execution_local(browserstack_execution_local);
             }
             tEnv().setCurrentTestClassName(class_name);
