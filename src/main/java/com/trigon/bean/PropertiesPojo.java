@@ -49,6 +49,10 @@ public class PropertiesPojo {
     private String CA_Appcenter_IOS_ProjectName;
     private String CA_Automation_Branch_Name;
 
+    private String Mobile_Apps;
+    private String Web_Apps;
+
+
     public String getCustomReportHeaders() {
         return customReportHeaders;
     }
@@ -351,5 +355,21 @@ public class PropertiesPojo {
 
     public void setJira_ca_proj(String jira_ca_proj) {
         this.jira_ca_proj = jira_ca_proj;
+    }
+
+    public String getMobile_Apps() {
+        return Mobile_Apps;
+    }
+
+    public void setMobile_Apps(String Mobile_Apps) {
+        this.Mobile_Apps = Mobile_Apps;
+    }
+
+    public String getWeb_Apps() {
+        return Web_Apps;
+    }
+
+    public void setWeb_APPS(String Web_Apps) {
+        this.Web_Apps = Web_Apps;
     }
 }

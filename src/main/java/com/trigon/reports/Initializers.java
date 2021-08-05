@@ -14,10 +14,7 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Initializers {
     public static PropertiesPojo propertiesPojo = new PropertiesPojo();
@@ -29,8 +26,11 @@ public class Initializers {
     protected TrigonAsserts sAssert = new TrigonAsserts();
     protected static String executionType = "local";
 
-    public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
-    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy");
+   /* public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
+    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy");*/
+
+    public static List<String> mobileApps = new ArrayList<>();
+    public static List<String> webApps = new ArrayList<>();
 
     public static ExtentReports extent = null;
     public static ThreadLocal<ExtentTest> extentTestNode = new ThreadLocal<>();
