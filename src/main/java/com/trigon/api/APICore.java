@@ -102,7 +102,6 @@ public class APICore extends ReportManager {
         return requestHandling(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, multiPartMap);
     }
 
-
     private Response requestHandling(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, Map<String, Object> multiPartMap) {
         RequestSpecification requestSpecification = null;
         try {
@@ -144,6 +143,24 @@ public class APICore extends ReportManager {
                 requestSpecification.queryParams(new LinkedHashMap<>(queryParams));
             }
             if ((formParams != null && formParams.size() > 0)) {
+
+                //This code is added to pass random html tags
+//                List<String> a = new ArrayList();
+//                a.add("<b>##</b>");
+//                a.add("<script>##</script>");
+//                a.add("<h3>##</h3>");
+//                a.add("<h1>##</h1>");
+//                a.add("##</br>");
+//
+//
+//                LinkedHashMap formparam1 = new LinkedHashMap<>();
+//                formParams.forEach((k,v)->{
+//                    String y = a.get(cUtils().getRandomNumber(0,4)).replace("##",v.toString());
+//                    formparam1.put(k,y);
+//                });
+//                dataToJSON("formParams", new LinkedHashMap<>(formparam1));
+//                requestSpecification.formParams(new LinkedHashMap<>(formparam1));
+
                 dataToJSON("formParams", new LinkedHashMap<>(formParams));
                 requestSpecification.formParams(new LinkedHashMap<>(formParams));
             }
@@ -183,6 +200,10 @@ public class APICore extends ReportManager {
 
     private Map<String, Object> responseCheck(Response response, String StatusCode, Map<String, Object> expectedResponse, Map<String, Object> modifiedExpectedResponse) {
         Map<String, Object> flattenMap = new LinkedHashMap<>();
+        Map<String, Object> htmlMap = new LinkedHashMap<>();
+        List<String> responseHtmlTagKeys = new ArrayList<>();
+        List<String> responseNullKeys = new ArrayList<>();
+        List<String> responseEmptyKeys = new ArrayList<>();
         LinkedHashMap<String, Object> statusCode = new LinkedHashMap<>();
         try {
             statusCode.put("ACT", String.valueOf(response.getStatusCode()));
@@ -200,6 +221,37 @@ public class APICore extends ReportManager {
                     flattenMap = JsonFlattener.flattenAsMap(response.asString());
                     flattenMap.put("actualStatusCode", response.getStatusCode());
                     dataToJSON("responseJSON", response.getBody().asString());
+
+                    // Added for custom variable extractions
+
+                    flattenMap.forEach((k,v)->{
+                        if(v!=null){
+                            if(v.toString().startsWith("<")){
+                                htmlMap.put(k,v);
+                                responseHtmlTagKeys.add(k);
+                            }
+                            if(v.toString().isEmpty()||v.toString().equals("")){
+                                responseEmptyKeys.add(k);
+                            }
+                        }
+                        if(v==null){
+                            responseNullKeys.add(k);
+                        }
+                    });
+
+                    if(htmlMap.size()>0){
+                        dataToJSON("responseHtmlTagKeysAndValues", htmlMap);
+                        dataToJSON("responseHtmlTagKeys",responseHtmlTagKeys.toString());
+                    }
+
+                    if(responseEmptyKeys.size()>0){
+                        dataToJSON("responseEmptyKeys", responseEmptyKeys.toString());
+                    }
+
+                    if(responseNullKeys.size()>0){
+                        dataToJSON("responseNullKeys", responseNullKeys.toString());
+                    }
+                    // Expected Vs Actual verification
                     if (expectedResponse != null) {
                         if (modifiedExpectedResponse != null) {
                             validateResponseFromMap(flattenMap, modifiedExpectedResponse, failStatus);
@@ -543,7 +595,6 @@ public class APICore extends ReportManager {
         return map;
     }
 
-
     protected void apiTearDown(Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, Map<String, Object> expectedResponse) {
         try {
             dataTableCollectionApi.get().add(new LinkedHashMap<>(dataTableMapApi.get()));
@@ -584,6 +635,33 @@ public class APICore extends ReportManager {
                 if(tEnv().getTestType().equalsIgnoreCase("api")){
                     logger.info(responseJSON);
                 }
+
+
+                String responseHtmlTagKeysAndValues = "No Html tag or values";
+                String responseHtmlTagKeys = "No Html tag matching keys";
+                String responseEmptyKeys = "No Empty Values Keys";
+                String responseNullKeys = "No NULL keys";
+
+
+                if(dataTableCollectionApi.get().get(0).get("responseHtmlTagKeysAndValues")!=null){
+                    responseHtmlTagKeysAndValues = "<textarea rows=\"4\" cols=\"50\">\n" +
+                            "  "+dataTableCollectionApi.get().get(0).get("responseHtmlTagKeysAndValues").toString()+"\n" +
+                            "  </textarea>";
+                }
+
+                if(dataTableCollectionApi.get().get(0).get("responseHtmlTagKeys")!=null){
+                    responseHtmlTagKeys = dataTableCollectionApi.get().get(0).get("responseHtmlTagKeys").toString();
+                }
+                if(dataTableCollectionApi.get().get(0).get("responseEmptyKeys")!=null){
+                    responseEmptyKeys = dataTableCollectionApi.get().get(0).get("responseEmptyKeys").toString();
+                }
+                if(dataTableCollectionApi.get().get(0).get("responseNullKeys")!=null){
+                    responseNullKeys = dataTableCollectionApi.get().get(0).get("responseNullKeys").toString();
+                }
+
+                addRowToCustomReport(dataTableCollectionApi.get().get(0).get("httpMethod").toString(),dataTableCollectionApi.get().get(0).get("endPoint").toString(),responseEmptyKeys,responseNullKeys,responseHtmlTagKeys,responseHtmlTagKeysAndValues);
+
+
             }
             dataTableCollectionApi.get().clear();
         } catch (Exception e) {

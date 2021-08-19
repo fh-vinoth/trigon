@@ -175,7 +175,6 @@ public class APICoreController extends APICore {
         return responseMapActualExpanded;
     }
 
-
     protected Map<String, Object> validateStaticResponseKeysImpl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse) {
         Map<String, Object> responseMapActualExpanded = null;
         try {

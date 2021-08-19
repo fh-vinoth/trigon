@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web_CustomReportTest_Suite" parallel="tests" thread-count="10">
+
+<!--    <listeners>-->
+<!--        <listener class-name="com.trigon.listeners.TestListener"/>-->
+<!--    </listeners>-->
+
+    <test name="Custom Report Test">
+        <classes>
+            <class name="com.fh.unittests.CustomReportTest"/>
+        </classes>
+    </test>
+
+</suite>
+
