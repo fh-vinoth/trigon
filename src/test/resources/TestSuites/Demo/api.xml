@@ -6,13 +6,13 @@
 <!--        </classes>-->
 <!--    </test>-->
 
-    <parameter name="excelFilePath"
-               value="src/test/resources/TestData/FrameworkTest.xlsx"></parameter>
-    <test name="API-Endpoint_Automation_Category">
-        <classes>
-            <class name="com.fh.unittests.FileSize"/>
-        </classes>
-    </test>
+<!--    <parameter name="excelFilePath"-->
+<!--               value="src/test/resources/TestData/FrameworkTest.xlsx"></parameter>-->
+<!--    <test name="API-Endpoint_Automation_Category">-->
+<!--        <classes>-->
+<!--            <class name="com.fh.unittests.FileSize"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 
 

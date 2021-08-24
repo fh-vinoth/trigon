@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org.testng.xml.XmlTest;
 
@@ -65,8 +66,8 @@ public class TestController extends TestInitialization {
             if (platformType != null) {
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
                 setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
-                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
-                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
+//                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
+//                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
                 testModuleCollection(xmlTest.getName());
             }
         } catch (Exception e) {
@@ -118,7 +119,7 @@ public class TestController extends TestInitialization {
     }
 
     @AfterMethod(alwaysRun = true)
-    protected void processTearDown(Method method, XmlTest xmlTest) {
+    protected void processTearDown(Method method, XmlTest xmlTest, ITestContext context, ITestResult result) {
         try {
             if (failAnalysisThread.get().size() > 0) {
                 if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
@@ -134,6 +135,15 @@ public class TestController extends TestInitialization {
                     CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
                 }
             }
+
+            if(result.wasRetried()){
+                if(result.getStatus() == 3){
+                    if (extentMethodNode.get() != null) {
+                        extent.removeTest(extentMethodNode.get());
+                    }
+                }
+            }
+
 
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
