@@ -264,62 +264,67 @@ public class EmailReport {
                         "                    </tr>\n");
                 testClass.getChildren().forEach(method -> {
 
-                    String methodName = method.getName();
-                    String description = method.getDescription();
-                    String author = method.getAuthorSet().stream().iterator().next().getName();
+                    try{
+                        String methodName = method.getName();
+                        String description = method.getDescription();
+                        String author = method.getAuthorSet().stream().iterator().next().getName();
 
-                    String StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/pass.png";
+                        String StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/pass.png";
 
-                    if (method.getStatus().getName().equals("Pass")) {
-                        StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/pass.png";
-                    } else if (method.getStatus().getName().equals("Fail")) {
-                        StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png";
-                    } else if (method.getStatus().getName().equals("Skip")) {
-                        StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/skip.png";
-                    }
-
-
-                    bf.append("<tr style=\"text-align: left\">\n" +
-                            "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
-                            "                            <div>\n" +
-                            "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"pass\">\n" +
-                            "                            </div>\n" +
-                            "                        </td>\n" +
-                            "                        <td style=\"padding-top:10px\">\n" +
-                            "                            <div>\n" +
-                            "                                <div style=\"word-break:break-all\">" + methodName + "</div>\n" +
-                            "                                <div style=\"padding-top: 5px;font-size: 11px;color: #928383\">\n" +
-                            "                                <div style=\"word-break:break-all\"><b>Author : </b>" + author + "</div>\n" +
-                            "                                </div>\n" +
-                            "                            </div>\n" +
-                            "                        </td>\n" +
-                            "                        <td>\n" +
-                            "                            <div style=\"word-break:break-all\">\n" +
-                            "                                <b>Scenario :</b> " + description + "\n" +
-                            "                            </div>\n");
-                    // If Test Fails
-                    if (method.getStatus().getName().equals("Fail")) {
-                        bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
-                        method.getLogs().forEach(log -> {
-                            if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                if (!log.getDetails().startsWith("<details><summary>")) {
-                                    bf.append("<div>" + log.getDetails() + "</div>");
-                                }
-                            }
-                        });
-                        if (method.hasChildren()) {
-                            method.getChildren().forEach(child -> {
-                                child.getLogs().forEach(log -> {
-                                    if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                        if (!log.getDetails().startsWith("<details><summary>")) {
-                                            bf.append("<div>" + log.getDetails() + "</div>");
-                                        }
-                                    }
-                                });
-                            });
+                        if (method.getStatus().getName().equals("Pass")) {
+                            StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/pass.png";
+                        } else if (method.getStatus().getName().equals("Fail")) {
+                            StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png";
+                        } else if (method.getStatus().getName().equals("Skip")) {
+                            StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/skip.png";
                         }
-                        bf.append("                            </div>\n");
+
+
+                        bf.append("<tr style=\"text-align: left\">\n" +
+                                "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
+                                "                            <div>\n" +
+                                "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"pass\">\n" +
+                                "                            </div>\n" +
+                                "                        </td>\n" +
+                                "                        <td style=\"padding-top:10px\">\n" +
+                                "                            <div>\n" +
+                                "                                <div style=\"word-break:break-all\">" + methodName + "</div>\n" +
+                                "                                <div style=\"padding-top: 5px;font-size: 11px;color: #928383\">\n" +
+                                "                                <div style=\"word-break:break-all\"><b>Author : </b>" + author + "</div>\n" +
+                                "                                </div>\n" +
+                                "                            </div>\n" +
+                                "                        </td>\n" +
+                                "                        <td>\n" +
+                                "                            <div style=\"word-break:break-all\">\n" +
+                                "                                <b>Scenario :</b> " + description + "\n" +
+                                "                            </div>\n");
+                        // If Test Fails
+                        if (method.getStatus().getName().equals("Fail")) {
+                            bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
+                            method.getLogs().forEach(log -> {
+                                if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
+                                    if (!log.getDetails().startsWith("<details><summary>")) {
+                                        bf.append("<div>" + log.getDetails() + "</div>");
+                                    }
+                                }
+                            });
+                            if (method.hasChildren()) {
+                                method.getChildren().forEach(child -> {
+                                    child.getLogs().forEach(log -> {
+                                        if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
+                                            if (!log.getDetails().startsWith("<details><summary>")) {
+                                                bf.append("<div>" + log.getDetails() + "</div>");
+                                            }
+                                        }
+                                    });
+                                });
+                            }
+                            bf.append("                            </div>\n");
+                        }
+                    }catch (Exception e){
+
                     }
+
                 });
             });
         });

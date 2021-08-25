@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -542,5 +544,21 @@ public class CommonUtils {
             fileList.add(folder);
         }
         return fileList;
+    }
+
+    public long getFileSizeFromURL(String url){
+        URL url1;
+        URLConnection conn;
+        long size = 0;
+        try {
+            url1 = new URL(url);
+            conn = url1.openConnection();
+            size = conn.getContentLength();
+            conn.getInputStream().close();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return size;
     }
 }

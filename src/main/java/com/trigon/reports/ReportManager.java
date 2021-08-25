@@ -24,7 +24,7 @@ import static org.apache.commons.io.FileUtils.copyFile;
 import static org.openqa.selenium.OutputType.FILE;
 
 
-public class ReportManager extends Initializers {
+public class ReportManager extends CustomReport {
 
     private static final Logger logger = LogManager.getLogger(ReportManager.class);
 

@@ -18,11 +18,11 @@ public class BrowserTest extends TestLocalController {
             String category_id = createCategory();
             System.out.println(category_id);
 
-//            browser().findElement(By.xpath("//input[@id=\"twotabsearchtextbox\"]")).sendKeys("iphone");
-//            logStepAction(" Performing Search click");
-//            browser().findElement(By.xpath("(//input[@type=\"submit\"])[1]")).click();
-//            logReport("PASS","Test Passed");
-            //hardFail("test failed");
+            browser().findElement(By.xpath("//input[@id=\"twotabsearchtextbox\"]")).sendKeys("iphone");
+            logStepAction(" Performing Search click");
+            browser().findElement(By.xpath("(//input[@type=\"submit\"])[1]")).click();
+            logReport("PASS","Test Passed");
+            hardFail("test failed");
         }catch (Exception e){
             hardFail(e);
         }finally {

@@ -40,6 +40,7 @@ public class TestInitialization extends Browsers {
     protected static String runId = null;
     protected static long suiteStartTime;
 
+
     public void reportsInitialization(String suiteName) {
         trigonPaths = new TrigonPaths();
         String suiteNameReplaced = suiteName.replaceAll("-", "_").replaceAll(" ", "_").trim();
@@ -723,5 +724,6 @@ public class TestInitialization extends Browsers {
         }
         return fVersion;
     }
+
 
 }

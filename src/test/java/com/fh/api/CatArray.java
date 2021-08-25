@@ -8,6 +8,7 @@ public class CatArray extends TestLocalController {
     @Test
     public void getCategoryListNew() {
         try {
+
             api().validateStaticResponse();
         } catch (Exception e) {
             e.printStackTrace();

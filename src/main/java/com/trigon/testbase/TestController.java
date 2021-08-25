@@ -4,21 +4,24 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
 import com.trigon.email.SendEmail;
 import com.trigon.reports.EmailReport;
 import com.trigon.testrail.BaseMethods;
 import com.trigon.testrail.Runs;
 import com.trigon.utils.CommonUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org.testng.xml.XmlTest;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -63,6 +66,8 @@ public class TestController extends TestInitialization {
             if (platformType != null) {
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
                 setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
+//                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
+//                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
                 testModuleCollection(xmlTest.getName());
             }
         } catch (Exception e) {
@@ -114,7 +119,7 @@ public class TestController extends TestInitialization {
     }
 
     @AfterMethod(alwaysRun = true)
-    protected void processTearDown(Method method, XmlTest xmlTest) {
+    protected void processTearDown(Method method, XmlTest xmlTest, ITestContext context, ITestResult result) {
         try {
             if (failAnalysisThread.get().size() > 0) {
                 if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
@@ -130,6 +135,15 @@ public class TestController extends TestInitialization {
                     CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
                 }
             }
+
+            if(result.wasRetried()){
+                if(result.getStatus() == 3){
+                    if (extentMethodNode.get() != null) {
+                        extent.removeTest(extentMethodNode.get());
+                    }
+                }
+            }
+
 
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
@@ -177,6 +191,26 @@ public class TestController extends TestInitialization {
                 } catch (Exception e) {
                     captureException(e);
                 }
+            }
+
+            if(cReportPojo.isCustomReportStartFlag()){
+                cReportPojo.getCustomReport().write("    <tr style=\"background: #e0dbdb;height: 40px;\">\n" +
+                        "        <td colspan=\""+cReportPojo.getCustomReportHeaderSize()+"\">© 2021 - Foodhub Automation Team</td>\n" +
+                        "    </tr>\n" +
+                        "    </tbody>\n" +
+                        "</table>\n" +
+                        "</body>\n" +
+                        "</html>");
+                cReportPojo.getCustomReport().flush();
+                cReportPojo.getCustomReport().close();
+
+                JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFileHTMLPath() + "/" + "CustomReport.json")));
+                writer.beginObject().name("subject").value(iTestContext.getSuite().getName());
+                String customData = FileUtils.readFileToString(new File(trigonPaths.getTestResultsPath()+ "/" + "CustomReport.html"), StandardCharsets.UTF_8);
+                String replaceWidth = customData.replace("90%","100%");
+                writer.name("customBody").value(replaceWidth);
+                writer.endObject().flush();
+
             }
 
         } catch (Exception e) {
