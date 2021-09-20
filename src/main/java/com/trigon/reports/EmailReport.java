@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.trigon.reports.ReportManager.cUtils;
 
 public class EmailReport {
-    public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType) {
+    public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
             StringBuffer bf = new StringBuffer();
@@ -36,28 +36,34 @@ public class EmailReport {
             bfFailure.append(failureData);
             bfFailure.append(footers);
 
-            generateEmailBody(reportPath, report, bf.toString(), bfFailure.toString(), suiteName, testType, executionType);
+            generateEmailBody(reportPath, report, bf.toString(), bfFailure.toString(), suiteName, testType, executionType,pipelineExecution);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void generateEmailBody(String reportPath, ExtentReports stats, String body, String failedData, String suiteName, String testType, String executionType) {
+    private static void generateEmailBody(String reportPath, ExtentReports stats, String body, String failedData, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(reportPath + "/SupportFiles/HTML/emailBody.json", false)));
             int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
             int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
             String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
 
-            String subject = "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
+            String subject;
+            if(pipelineExecution.equalsIgnoreCase("true")){
+                subject = "Pipeline|BVT : "+"" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
+            }else{
+                subject = "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
+            }
 
             writer.beginObject();
             writer.name("subject").value(subject);
             writer.name("suiteName").value(suiteName);
             writer.name("body").value(body.replace("width: 80%", "width: 100%"));
             writer.name("failedData").value(failedData.replace("width: 80%", "width: 100%"));
-            writer.name("testType").value(testType);
+            writer.name("testType").value(testType.toUpperCase());
             writer.name("executionType").value(executionType);
+            writer.name("pipelineExecution").value(pipelineExecution);
             writer.name("apiCoverage").value("70%");
             writer.name("testCoverage").value("60%");
             writer.endObject().flush();

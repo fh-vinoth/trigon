@@ -38,6 +38,7 @@ public class TestController extends TestInitialization {
             JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
             tre = pGson.fromJson(element1, RemoteEnvPojo.class);
             executionType = tre.getExecution_type();
+            pipelineExecution = tre.getPipeline_execution();
             propertiesPojo = setProperties();
             reportsInitialization(iTestContext.getSuite().getName());
             logInitialization();
@@ -210,41 +211,44 @@ public class TestController extends TestInitialization {
                 String replaceWidth = customData.replace("90%","100%");
                 writer.name("customBody").value(replaceWidth);
                 writer.endObject().flush();
-
             }
 
         } catch (Exception e) {
             captureException(e);
         } finally {
-            EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType);
+            EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType,pipelineExecution);
             if(apiCoverage.size()>0){
                 getAPICoverage(apiCoverage);
             }
-
             if(executionType.equalsIgnoreCase("remote"))
             {
-                if(System.getProperty("user.name").equalsIgnoreCase("root"))
+                if(System.getProperty("user.name").equalsIgnoreCase("root")||System.getProperty("user.name").equalsIgnoreCase("ec2-user"))
                 {
-                    SendEmail sendEmail = new SendEmail();
-                    if(email_recipients !=null){
-                        if(!failStatus){
-                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients,"true","false");
-                        }
-                    }
-                    if(failure_email_recipients !=null){
-                        if(failStatus){
-                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), failure_email_recipients,"true","false");
-                        }
-                    }
-                    if(error_email_recipients !=null){
-                        if(exceptionStatus){
-                            sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients,"true","false");
-                        }
-                    }
+                    emailTrigger();
                 }
             }
+
         }
 
+    }
+
+    private void emailTrigger() {
+        SendEmail sendEmail = new SendEmail();
+        if(email_recipients !=null){
+            if(!failStatus){
+                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients,"true","false");
+            }
+        }
+        if(failure_email_recipients !=null){
+            if(failStatus){
+                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), failure_email_recipients,"true","false");
+            }
+        }
+        if(error_email_recipients !=null){
+            if(exceptionStatus){
+                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients,"true","false");
+            }
+        }
     }
 
 }

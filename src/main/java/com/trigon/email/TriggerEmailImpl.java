@@ -95,7 +95,12 @@ public class TriggerEmailImpl implements ITriggerEmail {
         JSONObject jsonObject = (JSONObject) obj;
 
         try {
-            message.setFrom(new InternetAddress(from, "FOODHUB TestReport"));
+            if((String.valueOf(jsonObject.get("testType")) == null) || String.valueOf(jsonObject.get("testType")).isEmpty()){
+                message.setFrom(new InternetAddress(from, "FH AutomationReport"));
+            }else{
+                message.setFrom(new InternetAddress(from, "FH "+jsonObject.get("testType").toString()+" Report"));
+            }
+
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(recipients));
         } catch (Exception e) {
