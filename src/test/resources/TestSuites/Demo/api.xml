@@ -5,11 +5,14 @@
 <!--            <class name="com.fh.api.CatArray"/>-->
 <!--        </classes>-->
 <!--    </test>-->
-    <test name="API-Endpoint_Automation_Category">
-        <classes>
-            <class name="com.fh.api.Category_SEARCH"/>
-        </classes>
-    </test>
+
+<!--    <parameter name="excelFilePath"-->
+<!--               value="src/test/resources/TestData/FrameworkTest.xlsx"></parameter>-->
+<!--    <test name="API-Endpoint_Automation_Category">-->
+<!--        <classes>-->
+<!--            <class name="com.fh.unittests.FileSize"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 
 

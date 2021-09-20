@@ -1,9 +1,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Web_FrameworkTest" parallel="tests" thread-count="10">
 
-<!--    <listeners>-->
-<!--        <listener class-name="com.trigon.listeners.TestListener"/>-->
-<!--    </listeners>-->
+    <listeners>
+        <listener class-name="com.trigon.listeners.TestListener"/>
+    </listeners>
 
     <test name="WebTest">
         <groups>

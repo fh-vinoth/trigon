@@ -2,6 +2,7 @@ package com.trigon.reports;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.trigon.bean.CReportPojo;
 import com.trigon.bean.ExtentPojo;
 import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.testenv.TestEnv;
@@ -14,10 +15,8 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.TreeSet;
+import java.io.BufferedWriter;
+import java.util.*;
 
 public class Initializers {
     public static PropertiesPojo propertiesPojo = new PropertiesPojo();
@@ -28,6 +27,19 @@ public class Initializers {
     protected static ThreadLocal<LinkedHashMap<String, Object>> dataTableMapApi = new ThreadLocal<>();
     protected TrigonAsserts sAssert = new TrigonAsserts();
     protected static String executionType = "local";
+    protected static String pipelineExecution = "false";
+
+    public static CReportPojo cReportPojo = new CReportPojo();
+
+
+
+    public static boolean customAPIReportStartFlag = false;
+    public static BufferedWriter customAPIReport;
+    public static List<String> customAPIHeaderData = new ArrayList<>();
+    public static int customAPIReportHeaderSize = 2;
+
+    protected static Hashtable<String, String> customReportStatusMap = new Hashtable();
+    protected static Hashtable<Collection<?>, Collection<?>> customReportStatusMap1 = new Hashtable();
 
     public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
     public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy");

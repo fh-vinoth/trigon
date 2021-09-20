@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class TestListener extends ReportManager implements IAnnotationTransformer, ITestListener, IRetryAnalyzer  {
     int counter = 0;
-    int retryLimit = 2;
+    int retryLimit = 1;
 
     @Override
     public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
@@ -28,6 +28,13 @@ public class TestListener extends ReportManager implements IAnnotationTransforme
                 if (context.getPassedTests().getResults(method).size() > 0) {
                     failedTests.remove(temp);
                 }
+            }
+        }
+        Set<ITestResult> skippedTests = context.getSkippedTests().getAllResults();
+        for (ITestResult temp : skippedTests) {
+            ITestNGMethod method = temp.getMethod();
+            if (context.getSkippedTests().getResults(method).size() > 1) {
+                skippedTests.remove(temp);
             }
         }
     }

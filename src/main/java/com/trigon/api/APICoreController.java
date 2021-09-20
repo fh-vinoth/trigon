@@ -12,9 +12,11 @@ import io.restassured.response.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileReader;
+import javax.xml.bind.DatatypeConverter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.InflaterOutputStream;
 
 public class APICoreController extends APICore {
     private static final Logger logger = LogManager.getLogger(APICoreController.class);
@@ -175,7 +177,6 @@ public class APICoreController extends APICore {
         return responseMapActualExpanded;
     }
 
-
     protected Map<String, Object> validateStaticResponseKeysImpl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse) {
         Map<String, Object> responseMapActualExpanded = null;
         try {
@@ -258,6 +259,21 @@ public class APICoreController extends APICore {
 
     protected Map<String, Object> filterDynamicDataFromActualResponseImpl(Map<String, Object> actualResponseMap, String knownKey, String knownValue, String... requiredKeys) {
         return filterDynamicDataToMapImpl(actualResponseMap, knownKey, knownValue, requiredKeys);
+    }
+
+    protected  Map<String, Object> decodeResponseByteImpl(String byteString){
+        Map<String, Object> flattenMap = new HashMap<>();
+        try {
+            byte[] base64Decoded = DatatypeConverter.parseBase64Binary(byteString);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            try (OutputStream ios = new InflaterOutputStream(os)) {
+                ios.write(base64Decoded);
+            }
+            flattenMap = JsonFlattener.flattenAsMap(new String(os.toByteArray(), StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return flattenMap;
     }
 
 }

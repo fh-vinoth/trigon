@@ -147,6 +147,7 @@ public class Category_SEARCH extends TestLocalController {
 
         String endpoint = "category/" + category_id;
         expectedResponse.put("outcome","success2");
+
         try {
             api().validateStaticResponse("DELETE", endpoint, headers, null, queryparams, null, null, null, "200", expectedResponse);
         } catch (Exception e) {
