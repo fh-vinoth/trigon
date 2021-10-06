@@ -130,6 +130,7 @@ public class TestController extends TestInitialization {
                     createJiraTicket(method.getName() + " Test failed !! validate Issue ", failAnalysisThread.get().toString());
                 }
                 failStatus = true;
+                classFailAnalysisThread.get().add(context.getName());
             }else{
                 if(tEnv().getScreenshotPath()!=null){
                     CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
@@ -227,7 +228,7 @@ public class TestController extends TestInitialization {
                 {
                     SendEmail sendEmail = new SendEmail();
                     if(email_recipients !=null){
-                        if(!failStatus){
+                        if(!failStatus ){
                             sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients,"true","false");
                         }
                     }

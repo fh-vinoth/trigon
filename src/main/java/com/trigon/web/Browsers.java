@@ -213,8 +213,9 @@ public class Browsers extends Android {
                     logger.info("Android Session ID"+ android().getSessionId());
                     JavascriptExecutor jse = android();
                     if (executionType.equalsIgnoreCase("remote")) {
+                        String err = classFailAnalysisThread.get().get(0);
                         if (classFailAnalysisThread.get().size() > 0) {
-                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report -> "+err+"\"}}");
 
                         } else {
                             jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");

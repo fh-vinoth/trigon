@@ -21,12 +21,12 @@
     },
     "MYT": {
       "android": {
-        "bs_app_path": "bs://5b3624a83b03db344f37177471c877e18a20f049",
-        "build_number": "MYT2.0_Android_10.2_870"
+        "bs_app_path": "bs://c9d90d194b868862c026d60ff44a9abce3de3a8d",
+        "build_number": "MYT2.0_Android_10.4_940"
       },
       "ios": {
-        "bs_app_path": "bs://6962878c85daecc6eda5bf9e97751343d919449b",
-        "build_number": "MYT2.0_iOS_10.0_735"
+        "bs_app_path": "bs://1efbfc6c57e8c9331ff85daec2d0c88c146b3053",
+        "build_number": "MYT2.0_iOS_10.4_806"
       }
     },
     "MYPOS": {
