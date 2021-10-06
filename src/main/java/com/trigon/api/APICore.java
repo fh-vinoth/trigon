@@ -11,9 +11,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.collections.CollectionUtils;
 
+import javax.xml.bind.DatatypeConverter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.InflaterOutputStream;
 
 
 public class APICore extends ReportManager {
@@ -703,5 +709,8 @@ public class APICore extends ReportManager {
         }
         return respMap;
     }
+
+
+
 
 }
