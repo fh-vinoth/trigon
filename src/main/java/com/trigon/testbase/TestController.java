@@ -88,8 +88,7 @@ public class TestController extends TestInitialization {
             classFailAnalysisThread.set(new ArrayList<>());
             setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
             createExtentClassName(xmlTest);
-            remoteBrowserInit(context, xmlTest);
-            remoteMobileInit(context, xmlTest);
+
         } catch (Exception e) {
             captureException(e);
         }
@@ -107,6 +106,8 @@ public class TestController extends TestInitialization {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
             setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
+            remoteBrowserInit(context, xmlTest);
+            remoteMobileInit(context, xmlTest);
             setMobileLocator();
             setWebLocator();
             failAnalysisThread.set(new ArrayList<>());
@@ -144,6 +145,8 @@ public class TestController extends TestInitialization {
                     }
                 }
             }
+            closeBrowserClassLevel();
+            closeMobileClassLevel();
 
 
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
@@ -163,8 +166,6 @@ public class TestController extends TestInitialization {
         try {
             dataTableCollectionApi.remove();
             logger.info("Test Execution Finished for Class  : " + getClass().getSimpleName());
-            closeBrowserClassLevel();
-            closeMobileClassLevel();
             classFailAnalysisThread.remove();
         } catch (Exception e) {
             captureException(e);

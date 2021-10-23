@@ -50,7 +50,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
         String from = "t2semailnotifications@gmail.com";
         final String username = "t2semailnotifications@gmail.com";
-        final String password = "eeizrjqtltmogeix";
+        final String password = "ffwyvmzikvyacmpi";
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -169,7 +169,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
     public void triggerCustomEmail(String reportPath, String recipients) throws IOException, ParseException {
         String from = "t2semailnotifications@gmail.com";
         final String username = "t2semailnotifications@gmail.com";
-        final String password = "eeizrjqtltmogeix";
+        final String password = "ffwyvmzikvyacmpi";
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
