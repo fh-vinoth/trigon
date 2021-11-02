@@ -439,7 +439,7 @@ public class TestInitialization extends Browsers {
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version, String URI, String version, String token,
                                       String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -621,6 +621,11 @@ public class TestInitialization extends Browsers {
                 tEnv().setJsonDirectory(jsonDirectory);
             } else {
                 tEnv().setJsonDirectory("src/test/resources/TestData");
+            }
+
+            if(bs_app_path !=null){
+                logger.info("BS PATH is set to " + bs_app_path);
+                tEnv().setAndroidBSAppPath(bs_app_path);
             }
             if (test_region != null) {
                 tEnv().setTest_region(test_region);
