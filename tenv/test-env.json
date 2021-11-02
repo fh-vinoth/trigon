@@ -7,7 +7,7 @@
     "system_os": "OS X",
     "system_os_version": "Catalina",
     "browser": "chrome",
-    "headless": "false",
+    "headless": "true",
     "browser_version": "83",
     "url": "https://amazon.com/",
     "build_number": "pr-api-108"
@@ -95,7 +95,8 @@
       "currency": "£",
       "timezone": "GMT+1",
       "phoneNumber": "07012345679",
-      "emailId": "teamautomation18@gmail.com"
+      "emailId": "teamautomation18@gmail.com",
+      "accessToken": ""
     },
     "UK1": {
       "locale": "united kingdom",

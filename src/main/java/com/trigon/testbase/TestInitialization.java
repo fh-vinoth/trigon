@@ -437,7 +437,7 @@ public class TestInitialization extends Browsers {
 
     protected void setTestEnvironment(String fileName, String excelFilePath,
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version, String URI, String version, String token,
-                                      String store, String host, String locale,
+                                      String accessToken,String isJWT, String endpointPrefix,String store, String host, String locale,
                                       String region, String country, String currency,
                                       String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name) {
         try {
@@ -583,6 +583,9 @@ public class TestInitialization extends Browsers {
             if (token != null) {
                 tEnv().setApiToken(token);
             }
+            if (accessToken != null) {
+                tEnv().setApiAccessToken(accessToken);
+            }
             if (store != null) {
                 tEnv().setApiStore(store);
             }
@@ -613,6 +616,12 @@ public class TestInitialization extends Browsers {
             if (excelFilePath != null) {
                 tEnv().setExcelFilePath(excelFilePath);
             }
+            if(isJWT !=null){
+                tEnv().setIsJWT(isJWT);
+            }
+            if(endpointPrefix!=null){
+                tEnv().setEndpointPrefix(endpointPrefix);
+            }
             if (jsonFilePath != null) {
                 logger.info("JSON File Path Set to " + jsonFilePath);
                 tEnv().setJsonFilePath(jsonFilePath);
@@ -630,6 +639,7 @@ public class TestInitialization extends Browsers {
                     tEnv().setApiStore(tLocalEnv.getRegion().getAsJsonObject(test_region).get("store").getAsString());
                     tEnv().setApiHost(tLocalEnv.getRegion().getAsJsonObject(test_region).get("host").getAsString());
                     tEnv().setApiToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("token").getAsString());
+                    tEnv().setApiAccessToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("accessToken").getAsString());
                     tEnv().setApiCountry(tLocalEnv.getRegion().getAsJsonObject(test_region).get("country").getAsString());
                     tEnv().setApiCurrency(tLocalEnv.getRegion().getAsJsonObject(test_region).get("currency").getAsString());
                     tEnv().setApiTimeZone(tLocalEnv.getRegion().getAsJsonObject(test_region).get("timezone").getAsString());
@@ -646,6 +656,7 @@ public class TestInitialization extends Browsers {
                     tEnv().setApiStore(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("store").getAsString());
                     tEnv().setApiHost(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("host").getAsString());
                     tEnv().setApiToken(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("token").getAsString());
+                    tEnv().setApiAccessToken(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("accessToken").getAsString());
                     tEnv().setApiCountry(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("country").getAsString());
                     tEnv().setApiCurrency(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("currency").getAsString());
                     tEnv().setApiTimeZone(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("timezone").getAsString());
