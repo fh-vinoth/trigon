@@ -80,6 +80,7 @@ public class TestEnv {
     private String browserstack_execution_local;
     private String isJWT;
     private String endpointPrefix;
+    private String productName;
 
     public String getTestType() {
         return testType;
@@ -562,5 +563,13 @@ public class TestEnv {
 
     public void setContext(ITestContext context) {
         this.context = context;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 }

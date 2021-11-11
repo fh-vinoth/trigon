@@ -439,7 +439,7 @@ public class TestInitialization extends Browsers {
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version, String URI, String version, String token,
                                       String accessToken,String isJWT, String endpointPrefix,String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name,String bs_app_path,String productName) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -543,9 +543,17 @@ public class TestInitialization extends Browsers {
                         if (appType.equalsIgnoreCase("Android")) {
                             tEnv().setAndroidBSAppPath(tRemoteEnv.getProducts().get(platformType).getAsJsonObject().get("android").getAsJsonObject().get("bs_app_path").getAsString());
                             tEnv().setAndroidBuildNumber(tRemoteEnv.getProducts().get(platformType).getAsJsonObject().get("android").getAsJsonObject().get("build_number").getAsString());
+                            if(bs_app_path !=null){
+                                logger.info("BS PATH is set for Android " + bs_app_path);
+                                tEnv().setAndroidBSAppPath(bs_app_path);
+                            }
                         } else if (appType.equalsIgnoreCase("Ios")) {
                             tEnv().setIosBSAppPath(tRemoteEnv.getProducts().get(platformType).getAsJsonObject().get("ios").getAsJsonObject().get("bs_app_path").getAsString());
                             tEnv().setIosBuildNumber(tRemoteEnv.getProducts().get(platformType).getAsJsonObject().get("ios").getAsJsonObject().get("build_number").getAsString());
+                            if(bs_app_path !=null){
+                                logger.info("BS PATH is set for iOS " + bs_app_path);
+                                tEnv().setIosBSAppPath(bs_app_path);
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -631,6 +639,7 @@ public class TestInitialization extends Browsers {
             } else {
                 tEnv().setJsonDirectory("src/test/resources/TestData");
             }
+
             if (test_region != null) {
                 tEnv().setTest_region(test_region);
                 try {
