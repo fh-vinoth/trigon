@@ -91,7 +91,9 @@ public class TestInitialization extends Browsers {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        initializeExtentReport(testResultsPath, suiteNameWithTime);
+        if (!suiteName.contains("adhoc")) {
+            initializeExtentReport(testResultsPath, suiteNameWithTime);
+        }
 
     }
 
@@ -139,50 +141,56 @@ public class TestInitialization extends Browsers {
     }
 
     public void createExtentClassName(XmlTest xmlTest) {
-        if (xmlTest.getParallel().toString().equals("classes")) {
-            if (extentPojo == null) {
-                createExtentTest(xmlTest.getName(), "");
+        if (extent != null) {
+            if (xmlTest.getParallel().toString().equals("classes")) {
+                if (extentPojo == null) {
+                    createExtentTest(xmlTest.getName(), "");
+                }
+                extentClassNode.set(extentPojo.getExtentTest().createNode(getClass().getSimpleName()));
+            } else if (xmlTest.getParallel().toString().equals("tests")) {
+                if (extentTestNode.get() == null) {
+                    createExtentTest(xmlTest.getName(), "");
+                }
+                extentClassNode.set(extentTestNode.get().createNode(getClass().getSimpleName()));
+            } else {
+                if (extentPojo == null) {
+                    createExtentTest(xmlTest.getName(), "");
+                }
+                extentClassNode.set(extentPojo.getExtentTest().createNode(getClass().getSimpleName()));
             }
-            extentClassNode.set(extentPojo.getExtentTest().createNode(getClass().getSimpleName()));
-        } else if (xmlTest.getParallel().toString().equals("tests")) {
-            if (extentTestNode.get() == null) {
-                createExtentTest(xmlTest.getName(), "");
-            }
-            extentClassNode.set(extentTestNode.get().createNode(getClass().getSimpleName()));
-        } else {
-            if (extentPojo == null) {
-                createExtentTest(xmlTest.getName(), "");
-            }
-            extentClassNode.set(extentPojo.getExtentTest().createNode(getClass().getSimpleName()));
         }
     }
 
     public void createExtentMethod(ITestContext context, XmlTest xmlTest, Method method) {
-        if (extentClassNode.get() == null) {
-            createExtentClassName(xmlTest);
-        }
-        if (extentClassNode.get() != null) {
-            extentMethodNode.set(extentClassNode.get().createNode(method.getName()));
-        }
-        if (tEnv().getContext().getIncludedGroups().length > 0) {
-            for (String cat : context.getIncludedGroups()) {
-                extentClassNode.get().assignCategory(cat);
+        if (extent != null) {
+            if (extentClassNode.get() == null) {
+                createExtentClassName(xmlTest);
+            }
+            if (extentClassNode.get() != null) {
+                extentMethodNode.set(extentClassNode.get().createNode(method.getName()));
+            }
+            if (tEnv().getContext().getIncludedGroups().length > 0) {
+                for (String cat : context.getIncludedGroups()) {
+                    extentClassNode.get().assignCategory(cat);
+                }
             }
         }
-
     }
 
     public void extentFlush() {
-        try {
-            extent.flush();
-        } catch (ConcurrentModificationException c) {
+        if(extent!=null){
             try {
-                Thread.sleep(100);
                 extent.flush();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (ConcurrentModificationException c) {
+                try {
+                    Thread.sleep(100);
+                    extent.flush();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
     }
 
     public void testRailInit() {
@@ -297,12 +305,15 @@ public class TestInitialization extends Browsers {
         String testType = platformType;
         suiteParallel = iTestContext.getSuite().getParallel();
         totalTestModules = iTestContext.getSuite().getXmlSuite().getTests().size() - 1;
-        extent.setSystemInfo("testType", testType);
-        extent.setSystemInfo("testAppType", appType);
-        extent.setSystemInfo("executedBy", System.getProperty("user.name"));
-        extent.setSystemInfo("executedSystemOS", System.getProperty("os.name"));
-        extent.setSystemInfo("parallel", suiteParallel);
-        extent.setSystemInfo("totalTestModules", String.valueOf(totalTestModules));
+        if (extent != null) {
+            extent.setSystemInfo("testType", testType);
+            extent.setSystemInfo("testAppType", appType);
+            extent.setSystemInfo("executedBy", System.getProperty("user.name"));
+            extent.setSystemInfo("executedSystemOS", System.getProperty("os.name"));
+            extent.setSystemInfo("parallel", suiteParallel);
+            extent.setSystemInfo("totalTestModules", String.valueOf(totalTestModules));
+        }
+
     }
 
     public void testModuleCollection(String testModuleName) {
@@ -344,10 +355,12 @@ public class TestInitialization extends Browsers {
     }
 
     public void createExtentTest(String moduleNameReplaced, String testEnvVariables) {
-        extentTest = extent.createTest(moduleNameReplaced + "<div style=\"color: #635959;font-size: 12px;\">" + testEnvVariables + "</div>");
-        extentPojo = new ExtentPojo();
-        extentPojo.setExtentTest(extentTest);
-        extentTestNode.set(extentTest);
+        if (extent != null) {
+            extentTest = extent.createTest(moduleNameReplaced + "<div style=\"color: #635959;font-size: 12px;\">" + testEnvVariables + "</div>");
+            extentPojo = new ExtentPojo();
+            extentPojo.setExtentTest(extentTest);
+            extentTestNode.set(extentTest);
+        }
     }
 
 
@@ -437,9 +450,9 @@ public class TestInitialization extends Browsers {
 
     protected void setTestEnvironment(String fileName, String excelFilePath,
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version, String URI, String version, String token,
-                                      String accessToken,String isJWT, String endpointPrefix,String store, String host, String locale,
+                                      String accessToken, String isJWT, String endpointPrefix, String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name,String bs_app_path,String productName) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -543,14 +556,14 @@ public class TestInitialization extends Browsers {
                         if (appType.equalsIgnoreCase("Android")) {
                             tEnv().setAndroidBSAppPath(tRemoteEnv.getProducts().get(platformType).getAsJsonObject().get("android").getAsJsonObject().get("bs_app_path").getAsString());
                             tEnv().setAndroidBuildNumber(tRemoteEnv.getProducts().get(platformType).getAsJsonObject().get("android").getAsJsonObject().get("build_number").getAsString());
-                            if(bs_app_path !=null){
+                            if (bs_app_path != null) {
                                 logger.info("BS PATH is set for Android " + bs_app_path);
                                 tEnv().setAndroidBSAppPath(bs_app_path);
                             }
                         } else if (appType.equalsIgnoreCase("Ios")) {
                             tEnv().setIosBSAppPath(tRemoteEnv.getProducts().get(platformType).getAsJsonObject().get("ios").getAsJsonObject().get("bs_app_path").getAsString());
                             tEnv().setIosBuildNumber(tRemoteEnv.getProducts().get(platformType).getAsJsonObject().get("ios").getAsJsonObject().get("build_number").getAsString());
-                            if(bs_app_path !=null){
+                            if (bs_app_path != null) {
                                 logger.info("BS PATH is set for iOS " + bs_app_path);
                                 tEnv().setIosBSAppPath(bs_app_path);
                             }
@@ -624,10 +637,10 @@ public class TestInitialization extends Browsers {
             if (excelFilePath != null) {
                 tEnv().setExcelFilePath(excelFilePath);
             }
-            if(isJWT !=null){
+            if (isJWT != null) {
                 tEnv().setIsJWT(isJWT);
             }
-            if(endpointPrefix!=null){
+            if (endpointPrefix != null) {
                 tEnv().setEndpointPrefix(endpointPrefix);
             }
             if (jsonFilePath != null) {
@@ -672,7 +685,7 @@ public class TestInitialization extends Browsers {
                     tEnv().setApiPhoneNumber(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("phoneNumber").getAsString());
                     tEnv().setApiEmailID(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("emailId").getAsString());
                 } catch (Exception e) {
-                    Assert.fail("Provided test_region " + tRemoteEnv.getTest_region() + " in remote-env.json is not found in test-env.json");
+                    Assert.fail("Provided test_region " + tRemoteEnv.getTest_region() + " in remote-env.json is not found in test-env.json or some mandatory keys in " + tRemoteEnv.getTest_region() + " are missed, Please check all keys");
                 }
             }
 
@@ -690,6 +703,9 @@ public class TestInitialization extends Browsers {
             }
             if (browserstack_execution_local != null) {
                 tEnv().setBrowserstack_execution_local(browserstack_execution_local);
+            }
+            if(productName!=null){
+                tEnv().setProductName(productName);
             }
             tEnv().setCurrentTestClassName(class_name);
 

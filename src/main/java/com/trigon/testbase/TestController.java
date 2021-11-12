@@ -47,7 +47,10 @@ public class TestController extends TestInitialization {
             if (executionType == null) {
                 executionType = "local";
             }
-            extent.setSystemInfo("testExecutionType", executionType);
+            if(extent!=null){
+                extent.setSystemInfo("testExecutionType", executionType);
+            }
+
         } catch (FileNotFoundException fe){
             captureException(fe);
         }catch (Exception e) {
@@ -87,6 +90,10 @@ public class TestController extends TestInitialization {
             logger.info("Test Execution Started for Class  : " + getClass().getSimpleName());
             classFailAnalysisThread.set(new ArrayList<>());
             setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, accessToken,isJWT,endpointPrefix,store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName(),bs_app_path,productName);
+            if(context.getSuite().getName().contains("adhoc")){
+                remoteBrowserInit(context, xmlTest);
+            }
+
             createExtentClassName(xmlTest);
 
         } catch (Exception e) {
@@ -106,7 +113,10 @@ public class TestController extends TestInitialization {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
             setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token,accessToken,isJWT,endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName(),bs_app_path,productName);
-            remoteBrowserInit(context, xmlTest);
+
+            if(!context.getSuite().getName().contains("adhoc")){
+                remoteBrowserInit(context, xmlTest);
+            }
             remoteMobileInit(context, xmlTest);
             setMobileLocator();
             setWebLocator();
@@ -145,15 +155,15 @@ public class TestController extends TestInitialization {
                     }
                 }
             }
-            closeBrowserClassLevel();
+            if(!context.getSuite().getName().contains("adhoc")){
+                closeBrowserClassLevel();
+            }
             closeMobileClassLevel();
-
 
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
                 b.setTestCaseFinalStatus(runId, 1, "TEST PASSED", method.getName());
             }
-
             extentFlush();
             failAnalysisThread.remove();
         } catch (Exception e) {
@@ -162,10 +172,14 @@ public class TestController extends TestInitialization {
     }
 
     @AfterClass(alwaysRun = true)
-    protected void finalValidation(XmlTest xmlTest) {
+    protected void finalValidation(ITestContext context,XmlTest xmlTest) {
         try {
             dataTableCollectionApi.remove();
             logger.info("Test Execution Finished for Class  : " + getClass().getSimpleName());
+            if(!context.getSuite().getName().contains("adhoc")){
+                closeBrowserClassLevel();
+            }
+
             classFailAnalysisThread.remove();
         } catch (Exception e) {
             captureException(e);
