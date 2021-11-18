@@ -41,7 +41,7 @@ public class TestController extends TestInitialization {
             pipelineExecution = tre.getPipeline_execution();
             propertiesPojo = setProperties();
             reportsInitialization(iTestContext.getSuite().getName());
-            logInitialization();
+            logInitialization(iTestContext.getSuite().getName());
             testSuiteCollectionBeforeSuite(iTestContext);
             testRailInit();
             if (executionType == null) {
@@ -176,7 +176,7 @@ public class TestController extends TestInitialization {
         try {
             dataTableCollectionApi.remove();
             logger.info("Test Execution Finished for Class  : " + getClass().getSimpleName());
-            if(!context.getSuite().getName().contains("adhoc")){
+            if(context.getSuite().getName().contains("adhoc")){
                 closeBrowserClassLevel();
             }
 
@@ -231,15 +231,17 @@ public class TestController extends TestInitialization {
         } catch (Exception e) {
             captureException(e);
         } finally {
-            EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType,pipelineExecution);
-            if(apiCoverage.size()>0){
-                getAPICoverage(apiCoverage);
-            }
-            if(executionType.equalsIgnoreCase("remote"))
-            {
-                if(System.getProperty("user.name").equalsIgnoreCase("root")||System.getProperty("user.name").equalsIgnoreCase("ec2-user"))
+            if(!iTestContext.getSuite().getName().contains("adhoc")){
+                EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType,pipelineExecution);
+                if(apiCoverage.size()>0){
+                    getAPICoverage(apiCoverage);
+                }
+                if(executionType.equalsIgnoreCase("remote"))
                 {
-                    emailTrigger();
+                    if(System.getProperty("user.name").equalsIgnoreCase("root")||System.getProperty("user.name").equalsIgnoreCase("ec2-user"))
+                    {
+                        emailTrigger();
+                    }
                 }
             }
 

@@ -40,10 +40,13 @@ public class TestModelCore extends ReportManager {
     private String locatorString(String s) {
         String locator = s;
         try {
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
-            JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
-            ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
-            locator = eRepo.getElements().get(s).getAsJsonObject().get(tEnv().getElementLocator()).getAsString();
+            //s.startsWith("name")||s.startsWith("xpath")||s.startsWith("classname")||s.startsWith("partiallinktext")||s.startsWith("linktext")||s.startsWith("tagname")||s.startsWith("css")||s.startsWith("id")
+            if(!s.contains("=")){
+                Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+                JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
+                ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
+                locator = eRepo.getElements().get(s).getAsJsonObject().get(tEnv().getElementLocator()).getAsString();
+            }
         } catch (Exception e) {
             captureException(e);
         }

@@ -198,7 +198,6 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 long endTime5 = System.currentTimeMillis();
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
-                    logger.error(Message.ELEMENT_NOT_FOUND);
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
                     hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                 }
@@ -289,7 +288,6 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 long endTime5 = System.currentTimeMillis();
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
-                    logger.error(Message.ELEMENT_NOT_FOUND);
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
                     hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                 }
@@ -385,7 +383,6 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 long endTime5 = System.currentTimeMillis();
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
-                    logger.error(Message.ELEMENT_NOT_FOUND);
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
                     hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                 }
@@ -480,7 +477,6 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 long endTime5 = System.currentTimeMillis();
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
-                    logger.error(Message.ELEMENT_NOT_FOUND);
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
                     hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                 }
@@ -572,7 +568,6 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 long endTime5 = System.currentTimeMillis();
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
-                    logger.error(Message.ELEMENT_NOT_FOUND);
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
                     hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                 }

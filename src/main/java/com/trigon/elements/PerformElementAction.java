@@ -8,6 +8,8 @@ import io.appium.java_client.touch.WaitOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public class PerformElementAction extends ElementStrategyImpl {
         IOSElement iOSElement = getIOSElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
         AndroidElement androidElement = getAndroidElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
         WebElement webElement = getWebElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
-        String navigation = Message.NAVIGATED_TO_PAGE +Thread.currentThread().getStackTrace()[3].getFileName().replace(".java","");
+        String navigation = Message.NAVIGATED_TO_PAGE + Thread.currentThread().getStackTrace()[3].getFileName().replace(".java", "");
 
         switch (action) {
             case "click":
@@ -37,47 +39,55 @@ public class PerformElementAction extends ElementStrategyImpl {
                                 webElement.click();
                             }
                         } catch (WebDriverException e) {
-                            logReport("INFO", "Element NOT intractable Hence Scrolling" + locatorString);
-                            logger.error("Element NOT intractable Hence Scrolling...");
                             try {
-                                scrollToElement(webElement);
-                                hardWait(1000);
-                                if (webElement.isEnabled()) {
-                                    webElement.click();
-                                }
-                            } catch (WebDriverException e1) {
-                                for (int b = 0; b < 10; b++) {
-                                    try {
-                                        JavascriptExecutor js = browser();
-                                        js.executeScript("window.scrollBy(0,-450)", "");
-                                        if (webElement.isEnabled()) {
-                                            webElement.click();
+                                WebDriverWait wait = new WebDriverWait(browser(), 5000);
+                                wait.until(ExpectedConditions.elementToBeClickable(webElement));
+                                JavascriptExecutor executor = (JavascriptExecutor) browser();
+                                executor.executeScript("arguments[0].click();", webElement);
+                            } catch (Exception e3) {
+                                try {
+                                    logReport("INFO", "Element NOT intractable Hence Scrolling" + locatorString);
+                                    logger.error("Element NOT intractable Hence Scrolling...");
+                                    scrollToElement(webElement);
+                                    hardWait(1000);
+                                    if (webElement.isEnabled()) {
+                                        webElement.click();
+                                    }
+                                } catch (WebDriverException e1) {
+                                    for (int b = 0; b < 10; b++) {
+                                        try {
+                                            JavascriptExecutor js = browser();
+                                            js.executeScript("window.scrollBy(0,-450)", "");
+                                            if (webElement.isEnabled()) {
+                                                webElement.click();
+                                            }
+                                            break;
+                                        } catch (WebDriverException e2) {
+
                                         }
-                                        break;
-                                    } catch (WebDriverException e2) {
-                                        e2.printStackTrace();
                                     }
                                 }
                             }
+
                         }
                         browser().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
                         browser().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
                         logReportWithScreenShot("PASS",
-                                navigation+Message.CLICKED + locatorString);
+                                navigation + Message.CLICKED + locatorString);
                     }
                     if (androidElement != null) {
                         androidElement.click();
                         logReportWithScreenShot("PASS",
-                                navigation+Message.CLICKED + locatorString);
+                                navigation + Message.CLICKED + locatorString);
                     }
                     if (iOSElement != null) {
                         iOSElement.click();
                         logReportWithScreenShot("PASS",
-                                navigation+Message.CLICKED + locatorString);
+                                navigation + Message.CLICKED + locatorString);
                     }
 
                 } catch (WebDriverException e) {
-                    hardFail(navigation+Message.ELEMENT_NOT_INTRACTABLE_CLICK, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(navigation + Message.ELEMENT_NOT_INTRACTABLE_CLICK, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                     break;
                 }
                 break;
@@ -94,9 +104,9 @@ public class PerformElementAction extends ElementStrategyImpl {
                         returnvalue = iOSElement.getAttribute(getElementValue);
                     }
                     logReportWithScreenShot("PASS",
-                            navigation+Message.GET_ATTRIBUTE + locatorString);
+                            navigation + Message.GET_ATTRIBUTE + locatorString);
                 } catch (WebDriverException e) {
-                    hardFail(navigation+Message.ELEMENT_NOT_INTRACTABLE_GET_ATTRIBUTE, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(navigation + Message.ELEMENT_NOT_INTRACTABLE_GET_ATTRIBUTE, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                     break;
                 }
                 break;
@@ -112,9 +122,9 @@ public class PerformElementAction extends ElementStrategyImpl {
                         returnvalue = String.valueOf(iOSElement.isDisplayed());
                     }
                     logReportWithScreenShot("PASS",
-                            navigation+Message.ELEMENT_VERIFY_DISPLAYED + locatorString);
+                            navigation + Message.ELEMENT_VERIFY_DISPLAYED + locatorString);
                 } catch (WebDriverException e) {
-                    hardFail(navigation+Message.ELEMENT_NOT_INTRACTABLE_VERIFY_DISPLAYED, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(navigation + Message.ELEMENT_NOT_INTRACTABLE_VERIFY_DISPLAYED, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                     break;
                 }
                 break;
@@ -131,9 +141,9 @@ public class PerformElementAction extends ElementStrategyImpl {
                         iOSElement.clear();
                     }
                     logReportWithScreenShot("PASS",
-                            navigation+Message.CLEAR_TEXT + locatorString);
+                            navigation + Message.CLEAR_TEXT + locatorString);
                 } catch (WebDriverException e) {
-                    hardFail(navigation+Message.ELEMENT_NOT_INTRACTABLE_CLEAR_TEXT, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(navigation + Message.ELEMENT_NOT_INTRACTABLE_CLEAR_TEXT, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                     break;
                 }
                 break;
@@ -180,13 +190,13 @@ public class PerformElementAction extends ElementStrategyImpl {
                         iOSElement.sendKeys(getElementValue);
                     }
                     logReportWithScreenShot("PASS",
-                            navigation+ "and entered "+getElementValue + "in text/input field for element : " + locatorString);
+                            navigation + "and entered " + getElementValue + "in text/input field for element : " + locatorString);
                     long endTime5 = System.currentTimeMillis();
                     logger.info(Message.TIME_TAKEN_TO_PERFORM_ACTION_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
 
                     // logTimeReport("PASS","Testing Time Taken ",cUtils().getRunDuration(startTime5, endTime5));
-                } catch (WebDriverException |NoClassDefFoundError e) {
-                    hardFail(navigation+Message.ELEMENT_NOT_INTRACTABLE_ENTER_TEXT, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                } catch (WebDriverException | NoClassDefFoundError e) {
+                    hardFail(navigation + Message.ELEMENT_NOT_INTRACTABLE_ENTER_TEXT, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                     break;
                 }
                 break;
@@ -207,9 +217,9 @@ public class PerformElementAction extends ElementStrategyImpl {
                         returnvalue = iOSElement.getText();
                     }
                     logReportWithScreenShot("PASS",
-                            navigation+" and captured the Text as : " + returnvalue + " for element " + locatorString);
+                            navigation + " and captured the Text as : " + returnvalue + " for element " + locatorString);
                 } catch (WebDriverException e) {
-                    hardFail(navigation+Message.ELEMENT_NOT_INTRACTABLE_GET_TEXT, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(navigation + Message.ELEMENT_NOT_INTRACTABLE_GET_TEXT, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                     break;
                 }
                 break;
@@ -387,7 +397,7 @@ public class PerformElementAction extends ElementStrategyImpl {
         return Values;
     }
 
-    public void horizontalSwipeToElement1(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues){
+    public void horizontalSwipeToElement1(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         AndroidElement androidElement = getAndroidElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
         IOSElement iOSElement = getIOSElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
         try {
@@ -407,7 +417,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                                 .release()
                                 .perform();
 
-                        logReportWithScreenShot( "PASS",
+                        logReportWithScreenShot("PASS",
                                 "Horizontal Swiped to Element  :  " + "Pressed X Location : " + chosenElementX + "Pressed Y Location : " + chosenElementY + " Moved X Location : " + MoveX + " Moved Y Location : " + MoveY);
                         break;
                     } catch (WebDriverException | NullPointerException e) {
@@ -433,7 +443,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                                 .release()
                                 .perform();
 
-                        logReportWithScreenShot( "PASS",
+                        logReportWithScreenShot("PASS",
                                 "Horizontal Swiped to Element  :  " + "Pressed X Location : " + chosenElementX + " Pressed Y Location : " + chosenElementY + " Moved X Location : " + MoveX + " Moved Y Location : " + MoveY);
                         break;
                     } catch (WebDriverException e) {

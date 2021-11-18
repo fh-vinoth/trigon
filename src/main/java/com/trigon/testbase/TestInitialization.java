@@ -69,31 +69,35 @@ public class TestInitialization extends Browsers {
         String suiteNameWithTime = suiteNameReplaced + "_" + cUtils().getCurrentTimeStamp();
         getSuiteNameWithTime = suiteNameWithTime;
         String testResultsPath = cUtils().createFolder("src/test/resources", "TestResults", suiteNameWithTime);
-        String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
-
-        trigonPaths.setLogsPath(cUtils().createFolder(testResultsPath, "RunTimeLogs", ""));
-        trigonPaths.setSupportFilePath(supportFilePath);
         trigonPaths.setTestResultsPath(testResultsPath);
-        trigonPaths.setSupportSubSuiteFilePath(cUtils().createFolder(supportFilePath, "TestResultJSON", ""));
+        String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
+        trigonPaths.setSupportFilePath(supportFilePath);
         trigonPaths.setSupportFileHTMLPath(cUtils().createFolder(supportFilePath, "HTML", ""));
-        trigonPaths.setScreenShotsPath(cUtils().createFolder(testResultsPath, "ScreenShots", ""));
 
-        File file2 = new File("reports-path.json");
-        if (file2.exists()) {
-            file2.delete();
-        }
-        try {
-            JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter("reports-path.json", false)));
-            writer.beginObject().name("path").value(testResultsPath);
-            writer.name("testType").value(platformType);
-            writer.name("platformType").value(appType).endObject().flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         if (!suiteName.contains("adhoc")) {
+            trigonPaths.setLogsPath(cUtils().createFolder(testResultsPath, "RunTimeLogs", ""));
+            if(!platformType.equalsIgnoreCase("API")){
+                trigonPaths.setScreenShotsPath(cUtils().createFolder(testResultsPath, "ScreenShots", ""));
+            }
+            trigonPaths.setSupportSubSuiteFilePath(cUtils().createFolder(supportFilePath, "TestResultJSON", ""));
+
+            File file2 = new File("reports-path.json");
+            if (file2.exists()) {
+                file2.delete();
+            }
+            try {
+                JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter("reports-path.json", false)));
+                writer.beginObject().name("path").value(testResultsPath);
+                writer.name("testType").value(platformType);
+                writer.name("platformType").value(appType).endObject().flush();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             initializeExtentReport(testResultsPath, suiteNameWithTime);
         }
+
 
     }
 
@@ -178,7 +182,7 @@ public class TestInitialization extends Browsers {
     }
 
     public void extentFlush() {
-        if(extent!=null){
+        if (extent != null) {
             try {
                 extent.flush();
             } catch (ConcurrentModificationException c) {
@@ -376,14 +380,16 @@ public class TestInitialization extends Browsers {
     }
 
 
-    public void logInitialization() {
+    public void logInitialization(String suiteName) {
         try {
-            System.setProperty("logFilename", trigonPaths.getLogsPath() + "RunTimeExecutionLog.log");
-            System.setProperty("loghtmlfile", trigonPaths.getLogsPath() + "RunTimeExecutionLog.html");
-            LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-            ctx.reconfigure();
-            cUtils().deleteFile("${sys:logFilename}");
-            cUtils().deleteFile("${sys:loghtmlfile}");
+            if (!suiteName.contains("adhoc")) {
+                System.setProperty("logFilename", trigonPaths.getLogsPath() + "RunTimeExecutionLog.log");
+                System.setProperty("loghtmlfile", trigonPaths.getLogsPath() + "RunTimeExecutionLog.html");
+                LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+                ctx.reconfigure();
+                cUtils().deleteFile("${sys:logFilename}");
+                cUtils().deleteFile("${sys:loghtmlfile}");
+            }
         } catch (Exception e) {
             captureException(e);
         }
@@ -704,7 +710,7 @@ public class TestInitialization extends Browsers {
             if (browserstack_execution_local != null) {
                 tEnv().setBrowserstack_execution_local(browserstack_execution_local);
             }
-            if(productName!=null){
+            if (productName != null) {
                 tEnv().setProductName(productName);
             }
             tEnv().setCurrentTestClassName(class_name);
