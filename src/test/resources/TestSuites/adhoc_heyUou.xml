@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="web_adhoc_HryYou">
+    <parameter name="excelFilePath" value="src/test/resources/TestData/HeyYou.xlsx"></parameter>
+    <test name="HeyYou">
+        <classes>
+            <class name="com.fh.adhoc.HeyYou"/>
+        </classes>
+    </test>
+</suite>

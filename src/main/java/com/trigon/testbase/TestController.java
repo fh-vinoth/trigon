@@ -1,5 +1,6 @@
 package com.trigon.testbase;
 
+import com.aventstack.extentreports.Status;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -72,6 +73,7 @@ public class TestController extends TestInitialization {
                 setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token,accessToken,isJWT,endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName(),bs_app_path,productName);
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
+                moduleFailAnalysisThread.set(new ArrayList<>());
                 testModuleCollection(xmlTest.getName());
             }
         } catch (Exception e) {
@@ -117,6 +119,10 @@ public class TestController extends TestInitialization {
             if(!context.getSuite().getName().contains("adhoc")){
                 remoteBrowserInit(context, xmlTest);
             }
+            if(webDriverThreadLocal.get()!=null){
+                System.out.println(browser().getSessionId());
+            }
+
             remoteMobileInit(context, xmlTest);
             setMobileLocator();
             setWebLocator();
@@ -133,27 +139,16 @@ public class TestController extends TestInitialization {
     @AfterMethod(alwaysRun = true)
     protected void processTearDown(Method method, XmlTest xmlTest, ITestContext context, ITestResult result) {
         try {
-            if (failAnalysisThread.get().size() > 0) {
-                if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
-                    BaseMethods b = new BaseMethods();
-                    b.setTestCaseFinalStatus(runId, 4, failAnalysisThread.get().toString(), method.getName());
-                }
-                if (propertiesPojo.getEnable_jira().equalsIgnoreCase("true")) {
-                    createJiraTicket(method.getName() + " Test failed !! validate Issue ", failAnalysisThread.get().toString());
-                }
-                failStatus = true;
-            }else{
-                if(tEnv().getScreenshotPath()!=null){
-                    CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
-                }
-            }
-
             if(result.wasRetried()){
                 if(result.getStatus() == 3){
                     if (extentMethodNode.get() != null) {
                         extent.removeTest(extentMethodNode.get());
                     }
+                }else{
+                    failStatusCheck(method);
                 }
+            }else{
+                failStatusCheck(method);
             }
             if(!context.getSuite().getName().contains("adhoc")){
                 closeBrowserClassLevel();
@@ -179,6 +174,14 @@ public class TestController extends TestInitialization {
             if(context.getSuite().getName().contains("adhoc")){
                 closeBrowserClassLevel();
             }
+            if(classFailAnalysisThread.get().size()>0){
+                moduleFailAnalysisThread.get().add("FAIL");
+            }else{
+               if( extentClassNode.get()!=null){
+                   extentClassNode.get().getModel().setStatus(Status.PASS);
+               }
+
+            }
 
             classFailAnalysisThread.remove();
         } catch (Exception e) {
@@ -190,6 +193,16 @@ public class TestController extends TestInitialization {
     protected void methodClosure(XmlTest xmlTest) {
         try {
             logger.info("Test Execution Finished for Module : " + xmlTest.getName());
+            if(extentTestNode.get()!=null){
+                if(moduleFailAnalysisThread.get().size()>0){
+
+                }else{
+                    if(extentTestNode.get()!=null){
+                        extentTestNode.get().getModel().setStatus(Status.PASS);
+                    }
+
+                }
+            }
         } catch (Exception e) {
             captureException(e);
         }
@@ -264,6 +277,24 @@ public class TestController extends TestInitialization {
         if(error_email_recipients !=null){
             if(exceptionStatus){
                 sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients,"true","false");
+            }
+        }
+    }
+
+    private void failStatusCheck(Method method) {
+        if (failAnalysisThread.get().size() > 0) {
+            if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
+                BaseMethods b = new BaseMethods();
+                b.setTestCaseFinalStatus(runId, 4, failAnalysisThread.get().toString(), method.getName());
+            }
+            if (propertiesPojo.getEnable_jira().equalsIgnoreCase("true")) {
+                createJiraTicket(method.getName() + " Test failed !! validate Issue ", failAnalysisThread.get().toString());
+            }
+            failStatus = true;
+            classFailAnalysisThread.get().add("fail");
+        }else{
+            if(tEnv().getScreenshotPath()!=null){
+                CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
             }
         }
     }

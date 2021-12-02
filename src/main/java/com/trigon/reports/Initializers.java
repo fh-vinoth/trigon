@@ -22,6 +22,7 @@ public class Initializers {
     public static PropertiesPojo propertiesPojo = new PropertiesPojo();
     protected static ThreadLocal<List<String>> failAnalysisThread = new ThreadLocal<>();
     protected static ThreadLocal<List<String>> classFailAnalysisThread = new ThreadLocal<>();
+    protected static ThreadLocal<List<String>> moduleFailAnalysisThread = new ThreadLocal<>();
     protected static ThreadLocal<TestEnv> envThreadLocal = new ThreadLocal<>();
     protected static ThreadLocal<List<LinkedHashMap<String, Object>>> dataTableCollectionApi = new ThreadLocal<>();
     protected static ThreadLocal<LinkedHashMap<String, Object>> dataTableMapApi = new ThreadLocal<>();
