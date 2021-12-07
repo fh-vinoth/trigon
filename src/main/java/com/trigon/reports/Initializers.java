@@ -22,6 +22,7 @@ public class Initializers {
     public static PropertiesPojo propertiesPojo = new PropertiesPojo();
     protected static ThreadLocal<List<String>> failAnalysisThread = new ThreadLocal<>();
     protected static ThreadLocal<List<String>> classFailAnalysisThread = new ThreadLocal<>();
+    protected static ThreadLocal<List<String>> moduleFailAnalysisThread = new ThreadLocal<>();
     protected static ThreadLocal<TestEnv> envThreadLocal = new ThreadLocal<>();
     protected static ThreadLocal<List<LinkedHashMap<String, Object>>> dataTableCollectionApi = new ThreadLocal<>();
     protected static ThreadLocal<LinkedHashMap<String, Object>> dataTableMapApi = new ThreadLocal<>();
@@ -42,7 +43,7 @@ public class Initializers {
     protected static Hashtable<Collection<?>, Collection<?>> customReportStatusMap1 = new Hashtable();
 
     public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
-    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy");
+    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy","mytweb");
 
     public static ExtentReports extent = null;
     public static ThreadLocal<ExtentTest> extentTestNode = new ThreadLocal<>();

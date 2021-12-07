@@ -64,3 +64,5 @@ backupLogs
 backupLogs/**
 /backupLogs/**
 reports-path.json
+/logs
+/logs/**

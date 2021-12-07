@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web_Scrap_Suite">
+
+    <parameter name="excelFilePath" value="src/test/resources/TestData/FrameworkTest.xlsx"></parameter>
+
+    <test name="Web Test Report">
+        <classes>
+            <class name="com.fh.unittests.frameworktest.FBScrap"/>
+        </classes>
+    </test>
+
+</suite>
+

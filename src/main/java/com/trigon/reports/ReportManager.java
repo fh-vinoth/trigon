@@ -163,7 +163,11 @@ public class ReportManager extends CustomReport {
 
     public void logScenario(String ScenarioName) {
         logger.info("Scenario : " + ScenarioName);
-        extentScenarioNode.set(extentMethodNode.get().createNode("<font color=\"#d0b2e6\">" + ScenarioName + "</font>"));
+        if(extent!=null){
+            if(extentScenarioNode!=null){
+                extentScenarioNode.set(extentMethodNode.get().createNode("<font color=\"#d0b2e6\">" + ScenarioName + "</font>"));
+            }
+        }
     }
 
     protected void customAssertEquals(String actual, String expected) {
