@@ -551,6 +551,7 @@ public class ReportManager extends CustomReport {
     protected void captureException(Exception e) {
         try {
             logger.error(ExceptionUtils.getStackTrace(e));
+            exceptionStatus = true;
         } catch (Exception e1) {
             e1.printStackTrace();
         }
