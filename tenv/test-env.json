@@ -95,7 +95,8 @@
       "currency": "£",
       "timezone": "GMT+1",
       "phoneNumber": "07012345679",
-      "emailId": "teamautomation18@gmail.com"
+      "emailId": "teamautomation18@gmail.com",
+      "accessToken": ""
     },
     "UK1": {
       "locale": "united kingdom",
@@ -215,7 +216,8 @@
       "currency": "$",
       "timezone": "GMT+12",
       "phoneNumber": "0211004548",
-      "emailId": "teamautomation16@gmail.com"
+      "emailId": "teamautomation16@gmail.com",
+      "accessToken": ""
     },
     "NZ2": {
       "locale": "newzealand",

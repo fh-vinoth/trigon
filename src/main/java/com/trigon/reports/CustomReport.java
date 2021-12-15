@@ -126,6 +126,29 @@ public class CustomReport extends Initializers{
         }
     }
 
+    public void addRowToCustomReport(List<String> values) {
+
+        if(cReportPojo.getCustomReport()!=null){
+            if(values.size()>0){
+                try{
+                    cReportPojo.getCustomReport().write(" <tr style=\"height: 40px;\">\n");
+                    for(int i = 0; i< values.size(); i++){
+                        cReportPojo.getCustomReport().write("<td> "+ values.get(i) +"</td>\n");
+                    }
+                    cReportPojo.getCustomReport().write(       "                    </tr>\n");
+                }catch (Exception e){
+                    Assert.fail("Add Headers for Custom Report using addHeaderToCustomReport before you add Row to CustomReport");
+                }
+
+            }
+            try {
+                cReportPojo.getCustomReport().flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private synchronized void compareCustomReportValues(List<String> status, String actual, String expected) {
         if (expected.equals(actual)) {

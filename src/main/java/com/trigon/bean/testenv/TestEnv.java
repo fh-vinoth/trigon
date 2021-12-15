@@ -17,6 +17,7 @@ public class TestEnv {
     private String apiStore;
     private String apiHost;
     private String apiToken;
+    private String apiAccessToken;
     private String apiCountry;
     private String apiCurrency;
     private String apiTimeZone;
@@ -77,6 +78,9 @@ public class TestEnv {
     private String currentTestClassName;
     private File screenshotPath;
     private String browserstack_execution_local;
+    private String isJWT;
+    private String endpointPrefix;
+    private String productName;
 
     public String getTestType() {
         return testType;
@@ -148,6 +152,14 @@ public class TestEnv {
 
     public void setApiToken(String apiToken) {
         this.apiToken = apiToken;
+    }
+
+    public String getApiAccessToken() {
+        return apiAccessToken;
+    }
+
+    public void setApiAccessToken(String apiAccessToken) {
+        this.apiAccessToken = apiAccessToken;
     }
 
     public String getApiCountry() {
@@ -529,11 +541,35 @@ public class TestEnv {
         this.browserstack_execution_local = browserstack_execution_local;
     }
 
+    public String getIsJWT() {
+        return isJWT;
+    }
+
+    public void setIsJWT(String isJWT) {
+        this.isJWT = isJWT;
+    }
+
+    public String getEndpointPrefix() {
+        return endpointPrefix;
+    }
+
+    public void setEndpointPrefix(String endpointPrefix) {
+        this.endpointPrefix = endpointPrefix;
+    }
+
     public ITestContext getContext() {
         return context;
     }
 
     public void setContext(ITestContext context) {
         this.context = context;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 }

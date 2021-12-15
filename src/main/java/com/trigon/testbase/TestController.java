@@ -1,5 +1,6 @@
 package com.trigon.testbase;
 
+import com.aventstack.extentreports.Status;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -41,13 +42,16 @@ public class TestController extends TestInitialization {
             pipelineExecution = tre.getPipeline_execution();
             propertiesPojo = setProperties();
             reportsInitialization(iTestContext.getSuite().getName());
-            logInitialization();
+            logInitialization(iTestContext.getSuite().getName());
             testSuiteCollectionBeforeSuite(iTestContext);
             testRailInit();
             if (executionType == null) {
                 executionType = "local";
             }
-            extent.setSystemInfo("testExecutionType", executionType);
+            if(extent!=null){
+                extent.setSystemInfo("testExecutionType", executionType);
+            }
+
         } catch (FileNotFoundException fe){
             captureException(fe);
         }catch (Exception e) {
@@ -59,16 +63,17 @@ public class TestController extends TestInitialization {
     protected void moduleInitilalization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath,@Optional String excelFilePath,
                                          @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType,@Optional String url, @Optional String browser,
                                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                                         @Optional String URI, @Optional String version, @Optional String token,
+                                         @Optional String URI, @Optional String version, @Optional String token,@Optional String accessToken,@Optional String isJWT, @Optional String endpointPrefix,
                                          @Optional String store, @Optional String host, @Optional String locale,
                                          @Optional String region, @Optional String country, @Optional String currency,
-                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId ,@Optional String test_region,@Optional String browserstack_execution_local) {
+                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId ,@Optional String test_region,@Optional String browserstack_execution_local,@Optional String bs_app_path,@Optional String productName) {
         try {
             if (platformType != null) {
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
-                setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
+                setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token,accessToken,isJWT,endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName(),bs_app_path,productName);
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
+                moduleFailAnalysisThread.set(new ArrayList<>());
                 testModuleCollection(xmlTest.getName());
             }
         } catch (Exception e) {
@@ -79,17 +84,20 @@ public class TestController extends TestInitialization {
     protected void classInitialization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
                                        @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType,@Optional String url,@Optional String browser,
                                        @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                                       @Optional String URI, @Optional String version, @Optional String token,
+                                       @Optional String URI, @Optional String version, @Optional String token,@Optional String accessToken,@Optional String isJWT, @Optional String endpointPrefix,
                                        @Optional String store, @Optional String host, @Optional String locale,
                                        @Optional String region, @Optional String country, @Optional String currency,
-                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region,@Optional String browserstack_execution_local) {
+                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region,@Optional String browserstack_execution_local,@Optional String bs_app_path,@Optional String productName) {
         try {
             logger.info("Test Execution Started for Class  : " + getClass().getSimpleName());
             classFailAnalysisThread.set(new ArrayList<>());
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
+            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, accessToken,isJWT,endpointPrefix,store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName(),bs_app_path,productName);
+            if(context.getSuite().getName().contains("adhoc")){
+                remoteBrowserInit(context, xmlTest);
+            }
+
             createExtentClassName(xmlTest);
-            remoteBrowserInit(context, xmlTest);
-            remoteMobileInit(context, xmlTest);
+
         } catch (Exception e) {
             captureException(e);
         }
@@ -98,15 +106,24 @@ public class TestController extends TestInitialization {
     protected void setUp(ITestContext context, XmlTest xmlTest, Method method, @Optional String testEnvPath, @Optional String excelFilePath,
                          @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                         @Optional String URI, @Optional String version, @Optional String token,
+                         @Optional String URI, @Optional String version, @Optional String token,@Optional String accessToken,@Optional String isJWT, @Optional String endpointPrefix,
                          @Optional String store, @Optional String host, @Optional String locale,
                          @Optional String region, @Optional String country, @Optional String currency,
-                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local) {
+                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local,@Optional String bs_app_path,@Optional String productName) {
         logger.info("Test Execution Started for Method : " + method.getName());
         try {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName());
+            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token,accessToken,isJWT,endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName(),bs_app_path,productName);
+
+            if(!context.getSuite().getName().contains("adhoc")){
+                remoteBrowserInit(context, xmlTest);
+            }
+            if(webDriverThreadLocal.get()!=null){
+                System.out.println(browser().getSessionId());
+            }
+
+            remoteMobileInit(context, xmlTest);
             setMobileLocator();
             setWebLocator();
             failAnalysisThread.set(new ArrayList<>());
@@ -122,35 +139,26 @@ public class TestController extends TestInitialization {
     @AfterMethod(alwaysRun = true)
     protected void processTearDown(Method method, XmlTest xmlTest, ITestContext context, ITestResult result) {
         try {
-            if (failAnalysisThread.get().size() > 0) {
-                if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
-                    BaseMethods b = new BaseMethods();
-                    b.setTestCaseFinalStatus(runId, 4, failAnalysisThread.get().toString(), method.getName());
-                }
-                if (propertiesPojo.getEnable_jira().equalsIgnoreCase("true")) {
-                    createJiraTicket(method.getName() + " Test failed !! validate Issue ", failAnalysisThread.get().toString());
-                }
-                failStatus = true;
-            }else{
-                if(tEnv().getScreenshotPath()!=null){
-                    CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
-                }
-            }
-
             if(result.wasRetried()){
                 if(result.getStatus() == 3){
                     if (extentMethodNode.get() != null) {
                         extent.removeTest(extentMethodNode.get());
                     }
+                }else{
+                    failStatusCheck(method);
                 }
+            }else{
+                failStatusCheck(method);
             }
-
+            if(!context.getSuite().getName().contains("adhoc")){
+                closeBrowserClassLevel();
+            }
+            closeMobileClassLevel();
 
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
                 b.setTestCaseFinalStatus(runId, 1, "TEST PASSED", method.getName());
             }
-
             extentFlush();
             failAnalysisThread.remove();
         } catch (Exception e) {
@@ -159,12 +167,22 @@ public class TestController extends TestInitialization {
     }
 
     @AfterClass(alwaysRun = true)
-    protected void finalValidation(XmlTest xmlTest) {
+    protected void finalValidation(ITestContext context,XmlTest xmlTest) {
         try {
             dataTableCollectionApi.remove();
             logger.info("Test Execution Finished for Class  : " + getClass().getSimpleName());
-            closeBrowserClassLevel();
-            closeMobileClassLevel();
+            if(context.getSuite().getName().contains("adhoc")){
+                closeBrowserClassLevel();
+            }
+            if(classFailAnalysisThread.get().size()>0){
+                moduleFailAnalysisThread.get().add("FAIL");
+            }else{
+               if( extentClassNode.get()!=null){
+                   extentClassNode.get().getModel().setStatus(Status.PASS);
+               }
+
+            }
+
             classFailAnalysisThread.remove();
         } catch (Exception e) {
             captureException(e);
@@ -175,6 +193,16 @@ public class TestController extends TestInitialization {
     protected void methodClosure(XmlTest xmlTest) {
         try {
             logger.info("Test Execution Finished for Module : " + xmlTest.getName());
+            if(extentTestNode.get()!=null){
+                if(moduleFailAnalysisThread.get().size()>0){
+
+                }else{
+                    if(extentTestNode.get()!=null){
+                        extentTestNode.get().getModel().setStatus(Status.PASS);
+                    }
+
+                }
+            }
         } catch (Exception e) {
             captureException(e);
         }
@@ -216,15 +244,17 @@ public class TestController extends TestInitialization {
         } catch (Exception e) {
             captureException(e);
         } finally {
-            EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType,pipelineExecution);
-            if(apiCoverage.size()>0){
-                getAPICoverage(apiCoverage);
-            }
-            if(executionType.equalsIgnoreCase("remote"))
-            {
-                if(System.getProperty("user.name").equalsIgnoreCase("root")||System.getProperty("user.name").equalsIgnoreCase("ec2-user"))
+            if(!iTestContext.getSuite().getName().contains("adhoc")){
+                EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType,pipelineExecution);
+                if(apiCoverage.size()>0){
+                    getAPICoverage(apiCoverage);
+                }
+                if(executionType.equalsIgnoreCase("remote"))
                 {
-                    emailTrigger();
+                    if(System.getProperty("user.name").equalsIgnoreCase("root")||System.getProperty("user.name").equalsIgnoreCase("ec2-user"))
+                    {
+                        emailTrigger();
+                    }
                 }
             }
 
@@ -247,6 +277,24 @@ public class TestController extends TestInitialization {
         if(error_email_recipients !=null){
             if(exceptionStatus){
                 sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients,"true","false");
+            }
+        }
+    }
+
+    private void failStatusCheck(Method method) {
+        if (failAnalysisThread.get().size() > 0) {
+            if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
+                BaseMethods b = new BaseMethods();
+                b.setTestCaseFinalStatus(runId, 4, failAnalysisThread.get().toString(), method.getName());
+            }
+            if (propertiesPojo.getEnable_jira().equalsIgnoreCase("true")) {
+                createJiraTicket(method.getName() + " Test failed !! validate Issue ", failAnalysisThread.get().toString());
+            }
+            failStatus = true;
+            classFailAnalysisThread.get().add("fail");
+        }else{
+            if(tEnv().getScreenshotPath()!=null){
+                CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
             }
         }
     }
