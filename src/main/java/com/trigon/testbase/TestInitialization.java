@@ -30,6 +30,8 @@ import org.testng.xml.XmlTest;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public class TestInitialization extends Browsers {
@@ -103,13 +105,16 @@ public class TestInitialization extends Browsers {
 
     }
 
-    protected void getAPICoverage(TreeSet<String> apiCoverage) {
+    protected void getAPICoverage(List<String> apiCoverage) {
         try {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/TestResultJSON/apiCoverage.json", false)));
+            TreeSet<String> listOfEndpoints = new TreeSet<>(apiCoverage);
+            totalEndpoints = listOfEndpoints.size();
+            Map<String,Long> getEndpointCount = apiCoverage.stream().collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
             writer.beginArray();
-            apiCoverage.forEach(ep -> {
+            getEndpointCount.forEach((k,v) -> {
                 try {
-                    writer.value(ep);
+                    writer.value(k);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

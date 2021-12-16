@@ -40,10 +40,17 @@ public class PerformElementAction extends ElementStrategyImpl {
                             }
                         } catch (WebDriverException e) {
                             try {
-                                WebDriverWait wait = new WebDriverWait(browser(), 5000);
-                                wait.until(ExpectedConditions.elementToBeClickable(webElement));
-                                JavascriptExecutor executor = (JavascriptExecutor) browser();
-                                executor.executeScript("arguments[0].click();", webElement);
+                                try{
+                                    WebDriverWait wait = new WebDriverWait(browser(), 5);
+                                    wait.until(ExpectedConditions.elementToBeClickable(webElement));
+                                    JavascriptExecutor executor = (JavascriptExecutor) browser();
+                                    executor.executeScript("arguments[0].click();", webElement);
+                                }catch (Exception e1){
+                                    hardWait(1000);
+                                    JavascriptExecutor executor = (JavascriptExecutor) browser();
+                                    executor.executeScript("arguments[0].click();", webElement);
+                                }
+
                             } catch (Exception e3) {
                                 try {
                                     logReport("INFO", "Element NOT intractable Hence Scrolling" + locatorString);

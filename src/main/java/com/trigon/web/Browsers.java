@@ -66,7 +66,7 @@ public class Browsers extends Android {
                     } else {
                         remoteExecution(context, xmlTest);
                     }
-                    launchURL();
+                    launchURL(context);
                 } catch (Exception sn) {
                     captureException(sn);
                     hardFail("Chrome Session Not created !!");
@@ -95,7 +95,7 @@ public class Browsers extends Android {
                     } else {
                         remoteExecution(context, xmlTest);
                     }
-                    launchURL();
+                    launchURL(context);
                 } catch (Exception sn) {
                     captureException(sn);
                     hardFail("Firefox Session Not created !!");
@@ -110,7 +110,7 @@ public class Browsers extends Android {
                     } else {
                         remoteExecution(context, xmlTest);
                     }
-                    launchURL();
+                    launchURL(context);
                 } catch (Exception sn) {
                     captureException(sn);
                     hardFail("Safari Session Not created !!");
@@ -171,15 +171,19 @@ public class Browsers extends Android {
         }
     }
 
-    private void launchURL() {
+    private void launchURL(ITestContext context) {
         try {
             if ((tEnv().getWebUrl() == null) || (tEnv().getWebUrl().isEmpty())) {
                 Assert.fail("Please provide webURL in TestEnvironment File");
             } else {
                 browser().manage().window().maximize();
-                browser().get(tEnv().getWebUrl());
-                browser().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                browser().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+                if(!context.getSuite().getName().contains("adhoc")) {
+                    browser().get(tEnv().getWebUrl());
+                    browser().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                    browser().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+                }else{
+                    logger.warn("Default URL is not loaded as It is adhoc task. please use navigateToUrl in your method level");
+                }
             }
         } catch (Exception e) {
             captureException(e);
