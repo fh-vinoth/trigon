@@ -272,8 +272,6 @@ public class Database extends TrigonUtils {
         Statement stmt = null;
         ResultSet rs = null;
         List<Map<String, Object>> table = new ArrayList<>();
-
-        int rowCount = 1;
         try {
             connection = connect();
             logger.info("Database connection success");
@@ -291,7 +289,6 @@ public class Database extends TrigonUtils {
                 }
                 table.add(map);
                 System.out.println(table);
-                rowCount++;
             }
         } catch (Exception e) {
             e.printStackTrace();
