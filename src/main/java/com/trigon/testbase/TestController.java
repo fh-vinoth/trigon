@@ -309,11 +309,12 @@ public class TestController extends TestInitialization {
     private void getGitBranch(){
         try{
 //            Process process = Runtime.getRuntime().exec( "git branch --show-current" );
+//            Process process = Runtime.getRuntime().exec( "git rev-parse --abbrev-ref HEAD" );
             Process process = Runtime.getRuntime().exec( "git rev-parse --abbrev-ref HEAD" );
             process.waitFor();
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader( process.getInputStream() ) );
-            executedGitBranch = reader.readLine();
+           executedGitBranch = reader.readLine();
             if(executedGitBranch==null){
                 executedGitBranch = "git-branch";
             }
