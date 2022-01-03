@@ -8,12 +8,8 @@ import com.trigon.utils.TrigonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Properties;
+import java.sql.*;
+import java.util.*;
 
 
 public class Database extends TrigonUtils {
@@ -48,7 +44,7 @@ public class Database extends TrigonUtils {
                     SshKeyFilepath = tEnv().getDbSSHFilePath();
                 }
 
-                String remoteHost =  tEnv().getDbHost();
+                String remoteHost = tEnv().getDbHost();
                 int remotePort = 3306;
                 Properties config = new Properties();
                 JSch jsch = new JSch();
@@ -65,9 +61,9 @@ public class Database extends TrigonUtils {
                 String localSSHUrl = "localhost";
                 dataSource.setServerName(localSSHUrl);
                 dataSource.setPortNumber(localPort);
-            }else{
+            } else {
                 connectionUrl = tEnv().getDbHost();
-                System.out.println("Connection URL is : "+connectionUrl);
+                System.out.println("Connection URL is : " + connectionUrl);
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 dataSource.setServerName(connectionUrl);
                 dataSource.setPortNumber(connectionPort);
@@ -226,6 +222,98 @@ public class Database extends TrigonUtils {
             }
         }
         return rs1;
+    }
+
+    public static synchronized Map<String, Object> sendQueryReturnMap(String query) {
+        Connection connection = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        Map<String, Object> map = new HashMap<>();
+        try {
+            connection = connect();
+            logger.info("Database connection success");
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery(query);
+            logger.info("Executed Query Statement " + query);
+            ResultSetMetaData rsMetaData = rs.getMetaData();
+            int count = rsMetaData.getColumnCount();
+            String columnName = null;
+            while (rs.next()) {
+                for (int i = 1; i <= count; i++) {
+                    columnName = rsMetaData.getColumnName(i);
+                    map.put(columnName, rs.getString(columnName));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    logger.info("Closing Statement");
+                }
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                    logger.info("Closing DB Connection");
+                }
+                if (session != null && session.isConnected()) {
+                    logger.info("Closing SSH Connection");
+                    session.disconnect();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return map;
+    }
+
+    public static synchronized List<Map<String, Object>> sendQueryReturnTableAsMap(String query) {
+        Connection connection = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<Map<String, Object>> table = new ArrayList<>();
+
+        int rowCount = 1;
+        try {
+            connection = connect();
+            logger.info("Database connection success");
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery(query);
+            logger.info("Executed Query Statement " + query);
+            ResultSetMetaData rsMetaData = rs.getMetaData();
+            int count = rsMetaData.getColumnCount();
+            String columnName = null;
+            while (rs.next()) {
+                Map<String, Object> map = new HashMap<>();
+                for (int i = 1; i <= count; i++) {
+                    columnName = rsMetaData.getColumnName(i);
+                    map.put(columnName, rs.getString(columnName));
+                }
+                table.add(map);
+                System.out.println(table);
+                rowCount++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    logger.info("Closing Statement");
+                }
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                    logger.info("Closing DB Connection");
+                }
+                if (session != null && session.isConnected()) {
+                    logger.info("Closing SSH Connection");
+                    session.disconnect();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return table;
     }
 
 }
