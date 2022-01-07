@@ -50,7 +50,9 @@ public class Initializers {
     public static ThreadLocal<ExtentTest> extentClassNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentScenarioNode = new ThreadLocal<>();
-    public static TreeSet<String> apiCoverage = new TreeSet();
+    public static List<String> apiCoverage = new ArrayList<>();
+    public static int totalEndpoints = 0;
+    public static String executedGitBranch = "NA";
     public static ExtentPojo extentPojo = null;
     public ExtentTest extentTest = null;
 

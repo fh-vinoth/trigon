@@ -119,9 +119,6 @@ public class TestController extends TestInitialization {
             if(!context.getSuite().getName().contains("adhoc")){
                 remoteBrowserInit(context, xmlTest);
             }
-            if(webDriverThreadLocal.get()!=null){
-                System.out.println(browser().getSessionId());
-            }
 
             remoteMobileInit(context, xmlTest);
             setMobileLocator();
@@ -245,10 +242,16 @@ public class TestController extends TestInitialization {
             captureException(e);
         } finally {
             if(!iTestContext.getSuite().getName().contains("adhoc")){
-                EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType,pipelineExecution);
+                getGitBranch();
                 if(apiCoverage.size()>0){
+                    if(extent!=null){
+                        extent.setSystemInfo("API Endpoints Covered", String.valueOf(totalEndpoints));
+                        extent.flush();
+                    }
                     getAPICoverage(apiCoverage);
                 }
+                EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType,pipelineExecution);
+
                 if(executionType.equalsIgnoreCase("remote"))
                 {
                     if(System.getProperty("user.name").equalsIgnoreCase("root")||System.getProperty("user.name").equalsIgnoreCase("ec2-user"))
@@ -264,19 +267,23 @@ public class TestController extends TestInitialization {
 
     private void emailTrigger() {
         SendEmail sendEmail = new SendEmail();
-        if(email_recipients !=null){
-            if(!failStatus){
-                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients,"true","false");
-            }
-        }
+        boolean emailTriggerStatus = false;
+
         if(failure_email_recipients !=null){
-            if(failStatus){
+            if(failStatus && !emailTriggerStatus){
                 sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), failure_email_recipients,"true","false");
+                emailTriggerStatus = true;
             }
         }
         if(error_email_recipients !=null){
-            if(exceptionStatus){
+            if(exceptionStatus && !emailTriggerStatus){
                 sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients,"true","false");
+                emailTriggerStatus = true;
+            }
+        }
+        if(email_recipients !=null){
+            if(!failStatus && !emailTriggerStatus){
+                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients,"true","false");
             }
         }
     }
@@ -296,6 +303,24 @@ public class TestController extends TestInitialization {
             if(tEnv().getScreenshotPath()!=null){
                 CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
             }
+        }
+    }
+
+    private void getGitBranch(){
+        try{
+//            Process process = Runtime.getRuntime().exec( "git branch --show-current" );
+//            Process process = Runtime.getRuntime().exec( "git rev-parse --abbrev-ref HEAD" );
+            Process process = Runtime.getRuntime().exec( "git rev-parse --abbrev-ref HEAD" );
+            process.waitFor();
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader( process.getInputStream() ) );
+           executedGitBranch = reader.readLine();
+            if(executedGitBranch==null){
+                executedGitBranch = "git-branch";
+            }
+
+        }catch (Exception e){
+
         }
     }
 

@@ -276,5 +276,9 @@ public class APICoreController extends APICore {
         return flattenMap;
     }
 
+    protected String encodeStringImpl(String plainString){
+        return DatatypeConverter.printBase64Binary(plainString.getBytes());
+    }
+
 }
 

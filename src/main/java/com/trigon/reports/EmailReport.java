@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.trigon.reports.Initializers.executedGitBranch;
+import static com.trigon.reports.Initializers.totalEndpoints;
 import static com.trigon.reports.ReportManager.cUtils;
 
 public class EmailReport {
@@ -86,7 +88,7 @@ public class EmailReport {
         int skipPercentage = stats.getStats().getGrandchildPercentage().get(Status.SKIP).intValue();
 
         String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
-
+        String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
 
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -127,10 +129,12 @@ public class EmailReport {
                 "                                <tr>\n" +
                 "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_ExecutedBy.png\" height=\"15\" width=\"15\" alt=\"Executed By\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getSystemEnvInfo().get(4).getValue() + "</td>\n" +
+//                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_OS.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
+//                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">"+stats.getReport().getSystemEnvInfo().get(5).getValue()+"</td>"+
                 "                                </tr>\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_OS.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
-                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getSystemEnvInfo().get(5).getValue() + "</td>\n" +
+                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
+                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + executedGitBranch + "</td>\n" +
                 "                                </tr>\n" +
                 "                            </table>\n" +
                 "                        </td>\n" +
@@ -197,6 +201,11 @@ public class EmailReport {
                 "                            <div style=\"font-size: 25px;padding: 2.45rem .20rem;\"></div>\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
+                "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
+                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\">API Endpoints Covered : "+totalEndpoints+"</div> </td>\n" +
+//                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/"+suiteWithTime+"/APICoverage.html\"\n" +
+//                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
+                "                    </tr>"+
                 "                    </tbody>\n" +
                 "                </table>\n" +
                 "            </div>\n" +
