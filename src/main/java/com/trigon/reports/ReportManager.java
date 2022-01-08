@@ -178,6 +178,7 @@ public class ReportManager extends CustomReport {
             } else {
                 sAssert.assertEquals(actual, expected);
                 logReport("FAIL", "Actual Text:" + actual + "Expected Exact Text:" + expected);
+
             }
         } catch (Exception e) {
             captureException(e);
@@ -783,6 +784,7 @@ public class ReportManager extends CustomReport {
 
     private void logFail(String message, boolean screenshotMode) {
         logger.error(message);
+        Thread.dumpStack();
         if (extentScenarioNode.get() != null) {
             screenshotFail(extentScenarioNode.get(), message, screenshotMode);
         } else if (extentMethodNode.get() != null) {
