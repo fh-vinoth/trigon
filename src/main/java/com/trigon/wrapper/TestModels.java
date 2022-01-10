@@ -108,6 +108,9 @@ public class TestModels extends PerformElementAction {
         return performElementsAction(locatorString, "lisofvalues", "NA", null, wait_logReport_isPresent_Up_Down_XpathValues);
     }
 
+    public List<WebElement> findElements(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues){
+        return getWebElements(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+    }
 
     public List<String> getValueFromListByIndex(String locatorString, String i, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         return performElementsAction(locatorString, "lisofvalues", "NA", null, wait_logReport_isPresent_Up_Down_XpathValues);
