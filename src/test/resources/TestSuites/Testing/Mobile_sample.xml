@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="MYT_Android_SampleRun" parallel="none" thread-count="0">
+<suite name="API_Sample" parallel="classes" thread-count="2">
 
     <test name="MobileSampleRun">
         <classes>

@@ -544,7 +544,7 @@ public class ReportManager extends CustomReport {
     }
 
     protected void hardFail() {
-        logReport("FAIL", "Test Exception Occured");
+        logReport("FAIL", "Test Exception Occurred");
         Thread.dumpStack();
         Assert.fail("Test Exception Occured");
     }

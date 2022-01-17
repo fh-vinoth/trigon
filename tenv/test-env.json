@@ -108,7 +108,8 @@
       "currency": "£",
       "timezone": "GMT+1",
       "phoneNumber": "07012345679",
-      "emailId": "teamautomation16@gmail.com"
+      "emailId": "teamautomation16@gmail.com",
+      "accessToken": ""
     },
     "UK2": {
       "locale": "united kingdom",

@@ -7,6 +7,7 @@ import com.trigon.bean.ExtentPojo;
 import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.testenv.TestEnv;
 import com.trigon.database.Database;
+import com.trigon.database.DbConnectionPool;
 import com.trigon.exceptions.TrigonAsserts;
 import com.trigon.utils.CommonUtils;
 import io.appium.java_client.android.AndroidDriver;
@@ -93,4 +94,6 @@ public class Initializers {
     }
 
     public static Database db;
+
+    public static DbConnectionPool dbc;
 }
