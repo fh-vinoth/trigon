@@ -47,6 +47,8 @@ public class TestInitialization extends Browsers {
         trigonPaths = new TrigonPaths();
         String suiteNameReplaced = suiteName.replaceAll("-", "_").replaceAll(" ", "_").trim();
         String[] tType = suiteNameReplaced.split("_");
+        mobileApps = Arrays.asList(propertiesPojo.getMobile_Apps().split(","));
+        webApps = Arrays.asList(propertiesPojo.getWeb_Apps().split(","));
         if (tType.length > 0) {
             if (tType[0].toLowerCase().equalsIgnoreCase("API") ||
                     mobileApps.contains(tType[0].toLowerCase()) || webApps.contains(tType[0].toLowerCase())) {
@@ -303,6 +305,9 @@ public class TestInitialization extends Browsers {
             propertiesPojo.setCA_Appcenter_Android_ProjectName(testConfig.getProperty("CA_Appcenter_Android_ProjectName"));
             propertiesPojo.setCA_Appcenter_IOS_ProjectName(testConfig.getProperty("CA_Appcenter_IOS_ProjectName"));
             propertiesPojo.setCA_Automation_Branch_Name(testConfig.getProperty("CA_Automation_Branch_Name"));
+
+            propertiesPojo.setMobile_Apps(testConfig.getProperty("Mobile_Apps"));
+            propertiesPojo.setWeb_APPS(testConfig.getProperty("Web_Apps"));
 
         } catch (Exception e) {
             captureException(e);

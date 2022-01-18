@@ -16,11 +16,11 @@
     "app_package": "com.android.calculator2",
     "app_activity": "com.android.calculator2.Calculator",
     "device": "Google Pixel 4 XL",
-    "os": "11.0",
+    "os": "10.0",
     "region_android_devices": {
       "UK1": {
-        "device": "Samsung Galaxy S20",
-        "os": "11.0"
+        "device": "Google Pixel 4 XL",
+        "os": "10.0"
       },
       "AUS1": {
         "device": "OnePlus 7T",
@@ -108,7 +108,8 @@
       "currency": "£",
       "timezone": "GMT+1",
       "phoneNumber": "07012345679",
-      "emailId": "teamautomation16@gmail.com"
+      "emailId": "teamautomation16@gmail.com",
+      "accessToken": ""
     },
     "UK2": {
       "locale": "united kingdom",

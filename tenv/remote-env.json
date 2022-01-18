@@ -1,13 +1,13 @@
 {
-  "execution_type": "local",
+  "execution_type": "remote",
   "jenkins_execution": "false",
   "pipeline_execution": "false",
-  "test_region": "NZ1",
+  "test_region": "UK1",
   "app_reset": "NA",
   "random_device": "",
-  "email_recipients":"bhaskar.marrikunta@foodhub.com",
-  "error_email_recipients":"bhaskar.marrikunta@foodhub.com",
-  "failure_email_recipients":"bhaskar.marrikunta@foodhub.com",
+  "email_recipients":"srikrishna.n@foodhub.com",
+  "error_email_recipients":"srikrishna.n@foodhub.com",
+  "failure_email_recipients":"srikrishna.n@foodhub.com",
   "products": {
     "D2S": {
       "android": {
@@ -21,12 +21,12 @@
     },
     "MYT": {
       "android": {
-        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
-        "build_number": "1234"
+        "bs_app_path": "bs://c9d90d194b868862c026d60ff44a9abce3de3a8d",
+        "build_number": "MYT2.0_Android_10.4_940"
       },
       "ios": {
-        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
-        "build_number": "1234"
+        "bs_app_path": "bs://1efbfc6c57e8c9331ff85daec2d0c88c146b3053",
+        "build_number": "MYT2.0_iOS_10.4_806"
       }
     },
     "MYPOS": {
