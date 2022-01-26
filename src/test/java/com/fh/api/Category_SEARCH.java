@@ -35,7 +35,7 @@ public class Category_SEARCH extends TestLocalController {
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void searchCategory_test2() {
         try{
             author_ScenarioName("Reddy", "Searching the particular category from category/search endpoint2");
@@ -52,7 +52,7 @@ public class Category_SEARCH extends TestLocalController {
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void searchCategory_test3() {
         try{
             author_ScenarioName("Reddy", "Searching the particular category from category/search endpoint3");
@@ -68,7 +68,7 @@ public class Category_SEARCH extends TestLocalController {
         }
 
     }
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void searchCategory_test4() {
         try{
             author_ScenarioName("Bhaskar", "Searching the particular category from category/search endpoint");
@@ -127,7 +127,7 @@ public class Category_SEARCH extends TestLocalController {
         queryparams.put("api_token", tEnv().getApiToken());
 
         String endPoint = "category/search";
-        formparams.put("q", category_id);
+        formparams.put("q", "id="+category_id+"" );
 
         try {
             api().validateStaticResponse("POST", endPoint, headers, null, queryparams, formparams, null, null, "201", null);
@@ -146,7 +146,7 @@ public class Category_SEARCH extends TestLocalController {
         queryparams.put("api_token", tEnv().getApiToken());
 
         String endpoint = "category/" + category_id;
-        expectedResponse.put("outcome","success2");
+        expectedResponse.put("outcome","success");
 
         try {
             api().validateStaticResponse("DELETE", endpoint, headers, null, queryparams, null, null, null, "200", expectedResponse);

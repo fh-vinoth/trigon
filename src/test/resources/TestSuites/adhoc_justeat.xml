@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="web_adhoc_JustEat">
+    <parameter name="excelFilePath" value="src/test/resources/TestData/JustEat.xlsx"></parameter>
+    <test name="JustEats">
+        <classes>
+            <class name="com.fh.adhoc.JustEats"/>
+        </classes>
+    </test>
+</suite>

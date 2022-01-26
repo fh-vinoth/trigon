@@ -1,5 +1,5 @@
 {
-  "execution_type": "remote",
+  "execution_type": "local",
   "jenkins_execution": "false",
   "pipeline_execution": "false",
   "test_region": "UK1",
