@@ -287,14 +287,14 @@ public class APICore extends ReportManager {
                     try {
                         if (actual.get(k).toString().equals(expectedResponse.get(k).toString())) {
                             actualResponse.put(k, actual.get(k).toString());
-                            logger.info("Actual Text:" + actual.get(k).toString() + " Expected Exact Text:" + expectedResponse.get(k).toString());
+                            logger.info("Actual Text :" + actual.get(k).toString() + " <br> Expected Exact Text :" + expectedResponse.get(k).toString());
                         } else {
                             failStatus.add("FAILED");
                             failAnalysisThread.get().add("[Actual value : " + actual.get(k).toString() + "] " + " [Expected Value : " + expectedResponse.get(k).toString() + "]");
                             actualResponse.put(k, actual.get(k).toString());
-                            dataToJSON("failReason","Actual Text:" + actual.get(k).toString() + " Expected Exact Text:" + expectedResponse.get(k).toString());
+                            dataToJSON("failReason","Actual Text :" + actual.get(k).toString() + " <br> Expected Exact Text :" + expectedResponse.get(k).toString());
                             //sAssert.assertEquals(actual.get(k).toString(), expectedResponse.get(k).toString());
-                            logReport("FAIL", "Actual Text:" + actual.get(k).toString() + "Expected Exact Text:" + expectedResponse.get(k).toString());
+                            logReport("FAIL", "Actual Text :" + actual.get(k).toString() + "<br> Expected Exact Text :" + expectedResponse.get(k).toString());
                         }
                     } catch (NullPointerException e) {
                         failStatus.add("FAILED");

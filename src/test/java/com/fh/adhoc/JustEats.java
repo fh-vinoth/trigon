@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 
 public class JustEats extends TestLocalController {
 
-    @Test(dataProvider = "getDataFromExcel", dataProviderClass = DataProviders.class)
+    @Test(dataProvider = "getDataFromExcelParallel", dataProviderClass = DataProviders.class)
     @ExcelSheet(name = "Sheet3")
 
     public void jEatTest(LinkedHashMap<String, Object> tData) {
@@ -30,7 +30,7 @@ public class JustEats extends TestLocalController {
         String offers = "NA";
         try {
             model.navigateToUrl(URL);
-            //model.click("css=button[data-test-id='accept-all-cookies-button']","wait_0", "isPresent");
+            model.click("css=button[data-test-id='accept-all-cookies-button']","wait_0", "isPresent");
             try {
                 takeAwayName = browser().findElement(By.cssSelector("h1[data-test-id='restaurant-heading']")).getText();
             } catch (Exception e) {

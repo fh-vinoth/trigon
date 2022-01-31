@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+
 import static com.trigon.testbase.TestInitialization.trigonPaths;
 import static org.apache.commons.io.FileUtils.copyFile;
 import static org.openqa.selenium.OutputType.FILE;
@@ -109,6 +110,12 @@ public class ReportManager extends CustomReport {
 
     }
 
+    public void logDBData(String query, String dbResponse) {
+        logger.info("Query : "+query);
+        String m = "<details><summary><font color=\"green\"><b>DBQuery</b></font></summary> "+MarkupHelper.createCodeBlock(query, dbResponse).getMarkup()+"</details>";
+        extentMethodNode.get().info(m);
+    }
+
     public void logApiReport(String status, String message) {
         try {
             if (status.equalsIgnoreCase("PASS")) {
@@ -154,6 +161,7 @@ public class ReportManager extends CustomReport {
     }
 
     public void logStepAction(String message) {
+
         if(extentScenarioNode.get()!=null){
             extentScenarioNode.get().info("<font style=\"color: #366792;font-weight:bold;\"> STEP : </font>"+message);
         }else{
@@ -161,23 +169,23 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void logScenario(String ScenarioName) {
-        logger.info("Scenario : " + ScenarioName);
-        if(extent!=null){
-            if(extentScenarioNode!=null){
-                extentScenarioNode.set(extentMethodNode.get().createNode("<font color=\"#d0b2e6\">" + ScenarioName + "</font>"));
-            }
-        }
-    }
+//    public void logStepAction(String ScenarioName) {
+//        logger.info("Scenario : " + ScenarioName);
+//        if(extent!=null){
+//            if(extentScenarioNode!=null){
+//                extentScenarioNode.set(extentMethodNode.get().createNode("<font color=\"#d0b2e6\">" + ScenarioName + "</font>"));
+//            }
+//        }
+//    }
 
     protected void customAssertEquals(String actual, String expected) {
         try {
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
             if (expected.equals(actual)) {
-                logReport("PASS", "Actual Text:" + actual + "Expected Exact Text:" + expected);
+                logReport("PASS", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReport("FAIL", "Actual Text:" + actual + "Expected Exact Text:" + expected);
+                logReport("FAIL", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
 
             }
         } catch (Exception e) {
@@ -189,9 +197,9 @@ public class ReportManager extends CustomReport {
         try {
             logger.info("Verifying NOT Equals Actual : " + actual + " with Expected : " + expected + "");
             if (!(expected.equals(actual))) {
-                logReport("PASS", "Actual Text:" + actual + " Expected NOT EQUALS Text:" + expected);
+                logReport("PASS", "Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
             } else {
-                logReport("FAIL", "Actual Text:" + actual + " Expected NOT EQUALS Text:" + expected);
+                logReport("FAIL", "Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -202,10 +210,10 @@ public class ReportManager extends CustomReport {
         logger.info("Verifying Partial Equals Actual : " + actual + " with Expected : " + expected + "");
         try {
             if (actual.contains(expected)) {
-                logReport("PASS", "Actual Text:" + actual + "Expected Partial Text:" + expected);
+                logReport("PASS", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReport("FAIL", "Actual Text:" + actual + "Expected Partial Text:" + expected);
+                logReport("FAIL", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -228,16 +236,16 @@ public class ReportManager extends CustomReport {
             }
             if (expectedValueSize == actualValueSize) {
                 if ((expectedlist.equals(actuallist))) {
-                    logReport("PASS", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Exact Text:" + expected + "ExpectedSize :" + expectedValueSize);
+                    logReport("PASS", "Actual Text :" + actual + "ActualSize :" + actualValueSize + "<br> Expected Exact Text :" + expected + "ExpectedSize :" + expectedValueSize);
                 } else {
                     actuallist.removeAll(expectedlist);
                     expectedlist.removeAll(actuallist);
-                    logReport("FAIL", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Exact Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
+                    logReport("FAIL", "Actual Text :" + actual + "ActualSize :" + actualValueSize + "<br> Expected Exact Text :" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
                 }
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched " + "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Exact Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched " + "Actual Text :" + actual + "ActualSize :" + actualValueSize + "<br> Expected Exact Text :" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -259,16 +267,16 @@ public class ReportManager extends CustomReport {
             }
             if (expectedValueSize == actualValueSize) {
                 if ((expectedlist.contains(actuallist))) {
-                    logReport("PASS", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Partial Text:" + expected + "ExpectedSize :" + expectedValueSize);
+                    logReport("PASS", "Actual Text :" + actual + "ActualSize :" + actualValueSize + "<br> Expected Partial Text:" + expected + "ExpectedSize :" + expectedValueSize);
                 } else {
                     actuallist.removeAll(expectedlist);
                     expectedlist.removeAll(actuallist);
-                    logReport("FAIL", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "Expected Partial Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
+                    logReport("FAIL", "Actual Text :" + actual + "ActualSize :" + actualValueSize + "<br> Expected Partial Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
                 }
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched " + "Actual Text:" + actual + "ActualSize :" + actualValueSize + "  Expected Partial Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched " + "Actual Text :" + actual + "ActualSize :" + actualValueSize + "  <br> Expected Partial Text:" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -290,16 +298,16 @@ public class ReportManager extends CustomReport {
             }
             if (expectedValueSize == actualValueSize) {
                 if (!(expectedlist.equals(actuallist))) {
-                    logReport("PASS", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "  Expected NOT EQUALS Text:" + expected + " ExpectedSize :" + expectedValueSize);
+                    logReport("PASS", "Actual Text :" + actual + "ActualSize :" + actualValueSize + "  <br> Expected NOT EQUALS Text:" + expected + " ExpectedSize :" + expectedValueSize);
                 } else {
                     actuallist.removeAll(expectedlist);
                     expectedlist.removeAll(actuallist);
-                    logReport("FAIL", "Actual Text:" + actual + "ActualSize :" + actualValueSize + "  Expected NOT EQUALS Text:" + expected + " ExpectedSize :" + expectedValueSize + " Additional values in Actual List" + actuallist + " Additional values in Expected List" + expectedlist);
+                    logReport("FAIL", "Actual Text :" + actual + "ActualSize :" + actualValueSize + "  <br> Expected NOT EQUALS Text:" + expected + " ExpectedSize :" + expectedValueSize + " Additional values in Actual List" + actuallist + " Additional values in Expected List" + expectedlist);
                 }
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched " + "Actual Text:" + actual + "ActualSize :" + actualValueSize + "  Expected NOT EQUALS Text:" + expected + " ExpectedSize :" + expectedValueSize + " Additional values in Actual List" + actuallist + " Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched " + "Actual Text :" + actual + "ActualSize :" + actualValueSize + "  <br> Expected NOT EQUALS Text:" + expected + " ExpectedSize :" + expectedValueSize + " Additional values in Actual List" + actuallist + " Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
@@ -310,10 +318,10 @@ public class ReportManager extends CustomReport {
         logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
         try {
             if (expected.equals(actual)) {
-                logReportWithScreenShot("PASS", "Actual Text:" + actual + "Expected Exact Text:" + expected);
+                logReportWithScreenShot("PASS", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReportWithScreenShot("FAIL", "Actual Text:" + actual + "Expected Exact Text:" + expected);
+                logReportWithScreenShot("FAIL", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -324,9 +332,9 @@ public class ReportManager extends CustomReport {
         try {
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
             if (actual.contains(expected)) {
-                logReportWithScreenShot("PASS", "Actual Text:" + actual + "Expected Partial Text:" + expected);
+                logReportWithScreenShot("PASS", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
             } else {
-                logReportWithScreenShot("FAIL", "Actual Text:" + actual + "Expected Partial Text:" + expected);
+                logReportWithScreenShot("FAIL", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -765,7 +773,8 @@ public class ReportManager extends CustomReport {
     }
 
     private void logInfo(String message, boolean screenshotMode) {
-        logger.info(message);
+        String replacedMessage = message;
+        logger.info(replacedMessage.replace("<br>",""));
         if (extentScenarioNode.get() != null) {
             screenshotInfo(extentScenarioNode.get(), message, screenshotMode);
         } else if (extentMethodNode.get() != null) {
@@ -783,7 +792,8 @@ public class ReportManager extends CustomReport {
     }
 
     private void logFail(String message, boolean screenshotMode) {
-        logger.error(message);
+        String replacedMessage = message;
+        logger.error(replacedMessage.replace("<br>",""));
         Thread.dumpStack();
         if (extentScenarioNode.get() != null) {
             screenshotFail(extentScenarioNode.get(), message, screenshotMode);
@@ -805,7 +815,8 @@ public class ReportManager extends CustomReport {
     }
 
     private void logPass(String message, boolean screenshotMode) {
-        logger.info(message);
+        String replacedMessage = message;
+        logger.info(replacedMessage.replace("<br>",""));
         if (extentScenarioNode.get() != null) {
             screenshotPass(extentScenarioNode.get(), message, screenshotMode);
         } else if (extentMethodNode.get() != null) {

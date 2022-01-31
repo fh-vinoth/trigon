@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Yell extends TestLocalController {
 
-    @Test
+    @Test(enabled = false)
     public void yellData() {
         author_ScenarioName("Bhaskar", "Yell");
         addHeaderToCustomReport("S.No", "SearchURL", "Source", "businessType","businessName", "businessURL","services", "businessWebsite", "businessPhone", "businessAddress", "businessHours","ratings","reviews");
@@ -39,9 +39,41 @@ public class Yell extends TestLocalController {
                 String reviews = model.getText("xpath=(//div[@class='row businessCapsule--mainRow'])[" + i + "]//span[contains(@class,'starRating--total')]", "wait_0", "isPresent");
                 addRowToCustomReport(String.valueOf(i), searchURL, "PDQ",businessType,businessName, businessURL,services, businessWebsite, businessPhone, businessAddress,businessHours,ratings,reviews);
             }
-
         }
+    }
 
+    @Test
+    public void yellURL(){
+        author_ScenarioName("Bhaskar", "Yell");
+        addHeaderToCustomReport("Region", "Name", "URL" );
+        TestModels model = new TestModels();
+        String region = "https://www.yell.com/k/uk-c.html";
+        model.navigateToUrl(region);
+        model.click("css=button[data-tracking=\"ACCEPTCOOKIES\"]","wait_0","isPresent");
+        List<WebElement> data = model.findElements("css=a[data-tracking=\"SEARCHESINLOCATIONBYLETTER\"]","wait_0","isPresent");
+        data.forEach(d->{
+            addRowToCustomReport(region,d.getText(),d.getAttribute("href"));
+        });
 
+        List<WebElement> pages = model.findElements("css=a[data-tracking=\"DISPLAY:PAGINATION:NUMBER\"]","wait_0","isPresent");
+        if(pages.size()>0){
+            System.out.println(pages.size());
+            for (int i =0;i<pages.size();i++) {
+                System.out.println(pages.get(i).getText());
+                System.out.println(pages.get(i).getAttribute("href"));
+                hardWait(2000);
+                try{
+                    pages.get(i).click();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                hardWait(6000);
+                List<WebElement> data1 = model.findElements("css=a[data-tracking=\"SEARCHESINLOCATIONBYLETTER\"]", "wait_0", "isPresent");
+                data1.forEach(d -> {
+                    addRowToCustomReport(region, d.getText(), d.getAttribute("href"));
+                });
+            }
+        }
     }
 }

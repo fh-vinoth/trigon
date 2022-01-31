@@ -85,19 +85,19 @@ public class TestInitialization extends Browsers {
             }
             trigonPaths.setSupportSubSuiteFilePath(cUtils().createFolder(supportFilePath, "TestResultJSON", ""));
 
-            File file2 = new File("reports-path.json");
-            if (file2.exists()) {
-                file2.delete();
-            }
-            try {
-                JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter("reports-path.json", false)));
-                writer.beginObject().name("path").value(testResultsPath);
-                writer.name("testType").value(platformType);
-                writer.name("platformType").value(appType).endObject().flush();
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            File file2 = new File("reports-path.json");
+//            if (file2.exists()) {
+//                file2.delete();
+//            }
+//            try {
+//                JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter("reports-path.json", false)));
+//                writer.beginObject().name("path").value(testResultsPath);
+//                writer.name("testType").value(platformType);
+//                writer.name("platformType").value(appType).endObject().flush();
+//                writer.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             initializeExtentReport(testResultsPath, suiteNameWithTime);
         }

@@ -2,12 +2,10 @@ package com.trigon.reports;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import com.trigon.bean.CReportPojo;
 import com.trigon.bean.ExtentPojo;
 import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.testenv.TestEnv;
 import com.trigon.database.Database;
-import com.trigon.database.DbConnectionPool;
 import com.trigon.exceptions.TrigonAsserts;
 import com.trigon.utils.CommonUtils;
 import io.appium.java_client.android.AndroidDriver;
@@ -31,10 +29,6 @@ public class Initializers {
     protected static String executionType = "local";
     protected static String pipelineExecution = "false";
 
-    public static CReportPojo cReportPojo = new CReportPojo();
-
-
-
     public static boolean customAPIReportStartFlag = false;
     public static BufferedWriter customAPIReport;
     public static List<String> customAPIHeaderData = new ArrayList<>();
@@ -43,8 +37,8 @@ public class Initializers {
     protected static Hashtable<String, String> customReportStatusMap = new Hashtable();
     protected static Hashtable<Collection<?>, Collection<?>> customReportStatusMap1 = new Hashtable();
 
-    public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
-    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy","mytweb");
+    public static List<String> mobileApps;
+    public static List<String> webApps;
 
     public static ExtentReports extent = null;
     public static ThreadLocal<ExtentTest> extentTestNode = new ThreadLocal<>();
@@ -67,9 +61,9 @@ public class Initializers {
     protected static String appType;
     protected static String suiteParallel;
     protected static int totalTestModules;
-    protected static String email_recipients =null;
-    protected static String error_email_recipients =null;
-    protected static String failure_email_recipients =null;
+    protected static String email_recipients = null;
+    protected static String error_email_recipients = null;
+    protected static String failure_email_recipients = null;
     protected static boolean failStatus = false;
     protected static boolean exceptionStatus = false;
 
@@ -93,7 +87,5 @@ public class Initializers {
         return commonUtils;
     }
 
-    public static Database db;
-
-    public static DbConnectionPool dbc;
+    public static Database db = new Database();
 }

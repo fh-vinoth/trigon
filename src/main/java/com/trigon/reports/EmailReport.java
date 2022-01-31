@@ -7,11 +7,11 @@ import com.google.gson.stream.JsonWriter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.trigon.reports.Initializers.executedGitBranch;
-import static com.trigon.reports.Initializers.totalEndpoints;
-import static com.trigon.reports.ReportManager.cUtils;
+import static com.trigon.reports.Initializers.*;
+
 
 public class EmailReport {
     public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
@@ -358,7 +358,7 @@ public class EmailReport {
 
     private static String footers() {
         return "    <tr style=\"background: #e0dbdb;height: 40px;\">\n" +
-                "        <td colspan=\"2\">© 2021 - Foodhub Automation Team</td>\n" +
+                "        <td colspan=\"2\">© 2022 - Foodhub Automation Team</td>\n" +
                 "    </tr>\n" +
                 "    </tbody>\n" +
                 "</table>\n" +
@@ -458,6 +458,5 @@ public class EmailReport {
 
         return bf.toString();
     }
-
 
 }

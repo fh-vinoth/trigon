@@ -1,9 +1,9 @@
-package com.trigon.utils;
+package com.trigon.database;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.trigon.database.DbConnectionPool;
 import com.trigon.mobile.AvailablePorts;
+import com.trigon.utils.TrigonUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,9 +11,9 @@ import org.apache.logging.log4j.Logger;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-public class DbUtils extends TrigonUtils {
+public class DBController extends TrigonUtils {
 
-    private static final Logger logger = LogManager.getLogger(DbConnectionPool.class);
+    private static final Logger logger = LogManager.getLogger(Database.class);
     private static Session session = null;
     private static AvailablePorts ap = new AvailablePorts();
     private static BasicDataSource dataSource;
@@ -38,7 +38,7 @@ public class DbUtils extends TrigonUtils {
                     }
                 } catch (Exception e) {
                     logger.error("Add SSH File path to Execution.properties file Key DB_SSH_KEY_FILE_PATH ");
-                    //captureException(e);
+                    e.printStackTrace();
                     SshKeyFilepath = tEnv().getDbSSHFilePath();
                 }
                 if (SshKeyFilepath == null) {
@@ -56,18 +56,13 @@ public class DbUtils extends TrigonUtils {
                 config.put("ConnectionAttempts", "2");
                 session.setConfig(config);
                 session.connect();
-                int assinged_port = session.setPortForwardingL(localPort, remoteHost, remotePort);
-                logger.info("localhost:" + assinged_port + " -> " + remoteHost + ":" + remotePort);
-                logger.info("Port Forward Successful");
-                System.out.println("Port Forward Successful");
+                session.setPortForwardingL(localPort, remoteHost, remotePort);
                 String localSSHUrl = "localhost";
                 String connectionUrl = "jdbc:mysql://" + localSSHUrl + ":" + localPort + "/" + tEnv().getDbName();
-                System.out.println("Connection URL is : " + connectionUrl);
                 dataSource.setUrl(connectionUrl);
             } else {
                 String remoteConnectionUrl = tEnv().getDbHost();
                 String connectionUrl = "jdbc:mysql://" + remoteConnectionUrl + ":" + connectionPort + "/" + tEnv().getDbName();
-                System.out.println("Connection URL is : " + connectionUrl);
                 dataSource.setUrl(connectionUrl);
             }
 

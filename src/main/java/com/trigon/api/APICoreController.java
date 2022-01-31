@@ -188,9 +188,9 @@ public class APICoreController extends APICore {
             int actualMapSize = responseMapActualExpanded.keySet().size();
             int expectedMapSize = expectedResponse.values().size();
             if (unionKeys.isEmpty()) {
-                logger.info("Actual Text:" + responseMapActualExpanded.keySet() + "ActualMapSize :" + actualMapSize + "Expected Text:" + expectedResponse.values() + "ExpectedMapSize :" + expectedMapSize);
+                logger.info("Actual Text :" + responseMapActualExpanded.keySet() + "ActualMapSize :" + actualMapSize + "Expected Text:" + expectedResponse.values() + "ExpectedMapSize :" + expectedMapSize);
             } else {
-                logger.error("Actual Text:" + responseMapActualExpanded.keySet() + "ActualSize :" + actualMapSize + "Expected Text:" + expectedResponse.values() + "ExpectedSize :" + expectedMapSize + "Additional values in Expected List" + unionKeys);
+                logger.error("Actual Text :" + responseMapActualExpanded.keySet() + "ActualSize :" + actualMapSize + "Expected Text:" + expectedResponse.values() + "ExpectedSize :" + expectedMapSize + "Additional values in Expected List" + unionKeys);
             }
             apiTearDown(headers, cookies, queryParams, formParams, pathParams, requestBody, expectedResponse);
         } catch (Exception e) {

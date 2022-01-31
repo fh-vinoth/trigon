@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
-<suite name="web_adhoc_JustEat">
+<suite name="web_adhoc_JustEat_Parallel" data-provider-thread-count="5" thread-count="5">
     <parameter name="excelFilePath" value="src/test/resources/TestData/JustEat.xlsx"></parameter>
     <test name="JustEats">
         <classes>
