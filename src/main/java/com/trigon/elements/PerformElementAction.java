@@ -36,17 +36,15 @@ public class PerformElementAction extends ElementStrategyImpl {
                     if (webElement != null) {
                         try {
                             if (webElement.isEnabled()) {
-                                JavascriptExecutor executor = (JavascriptExecutor) browser();
-                                executor.executeScript("arguments[0].style.border='4px solid red'", webElement);
+                                browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                                 webElement.click();
                             }
                         } catch (WebDriverException e) {
                             try {
-                                WebDriverWait wait = new WebDriverWait(browser(), 5000);
+                                WebDriverWait wait = new WebDriverWait(browser(), 5);
                                 wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
-                                JavascriptExecutor executor = (JavascriptExecutor) browser();
-                                executor.executeScript("arguments[0].click();", webElement);
-                                executor.executeScript("arguments[0].style.border='4px solid red'", webElement);
+                                browser().executeScript("arguments[0].click();", webElement);
+                                browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                             } catch (Exception e3) {
                                 try {
                                     logReport("INFO", "Element NOT intractable Hence Scrolling" + locatorString);
@@ -54,8 +52,8 @@ public class PerformElementAction extends ElementStrategyImpl {
                                     scrollToElement(webElement);
                                     hardWait(1000);
                                     if (webElement.isEnabled()) {
-                                        JavascriptExecutor executor = (JavascriptExecutor) browser();
-                                        executor.executeScript("arguments[0].style.border='4px solid red'", webElement);
+                                        
+                                        browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                                         webElement.click();
                                     }
                                 } catch (WebDriverException e1) {
@@ -64,8 +62,8 @@ public class PerformElementAction extends ElementStrategyImpl {
                                             JavascriptExecutor js = browser();
                                             js.executeScript("window.scrollBy(0,-450)", "");
                                             if (webElement.isEnabled()) {
-                                                JavascriptExecutor executor = (JavascriptExecutor) browser();
-                                                executor.executeScript("arguments[0].style.border='4px solid red'", webElement);
+                                                
+                                                browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                                                 webElement.click();
                                             }
                                             break;
@@ -121,8 +119,8 @@ public class PerformElementAction extends ElementStrategyImpl {
                 try {
                     if (webElement != null) {
                         returnvalue = String.valueOf(webElement.isDisplayed());
-                        JavascriptExecutor executor = (JavascriptExecutor) browser();
-                        executor.executeScript("arguments[0].style.border='4px solid red'", webElement);
+                        
+                        browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                     }
                     if (androidElement != null) {
                         returnvalue = String.valueOf(androidElement.isDisplayed());
@@ -164,8 +162,8 @@ public class PerformElementAction extends ElementStrategyImpl {
                             if (webElement.isEnabled()) {
                                 webElement.clear();
                                 webElement.sendKeys(getElementValue);
-                                JavascriptExecutor executor = (JavascriptExecutor) browser();
-                                executor.executeScript("arguments[0].style.border='4px solid red'", webElement);
+                                
+                                browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                             }
                         } catch (WebDriverException e) {
                             logReport("INFO", "Element NOT intractable Hence Scrolling" + locatorString);
@@ -219,8 +217,8 @@ public class PerformElementAction extends ElementStrategyImpl {
                         } catch (WebDriverException e) {
                             scrollToElement(webElement);
                             returnvalue = webElement.getText();
-                            JavascriptExecutor executor = (JavascriptExecutor) browser();
-                            executor.executeScript("arguments[0].style.border='4px solid red'", webElement);
+                            
+                            browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                         }
                     }
                     if (androidElement != null) {
