@@ -42,7 +42,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                             }
                         } catch (WebDriverException e) {
                             try {
-                                WebDriverWait wait = new WebDriverWait(browser(), 5000);
+                                WebDriverWait wait = new WebDriverWait(browser(), 5);
                                 wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                 JavascriptExecutor executor = (JavascriptExecutor) browser();
                                 executor.executeScript("arguments[0].click();", webElement);
