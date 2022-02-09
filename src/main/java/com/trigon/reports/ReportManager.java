@@ -112,6 +112,9 @@ public class ReportManager extends CustomReport {
 
     public void logDBData(String query, String dbResponse) {
         logger.info("Query : "+query);
+        if(dbResponse ==null){
+            dbResponse = "No Data found or returned null";
+        }
         String m = "<details><summary><font color=\"green\"><b>DBQuery</b></font></summary> "+MarkupHelper.createCodeBlock(query, dbResponse).getMarkup()+"</details>";
         extentMethodNode.get().info(m);
     }
