@@ -203,7 +203,7 @@ public class EmailReport {
                 "                    </tr>\n" +
                 "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
                 "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\">API Endpoints Covered : "+totalEndpoints+"</div> </td>\n" +
-//                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/"+suiteWithTime+"/APICoverage.html\"\n" +
+//                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.6/"+suiteWithTime+"/APICoverage.html\"\n" +
 //                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
                 "                    </tr>"+
                 "                    </tbody>\n" +
@@ -226,14 +226,14 @@ public class EmailReport {
                 "                        <td colspan=\"2\">Detailed Analysis Reports</td>\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.6/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
                 "                                style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Report</a></td>\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/" + suiteWithTime + "/EmailReport.html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.6/" + suiteWithTime + "/EmailReport.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Summary Report</a></td>\n" +
                 "\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.6/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Logs</a></td>\n" +
                 "                        <td><a href=\"https://touch2success.testrail.com/index.php?/projects/overview\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">TestRail Report</a></td>\n" +

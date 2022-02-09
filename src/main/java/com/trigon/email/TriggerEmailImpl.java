@@ -141,7 +141,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
                 String[] folderName = reportPath.split("/");
                 int folderlength = folderName.length;
                 System.out.println("Uploading to S3 Bucket !! It takes a while depending on your network and depending on size of report !! Please, Wait.... ");
-                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("t2s-staging-automation/TestResults",
+                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("t2s-staging-automation/TestResults_2.6",
                         folderName[folderlength - 1], new File(reportPath), true);
                 XferMgrProgress.showTransferProgress(xfer);
                 XferMgrProgress.waitForCompletion(xfer);
