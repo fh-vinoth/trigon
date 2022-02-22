@@ -144,6 +144,10 @@ public class Browsers extends Android {
         else if(location.equalsIgnoreCase("IRE")){
             location = "IE";
         }
+        else if(location.equalsIgnoreCase("UK")){
+            location = "GB";
+        }
+        logger.info("Setting location to :: "+location);
         caps.setCapability("browserstack.geoLocation",location);
         caps.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
         caps.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);

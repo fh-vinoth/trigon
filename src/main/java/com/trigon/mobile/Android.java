@@ -53,6 +53,10 @@ public class Android extends IOS {
                 else if(location.equalsIgnoreCase("IRE")){
                     location = "IE";
                 }
+                else if(location.equalsIgnoreCase("UK")){
+                    location = "GB";
+                }
+                logger.info("Setting location to :: "+location);
                 androidCaps.setCapability("browserstack.geoLocation",location);
                 if(tEnv().getTestType().equalsIgnoreCase("digitalboard")){
                     androidCaps.setCapability("orientation", "landscape");

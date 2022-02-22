@@ -50,6 +50,10 @@ public class IOS extends ReportManager {
                 else if(location.equalsIgnoreCase("IRE")){
                     location = "IE";
                 }
+                else if(location.equalsIgnoreCase("UK")){
+                    location = "GB";
+                }
+                logger.info("Setting location to :: "+location);
                 iosCaps.setCapability("browserstack.geoLocation",location);
                 //iosCaps.setCapability("browserstack.geoLocation","NZ");
                 //iosCaps.setCapability("autoAcceptAlerts", "true");
