@@ -137,6 +137,14 @@ public class Browsers extends Android {
         caps.setCapability("browserstack.idleTimeout", "300");
         caps.setCapability("browserstack.autoWait", "50");
         caps.setCapability("language", "en");
+        String location = tEnv().getApiCountry();
+        if(location.equalsIgnoreCase("AUS")){
+            location = "AU";
+        }
+        else if(location.equalsIgnoreCase("IRE")){
+            location = "IE";
+        }
+        caps.setCapability("browserstack.geoLocation",location);
         caps.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
         caps.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
