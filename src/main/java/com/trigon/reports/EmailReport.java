@@ -7,13 +7,17 @@ import com.google.gson.stream.JsonWriter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static com.trigon.reports.Initializers.*;
 
 
 public class EmailReport {
+    static final int initLogStepLimit = 5;
+    static long totalCount = 0;
     public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
@@ -81,7 +85,7 @@ public class EmailReport {
         long failCount = stats.getStats().getGrandchild().get(Status.FAIL);
         long skipCount = stats.getStats().getGrandchild().get(Status.SKIP);
 
-        long totalCount = passCount + failCount + skipCount;
+        totalCount = passCount + failCount + skipCount;
 
         int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
         int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
@@ -313,6 +317,20 @@ public class EmailReport {
                                 "                            <div style=\"word-break:break-all\">\n" +
                                 "                                <b>Scenario :</b> " + description + "\n" +
                                 "                            </div>\n");
+
+                        // Adds Log Steps if modules are less than initLogStepLimit which is set as 5
+                        System.out.println("Total Modules :: "+totalCount);
+                        if(totalCount<initLogStepLimit) {
+                            List<String> stepLogs = method.getLogs().stream().filter(log -> log.getDetails().contains("STEP : ")).map(t -> t.getDetails()).collect(Collectors.toList());
+                            ArrayList<String> modStepLogs = new ArrayList<>();
+                            for (int i = 0; i < stepLogs.size(); i++) {
+                                modStepLogs.add(stepLogs.get(i).replaceAll("STEP", "<br> STEP " + (i + 1)));
+                            }
+                            System.out.println(modStepLogs);
+                            String steps = modStepLogs.toString().replaceAll("[\\[]", "").replaceAll("[\\]]", "");
+                            bf.append("                            <div style=\"word-break:break-all\">\n<b>Test Steps :</b>" + steps + "\n</div>\n");
+                        }
+
                         // If Test Fails
                         if (method.getStatus().getName().equals("Fail")) {
                             bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
