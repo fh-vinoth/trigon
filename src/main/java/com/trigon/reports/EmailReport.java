@@ -7,17 +7,14 @@ import com.google.gson.stream.JsonWriter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.trigon.reports.Initializers.*;
 
 
 public class EmailReport {
-    static final int initLogStepLimit = 5;
-    static long totalCount = 0;
+
     public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
@@ -26,7 +23,7 @@ public class EmailReport {
             String headers = header(report, suiteName);
             String reportLinks = reportLinks(report);
             String failureData = failureData(report);
-            String body = body(report);
+            String body = body(report, suiteName);
             String footers = footers();
             bf.append(headers);
             bf.append(reportLinks);
@@ -42,7 +39,7 @@ public class EmailReport {
             bfFailure.append(failureData);
             bfFailure.append(footers);
 
-            generateEmailBody(reportPath, report, bf.toString(), bfFailure.toString(), suiteName, testType, executionType,pipelineExecution);
+            generateEmailBody(reportPath, report, bf.toString(), bfFailure.toString(), suiteName, testType, executionType, pipelineExecution);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,7 +82,7 @@ public class EmailReport {
         long failCount = stats.getStats().getGrandchild().get(Status.FAIL);
         long skipCount = stats.getStats().getGrandchild().get(Status.SKIP);
 
-        totalCount = passCount + failCount + skipCount;
+        long totalCount = passCount + failCount + skipCount;
 
         int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
         int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
@@ -206,10 +203,10 @@ public class EmailReport {
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
-                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\">API Endpoints Covered : "+totalEndpoints+"</div> </td>\n" +
+                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\">API Endpoints Covered : " + totalEndpoints + "</div> </td>\n" +
 //                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.6/"+suiteWithTime+"/APICoverage.html\"\n" +
 //                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
-                "                    </tr>"+
+                "                    </tr>" +
                 "                    </tbody>\n" +
                 "                </table>\n" +
                 "            </div>\n" +
@@ -250,7 +247,7 @@ public class EmailReport {
                 "    </tr>\n";
     }
 
-    private static String body(ExtentReports stats) {
+    private static String body(ExtentReports stats, String suiteName) {
         StringBuffer bf = new StringBuffer();
 
         // Fixed body Top
@@ -283,7 +280,7 @@ public class EmailReport {
                         "                    </tr>\n");
                 testClass.getChildren().forEach(method -> {
 
-                    try{
+                    try {
                         String methodName = method.getName();
                         String description = method.getDescription();
                         String author = method.getAuthorSet().stream().iterator().next().getName();
@@ -317,18 +314,17 @@ public class EmailReport {
                                 "                            <div style=\"word-break:break-all\">\n" +
                                 "                                <b>Scenario :</b> " + description + "\n" +
                                 "                            </div>\n");
-
-                        // Adds Log Steps if modules are less than initLogStepLimit which is set as 5
-                        System.out.println("Total Modules :: "+totalCount);
-                        if(totalCount<initLogStepLimit) {
-                            List<String> stepLogs = method.getLogs().stream().filter(log -> log.getDetails().contains("STEP : ")).map(t -> t.getDetails()).collect(Collectors.toList());
-                            ArrayList<String> modStepLogs = new ArrayList<>();
-                            for (int i = 0; i < stepLogs.size(); i++) {
-                                modStepLogs.add(stepLogs.get(i).replaceAll("STEP", "<br> STEP " + (i + 1)));
-                            }
-                            System.out.println(modStepLogs);
-                            String steps = modStepLogs.toString().replaceAll("[\\[]", "").replaceAll("[\\]]", "");
-                            bf.append("                            <div style=\"word-break:break-all\">\n<b>Test Steps :</b>" + steps + "\n</div>\n");
+                        // Adds Log Steps if the suite is Sanity or Smoke
+                        if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke")) {
+                            AtomicInteger count = new AtomicInteger(1);
+                            bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
+                            method.getLogs().forEach(log -> {
+                                System.out.println(log.getDetails());
+                                if (log.getDetails().contains("STEP ")) {
+                                    bf.append("                            <div style=\"word-break:break-all\">" + log.getDetails().replaceAll("STEP", "STEP " + count) + "</div>\n");
+                                    count.getAndIncrement();
+                                }
+                            });
                         }
 
                         // If Test Fails
@@ -354,7 +350,7 @@ public class EmailReport {
                             }
                             bf.append("                            </div>\n");
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
 
