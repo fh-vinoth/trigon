@@ -43,6 +43,18 @@ public class IOS extends ReportManager {
                 iosCaps.setCapability("browserstack.debug", "true");
                 iosCaps.setCapability("browserstack.networkLogs", "true");
                 iosCaps.setCapability("browserstack.appiumLogs", "true");
+               /* String location = tEnv().getApiCountry();
+                logger.info("Setting location to :: "+location);
+                if(location.equalsIgnoreCase("AUS")){
+                    location = "AU";
+                }
+                else if(location.equalsIgnoreCase("IRE")){
+                    location = "IE";
+                }
+                else if(location.equalsIgnoreCase("UK") || location.equalsIgnoreCase("GT")){
+                    location = "GB";
+                }
+                iosCaps.setCapability("browserstack.geoLocation",location);*/
                 //iosCaps.setCapability("browserstack.geoLocation","NZ");
                 //iosCaps.setCapability("autoAcceptAlerts", "true");
                 //iosCaps.setCapability("autoDissmissAlerts", "true");
