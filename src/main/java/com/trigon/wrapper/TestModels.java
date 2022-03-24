@@ -264,7 +264,7 @@ public class TestModels extends PerformElementAction {
         if (browser() != null) {
             logger.info("Set Current Page url");
             browser().get(appURL);
-            browser().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            browser().manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
             logReportWithScreenShot("PASS",
                     "Set page URL to : " + appURL);
         }
