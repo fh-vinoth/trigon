@@ -319,7 +319,7 @@ public class EmailReport {
                             AtomicInteger count = new AtomicInteger(1);
                             bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
                             method.getLogs().forEach(log -> {
-                                System.out.println(log.getDetails());
+                               // System.out.println(log.getDetails());
                                 if (log.getDetails().contains("STEP ")) {
                                     bf.append("                            <div style=\"word-break:break-all\">" + log.getDetails().replaceAll("STEP", "STEP " + count) + "</div>\n");
                                     count.getAndIncrement();
