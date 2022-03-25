@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
-<suite name="web_adhoc_Yell">
-    <parameter name="excelFilePath" value="src/test/resources/TestData/HeyYou.xlsx"></parameter>
+<suite name="web_adhoc_Yell" data-provider-thread-count="5">
+    <parameter name="excelFilePath" value="src/test/resources/TestData/YellURL.xlsx"></parameter>
     <test name="Yell">
         <classes>
             <class name="com.fh.adhoc.Yell"/>

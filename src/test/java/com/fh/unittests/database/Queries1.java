@@ -10,7 +10,8 @@ public class Queries1 extends TestLocalController {
     @Test
     public void queries(){
 
-        String s = db.sendQuery("select * from config where host = 'automation-uk1.t2scdn.com'", 1);
-        System.out.println(s);
+        System.out.println("wkjdjwd");
+//        String s = db.sendQuery("select * from config where host = 'automation-uk1.t2scdn.com'", 1);
+//        System.out.println(s);
     }
 }
