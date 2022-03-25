@@ -28,8 +28,13 @@ public class DBController extends TrigonUtils {
             if (tEnv().getJenkins_execution().equalsIgnoreCase("false") && tEnv().getPipeline_execution().equalsIgnoreCase("false")) {
                 String sshHost = tEnv().getDbSSHHost();
                 String sshuser = tEnv().getDbSSHUser();
-                //int sshPort = 22;
-                int sshPort = 7599;
+                int sshPort = 22;
+                if(tEnv().getApiEnvType().equalsIgnoreCase("PRE-PROD") || tEnv().getApiEnvType().equalsIgnoreCase("PROD")){
+                    sshPort = 7599;
+                    if(tEnv().getDbName().equalsIgnoreCase("sit_foxy_project56")){
+                        logger.error("Please check your DB config based on "+tEnv().getApiEnvType()+" environment");
+                    }
+                }
                 String SshKeyFilepath;
                 int localPort = ap.getPort();
                 try {
