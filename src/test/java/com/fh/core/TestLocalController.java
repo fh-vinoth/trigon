@@ -14,7 +14,7 @@ public class TestLocalController extends TestController {
 
 
     @BeforeTest(alwaysRun = true)
-    @Parameters({"testEnvPath", "excelFilePath", "jsonFilePath", "jsonDirectory", "applicationType", "url", "browser", "browser_version", "device", "os_version", "URI", "version", "token", "accessToken", "isJWT", "endpointPrefix", "store", "host", "locale", "region", "country", "currency", "timezone", "phoneNumber", "emailId", "test_region", "browserstack_execution_local","bs_app_path","productName"})
+    @Parameters({"testEnvPath", "excelFilePath", "jsonFilePath", "jsonDirectory", "applicationType", "url", "browser", "browser_version", "device", "os_version", "URI","envType","appSycURI","appSycAuth", "version", "token", "accessToken", "isJWT", "endpointPrefix", "store", "host", "locale", "region", "country", "currency", "timezone", "phoneNumber", "emailId", "test_region", "browserstack_execution_local","bs_app_path","productName"})
     public void moduleInit(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
                            @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                            @Optional String browserVersion, @Optional String device, @Optional String os_version,
@@ -26,7 +26,7 @@ public class TestLocalController extends TestController {
     }
 
     @BeforeClass(alwaysRun = true)
-    @Parameters({"testEnvPath", "excelFilePath", "jsonFilePath", "jsonDirectory", "applicationType", "url", "browser", "browser_version", "device", "os_version", "URI", "version", "token", "accessToken", "isJWT", "endpointPrefix","store", "host", "locale", "region", "country", "currency", "timezone", "phoneNumber", "emailId", "test_region", "browserstack_execution_local","bs_app_path","productName"})
+    @Parameters({"testEnvPath", "excelFilePath", "jsonFilePath", "jsonDirectory", "applicationType", "url", "browser", "browser_version", "device", "os_version", "URI", "envType","appSycURI","appSycAuth","version", "token", "accessToken", "isJWT", "endpointPrefix","store", "host", "locale", "region", "country", "currency", "timezone", "phoneNumber", "emailId", "test_region", "browserstack_execution_local","bs_app_path","productName"})
     public void classInit(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
                           @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                           @Optional String browserVersion, @Optional String device, @Optional String os_version,
@@ -39,7 +39,7 @@ public class TestLocalController extends TestController {
     }
 
     @BeforeMethod(alwaysRun = true)
-    @Parameters({"testEnvPath", "excelFilePath", "jsonFilePath", "jsonDirectory", "applicationType", "url", "browser", "browser_version", "device", "os_version", "URI", "version", "token","accessToken", "isJWT", "endpointPrefix", "store", "host", "locale", "region", "country", "currency", "timezone", "phoneNumber", "emailId", "test_region", "browserstack_execution_local","bs_app_path","productName"})
+    @Parameters({"testEnvPath", "excelFilePath", "jsonFilePath", "jsonDirectory", "applicationType", "url", "browser", "browser_version", "device", "os_version", "URI","envType","appSycURI","appSycAuth", "version", "token","accessToken", "isJWT", "endpointPrefix", "store", "host", "locale", "region", "country", "currency", "timezone", "phoneNumber", "emailId", "test_region", "browserstack_execution_local","bs_app_path","productName"})
     public void methodInit(ITestContext context, XmlTest xmlTest, Method method, @Optional String testEnvPath, @Optional String excelFilePath,
                            @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                            @Optional String browserVersion, @Optional String device, @Optional String os_version,
