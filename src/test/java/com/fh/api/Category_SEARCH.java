@@ -24,6 +24,11 @@ public class Category_SEARCH extends TestLocalController {
             logStepAction("Searching the created category");
             searchCategory(category_id);
 
+            createCategory();
+
+            updateCategory(category_id, "thursday", "0");
+
+
             logStepAction("Deleting the created category");
             deleteCategory(category_id);
 
@@ -135,6 +140,30 @@ public class Category_SEARCH extends TestLocalController {
             hardFail("Searching Category is not found");
         }
     }
+
+
+    public Map<String, Object> updateCategory(String categoryId, String parameterToUpdate, String valueToUpdate) {
+        logStepAction("Update parameter " + parameterToUpdate + " with value " + valueToUpdate + " for the Category with id " + categoryId);
+
+        Map<String, Object> headers = new HashMap<>();
+        Map<String, Object> formparams = new HashMap<>();
+        Map<String, Object> queryparams = new HashMap<>();
+
+        Map<String, Object> response = new HashMap<>();
+        try {
+
+            headers.put("Content-Type", "application/x-www-form-urlencoded");
+            headers.put("Store", tEnv().getApiStore());
+            queryparams.put("api_token", tEnv().getApiToken());
+            formparams.put(parameterToUpdate, valueToUpdate);
+            String endpoint = "category/" + categoryId;
+            response = api().validateStaticResponse("PUT", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
+        } catch (Exception e) {
+            hardFail("Failed to update category");
+        }
+        return response;
+    }
+
 
     public void deleteCategory(String category_id) {
         Map<String, Object> headers = new HashMap<>();

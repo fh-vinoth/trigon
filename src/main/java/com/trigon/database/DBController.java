@@ -28,6 +28,8 @@ public class DBController extends TrigonUtils {
             if (tEnv().getJenkins_execution().equalsIgnoreCase("false") && tEnv().getPipeline_execution().equalsIgnoreCase("false")) {
                 String sshHost = tEnv().getDbSSHHost();
                 String sshuser = tEnv().getDbSSHUser();
+                //int sshPort = 22;
+                int sshPort = 7599;
                 String SshKeyFilepath;
                 int localPort = ap.getPort();
                 try {
@@ -50,7 +52,7 @@ public class DBController extends TrigonUtils {
                 int remotePort = 3306;
                 Properties config = new Properties();
                 JSch jsch = new JSch();
-                session = jsch.getSession(sshuser, sshHost, 22);
+                session = jsch.getSession(sshuser, sshHost, sshPort);
                 jsch.addIdentity(SshKeyFilepath);
                 config.put("StrictHostKeyChecking", "no");
                 config.put("ConnectionAttempts", "2");
