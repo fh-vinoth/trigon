@@ -22,8 +22,10 @@ public class MobileTest extends TestLocalController {
 //            String c = db.sendQuery("select * from config where host = 'mytautomation-uk1.t2scdn.com'","host");
 //            String d = db.sendQuery("select * from config where host = 'mytautomation-uk2.t2scdn.com'","host");
 //            String e = db.sendQuery("select * from config where host = 'mytautomation-uk1.t2scdn.com'","host");
+            String d = db.sendQuery("select * from config limit 1","host");
+
             logStepAction("Printing query 1");
-            System.out.println(a);
+            System.out.println(d);
             logStepAction("Printing query 2");
             System.out.println(b);
 //            System.out.println(c);
