@@ -73,15 +73,6 @@
     }
   },
   "db_config": {
-    "dbHost": "reader.t2sdb.local",
-    "dbUserName": "automation",
-    "dbPassword": "}3%PH8yesmXtrPSgC",
-    "dbSSHHost": "52.49.25.22",
-    "dbSSHUser": "automation",
-    "dbSSHFilePath": "",
-    "dbName": "foxy_project56"
-  },
-  "##db_config": {
     "dbHost": "nonprod-rds-writer.foodhub.local",
     "dbUserName": "ssostag",
     "dbPassword": "sskDwm8X",
