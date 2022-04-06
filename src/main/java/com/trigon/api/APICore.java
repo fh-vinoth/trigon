@@ -717,37 +717,45 @@ public class APICore extends ReportManager {
 
     protected String getCurl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, Map<String, Object> multiPart) {
         StringBuffer sb = new StringBuffer();
+        String curl = "";
+        boolean pathParamFlag = false;
         try {
             String URI = tEnv().getApiURI();
-            if (!URI.endsWith("/")){ URI = URI.concat("/");}
+            if (!URI.endsWith("/")) {
+                URI = URI.concat("/");
+            }
 
             sb.append("curl --location --request " + HttpMethod.toUpperCase() + " '" + URI + Endpoint);
 
             if ((pathParams != null && pathParams.size() > 0)) {
                 pathParams.forEach((k, v) -> sb.append("/" + v));
+                pathParamFlag = true;
             }
-
             if ((queryParams != null && queryParams.size() > 0)) {
                 sb.append("?");
                 sb.append(queryParams.toString().replace("{", "").replace("}", "").replaceAll(", ", "&"));
-                sb.append("'\n");
+                sb.append("' ");
+            }else if(pathParamFlag){
+                sb.append("'");
             }
 
             if (headers != null && headers.size() > 0) {
-                headers.forEach((k, v) -> sb.append("--header '" + k + ": " + v + "'\n"));
+                headers.forEach((k, v) -> sb.append("--header '" + k + ": " + v + "' "));
             }
-
             if ((cookies != null && cookies.size() > 0)) {
-                cookies.forEach((k, v) -> sb.append("--header '" + k + ": " + v + "'\n"));
+                cookies.forEach((k, v) -> sb.append("--header '" + k + ": " + v + "' "));
             }
 
             if ((formParams != null && formParams.size() > 0)) {
-                if (headers.get("Content-Type").toString().endsWith("x-www-form-urlencoded")) {
-                    formParams.forEach((k, v) -> sb.append("--data-urlencode '" + k + "=" + v + "'\n"));
-                } else {
-                    formParams.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "'\n"));
+                if (headers.containsKey("Content-Type")) {
+                    if (headers.get("Content-Type").toString().endsWith("x-www-form-urlencoded")) {
+                        formParams.forEach((k, v) -> sb.append("--data-urlencode '" + k + "=" + v + "' "));
+                    } else {
+                        formParams.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "' "));
+                    }
+                }else {
+                    formParams.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "' "));
                 }
-
             }
 
             if (requestBody != null && !requestBody.equalsIgnoreCase("")) {
@@ -755,10 +763,14 @@ public class APICore extends ReportManager {
             }
 
             if ((multiPart != null && multiPart.size() > 0)) {
-                if (headers.get("Content-Type").toString().contains("application/x-www-form-urlencoded")) {
-                    multiPart.forEach((k, v) -> sb.append("--data-urlencode '" + k + "=" + v + "'\n"));
-                } else {
-                    multiPart.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "'\n"));
+                if (headers.containsKey("Content-Type")) {
+                    if (headers.get("Content-Type").toString().contains("application/x-www-form-urlencoded")) {
+                        multiPart.forEach((k, v) -> sb.append("--data-urlencode '" + k + "=" + v + "' "));
+                    } else {
+                        multiPart.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "' "));
+                    }
+                }else{
+                    multiPart.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "' "));
                 }
             }
 
@@ -766,7 +778,9 @@ public class APICore extends ReportManager {
             captureException(e);
         }
 
-        return  commonUtils.escapeCharacters(sb.toString());
+        curl = commonUtils.escapeCharacters(sb.toString());
+
+        return curl;
     }
 
 
