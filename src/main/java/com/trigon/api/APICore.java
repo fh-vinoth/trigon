@@ -225,9 +225,13 @@ public class APICore extends ReportManager {
                     dataToJSON("responseJSON", response.getBody().asString());
                     dataToJSON("apiTestStatus", "FAILED");
                     dataToJSON("failReason", "[ACT : " + response.getStatusCode() + "] " + " [EXP : " + StatusCode + "]");
+                    flattenMap = JsonFlattener.flattenAsMap(response.asString());
+                    flattenMap.put("actualStatusCode", response.getStatusCode());
+                    flattenMap.put("actualResponseTime", response.time());
                 } else {
                     flattenMap = JsonFlattener.flattenAsMap(response.asString());
                     flattenMap.put("actualStatusCode", response.getStatusCode());
+                    flattenMap.put("actualResponseTime", response.time());
                     dataToJSON("responseJSON", response.getBody().asString());
 
                     // Added for custom variable extractions
