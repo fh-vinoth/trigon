@@ -73,17 +73,17 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void logMultipleJSON(String status, String message, String responseJSON) {
-        String apiName = "API : " + getAPIMethodName();
-        Markup m1 = MarkupHelper.createCodeBlock(message, CodeLanguage.JSON);
-        Markup m2 = MarkupHelper.createCodeBlock(responseJSON, CodeLanguage.JSON);
-        String m = "<details><summary><font color=\"green\"><b>" + apiName + "</b></font></summary> <table><tr><td>" + m1.getMarkup() + " </td><td>" + m2.getMarkup() + "</td></tr></table></details>";
+    public void logMultipleJSON(String status, String message, String responseJSON, String curl, String responseValidation) {
+        String apiName = "API : "+getAPIMethodName();
+        String m = apiCard(status,apiName,message,responseJSON,curl,responseValidation);
         try {
             if (status.equalsIgnoreCase("PASS")) {
                 if (extentScenarioNode.get() != null) {
                     extentScenarioNode.get().pass(m);
+
                 } else if (extentMethodNode.get() != null) {
                     extentMethodNode.get().pass(m);
+
                 }
                 if (tEnv().getTestType().equalsIgnoreCase("api")) {
                     logger.info(message);
@@ -108,6 +108,191 @@ public class ReportManager extends CustomReport {
             captureException(e);
         }
 
+    }
+
+    private String navTabs(){
+
+        int random = commonUtils.getRandomNumber(100,100000);
+
+        String a = "<div class=\"col-md-12 col-sm-12\">\n" +
+                "            <!-- Nav tabs -->\n" +
+                "            <ul class=\"nav nav-tabs\" role=\"tablist\">\n" +
+                "                <li class=\"nav-item\">\n" +
+                "                    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#request_"+random+"\">Request</a>\n" +
+                "                </li>\n" +
+                "                <li class=\"nav-item\">\n" +
+                "                    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#response_"+random+"\">Response</a>\n" +
+                "                </li>\n" +
+                "                <li class=\"nav-item\">\n" +
+                "                    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#curl_"+random+"\">Curl</a>\n" +
+                "                </li>\n" +
+                "            </ul>\n" +
+                "\n" +
+                "            <!-- Tab panes -->\n" +
+                "            <div class=\"tab-content\">\n" +
+                "                <div id=\"request_"+random+"\" class=\"container tab-pane active\"><br>\n" +
+                "                    <div class=\"bd-clipboard\"><button type=\"button\" class=\"btn-clipboard\" data-clipboard-target=\"#responseCopy_1-"+random+"-1\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Copy\" data-original-title=\"Copy to clipboard\">Copy</button></div>\n" +
+                "                    <div><pre><div class='json-tree' id='responseCopy_1-"+random+"-1'></div>\n" +
+                "                                                            <script>function jsonTreeCreate1() {\n" +
+                "                                                                document.getElementById('responseCopy_1-"+random+"-1').innerHTML = JSONTree.create({\n" +
+                "                                                                    \"URI\": \"https://api-preprod.t2sonline.com\",\n" +
+                "                                                                    \"queryParams\": {\n" +
+                "                                                                        \"api_token\": \"J6WDf00hQKGhfYhQkbRCjwraBS11JYuIDx\"\n" +
+                "                                                                    },\n" +
+                "                                                                    \"formParams\": {\n" +
+                "                                                                        \"tag\": \"foodhub-db\",\n" +
+                "                                                                        \"key\": \"country\"\n" +
+                "                                                                    },\n" +
+                "                                                                    \"httpMethod\": \"POST\",\n" +
+                "                                                                    \"endPoint\": \"clear/cache\",\n" +
+                "                                                                    \"responseTime\": \"1.641\",\n" +
+                "                                                                    \"statusCode\": {\n" +
+                "                                                                        \"ACT\": \"200\",\n" +
+                "                                                                        \"EXP\": \"200\"\n" +
+                "                                                                    },\n" +
+                "                                                                    \"expectedResponse\": {\n" +
+                "                                                                        \"outcome\": \"success\"\n" +
+                "                                                                    },\n" +
+                "                                                                    \"actualResponse\": {\n" +
+                "                                                                        \"outcome\": \"success\"\n" +
+                "                                                                    },\n" +
+                "                                                                    \"apiTestStatus\": \"PASSED\"\n" +
+                "                                                                });\n" +
+                "                                                            }\n" +
+                "\n" +
+                "                                                            jsonTreeCreate1();</script>\n" +
+                "                                                    </pre></div>\n" +
+                "                </div>\n" +
+                "                <div id=\"response_"+random+"\" class=\"container tab-pane fade\"><br>\n" +
+                "                    <div class=\"bd-clipboard\"><button type=\"button\" class=\"btn-clipboard\" data-clipboard-target=\"#responseCopy_1-"+random+"-2\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Copy\" data-original-title=\"Copy to clipboard\">Copy</button></div>\n" +
+                "                    <div><pre><div class='json-tree' id='responseCopy_1-"+random+"-2'></div>\n" +
+                "                                                            <script>function jsonTreeCreate1() {\n" +
+                "                                                                document.getElementById('responseCopy_1-"+random+"-2').innerHTML = JSONTree.create({\n" +
+                "                                                                    \"Outcome\": \"Success\",\n" +
+                "\n" +
+                "                                                                });\n" +
+                "                                                            }\n" +
+                "                                                            jsonTreeCreate1();</script>\n" +
+                "                                                    </pre></div>\n" +
+                "                </div>\n" +
+                "                <div id=\"curl_"+random+"\" class=\"container tab-pane fade\"><br>\n" +
+                "                    <div class=\"bd-clipboard\"><button type=\"button\" class=\"btn-clipboard\" data-clipboard-target=\"#responseCopy_1-"+random+"-3\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Copy\" data-original-title=\"Copy to clipboard\">Copy</button></div>\n" +
+                "                    <div><pre><div id='responseCopy_1-"+random+"-3'>curl --location --request POST 'https://api-cloud.browserstack.com/app-automate/upload' \\\n" +
+                "--header 'Authorization: Basic dG91Y2hzdWNjZXNzMTpVakJSTHNzOUFUYVRDZWFId3RkYw==' \\\n" +
+                "--header 'Cookie: tracking_id=56ce83d7-b830-44ce-82a4-0a9f31be2d17' \\\n" +
+                "--form 'data=\"{\\\"custom_id\\\": \\\"MYT_Android\\\"}\"' \\\n" +
+                "--form 'file=@\"/path/to/file\"'</div></pre></div>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>";
+
+        return a;
+    }
+
+    private String apiCard(String status,String apiName, String request,String response,String curl,String responseValidation){
+        int random = commonUtils.getRandomNumber(100,100000);
+        String jsonRequestId = "json-request-"+random+"";
+        String jsonResponseValidationId = "json-response-validation-"+random+"";
+        String jsonResponseId = "json-response-"+random+"";
+        String curlId = "json-curl-"+random+"";
+        String bColor = "#efebeb";
+        if(status.equalsIgnoreCase("FAIL")){
+            bColor = "#e47373";
+        }
+
+        String apiFormat = "<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color: "+bColor+"\">\n" +
+                "               <div class=\"card-header\">\n" +
+                "                   <div class=\"card-title\">\n" +
+                "                       <a class=\"node\" ><span class=\"apiSpan\">"+apiName+"</span></a>\n" +
+                "                   </div>\n" +
+                "               </div>\n" +
+                "               <div class=\"collapse\">\n" +
+                "                   <div class=\"card-body\">\n" +
+                "                       <p>\n" +
+                "                           <button class=\"btn\" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_request_"+random+"\" aria-expanded=\"false\" >\n" +
+                "                               Request\n" +
+                "                           </button>\n" +
+                "                           <button class=\"btn \" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_response_"+random+"\" aria-expanded=\"false\" >\n" +
+                "                               Response\n" +
+                "                           </button>\n" +
+                "                           <button class=\"btn \" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_response-validation_"+random+"\" aria-expanded=\"false\" >\n" +
+                "                               ResponseValidation\n" +
+                "                           </button>\n" +
+                "                           <button class=\"btn \" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_curl_"+random+"\" aria-expanded=\"false\" >\n" +
+                "                               Curl\n" +
+                "                           </button>\n" +
+                "                       </p>\n" +
+                "                       <div class=\"collapse\" id=\"collapse_request_"+random+"\">\n" +
+                "                           <div class=\"card card-body\">\n" +
+                "                               <div class=\"bd-clipboard\">\n" +
+                "                                   <button type=\"button\"\n" +
+                "                                           onclick=\"copy('"+jsonRequestId+"')\"\n" +
+                "                                           class=\"btn-clipboard\">\n" +
+                "                                       Copy\n" +
+                "                                   </button>\n" +
+                "                               </div>\n" +
+                "                               <div>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\""+jsonRequestId+"\"></code></pre>\n" +
+                "                               </div>\n" +
+                "                               <script>\n" +
+                "                                   document.getElementById('"+jsonRequestId+"').innerHTML = JSON.stringify(JSON.parse('"+request+"'), undefined, 4);\n" +
+                "                               </script>\n" +
+                "                           </div>\n" +
+                "                       </div>\n" +
+                "                       <div class=\"collapse\" id=\"collapse_response_"+random+"\">\n" +
+                "                           <div class=\"card card-body\">\n" +
+                "                               <div class=\"bd-clipboard\">\n" +
+                "                                   <button type=\"button\"\n" +
+                "                                           onclick=\"copy('"+jsonResponseId+"')\"\n" +
+                "                                           class=\"btn-clipboard\">\n" +
+                "                                       Copy\n" +
+                "                                   </button>\n" +
+                "                               </div>\n" +
+                "                               <div>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\""+jsonResponseId+"\"></code></pre>\n" +
+                "                               </div>\n" +
+                "                               <script>\n" +
+                "                                   document.getElementById('"+jsonResponseId+"').innerHTML = JSON.stringify(JSON.parse('"+response+"'), undefined, 4);\n" +
+                "                               </script>\n" +
+                "                           </div>\n" +
+                "                       </div>\n" +
+                "                       <div class=\"collapse\" id=\"collapse_response-validation_"+random+"\">\n" +
+                "                           <div class=\"card card-body\">\n" +
+                "                               <div class=\"bd-clipboard\">\n" +
+                "                                   <button type=\"button\"\n" +
+                "                                           onclick=\"copy('"+jsonResponseValidationId+"')\"\n" +
+                "                                           class=\"btn-clipboard\">\n" +
+                "                                       Copy\n" +
+                "                                   </button>\n" +
+                "                               </div>\n" +
+                "                               <div>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\""+jsonResponseValidationId+"\"></code></pre>\n" +
+                "                               </div>\n" +
+                "                               <script>\n" +
+                "                                   document.getElementById('"+jsonResponseValidationId+"').innerHTML = JSON.stringify(JSON.parse('"+responseValidation+"'), undefined, 4);\n" +
+                "                               </script>\n" +
+                "                           </div>\n" +
+                "                       </div>\n" +
+                "                       <div class=\"collapse\" id=\"collapse_curl_"+random+"\">\n" +
+                "                           <div class=\"card card-body\">\n" +
+                "                               <div class=\"bd-clipboard\">\n" +
+                "                                   <button type=\"button\"\n" +
+                "                                           onclick=\"copy('"+curlId+"')\"\n" +
+                "                                           class=\"btn-clipboard\">\n" +
+                "                                       Copy\n" +
+                "                                   </button>\n" +
+                "                               </div>\n" +
+                "                               <div>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\""+curlId+"\">"+curl+"</code></pre>\n" +
+                "                               </div>\n" +
+                "                           </div>\n" +
+                "                       </div>\n" +
+                "                   </div>\n" +
+                "               </div>\n" +
+                "           </div>\n" +
+                "       </div>";
+
+        return apiFormat;
     }
 
     public void logDBData(String query, String dbResponse) {
@@ -166,9 +351,9 @@ public class ReportManager extends CustomReport {
     public void logStepAction(String message) {
 
         if(extentScenarioNode.get()!=null){
-            extentScenarioNode.get().info("<font style=\"color: #366792;font-weight:bold;\"> STEP : </font>"+message);
+            extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>"+message);
         }else{
-            extentMethodNode.get().info("<font style=\"color: #366792;font-weight:bold;\"> STEP : </font>"+message);
+            extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>"+message);
         }
     }
 
@@ -548,6 +733,12 @@ public class ReportManager extends CustomReport {
         Assert.fail(message);
     }
 
+    protected void hardFail(String message,Exception e) {
+        logReport("FAIL", message);
+        e.printStackTrace();
+        Assert.fail(message + e.getMessage());
+    }
+
     protected void hardFail(Exception e) {
         logReport("FAIL", e.getMessage());
         e.printStackTrace();
@@ -680,12 +871,12 @@ public class ReportManager extends CustomReport {
         if(extentMethodNode.get()!=null){
             extentMethodNode.get().assignAuthor(author);
             extentMethodNode.get().getModel().setDescription(scenario);
-            extentMethodNode.get().info("<font style=\"color: #3cbb2d;font-weight:bold;\"> SCENARIO : </font>"+scenario);
+            extentMethodNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>"+scenario);
         }
         if(extentScenarioNode.get()!=null){
             extentScenarioNode.get().assignAuthor(author);
             extentScenarioNode.get().getModel().setDescription(scenario);
-            extentScenarioNode.get().info("<font style=\"color: #3cbb2d;font-weight:bold;\"> SCENARIO : </font>"+scenario);
+            extentScenarioNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>"+scenario);
         }
     }
 

@@ -296,7 +296,7 @@ public class EmailReport {
                         }
 
 
-                        bf.append("<tr style=\"text-align: left\">\n" +
+                        bf.append("<tr style=\"text-align: left;border-top: 0.2px solid #ce8c8c;\">\n" +
                                 "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
                                 "                            <div>\n" +
                                 "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"pass\">\n" +
@@ -318,21 +318,30 @@ public class EmailReport {
                         if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke")) {
                             AtomicInteger count = new AtomicInteger(1);
                             bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
+
                             method.getLogs().forEach(log -> {
                                // System.out.println(log.getDetails());
                                 if (log.getDetails().contains("STEP ")) {
                                     bf.append("                            <div style=\"word-break:break-all\">" + log.getDetails().replaceAll("STEP", "STEP " + count) + "</div>\n");
                                     count.getAndIncrement();
                                 }
+
                             });
                         }
+                        method.getLogs().forEach(log -> {
+                            if(log.getDetails().startsWith("<b>BS Video:</b>")){
+                                bf.append("                                <div style=\"word-break:break-all;padding-top: 10px\">\n" +
+                                        ""+log.getDetails()+""+
+                                        "                                </div>");
+                            }
+                        });
 
                         // If Test Fails
                         if (method.getStatus().getName().equals("Fail")) {
                             bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
                             method.getLogs().forEach(log -> {
                                 if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                    if (!log.getDetails().startsWith("<details><summary>")) {
+                                    if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                         bf.append("<div>" + log.getDetails() + "</div>");
                                     }
                                 }
@@ -341,7 +350,7 @@ public class EmailReport {
                                 method.getChildren().forEach(child -> {
                                     child.getLogs().forEach(log -> {
                                         if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                            if (!log.getDetails().startsWith("<details><summary>")) {
+                                            if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                                 bf.append("<div>" + log.getDetails() + "</div>");
                                             }
                                         }
@@ -417,7 +426,7 @@ public class EmailReport {
 
                         String StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png";
 
-                        bf.append("<tr style=\"text-align: left\">\n" +
+                        bf.append("<tr style=\"text-align: left;border-top: 0.2px solid #ce8c8c;\">\n" +
                                 "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
                                 "                            <div>\n" +
                                 "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"pass\">\n" +
@@ -438,7 +447,7 @@ public class EmailReport {
                         bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
                         method.getLogs().forEach(log -> {
                             if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                if (!log.getDetails().startsWith("<details><summary>")) {
+                                if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                     bf.append("<div>" + log.getDetails() + "</div>");
                                 }
                             }
@@ -447,7 +456,7 @@ public class EmailReport {
                             method.getChildren().forEach(child -> {
                                 child.getLogs().forEach(log -> {
                                     if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                        if (!log.getDetails().startsWith("<details><summary>")) {
+                                        if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                             bf.append("<div>" + log.getDetails() + "</div>");
                                         }
                                     }

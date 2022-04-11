@@ -177,7 +177,9 @@ public class TestController extends TestInitialization {
                 closeBrowserClassLevel();
             }
             if (classFailAnalysisThread.get().size() > 0) {
-                moduleFailAnalysisThread.get().add("FAIL");
+                if(moduleFailAnalysisThread.get()!=null){
+                    moduleFailAnalysisThread.get().add("FAIL");
+                }
             } else {
                 if (extentClassNode.get() != null) {
                     extentClassNode.get().getModel().setStatus(Status.PASS);
