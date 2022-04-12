@@ -318,16 +318,18 @@ public class TestController extends TestInitialization {
             if (browser() != null) {
                 sessionID = browser().getSessionId().toString();
             }
-            else if (android() != null) {
+            if (android() != null) {
                 sessionID = android().getSessionId().toString();
             }
-            else if (ios() != null) {
+            if (ios() != null) {
                 sessionID = ios().getSessionId().toString();
             }
         } catch (Exception e) {
+
         }
         return sessionID;
     }
+
     private void browserStackVideo(Method method) {
         try {
             String sessionId = getSession();
@@ -335,8 +337,7 @@ public class TestController extends TestInitialization {
                 logReport("INFO", "<a href=\"https://automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\" \"> Browserstack Video " + method.getName() + "</a>");
             } else{
                 logReport("INFO", "<a href=\"https://app-automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\" \"> Browserstack Video " + method.getName() + "</a>");
-            }
-        } catch (Exception e) {
+            }        } catch (Exception e) {
             captureException(e);
         }
     }
