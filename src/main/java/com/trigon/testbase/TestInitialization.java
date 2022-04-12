@@ -140,10 +140,73 @@ public class TestInitialization extends Browsers {
         sparkFail.config().setTimelineEnabled(false);
         sparkAll.config().setReportName(suiteNameWithTime);
         sparkAll.config().setTimelineEnabled(false);
-        sparkAll.config().setCss(".card {border-radius: 13px;}");
+
+        sparkAll.config().setCss(" .card {\n" +
+                "        border-radius: 13px;\n" +
+                "    }\n" +
+                "\n" +
+                "    .bd-clipboard {\n" +
+                "        position: relative;\n" +
+                "    / / display: none;\n" +
+                "        float: right;\n" +
+                "    }\n" +
+                "\n" +
+                "    .btn-clipboard {\n" +
+                "        position: absolute;\n" +
+                "        top: 0.65rem;\n" +
+                "        right: 0.65rem;\n" +
+                "        z-index: 10;\n" +
+                "        display: block;\n" +
+                "        padding: 0.25rem 0.5rem;\n" +
+                "        font-size: 65%;\n" +
+                "        color: #007bff;\n" +
+                "        background-color: #fff;\n" +
+                "        border: 1px solid;\n" +
+                "        border-radius: 0.25rem;\n" +
+                "        width: max-content;\n" +
+                "    }\n" +
+                "\n" +
+                "    .btn-clipboard:hover, .btn-clipboard:focus {\n" +
+                "        color: #FFFFFF;\n" +
+                "        background-color: #007bff;\n" +
+                "    }\n" +
+                "    .apiSpan{\n" +
+                "        color: #6b6b70;\n" +
+                "        font-weight: bold;\n" +
+                "    }\n" +
+                "    .stepSpan{\n" +
+                "        color: #366792;\n" +
+                "        font-weight: bold;\n" +
+                "    }\n" +
+                "    .scenarioSpan{\n" +
+                "        color: #a98572;\n" +
+                "        font-weight: bold;\n" +
+                "        font-size: 15px;\n" +
+                "    }\n" +
+                "    .btn{\n" +
+                "        background-color: #c5c5d3;\n" +
+                "        border-radius: 10px;\n" +
+                "        color: #6b6b70;\n" +
+                "    }\n" +
+                "    .btn:hover, .btn:focus {\n" +
+                "        color: #FFFFFF;\n" +
+                "        background-color: #007bff;\n" +
+                "    }\n" +
+                "    .preCode{\n" +
+                "        max-width: 90%;\n" +
+                "        background-color: #ffffff;\n" +
+                "        border: none;\n" +
+                "    }");
         sparkAll.config().setJs("$('.test-item').click(function() {\n" +
                 "    $('.test-content').scrollTop(0);\n" +
-                "});");
+                "});</script>\n" +
+                "<script>\n" +
+                "    function copy(id) {\n" +
+                "        navigator.clipboard\n" +
+                "            .writeText(document.getElementById(id).innerText);\n" +
+                "    }\n" +
+                "</script>\n" +
+                "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js\"></script>");
         //htmlReporter.config().enableOfflineMode(true);
         //spark.config().setTheme(Theme.DARK);
         extent.attachReporter(json, sparkFail, sparkAll);
