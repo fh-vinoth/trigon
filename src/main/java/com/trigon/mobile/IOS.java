@@ -7,6 +7,7 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.MutableCapabilities;
+import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
@@ -30,9 +31,16 @@ public class IOS extends ReportManager {
 
                 //HashMap<String,String> buildData = get_bs_ios_app_url();
 
-                iosCaps.setCapability("app", tEnv().getIosBSAppPath());
+                if(tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                    iosCaps.setCapability("browser", tEnv().getWebBrowser());
+                    iosCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
+                }else {
+                    iosCaps.setCapability("app", tEnv().getIosBSAppPath());
+                    iosCaps.setCapability("build", tEnv().getIosBuildNumber()+"_"+tEnv().getTest_region());
+                }
+
+
                 iosCaps.setCapability("project", context.getSuite().getName());
-                iosCaps.setCapability("build", tEnv().getIosBuildNumber()+"_"+tEnv().getTest_region());
                 iosCaps.setCapability("name", xmlTest.getName()+"_"+tEnv().getCurrentTestClassName());
                 //iosCaps.setCapability("browserstack.appium_version", "1.17.0");
                 iosCaps.setCapability("browserstack.acceptInsecureCerts", "true");
@@ -109,11 +117,16 @@ public class IOS extends ReportManager {
             }
             ios().manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
             ios().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+            String iOSType = "Native App";
+            if(tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                ios().navigate().to(tEnv().getWebUrl());
+                iOSType = tEnv().getWebBrowser()+" Browser on "+tEnv().getWebBrowserVersion();
+            }
             logger.info("*****************************************");
-            logger.info("IOS Native App Launched Successfully in Device " + tEnv().getIosDevice());
+            logger.info("IOS "+iOSType+" Launched Successfully in Device " + tEnv().getIosDevice());
             logger.info("*****************************************");
             long endTime = System.currentTimeMillis();
-            logger.info("Time Taken to Launch IOS Native App: : " + cUtils().getRunDuration(startTime, endTime));
+            logger.info("Time Taken to Launch IOS "+iOSType+" : : " + cUtils().getRunDuration(startTime, endTime));
         } catch (Exception e) {
             captureException(e);
             hardFail("Failed to Launch IOS Device : "+tEnv().getIosDevice() +" Check your Test Parameters");
