@@ -150,11 +150,14 @@ public class TestController extends TestInitialization {
                 failStatusCheck(method);
             }
             if (!context.getSuite().getName().contains("adhoc")) {
+                browserStackVideo(method);
                 closeBrowserClassLevel();
             }
             if (context.getSuite().getName().contains("adhoc_parallel")) {
+                browserStackVideo(method);
                 closeBrowserClassLevel();
             }
+            browserStackVideo(method);
             closeMobileClassLevel();
 
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
@@ -169,11 +172,12 @@ public class TestController extends TestInitialization {
     }
 
     @AfterClass(alwaysRun = true)
-    protected void finalValidation(ITestContext context, XmlTest xmlTest) {
+    protected void finalValidation(Method method, ITestContext context, XmlTest xmlTest) {
         try {
             dataTableCollectionApi.remove();
             logger.info("Test Execution Finished for Class  : " + getClass().getSimpleName());
             if(context.getSuite().getName().contains("adhoc")){
+                browserStackVideo(method);
                 closeBrowserClassLevel();
             }
             if (classFailAnalysisThread.get().size() > 0) {
@@ -305,6 +309,35 @@ public class TestController extends TestInitialization {
 
         } catch (Exception e) {
 
+        }
+    }
+
+    private String getSession() {
+        String sessionID = null;
+        try {
+            if (browser() != null) {
+                sessionID = browser().getSessionId().toString();
+            }
+            else if (android() != null) {
+                sessionID = android().getSessionId().toString();
+            }
+            else if (ios() != null) {
+                sessionID = ios().getSessionId().toString();
+            }
+        } catch (Exception e) {
+        }
+        return sessionID;
+    }
+    private void browserStackVideo(Method method) {
+        try {
+            String sessionId = getSession();
+            if(browser()!=null){
+                logReport("INFO", "<a href=\"https://automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\" \"> Browserstack Video " + method.getName() + "</a>");
+            } else{
+                logReport("INFO", "<a href=\"https://app-automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\" \"> Browserstack Video " + method.getName() + "</a>");
+            }
+        } catch (Exception e) {
+            captureException(e);
         }
     }
 
