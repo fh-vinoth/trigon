@@ -141,6 +141,30 @@ public class TestController extends TestInitialization {
             if (result.wasRetried()) {
                 if (result.getStatus() == 3) {
                     if (extentMethodNode.get() != null) {
+                        int sizeOfTestList = extent.getReport().getTestList().size();
+                        A:     for (indexTest = 0; indexTest < sizeOfTestList; indexTest++) {
+                            if (extent.getReport().getTestList().get(indexTest).getName().substring(0, extent.getReport().getTestList().get(indexTest).getName().indexOf('<')).equalsIgnoreCase(xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim())) {
+                                int sizeOfClasses = extent.getReport().getTestList().get(indexTest).getChildren().size();
+                                for (indexClass = 0; indexClass < sizeOfClasses; indexClass++) {
+                                    if (extent.getReport().getTestList().get(indexTest).getChildren().get(indexClass).getName().equalsIgnoreCase(tEnv().getCurrentTestClassName())) {
+                                        int sizeOfMethods = extent.getReport().getTestList().get(indexTest).getChildren().get(indexClass).getChildren().size();
+                                        for (indexMethod = 0; indexMethod < sizeOfMethods; indexMethod++) {
+                                            if (extent.getReport().getTestList().get(indexTest).getChildren().get(indexClass).getChildren().get(indexMethod).getName().equalsIgnoreCase(method.getName())) {
+                                                sizeOfLogs = extent.getReport().getTestList().get(indexTest).getChildren().get(indexClass).getChildren().get(indexMethod).getLogs().size() - 1;
+                                                while (sizeOfLogs >= 0) {
+                                                    if (extent.getReport().getTestList().get(indexTest).getChildren().get(indexClass).getChildren().get(indexMethod).getLogs().get(sizeOfLogs).getStatus().toString().equalsIgnoreCase("Fail")) {
+                                                        detailsOfLogs = extent.getReport().getTestList().get(indexTest).getChildren().get(indexClass).getChildren().get(indexMethod).getLogs().get(sizeOfLogs).getDetails();
+                                                        break A;
+                                                    } else {
+                                                        --sizeOfLogs;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         extent.removeTest(extentMethodNode.get());
                     }
                 } else {
@@ -148,6 +172,12 @@ public class TestController extends TestInitialization {
                 }
             } else {
                 failStatusCheck(method);
+            }
+            if(result.getStatus()==2 && sizeOfLogs>0) {
+                if(!extent.getReport().getTestList().get(indexTest).getChildren().get(indexClass).getChildren().get(indexMethod).getLogs().get(sizeOfLogs).getStatus().toString().equalsIgnoreCase("Fail")) {
+                    logReport("Fail",detailsOfLogs);
+                    sizeOfLogs=0;
+                }
             }
             if (!context.getSuite().getName().contains("adhoc")) {
                 closeBrowserClassLevel();
