@@ -37,7 +37,9 @@ public class Browsers extends Android {
             browserType = tEnv().getWebBrowser();
         }
         if (extent != null) {
-            extentClassNode.get().assignDevice(browserType);
+            if(extentClassNode.get()!=null){
+                extentClassNode.get().assignDevice(browserType);
+            }
         }
         switch (browserType) {
             case "chrome":
