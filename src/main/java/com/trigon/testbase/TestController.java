@@ -73,6 +73,10 @@ public class TestController extends TestInitialization {
                 setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI, envType,appSycURI,appSycAuth,version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
+
+                if(context.getSuite().getName().contains("msweb")){
+                    remoteBrowserInit(context, xmlTest);
+                }
                 moduleFailAnalysisThread.set(new ArrayList<>());
                 testModuleCollection(xmlTest.getName());
             }
@@ -116,7 +120,9 @@ public class TestController extends TestInitialization {
             dataTableMapApi.set(new LinkedHashMap<>());
             setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
 
-            if (!context.getSuite().getName().contains("adhoc")) {
+            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")) {
+
+            }else{
                 remoteBrowserInit(context, xmlTest);
             }
             if (context.getSuite().getName().contains("adhoc_parallel")) {
@@ -149,7 +155,9 @@ public class TestController extends TestInitialization {
             } else {
                 failStatusCheck(method);
             }
-            if (!context.getSuite().getName().contains("adhoc")) {
+            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")) {
+
+            }else{
                 closeBrowserClassLevel();
             }
             if (context.getSuite().getName().contains("adhoc_parallel")) {
@@ -193,9 +201,12 @@ public class TestController extends TestInitialization {
     }
 
     @AfterTest(alwaysRun = true)
-    protected void methodClosure(XmlTest xmlTest) {
+    protected void methodClosure(ITestContext context,XmlTest xmlTest) {
         try {
             logger.info("Test Execution Finished for Module : " + xmlTest.getName());
+            if(context.getSuite().getName().contains("msweb")){
+                closeBrowserClassLevel();
+            }
             if (extentTestNode.get() != null) {
                 if (moduleFailAnalysisThread.get().size() > 0) {
 

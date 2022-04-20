@@ -6,6 +6,8 @@ import com.aventstack.extentreports.markuputils.CodeLanguage;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.github.wnameless.json.flattener.JsonFlattener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -73,9 +75,11 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void logMultipleJSON(String status, String message, String responseJSON, String curl, String responseValidation) {
+    public void logMultipleJSON(String status, LinkedHashMap message, Object responseJSON, String curl, LinkedHashMap responseValidation) {
         String apiName = "API : "+getAPIMethodName();
-        String m = apiCard(status,apiName,message,responseJSON,curl,responseValidation);
+        Gson pGson1 = new GsonBuilder().create();
+        Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+        String m = apiCard(status,apiName,pGson1.toJson(message),String.valueOf(responseJSON),curl,pGson1.toJson(responseValidation));
         try {
             if (status.equalsIgnoreCase("PASS")) {
                 if (extentScenarioNode.get() != null) {
@@ -83,10 +87,9 @@ public class ReportManager extends CustomReport {
 
                 } else if (extentMethodNode.get() != null) {
                     extentMethodNode.get().pass(m);
-
                 }
                 if (tEnv().getTestType().equalsIgnoreCase("api")) {
-                    logger.info(message);
+                    logger.info(pGson.toJson(message));
                     logger.info(apiName + " is PASSED");
                 } else {
                     logger.info(apiName + " is PASSED");
@@ -100,7 +103,7 @@ public class ReportManager extends CustomReport {
                     extentMethodNode.get().fail(m);
                 }
                 if (failAnalysisThread.get() != null) {
-                    failAnalysisThread.get().add(message);
+                    failAnalysisThread.get().add(pGson.toJson(message));
                 }
                 logger.error(apiName + " is FAILED !! Check your API Parameters ");
             }
