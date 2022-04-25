@@ -24,7 +24,10 @@ public class Android extends IOS {
 
         long startTime = System.currentTimeMillis();
         try {
-            extentClassNode.get().assignDevice(tEnv().getAndroidDevice());
+            System.out.println(tEnv().getAndroidDevice());
+            if(extentTestNode.get()!=null){
+                extentClassNode.get().assignDevice(tEnv().getAndroidDevice());
+            }
             if (executionType.equalsIgnoreCase("remote")) {
                 androidCaps.setCapability("os_version", tEnv().getAndroidOSVersion());
                 androidCaps.setCapability("device", tEnv().getAndroidDevice());
