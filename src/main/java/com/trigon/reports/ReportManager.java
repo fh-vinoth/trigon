@@ -90,13 +90,15 @@ public class ReportManager extends CustomReport {
                 }
                 if (tEnv().getTestType().equalsIgnoreCase("api")) {
                     logger.info(pGson.toJson(message));
+                    logger.info(pGson.toJson(responseValidation));
                     logger.info(apiName + " is PASSED");
                 } else {
                     logger.info(apiName + " is PASSED");
                 }
 
             } else if (status.equalsIgnoreCase("FAIL")) {
-                logger.error(message);
+                logger.info(pGson.toJson(message));
+                logger.info(pGson.toJson(responseValidation));
                 if (extentScenarioNode.get() != null) {
                     extentScenarioNode.get().fail(m);
                 } else if (extentMethodNode.get() != null) {
