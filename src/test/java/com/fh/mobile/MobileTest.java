@@ -10,31 +10,24 @@ public class MobileTest extends TestLocalController {
     @Test(groups = {"Sanity_MYT, Sanity_Fusion"})
     public void sanity_Orders_AllRegions() {
         try {
-            author_ScenarioName("Gayathri,Srikrishna", "Sanity Check for "+tEnv().getApiCountry()+" to check if the build fulfills the acceptance criteria");
-
-            logStepAction("Checking Login first");
-            String a = "test";
-            String b = "test11";
-            //android().findElement(By.xpath("//div[@class='Test']"));
-            //String a = db.sendQuery("select * from config where host = 'mytautomation-uk1.t2scdn.com'","host");
-            logStepAction("Checking Login for map");
-            //Map b = db.sendQueryReturnMap("select host from config where host = 'mytautomation-uk2.t2scdn.com'");
-//            String c = db.sendQuery("select * from config where host = 'mytautomation-uk1.t2scdn.com'","host");
-//            String d = db.sendQuery("select * from config where host = 'mytautomation-uk2.t2scdn.com'","host");
-//            String e = db.sendQuery("select * from config where host = 'mytautomation-uk1.t2scdn.com'","host");
-            String d = db.sendQuery("select * from config limit 1","host");
-
-            logStepAction("Printing query 1");
-            System.out.println(d);
-            logStepAction("Printing query 2");
-            System.out.println(b);
-//            System.out.println(c);
-//            System.out.println(d);
-//            System.out.println(e);
+            author_ScenarioName("Srikrishna", "To check if the build fulfills the acceptance criteria");
+            sample();
         } catch (Exception e) {
-            hardFail(e);
+            hardFail("sanity failed");
         } finally {
             testTearDown();
+        }
+    }
+
+
+    public void sample(){
+        try{
+            String num = "1000";
+            String Exp = "11.34";
+            int difference = Integer.parseInt(num)-Integer.parseInt(Exp);
+            System.out.println(difference);
+        }catch(Exception e){
+            hardFail("Failed Sample");
         }
     }
 }

@@ -1,5 +1,5 @@
 {
-  "execution_type": "local",
+  "execution_type": "remote",
   "jenkins_execution": "false",
   "pipeline_execution": "false",
   "browserstack_execution_local": "false",
