@@ -24,7 +24,10 @@ public class Android extends IOS {
 
         long startTime = System.currentTimeMillis();
         try {
-            extentClassNode.get().assignDevice(tEnv().getAndroidDevice());
+            System.out.println(tEnv().getAndroidDevice());
+            if(extentTestNode.get()!=null){
+                extentClassNode.get().assignDevice(tEnv().getAndroidDevice());
+            }
             if (executionType.equalsIgnoreCase("remote")) {
                 androidCaps.setCapability("os_version", tEnv().getAndroidOSVersion());
                 androidCaps.setCapability("device", tEnv().getAndroidDevice());
@@ -32,9 +35,16 @@ public class Android extends IOS {
 
                 //HashMap<String,String> buildData = get_bs_android_app_url();
 
-                androidCaps.setCapability("app", tEnv().getAndroidBSAppPath());
+                if(tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+                    androidCaps.setCapability("browser", tEnv().getWebBrowser());
+                    androidCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
+
+                }else {
+                    androidCaps.setCapability("app", tEnv().getAndroidBSAppPath());
+                    androidCaps.setCapability("build", tEnv().getAndroidBuildNumber()+"_"+tEnv().getTest_region());
+                }
                 androidCaps.setCapability("project", context.getSuite().getName());
-                androidCaps.setCapability("build", tEnv().getAndroidBuildNumber()+"_"+tEnv().getTest_region());
+
                 androidCaps.setCapability("name", xmlTest.getName()+"_"+tEnv().getCurrentTestClassName());
                 //androidCaps.setCapability("browserstack.appium_version", "1.17.0");
                 androidCaps.setCapability("browserstack.acceptInsecureCerts", "true");
@@ -46,6 +56,7 @@ public class Android extends IOS {
                 androidCaps.setCapability("browserstack.networkLogs", "true");
                 androidCaps.setCapability("browserstack.appiumLogs", "true");
                 androidCaps.setCapability("autoGrantPermissions","true");
+
                 /*String location = tEnv().getApiCountry();
                 if(location.equalsIgnoreCase("AUS")){
                     location = "AU";
@@ -102,11 +113,16 @@ public class Android extends IOS {
             }
             android().manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
             android().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+            String AndroidType = "Native App";
+            if(tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+                android().navigate().to(tEnv().getWebUrl());
+                AndroidType = tEnv().getWebBrowser()+" Browser on "+tEnv().getWebBrowserVersion();
+            }
             logger.info("*****************************************");
-            logger.info("Android Native App Launched Successfully in Device " + tEnv().getAndroidDevice());
+            logger.info("Android "+AndroidType+" Launched Successfully in Device " + tEnv().getAndroidDevice());
             logger.info("*****************************************");
             long endTime = System.currentTimeMillis();
-            logger.info("Time Taken to Launch Android Native App: : " + cUtils().getRunDuration(startTime, endTime));
+            logger.info("Time Taken to Launch "+AndroidType+" App: : " + cUtils().getRunDuration(startTime, endTime));
         } catch (Exception e) {
             captureException(e);
             hardFail("Failed to Launch Android Device : "+tEnv().getAndroidDevice() +" Check your Test Parameters");        }

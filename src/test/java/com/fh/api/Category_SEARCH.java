@@ -24,18 +24,18 @@ public class Category_SEARCH extends TestLocalController {
             logger.info("Created category_id: " + category_id);
 
             logStepAction("Searching the created category");
-            searchCategory(category_id);
+//            searchCategory(category_id);
 
             createCategory();
 
-            updateCategory(category_id, "thursday", "0");
+           /* updateCategory(category_id, "thursday", "0");
 
 
             logStepAction("Deleting the created category");
             deleteCategory(category_id);
-
+*/
         }catch (Exception e){
-            hardFail(e);
+            hardFail("Failes "+e);
         }finally {
             testTearDown();
         }
@@ -52,7 +52,7 @@ public class Category_SEARCH extends TestLocalController {
             logger.info("Created category_id: " + category_id);
 
         }catch (Exception e){
-            hardFail(e);
+            hardFail("Failed due to :: "+e);
         }finally {
             testTearDown();
         }
@@ -111,11 +111,13 @@ public class Category_SEARCH extends TestLocalController {
         String endpoint = "category";
         formparams.put("name", "TestCateg" + cUtils().generateRandomString(4));
         try {
-            Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
-            category_id = postresponse.get("resource_id").toString();
+            /*Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
+            category_id = postresponse.get("resource_id").toString();*/
+            String id = null;
+            id.replace("","re");
 
         } catch (Exception e) {
-            hardFail("Category is not created.");
+            hardFail("Category is not created."+e);
         }
         if (category_id == null) {
             hardFail("Category id is returned as null.");
