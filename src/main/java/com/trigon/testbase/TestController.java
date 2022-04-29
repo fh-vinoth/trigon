@@ -75,10 +75,10 @@ public class TestController extends TestInitialization {
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
 
-                if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")){
+                if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb") || context.getSuite().getName().toLowerCase().startsWith("fhweb")){
                     remoteBrowserInit(context, xmlTest);
                 }
-                if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
+                if(context.getSuite().getName().toLowerCase().startsWith("fusionapp") || context.getSuite().getName().toLowerCase().startsWith("fhapp")){
                     remoteMobileInit(context, xmlTest);
                 }
                 moduleFailAnalysisThread.set(new ArrayList<>());
@@ -124,7 +124,7 @@ public class TestController extends TestInitialization {
             dataTableMapApi.set(new LinkedHashMap<>());
             setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
 
-            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")) {
+            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb") || context.getSuite().getName().toLowerCase().startsWith("fhweb")) {
 
             }else{
                 remoteBrowserInit(context, xmlTest);
@@ -132,7 +132,7 @@ public class TestController extends TestInitialization {
             if (context.getSuite().getName().contains("adhoc_parallel")) {
                 remoteBrowserInit(context, xmlTest);
             }
-            if (context.getSuite().getName().toLowerCase().startsWith("fusionapp")) {
+            if (context.getSuite().getName().toLowerCase().startsWith("fusionapp")|| context.getSuite().getName().toLowerCase().startsWith("fhapp")) {
 
             }else{
                 remoteMobileInit(context, xmlTest);
@@ -163,7 +163,7 @@ public class TestController extends TestInitialization {
             } else {
                 failStatusCheck(method);
             }
-            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")) {
+            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhweb")) {
 
             }else{
                 closeBrowserClassLevel();
@@ -171,7 +171,7 @@ public class TestController extends TestInitialization {
             if (context.getSuite().getName().contains("adhoc_parallel")) {
                 closeBrowserClassLevel();
             }
-            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
+            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")|| context.getSuite().getName().toLowerCase().startsWith("fhapp")){
 
             }else {
                 closeMobileClassLevel();
@@ -215,10 +215,10 @@ public class TestController extends TestInitialization {
     protected void methodClosure(ITestContext context,XmlTest xmlTest) {
         try {
             logger.info("Test Execution Finished for Module : " + xmlTest.getName());
-            if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")){
+            if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhweb")){
                 closeBrowserClassLevel();
             }
-            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
+            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")|| context.getSuite().getName().toLowerCase().startsWith("fhapp")){
                 closeMobileClassLevel();
             }
             if (extentTestNode.get() != null) {
