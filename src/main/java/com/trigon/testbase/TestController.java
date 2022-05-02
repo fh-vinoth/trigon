@@ -25,7 +25,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 
 public class TestController extends TestInitialization {
@@ -75,11 +74,8 @@ public class TestController extends TestInitialization {
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
 
-                if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")){
+                if(context.getSuite().getName().contains("msweb")){
                     remoteBrowserInit(context, xmlTest);
-                }
-                if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
-                    remoteMobileInit(context, xmlTest);
                 }
                 moduleFailAnalysisThread.set(new ArrayList<>());
                 testModuleCollection(xmlTest.getName());
@@ -124,7 +120,7 @@ public class TestController extends TestInitialization {
             dataTableMapApi.set(new LinkedHashMap<>());
             setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
 
-            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")) {
+            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")) {
 
             }else{
                 remoteBrowserInit(context, xmlTest);
@@ -132,11 +128,7 @@ public class TestController extends TestInitialization {
             if (context.getSuite().getName().contains("adhoc_parallel")) {
                 remoteBrowserInit(context, xmlTest);
             }
-            if (context.getSuite().getName().toLowerCase().startsWith("fusionapp")) {
-
-            }else{
-                remoteMobileInit(context, xmlTest);
-            }
+            remoteMobileInit(context, xmlTest);
             setMobileLocator();
             setWebLocator();
             failAnalysisThread.set(new ArrayList<>());
@@ -163,7 +155,7 @@ public class TestController extends TestInitialization {
             } else {
                 failStatusCheck(method);
             }
-            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")) {
+            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")) {
 
             }else{
                 closeBrowserClassLevel();
@@ -171,11 +163,8 @@ public class TestController extends TestInitialization {
             if (context.getSuite().getName().contains("adhoc_parallel")) {
                 closeBrowserClassLevel();
             }
-            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
+            closeMobileClassLevel();
 
-            }else {
-                closeMobileClassLevel();
-            }
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
                 b.setTestCaseFinalStatus(runId, 1, "TEST PASSED", method.getName());
@@ -215,11 +204,8 @@ public class TestController extends TestInitialization {
     protected void methodClosure(ITestContext context,XmlTest xmlTest) {
         try {
             logger.info("Test Execution Finished for Module : " + xmlTest.getName());
-            if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")){
+            if(context.getSuite().getName().contains("msweb")){
                 closeBrowserClassLevel();
-            }
-            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
-                closeMobileClassLevel();
             }
             if (extentTestNode.get() != null) {
                 if (moduleFailAnalysisThread.get().size() > 0) {
