@@ -268,7 +268,7 @@ public class Browsers extends Android {
                     if (executionType.equalsIgnoreCase("remote")) {
                         String sessionId = ios().getSessionId().toString();
                         logReport("INFO", "<b>BS Video:</b> <a href=\"https://app-automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\"> View Recorded Video </a>");
-                        if (classFailAnalysisThread != null) {
+                        if (classFailAnalysisThread.get() != null) {
                             if (classFailAnalysisThread.get().size() > 0) {
                                 jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
                             }
@@ -330,13 +330,12 @@ public class Browsers extends Android {
                     if (executionType.equalsIgnoreCase("remote")) {
                         String sessionId = browser().getSessionId().toString();
                         logReport("INFO", "<b>BS Video:</b> <a href=\"https://automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\"> View Recorded Video </a>");
-
-                        if (classFailAnalysisThread.get().size() > 0) {
-                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
-
+                        if (classFailAnalysisThread.get()!= null) {
+                            if (classFailAnalysisThread.get().size() > 0) {
+                                jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                            }
                         } else {
                             jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
-
                         }
                     }
                     browser().quit();

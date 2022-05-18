@@ -1,7 +1,7 @@
 {
   "api": {
     "URI": "https://sit-api.t2scdn.com/",
-    "version": "V1.9",
+    "version": "",
     "envType": "",
     "appSycURI": "",
     "appSycAuth": ""

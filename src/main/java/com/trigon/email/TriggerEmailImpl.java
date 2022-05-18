@@ -61,8 +61,8 @@ public class TriggerEmailImpl implements ITriggerEmail {
         props.put("mail.smtp.port", "465");
 
         AWSCredentials credentials = new BasicAWSCredentials(
-                AES.decrypt("LBRGQ0dOh/cfKZtL09GVpwDdzdveukupzmqrY0uIhOE=", "t2sautomation"),
-                AES.decrypt("Aw0HhbPVq78mUnu9AjHgkTn7IWTWPBRRZIeyUniNUeWMqVu1dydCYvT+1IRgTapE", "t2sautomation")
+                AES.decrypt("W2ekXre8CE/HcVRqyloQgvx8gdNF7SukcZP/Gzx2aGY=", "t2sautomation"),
+                AES.decrypt("7vxMJLkwfL7VK8SksBb/ReNbhwbPtwjT9fHRCo1hutb6hXbOH/U/3c8Tad49ieBp", "t2sautomation")
         );
 
         AmazonS3 s3Client = AmazonS3ClientBuilder
