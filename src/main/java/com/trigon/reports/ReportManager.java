@@ -2,8 +2,6 @@ package com.trigon.reports;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
-import com.aventstack.extentreports.markuputils.CodeLanguage;
-import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.Gson;
@@ -20,7 +18,6 @@ import org.testng.Assert;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
 
 import static com.trigon.testbase.TestInitialization.trigonPaths;
 import static org.apache.commons.io.FileUtils.copyFile;
@@ -82,6 +79,10 @@ public class ReportManager extends CustomReport {
         String m = apiCard(status,apiName,pGson1.toJson(message),String.valueOf(responseJSON),curl,pGson1.toJson(responseValidation));
         try {
             if (status.equalsIgnoreCase("PASS")) {
+
+                if(tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true") && tEnv().getTestType().equalsIgnoreCase("api")){
+                     m = apiName + " is PASSED";
+                }
                 if (extentScenarioNode.get() != null) {
                     extentScenarioNode.get().pass(m);
 
@@ -974,11 +975,16 @@ public class ReportManager extends CustomReport {
     private void logInfo(String message, boolean screenshotMode) {
         String replacedMessage = message;
         logger.info(replacedMessage.replace("<br>",""));
-        if (extentScenarioNode.get() != null) {
-            screenshotInfo(extentScenarioNode.get(), message, screenshotMode);
-        } else if (extentMethodNode.get() != null) {
-            screenshotInfo(extentMethodNode.get(), message, screenshotMode);
+        if(tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true") && tEnv().getTestType().equalsIgnoreCase("api")){
+
+        }else{
+            if (extentScenarioNode.get() != null) {
+                screenshotInfo(extentScenarioNode.get(), message, screenshotMode);
+            } else if (extentMethodNode.get() != null) {
+                screenshotInfo(extentMethodNode.get(), message, screenshotMode);
+            }
         }
+
     }
 
     private void screenshotInfo(ExtentTest node, String message, boolean screenshotMode) {
@@ -1016,11 +1022,16 @@ public class ReportManager extends CustomReport {
     private void logPass(String message, boolean screenshotMode) {
         String replacedMessage = message;
         logger.info(replacedMessage.replace("<br>",""));
-        if (extentScenarioNode.get() != null) {
-            screenshotPass(extentScenarioNode.get(), message, screenshotMode);
-        } else if (extentMethodNode.get() != null) {
-            screenshotPass(extentMethodNode.get(), message, screenshotMode);
+        if(tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true") && tEnv().getTestType().equalsIgnoreCase("api")){
+
+        }else{
+            if (extentScenarioNode.get() != null) {
+                screenshotPass(extentScenarioNode.get(), message, screenshotMode);
+            } else if (extentMethodNode.get() != null) {
+                screenshotPass(extentMethodNode.get(), message, screenshotMode);
+            }
         }
+
     }
 
     private void screenshotPass(ExtentTest node, String message, boolean screenshotMode) {

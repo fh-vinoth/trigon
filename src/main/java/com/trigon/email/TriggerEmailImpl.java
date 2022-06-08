@@ -101,8 +101,10 @@ public class TriggerEmailImpl implements ITriggerEmail {
                 message.setFrom(new InternetAddress(from, "FH "+jsonObject.get("testType").toString()+" Report"));
             }
 
+            StringBuffer sb = new StringBuffer(recipients);
+            sb.append(",bhaskar.marrikunta@foodhub.com");
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(recipients));
+                    InternetAddress.parse(sb.toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }
