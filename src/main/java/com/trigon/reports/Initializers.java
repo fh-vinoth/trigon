@@ -52,11 +52,7 @@ public class Initializers {
     public ExtentTest extentTest = null;
 
     //variables used for saving failure functionality for retried tests
-    public static int sizeOfLogs=0;
-    public static int indexTest=0;
-    public static int indexClass=0;
-    public static int indexMethod=0;
-    public static String detailsOfLogs;
+    public static List<String> initFailedLogs;
 
     protected static ThreadLocal<AndroidDriver<AndroidElement>> androidDriverThreadLocal = new ThreadLocal<>();
     protected static ThreadLocal<IOSDriver<IOSElement>> iosDriverThreadLocal = new ThreadLocal<>();
