@@ -627,12 +627,12 @@ public class TestInitialization extends Browsers {
                             tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
                         } catch (Exception e) {
                             if (tRemoteEnv.getTest_region() != null) {
-                                logger.error("test_region is given as " + tRemoteEnv.getTest_region() + " in remote-env.json; Which is not present in test-env.json under ios devices!! Hence proceeding with default devices");
+                                logger.error("test_region is given as " + tRemoteEnv.getTest_region() + " in remote-env.json; Which is not present in test-env.json under Android devices!! Hence proceeding with default devices");
                             } else {
                                 logger.error("test_region is not given in remote-env.json; Hence proceeding with default devices");
                             }
-                            tEnv().setIosDevice(tLocalEnv.getIos().getDevice());
-                            tEnv().setIosOSVersion(tLocalEnv.getIos().getOs());
+                            tEnv().setAndroidDevice(tLocalEnv.getAndroid().getDevice());
+                            tEnv().setAndroidOSVersion(tLocalEnv.getAndroid().getOs());
                         }
                     }
                 }
@@ -722,11 +722,11 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebUrl(url);
             }
             if (device != null) {
-                if ((tLocalEnv.getAndroid() != null) && (appType.equalsIgnoreCase("Android"))) {
+                if ((tLocalEnv.getAndroid() != null) && ((appType.equalsIgnoreCase("Android") || appType.equalsIgnoreCase("AndroidBrowser")))) {
                     tEnv().setAndroidDevice(device);
                     tEnv().setAndroidOSVersion(os_version);
                 }
-                if ((tLocalEnv.getIos() != null) && (appType.equalsIgnoreCase("ios"))) {
+                if ((tLocalEnv.getIos() != null) && ((appType.equalsIgnoreCase("ios") || appType.equalsIgnoreCase("iosBrowser")))) {
                     tEnv().setIosDevice(device);
                     tEnv().setIosOSVersion(os_version);
                 }
