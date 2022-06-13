@@ -722,11 +722,11 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebUrl(url);
             }
             if (device != null) {
-                if ((tLocalEnv.getAndroid() != null) && (appType.equalsIgnoreCase("Android"))) {
+                if ((tLocalEnv.getAndroid() != null) && ((appType.equalsIgnoreCase("Android") || appType.equalsIgnoreCase("AndroidBrowser")))) {
                     tEnv().setAndroidDevice(device);
                     tEnv().setAndroidOSVersion(os_version);
                 }
-                if ((tLocalEnv.getIos() != null) && (appType.equalsIgnoreCase("ios"))) {
+                if ((tLocalEnv.getIos() != null) && ((appType.equalsIgnoreCase("ios") || appType.equalsIgnoreCase("iosBrowser")))) {
                     tEnv().setIosDevice(device);
                     tEnv().setIosOSVersion(os_version);
                 }

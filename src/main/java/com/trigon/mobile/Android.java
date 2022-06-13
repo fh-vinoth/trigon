@@ -45,7 +45,7 @@ public class Android extends IOS {
                 androidCaps.setCapability("project", context.getSuite().getName());
 
                 androidCaps.setCapability("name", xmlTest.getName()+"_"+tEnv().getCurrentTestClassName());
-                //androidCaps.setCapability("browserstack.appium_version", "1.17.0");
+                androidCaps.setCapability("browserstack.appium_version", "1.22.0");
                 androidCaps.setCapability("browserstack.acceptInsecureCerts", "true");
                 androidCaps.setCapability("browserstack.networkLogs",true);
                 androidCaps.setCapability("browserstack.console","errors");
