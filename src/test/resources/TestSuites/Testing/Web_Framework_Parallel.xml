@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="WEB Parallel_Framework" parallel="classes" thread-count="4">
+<suite name="Web Parallel Framework" parallel="tests" thread-count="4">
 
-    <listeners>
-        <listener class-name="com.trigon.listeners.TestListener"/>
-    </listeners>
     <test name="Web Parallel-FrameworkTest1">
-<!--     <parameter name="jsonFilePath" value="1"></parameter>-->
 
         <classes>
             <class name="com.fh.unittests.frameworktest.frameworkTest"/>
-<!--            <class name="com.fh.unittests.frameworktest.frameworkTest2"></class>-->
-
         </classes>
     </test>
-<!--    <test name="Web Prarabj_uggyg">-->
-<!--        <classes>-->
-<!--        </classes>-->
-<!--    </test>-->
-
 <!--    <test name="Web Parallel FrameworkTest2">-->
 <!--        <classes>-->
 <!--            <class name="com.fh.unittests.frameworktest.frameworkTest"/>-->
