@@ -1,6 +1,7 @@
 package com.trigon.testbase;
 
 import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.model.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -25,6 +26,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class TestController extends TestInitialization {
@@ -165,26 +168,26 @@ public class TestController extends TestInitialization {
             } else {
                 failStatusCheck(method);
             }
-            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
 
-            }else{
             if(result.getStatus()==2 && initFailedLogs!=null) {
                 List<Log> abc=  extent.getReport().getTestList().stream().filter(modules -> xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
                         tEnv().getCurrentTestClassName().equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> method.getName().equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> initFailedLogs.contains(logs.getDetails())).collect(Collectors.toList());
 
-                   for(Log l : abc)
-                   {   if(!l.getStatus().toString().equalsIgnoreCase("Fail"))
-                       {
-                           logReport("Fail", l.getDetails() + " - Initial Execution Failure");
-                       }
-                       initFailedLogs.remove(l.getDetails());
-                   }
-                   if(!initFailedLogs.isEmpty())
-                   {
-                       for(String s: initFailedLogs)
-                       logReport("Fail",  s+ " - Initial Execution Failure");
-                   }
+                for(Log l : abc)
+                {   if(!l.getStatus().toString().equalsIgnoreCase("Fail"))
+                    {
+                    logReport("Fail", l.getDetails());  //Initial Execution Failure Reporting
+                    }
+                    initFailedLogs.remove(l.getDetails());
+                }
+                if(!initFailedLogs.isEmpty())
+                {
+                    for(String s: initFailedLogs)
+                        logReport("Fail",  s);   //Initial Execution Failure Reporting
+                }
             }
+            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
+            }else
             if (!context.getSuite().getName().contains("adhoc")) {
                 closeBrowserClassLevel();
             }
