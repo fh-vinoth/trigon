@@ -30,7 +30,7 @@ public class DBController extends TrigonUtils {
                 String sshuser = tEnv().getDbSSHUser();
                 int sshPort = 22;
                 if(tEnv().getApiEnvType().equalsIgnoreCase("PRE-PROD") || tEnv().getApiEnvType().equalsIgnoreCase("PROD")){
-                    sshPort = 7599;
+                    sshPort = 5457;
                     if(tEnv().getDbName().equalsIgnoreCase("sit_foxy_project56")){
                         logger.error("Please check your DB config based on "+tEnv().getApiEnvType()+" environment");
                     }

@@ -56,7 +56,7 @@ public class EmailReport {
             if(pipelineExecution.equalsIgnoreCase("true")){
                 subject = "Pipeline|BVT : "+"" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
             }else{
-                subject = "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
+                subject = "" + suiteName + " | "+tEnv().getTest_region()+" | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
             }
 
             writer.beginObject();

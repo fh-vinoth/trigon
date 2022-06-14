@@ -58,7 +58,7 @@ public class TestInitialization extends Browsers {
                 System.exit(0);
             }
             if (mobileApps.contains(platformType.toLowerCase())) {
-                if (tType[1].equalsIgnoreCase("Android") || tType[1].equalsIgnoreCase("IOS")) {
+                if (tType[1].equalsIgnoreCase("Android") || tType[1].equalsIgnoreCase("AndroidBrowser") || tType[1].equalsIgnoreCase("IOS") ||tType[1].equalsIgnoreCase("IOSBrowser")) {
                     appType = tType[1].toLowerCase();
                 } else {
                     Assert.fail("Modify Your SuiteName as per standard structure : Example: MOBILE_ANDROID/MYT_ANDROID/D2S_ANDROID/FHAPP_IOS/CA_ANDROID/MYPOS_ANDROID/APOS_ANDROID_FUSIONApp_ANDROID");
@@ -413,11 +413,20 @@ public class TestInitialization extends Browsers {
                     //testEnvVariables = "<div>" + tEnv().getAndroidDevice() + "</div><div>" + tEnv().getAndroidOSVersion() + "</div><div>" + tEnv().getAndroidBuildNumber() + "</div>";
                     testEnvVariables = tEnv().getAndroidDevice() + " : " + tEnv().getAndroidOSVersion() + " : " + tEnv().getAndroidBuildNumber();
                 }
+                if (appType.equalsIgnoreCase("androidBrowser")) {
+                    //testEnvVariables = "<div>" + tEnv().getAndroidDevice() + "</div><div>" + tEnv().getAndroidOSVersion() + "</div><div>" + tEnv().getAndroidBuildNumber() + "</div>";
+                    testEnvVariables = tEnv().getAndroidDevice() + " : " + tEnv().getAndroidOSVersion() + " : " + tEnv().getWebBrowserVersion();
+                }
                 try {
                     if (tEnv().getIosDevice() != null) {
                         if (appType.equalsIgnoreCase("ios")) {
                             // testEnvVariables = "<div>" + tEnv().getIosDevice() + "</div><div>" + tEnv().getIosOSVersion() + "</div><div>" + tEnv().getIosBuildNumber() + "</div>";
                             testEnvVariables = tEnv().getIosDevice() + " : " + tEnv().getIosOSVersion() + " : " + tEnv().getIosBuildNumber();
+
+                        }
+                        if (appType.equalsIgnoreCase("iosBrowser")) {
+                            // testEnvVariables = "<div>" + tEnv().getIosDevice() + "</div><div>" + tEnv().getIosOSVersion() + "</div><div>" + tEnv().getIosBuildNumber() + "</div>";
+                            testEnvVariables = tEnv().getIosDevice() + " : " + tEnv().getIosOSVersion() + " : " + tEnv().getWebBrowserVersion();
 
                         }
                     }
@@ -492,8 +501,16 @@ public class TestInitialization extends Browsers {
                     tEnv().setElementLocator("Android");
                     androidNative(context, xmlTest);
                 }
+                if (tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+                    tEnv().setElementLocator("Web");
+                    androidNative(context, xmlTest);
+                }
                 if (tEnv().getAppType().equalsIgnoreCase("ios")) {
                     tEnv().setElementLocator("IOS");
+                    nativeiOS(context, xmlTest);
+                }
+                if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                    tEnv().setElementLocator("Web");
                     nativeiOS(context, xmlTest);
                 }
             }
@@ -508,8 +525,14 @@ public class TestInitialization extends Browsers {
                 if (tEnv().getAppType().equalsIgnoreCase("Android")) {
                     tEnv().setElementLocator("Android");
                 }
+                if (tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+                    tEnv().setElementLocator("Web");
+                }
                 if (tEnv().getAppType().equalsIgnoreCase("ios")) {
                     tEnv().setElementLocator("IOS");
+                }
+                if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                    tEnv().setElementLocator("Web");
                 }
             }
         } catch (Exception e) {
@@ -597,6 +620,21 @@ public class TestInitialization extends Browsers {
                             tEnv().setAndroidOSVersion(tLocalEnv.getAndroid().getOs());
                         }
                     }
+                    if (appType.equalsIgnoreCase("AndroidBrowser")) {
+                        try {
+                            tEnv().setAndroidDevice(tLocalEnv.getAndroid().getRegion_android_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("device").getAsString());
+                            tEnv().setAndroidOSVersion(tLocalEnv.getAndroid().getRegion_android_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("os").getAsString());
+                            tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
+                        } catch (Exception e) {
+                            if (tRemoteEnv.getTest_region() != null) {
+                                logger.error("test_region is given as " + tRemoteEnv.getTest_region() + " in remote-env.json; Which is not present in test-env.json under Android devices!! Hence proceeding with default devices");
+                            } else {
+                                logger.error("test_region is not given in remote-env.json; Hence proceeding with default devices");
+                            }
+                            tEnv().setAndroidDevice(tLocalEnv.getAndroid().getDevice());
+                            tEnv().setAndroidOSVersion(tLocalEnv.getAndroid().getOs());
+                        }
+                    }
                 }
             }
 
@@ -609,6 +647,21 @@ public class TestInitialization extends Browsers {
                         try {
                             tEnv().setIosDevice(tLocalEnv.getIos().getRegion_ios_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("device").getAsString());
                             tEnv().setIosOSVersion(tLocalEnv.getIos().getRegion_ios_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("os").getAsString());
+                        } catch (Exception e) {
+                            if (tRemoteEnv.getTest_region() != null) {
+                                logger.error("test_region is given as " + tRemoteEnv.getTest_region() + " in remote-env.json; Which is not present in test-env.json under ios devices!! Hence proceeding with default devices");
+                            } else {
+                                logger.error("test_region is not given in remote-env.json; Hence proceeding with default devices");
+                            }
+                            tEnv().setIosDevice(tLocalEnv.getIos().getDevice());
+                            tEnv().setIosOSVersion(tLocalEnv.getIos().getOs());
+                        }
+                    }
+                    if (appType.equalsIgnoreCase("iosBrowser")) {
+                        try {
+                            tEnv().setIosDevice(tLocalEnv.getIos().getRegion_ios_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("device").getAsString());
+                            tEnv().setIosOSVersion(tLocalEnv.getIos().getRegion_ios_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("os").getAsString());
+                            tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
                         } catch (Exception e) {
                             if (tRemoteEnv.getTest_region() != null) {
                                 logger.error("test_region is given as " + tRemoteEnv.getTest_region() + " in remote-env.json; Which is not present in test-env.json under ios devices!! Hence proceeding with default devices");
@@ -669,11 +722,11 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebUrl(url);
             }
             if (device != null) {
-                if ((tLocalEnv.getAndroid() != null) && (appType.equalsIgnoreCase("Android"))) {
+                if ((tLocalEnv.getAndroid() != null) && ((appType.equalsIgnoreCase("Android") || appType.equalsIgnoreCase("AndroidBrowser")))) {
                     tEnv().setAndroidDevice(device);
                     tEnv().setAndroidOSVersion(os_version);
                 }
-                if ((tLocalEnv.getIos() != null) && (appType.equalsIgnoreCase("ios"))) {
+                if ((tLocalEnv.getIos() != null) && ((appType.equalsIgnoreCase("ios") || appType.equalsIgnoreCase("iosBrowser")))) {
                     tEnv().setIosDevice(device);
                     tEnv().setIosOSVersion(os_version);
                 }

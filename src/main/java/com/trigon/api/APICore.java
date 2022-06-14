@@ -627,8 +627,7 @@ public class APICore extends ReportManager {
                 expectedResponse.clear();
             }
             if (dataTableCollectionApi.get().size() > 0) {
-                Gson pGson = new GsonBuilder().create();
-                String responseJSON = dataTableCollectionApi.get().get(0).get("responseJSON").toString();
+                Object responseJSON = dataTableCollectionApi.get().get(0).get("responseJSON");
                 String curl = dataTableCollectionApi.get().get(0).get("curl").toString();
                 Object statusCodeData = dataTableCollectionApi.get().get(0).get("statusCode");
                 Object responseTime = dataTableCollectionApi.get().get(0).get("responseTime");
@@ -656,10 +655,10 @@ public class APICore extends ReportManager {
                 dataTableCollectionApi.get().get(0).remove("apiTestStatus");
 
                 if (apiTestStatus.equals("FAILED")) {
-                    logMultipleJSON("FAIL", pGson.toJson(dataTableCollectionApi.get().get(0)), responseJSON, curl, pGson.toJson(respValidation));
+                    logMultipleJSON("FAIL", dataTableCollectionApi.get().get(0), responseJSON, curl, respValidation);
                     logApiReport("FAIL", dataTableCollectionApi.get().get(0).get("failReason").toString());
                 } else {
-                    logMultipleJSON("PASS", pGson.toJson(dataTableCollectionApi.get().get(0)), responseJSON, curl, pGson.toJson(respValidation));
+                    logMultipleJSON("PASS", dataTableCollectionApi.get().get(0), responseJSON, curl, respValidation);
                 }
                 if (tEnv().getTestType().equalsIgnoreCase("api")) {
                     logger.info(responseJSON);

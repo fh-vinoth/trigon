@@ -8,10 +8,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -22,6 +26,7 @@ import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +42,9 @@ public class Browsers extends Android {
             browserType = tEnv().getWebBrowser();
         }
         if (extent != null) {
-            extentClassNode.get().assignDevice(browserType);
+            if(extentClassNode.get()!=null){
+                extentClassNode.get().assignDevice(browserType);
+            }
         }
         switch (browserType) {
             case "chrome":
@@ -115,6 +122,54 @@ public class Browsers extends Android {
                 } catch (Exception sn) {
                     captureException(sn);
                     //hardFail("Safari Session Not created !!");
+                }
+                break;
+            case "edge":
+                try {
+                    if (executionType.equalsIgnoreCase("local")) {
+                        EdgeDriver options = new EdgeDriver();
+                        //options.setAutomaticInspection(true);
+                        webDriverThreadLocal.set(new EdgeDriver());
+                    } else {
+                        remoteExecution(context, xmlTest);
+                    }
+                    launchURL(context);
+                } catch (Exception sn) {
+                    captureException(sn);
+                    sn.printStackTrace();
+                    //hardFail("Chrome Session Not created !!");
+                }
+                break;
+            case "opera":
+                try {
+                    if (executionType.equalsIgnoreCase("local")) {
+                        OperaDriver options = new OperaDriver();
+                        //options.setAutomaticInspection(true);
+                        webDriverThreadLocal.set(new OperaDriver());
+                    } else {
+                        remoteExecution(context, xmlTest);
+                    }
+                    launchURL(context);
+                } catch (Exception sn) {
+                    captureException(sn);
+                    sn.printStackTrace();
+                    //hardFail("Chrome Session Not created !!");
+                }
+                break;
+            case "ie":
+                try {
+                    if (executionType.equalsIgnoreCase("local")) {
+                        InternetExplorerOptions options = new InternetExplorerOptions();
+                        options.waitForUploadDialogUpTo(Duration.ofSeconds(2));
+                        WebDriver driver = new RemoteWebDriver(options);
+                    } else {
+                        remoteExecution(context, xmlTest);
+                    }
+                    launchURL(context);
+                } catch (Exception sn) {
+                    captureException(sn);
+                    sn.printStackTrace();
+                    //hardFail("Chrome Session Not created !!");
                 }
                 break;
         }
@@ -213,13 +268,14 @@ public class Browsers extends Android {
                     if (executionType.equalsIgnoreCase("remote")) {
                         String sessionId = ios().getSessionId().toString();
                         logReport("INFO", "<b>BS Video:</b> <a href=\"https://app-automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\"> View Recorded Video </a>");
-
-                        if (classFailAnalysisThread.get().size() > 0) {
-                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
-
+                        if (classFailAnalysisThread.get() != null) {
+                            if (classFailAnalysisThread.get().size() > 0) {
+                                jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                            }
                         } else {
                             jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
                         }
+
                     }
                     ios().quit();
                     logger.info("IOS App Quit Successful");
@@ -236,10 +292,10 @@ public class Browsers extends Android {
                     if (executionType.equalsIgnoreCase("remote")) {
                         String sessionId = android().getSessionId().toString();
                         logReport("INFO", "<b>BS Video:</b> <a href=\"https://app-automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\"> View Recorded Video </a>");
-
-                        if (classFailAnalysisThread.get().size() > 0) {
-                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report -> " + classFailAnalysisThread.get().get(0) + "\"}}");
-
+                        if (classFailAnalysisThread.get() != null) {
+                            if (classFailAnalysisThread.get().size() > 0) {
+                                jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                            }
                         } else {
                             jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
                         }
@@ -274,13 +330,12 @@ public class Browsers extends Android {
                     if (executionType.equalsIgnoreCase("remote")) {
                         String sessionId = browser().getSessionId().toString();
                         logReport("INFO", "<b>BS Video:</b> <a href=\"https://automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\"> View Recorded Video </a>");
-
-                        if (classFailAnalysisThread.get().size() > 0) {
-                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
-
+                        if (classFailAnalysisThread.get()!= null) {
+                            if (classFailAnalysisThread.get().size() > 0) {
+                                jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                            }
                         } else {
                             jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
-
                         }
                     }
                     browser().quit();

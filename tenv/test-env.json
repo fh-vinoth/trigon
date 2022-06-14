@@ -1,7 +1,7 @@
 {
   "api": {
     "URI": "https://sit-api.t2scdn.com/",
-    "version": "V1.9",
+    "version": "",
     "envType": "",
     "appSycURI": "",
     "appSycAuth": ""
@@ -11,9 +11,9 @@
     "system_os_version": "Catalina",
     "browser": "chrome",
     "headless": "false",
-    "browser_version": "83",
-    "url": "https://amazon.com/",
-    "build_number": "pr-api-108"
+    "browser_version": "90",
+    "url": "https://myt-web.fhcdn.dev/",
+    "build_number": "MYT-MobileWeb"
   },
   "android": {
     "app_package": "com.android.calculator2",
@@ -124,7 +124,8 @@
       "currency": "£",
       "timezone": "GMT+1",
       "phoneNumber": "07032542435",
-      "emailId": "teamautomation16@gmail.com"
+      "emailId": "teamautomation16@gmail.com",
+      "accessToken": ""
     },
     "UK5": {
       "locale": "united kingdom",
