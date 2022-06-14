@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -175,9 +176,9 @@ public class TestController extends TestInitialization {
 
                 for(Log l : abc)
                 {   if(!l.getStatus().toString().equalsIgnoreCase("Fail"))
-                    {
+                {
                     logReport("Fail", l.getDetails());  //Initial Execution Failure Reporting
-                    }
+                }
                     initFailedLogs.remove(l.getDetails());
                 }
                 if(!initFailedLogs.isEmpty())
@@ -187,8 +188,8 @@ public class TestController extends TestInitialization {
                 }
             }
             if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
-            }else
-            if (!context.getSuite().getName().contains("adhoc")) {
+
+            }else{
                 closeBrowserClassLevel();
             }
             if (context.getSuite().getName().contains("adhoc_parallel")) {
