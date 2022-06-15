@@ -484,7 +484,17 @@ public class PerformElementAction extends ElementStrategyImpl {
                 }
             }
         } catch (WebDriverException we) {
-            hardFail("Failed to Hide Keyboard!! Application Crashed", "");
+            try{
+                if (ios() != null) {
+                    if (ios().isKeyboardShown()) {
+                        ios().hideKeyboard("Return");
+                    }else{
+                        logger.error("Keyboard is not visible or Application must be closed.");
+                    }
+                }
+            }catch (WebDriverException wde) {
+                hardFail("Failed to Hide Keyboard!! Application Crashed", "");
+            }
         }
     }
 
