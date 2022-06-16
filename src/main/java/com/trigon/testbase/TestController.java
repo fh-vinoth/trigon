@@ -171,20 +171,20 @@ public class TestController extends TestInitialization {
             }
 
             if(result.getStatus()==2 && initFailedLogs!=null) {
-                List<Log> abc=  extent.getReport().getTestList().stream().filter(modules -> xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+                List<Log> currentLogs=  extent.getReport().getTestList().stream().filter(modules -> xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
                         tEnv().getCurrentTestClassName().equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> method.getName().equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> initFailedLogs.contains(logs.getDetails())).collect(Collectors.toList());
 
-                for(Log l : abc)
-                {   if(!l.getStatus().toString().equalsIgnoreCase("Fail"))
+                for(Log currentLog : currentLogs)
+                {   if(!currentLog.getStatus().toString().equalsIgnoreCase("Fail"))
                 {
-                    logReport("Fail", l.getDetails());  //Initial Execution Failure Reporting
+                    logReport("Fail", currentLog.getDetails());  //Initial Execution Failure Reporting
                 }
-                    initFailedLogs.remove(l.getDetails());
+                    initFailedLogs.remove(currentLog.getDetails());
                 }
                 if(!initFailedLogs.isEmpty())
                 {
-                    for(String s: initFailedLogs)
-                        logReport("Fail",  s);   //Initial Execution Failure Reporting
+                    for(String logDetail: initFailedLogs)
+                        logReport("Fail",  logDetail);   //Initial Execution Failure Reporting
                 }
             }
             if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
@@ -360,10 +360,10 @@ public class TestController extends TestInitialization {
     }
     public List<String> getInitialFailureMessages(String testName, String className, String methodName)
     {
-        List<String> aa=new ArrayList<>();
+        List<String> failedSteps=new ArrayList<>();
        extent.getReport().getTestList().stream().filter(modules -> testName.equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
-                className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("Fail")).collect(Collectors.toList()).forEach(failLog -> aa.add(failLog.getDetails()));
-     return aa;
+                className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("Fail")).collect(Collectors.toList()).forEach(failLog -> failedSteps.add(failLog.getDetails()));
+     return failedSteps;
     }
 
 }
