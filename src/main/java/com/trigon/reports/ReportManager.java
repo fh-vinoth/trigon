@@ -12,6 +12,7 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.Assert;
 
@@ -72,6 +73,22 @@ public class ReportManager extends CustomReport {
         }
     }
 
+    public void getBSVideoSession(){
+        Object response = null;
+        if(ios()!=null) {
+           response  = ios().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        }
+        if(android()!=null) {
+            response  = android().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        }
+        if(browser()!=null) {
+            response  = browser().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        }
+
+        JSONObject bsResponse = new JSONObject(response.toString());
+        logReport("INFO", "<b>BS Video:</b> <a href=\""+bsResponse.get("public_url").toString()+"\" target=\"_blank\"> View Recorded Video </a>");
+    }
+
     public void logMultipleJSON(String status, LinkedHashMap message, Object responseJSON, String curl, LinkedHashMap responseValidation) {
         String apiName = "API : "+getAPIMethodName();
         Gson pGson1 = new GsonBuilder().create();
@@ -80,7 +97,7 @@ public class ReportManager extends CustomReport {
         try {
             if (status.equalsIgnoreCase("PASS")) {
 
-                if(tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true") && tEnv().getTestType().equalsIgnoreCase("api")){
+                if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
                      m = apiName + " is PASSED";
                 }
                 if (extentScenarioNode.get() != null) {
@@ -975,7 +992,7 @@ public class ReportManager extends CustomReport {
     private void logInfo(String message, boolean screenshotMode) {
         String replacedMessage = message;
         logger.info(replacedMessage.replace("<br>",""));
-        if(tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true") && tEnv().getTestType().equalsIgnoreCase("api")){
+        if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
 
         }else{
             if (extentScenarioNode.get() != null) {
@@ -1022,7 +1039,7 @@ public class ReportManager extends CustomReport {
     private void logPass(String message, boolean screenshotMode) {
         String replacedMessage = message;
         logger.info(replacedMessage.replace("<br>",""));
-        if(tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true") && tEnv().getTestType().equalsIgnoreCase("api")){
+        if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
 
         }else{
             if (extentScenarioNode.get() != null) {

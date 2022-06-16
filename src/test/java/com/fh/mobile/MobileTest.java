@@ -11,7 +11,8 @@ public class MobileTest extends TestLocalController {
     public void sanity_Orders_AllRegions() {
         try {
             author_ScenarioName("Srikrishna", "To check if the build fulfills the acceptance criteria");
-            sample();
+            //sample();
+            System.out.println("Testing");
         } catch (Exception e) {
             hardFail("sanity failed");
         } finally {
