@@ -262,12 +262,9 @@ public class Browsers extends Android {
         if (mobileApps.contains(tEnv().getTestType())) {
             try {
                 if (ios() != null) {
-                    ios().getSessionId();
-                    logger.info("IOS Session ID" + ios().getSessionId());
                     JavascriptExecutor jse = ios();
                     if (executionType.equalsIgnoreCase("remote")) {
-                        String sessionId = ios().getSessionId().toString();
-                        logReport("INFO", "<b>BS Video:</b> <a href=\"https://app-automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\"> View Recorded Video </a>");
+                        getBSVideoSession();
                         if (classFailAnalysisThread.get() != null) {
                             if (classFailAnalysisThread.get().size() > 0) {
                                 jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
@@ -286,12 +283,9 @@ public class Browsers extends Android {
             }
             try {
                 if (android() != null) {
-                    android().getSessionId();
-                    logger.info("Android Session ID" + android().getSessionId());
                     JavascriptExecutor jse = android();
                     if (executionType.equalsIgnoreCase("remote")) {
-                        String sessionId = android().getSessionId().toString();
-                        logReport("INFO", "<b>BS Video:</b> <a href=\"https://app-automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\"> View Recorded Video </a>");
+                        getBSVideoSession();
                         if (classFailAnalysisThread.get() != null) {
                             if (classFailAnalysisThread.get().size() > 0) {
                                 jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
@@ -323,13 +317,9 @@ public class Browsers extends Android {
         if (webApps.contains(tEnv().getTestType())) {
             try {
                 if (browser() != null) {
-                    //browser().close();
-                    browser().getSessionId();
                     JavascriptExecutor jse = browser();
-
                     if (executionType.equalsIgnoreCase("remote")) {
-                        String sessionId = browser().getSessionId().toString();
-                        logReport("INFO", "<b>BS Video:</b> <a href=\"https://automate.browserstack.com/dashboard/v2/sessions/" + sessionId + " \" target=\"_blank\"> View Recorded Video </a>");
+                        getBSVideoSession();
                         if (classFailAnalysisThread.get()!= null) {
                             if (classFailAnalysisThread.get().size() > 0) {
                                 jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
