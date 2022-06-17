@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodHub API Detailed Report</title>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css' rel='stylesheet prefetch'>
+    <script src="https://t2s-staging-automation.s3.amazonaws.com/Docs/api-css/jsontree.js"></script>
+
+</head>
+<body>
+
+<div class="dark" id="container">
+    <div class="container-fluid">
+
+        <div class="col-md-12 col-sm-12">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#m_name_1-1-1">Request</a></li>
+                <li><a class="" data-toggle="tab" href="#m_name_1-1-2">RequestStyle1</a></li>
+                <li><a class="" data-toggle="tab" href="#m_name_1-1-3">Response</a></li>
+                <li><a class="" data-toggle="tab" href="#m_name_1-1-4">Curl</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="m_name_1-1-1">
+                    <div class="table-responsive quiz-window-body">
+                        <table class="table table-borderless">
+                            <thead>
+                            <tr class="guiz-awards-row guiz-awards-header">
+                                <th>HttpMethod/Endpoint <br>Response Time</th>
+                                <th>RequestHeaders/<br>Cookies</th>
+                                <th>QueryParams/<br>PathParams</th>
+                                <th>FormParams/<br>RequestBody</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="guiz-awards-row guiz-awards-row-even">
+                                <td>
+                                    <b>PUT</b>:settings/802572
+                                    <br> <b>Response
+                                    Time:</b> 0.391
+                                </td>
+                                <td>
+                                    <b>locale</b> : united kingdom<br>
+                                    <b>region</b> : 1<br>
+                                    <b>Content-Type</b> : application/x-www-form-urlencoded<br>
+                                </td>
+                                <td>
+                                    <b>api_token</b> : c0eddd85f54bb325847a1f298b29deb0<br>
+                                </td>
+                                <td>
+                                    <b>currency</b> : 1<br>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="m_name_1-1-2">
+                    <div class="table-responsive quiz-window-body">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td colspan="5">
+
+                                         <pre>
+                                                            <div class='json-tree'
+                                                                 id='responseCopy_1-1-10'></div>
+                                                            <script>function jsonTreeCreate1() {
+                                                                document.getElementById('responseCopy_1-1-10').innerHTML = JSONTree.create({
+                                                                    "URI": "https://api-preprod.t2sonline.com",
+                                                                    "queryParams": {
+                                                                        "api_token": "J6WDf00hQKGhfYhQkbRCjwraBS11JYuIDx"
+                                                                    },
+                                                                    "formParams": {
+                                                                        "tag": "foodhub-db",
+                                                                        "key": "country"
+                                                                    },
+                                                                    "httpMethod": "POST",
+                                                                    "endPoint": "clear/cache",
+                                                                    "responseTime": "1.641",
+                                                                    "statusCode": {
+                                                                        "ACT": "200",
+                                                                        "EXP": "200"
+                                                                    },
+                                                                    "expectedResponse": {
+                                                                        "outcome": "success"
+                                                                    },
+                                                                    "actualResponse": {
+                                                                        "outcome": "success"
+                                                                    },
+                                                                    "apiTestStatus": "PASSED"
+                                                                });
+                                                            }
+
+                                                            jsonTreeCreate1();</script>
+                                                    </pre>
+                                    <button class="btn" data-clipboard-target="#responseCopy_1-1-10"
+                                            data-toggle="tooltip"
+                                            title="Copy to Clipboard">
+                                        <img alt="Copy" height="20em"
+                                             src="https://t2s-staging-automation.s3.amazonaws.com/Docs/clipboard/clippy.svg"
+                                             width="20em"></button>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="m_name_1-1-3">
+                    <div class="table-responsive quiz-window-body">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td colspan="5">
+
+                                         <pre>
+                                                            <div class='json-tree'
+                                                                 id='responseCopy_1-1-3'></div>
+                                                            <script>function jsonTreeCreate1() {
+                                                                document.getElementById('responseCopy_1-1-3').innerHTML = JSONTree.create({"outcome": "success"});
+                                                            }
+
+                                                            jsonTreeCreate1();</script>
+                                                    </pre>
+                                    <button class="btn" data-clipboard-target="#responseCopy_1-1-3"
+                                            data-toggle="tooltip"
+                                            title="Copy to Clipboard">
+                                        <img alt="Copy" height="20em"
+                                             src="https://t2s-staging-automation.s3.amazonaws.com/Docs/clipboard/clippy.svg"
+                                             width="20em"></button>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="m_name_1-1-4">
+                    <div class="table-responsive quiz-window-body">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td colspan="5">
+
+                                         <pre>
+                                                            <div class='json-tree'
+                                                                 id='responseCopy_1-1-4'></div>
+                                                            <script>function jsonTreeCreate1() {
+                                                                document.getElementById('responseCopy_1-1-4').innerHTML = JSONTree.create(["curl --location -g --request POST '{{url}}/foodhub/takeaway/list?api_token=99b8ad5d2f9e80889efcd73bc31f7e7b' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'postcode=ST6 6DX'"]);
+                                                            }
+
+                                                            jsonTreeCreate1();</script>
+                                                    </pre>
+                                    <button class="btn" data-clipboard-target="#responseCopy_1-1-4"
+                                            data-toggle="tooltip"
+                                            title="Copy to Clipboard">
+                                        <img alt="Copy" height="20em"
+                                             src="https://t2s-staging-automation.s3.amazonaws.com/Docs/clipboard/clippy.svg"
+                                             width="20em"></button>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>
+<script src="https://t2s-staging-automation.s3.amazonaws.com/Docs/clipboard/clipboard.min.js"></script>
+
+<script>
+    let clipboard = new ClipboardJS('.btn');
+    clipboard.on('success', function (e) {
+        console.log(e);
+    });
+    clipboard.on('error', function (e) {
+        console.log(e);
+    });
+</script>
+
+</body>
+</html>

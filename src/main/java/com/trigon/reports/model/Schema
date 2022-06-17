@@ -1,0 +1,60 @@
+Suite Table
+---------------------------------------------------
+suiteId
+suiteName
+suiteStartTime
+suiteEndTime
+suiteTotalTime
+testType
+platformType
+buildNumber
+executedBy
+executionType
+reportLinks [ detailedReport,emailReport,logs]
+suiteStatus [ PASSED,FAILED,SKIPPED,EXCEPTION]
+
+Module Table
+---------------------------------------------------
+moduleId
+moduleName
+moduleStartTime
+moduleEndTime
+moduleTotalTime
+moduleParams
+moduleStatus [ PASSED,FAILED,SKIPPED,EXCEPTION]
+
+Class Table
+---------------------------------------------------
+classId
+className
+classStartTime
+classEndTime
+classTotalTime
+classParams
+classStatus [ PASSED,FAILED,SKIPPED,EXCEPTION]
+
+Method Table
+---------------------------------------------------
+methodId
+methodName
+methodStartTime
+methodEndTime
+methodTotalTime
+methodParams
+methodStatus [ PASSED,FAILED,SKIPPED,EXCEPTION]
+
+nodeId
+nodeStatus[ PASSED,FAILED,SKIPPED,EXCEPTION]
+
+childNodeId
+childNodeStatus[ PASSED,FAILED,SKIPPED,EXCEPTION]
+
+logStatus
+logSteps
+
+ElementHistory
+suiteId
+buildID
+elementName
+platformType
+elementLocator

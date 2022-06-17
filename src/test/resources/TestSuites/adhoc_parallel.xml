@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="web_adhoc_parallel" data-provider-thread-count="5">
+    <parameter name="excelFilePath" value="src/test/resources/TestData/ParallelTest.xlsx"></parameter>
+    <test name="HeyYou">
+        <classes>
+            <class name="com.fh.unittests.frameworktest.CReport"/>
+        </classes>
+    </test>
+</suite>

@@ -5,14 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonWriter;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
 import com.trigon.email.SendEmail;
 import com.trigon.reports.EmailReport;
 import com.trigon.testrail.BaseMethods;
 import com.trigon.testrail.Runs;
 import com.trigon.utils.CommonUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
@@ -20,11 +18,14 @@ import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org.testng.xml.XmlTest;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 
 public class TestController extends TestInitialization {
@@ -48,31 +49,38 @@ public class TestController extends TestInitialization {
             if (executionType == null) {
                 executionType = "local";
             }
-            if(extent!=null){
+            if (extent != null) {
                 extent.setSystemInfo("testExecutionType", executionType);
             }
 
-        } catch (FileNotFoundException fe){
+        } catch (FileNotFoundException fe) {
             captureException(fe);
-        }catch (Exception e) {
+        } catch (Exception e) {
             captureException(e);
         }
     }
 
 
-    protected void moduleInitilalization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath,@Optional String excelFilePath,
-                                         @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType,@Optional String url, @Optional String browser,
+    protected void moduleInitilalization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
+                                         @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                                         @Optional String URI, @Optional String version, @Optional String token,@Optional String accessToken,@Optional String isJWT, @Optional String endpointPrefix,
+                                         @Optional String URI,@Optional String envType,@Optional String appSycURI,@Optional String appSycAuth, @Optional String version, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
                                          @Optional String store, @Optional String host, @Optional String locale,
                                          @Optional String region, @Optional String country, @Optional String currency,
-                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId ,@Optional String test_region,@Optional String browserstack_execution_local,@Optional String bs_app_path,@Optional String productName) {
+                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName) {
         try {
             if (platformType != null) {
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
-                setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token,accessToken,isJWT,endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName(),bs_app_path,productName);
+                setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI, envType,appSycURI,appSycAuth,version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
+
+                if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")){
+                    remoteBrowserInit(context, xmlTest);
+                }
+                if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
+                    remoteMobileInit(context, xmlTest);
+                }
                 moduleFailAnalysisThread.set(new ArrayList<>());
                 testModuleCollection(xmlTest.getName());
             }
@@ -82,16 +90,16 @@ public class TestController extends TestInitialization {
     }
 
     protected void classInitialization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
-                                       @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType,@Optional String url,@Optional String browser,
+                                       @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                                        @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                                       @Optional String URI, @Optional String version, @Optional String token,@Optional String accessToken,@Optional String isJWT, @Optional String endpointPrefix,
+                                       @Optional String URI, @Optional String envType,@Optional String appSycURI,@Optional String appSycAuth,@Optional String version, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
                                        @Optional String store, @Optional String host, @Optional String locale,
                                        @Optional String region, @Optional String country, @Optional String currency,
-                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId,@Optional String test_region,@Optional String browserstack_execution_local,@Optional String bs_app_path,@Optional String productName) {
+                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName) {
         try {
             logger.info("Test Execution Started for Class  : " + getClass().getSimpleName());
             classFailAnalysisThread.set(new ArrayList<>());
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType,url, browser, browserVersion, device, os_version, URI, version, token, accessToken,isJWT,endpointPrefix,store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName(),bs_app_path,productName);
+            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth, version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
             if(context.getSuite().getName().contains("adhoc")){
                 remoteBrowserInit(context, xmlTest);
             }
@@ -106,30 +114,35 @@ public class TestController extends TestInitialization {
     protected void setUp(ITestContext context, XmlTest xmlTest, Method method, @Optional String testEnvPath, @Optional String excelFilePath,
                          @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                         @Optional String URI, @Optional String version, @Optional String token,@Optional String accessToken,@Optional String isJWT, @Optional String endpointPrefix,
+                         @Optional String URI,@Optional String envType,@Optional String appSycURI,@Optional String appSycAuth, @Optional String version, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
                          @Optional String store, @Optional String host, @Optional String locale,
                          @Optional String region, @Optional String country, @Optional String currency,
-                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local,@Optional String bs_app_path,@Optional String productName) {
+                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName) {
         logger.info("Test Execution Started for Method : " + method.getName());
         try {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
-            setTestEnvironment(testEnvPath,excelFilePath,jsonFilePath,jsonDirectory,applicationType, url,browser, browserVersion, device, os_version, URI, version, token,accessToken,isJWT,endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId,test_region,browserstack_execution_local,getClass().getSimpleName(),bs_app_path,productName);
+            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
 
-            if(!context.getSuite().getName().contains("adhoc")){
+            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
+
+            }else{
                 remoteBrowserInit(context, xmlTest);
             }
-            if(webDriverThreadLocal.get()!=null){
-                System.out.println(browser().getSessionId());
+            if (context.getSuite().getName().contains("adhoc_parallel")) {
+                remoteBrowserInit(context, xmlTest);
             }
+            if (context.getSuite().getName().toLowerCase().startsWith("fusionapp")) {
 
-            remoteMobileInit(context, xmlTest);
+            }else{
+                remoteMobileInit(context, xmlTest);
+            }
             setMobileLocator();
             setWebLocator();
             failAnalysisThread.set(new ArrayList<>());
             tEnv().setContext(context);
             tEnv().setCurrentTestMethodName(method.getName());
-            createExtentMethod(context,xmlTest,method);
+            createExtentMethod(context, xmlTest, method);
 
         } catch (Exception e) {
             captureException(e);
@@ -139,22 +152,30 @@ public class TestController extends TestInitialization {
     @AfterMethod(alwaysRun = true)
     protected void processTearDown(Method method, XmlTest xmlTest, ITestContext context, ITestResult result) {
         try {
-            if(result.wasRetried()){
-                if(result.getStatus() == 3){
+            if (result.wasRetried()) {
+                if (result.getStatus() == 3) {
                     if (extentMethodNode.get() != null) {
                         extent.removeTest(extentMethodNode.get());
                     }
-                }else{
+                } else {
                     failStatusCheck(method);
                 }
-            }else{
+            } else {
                 failStatusCheck(method);
             }
-            if(!context.getSuite().getName().contains("adhoc")){
+            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
+
+            }else{
                 closeBrowserClassLevel();
             }
-            closeMobileClassLevel();
+            if (context.getSuite().getName().contains("adhoc_parallel")) {
+                closeBrowserClassLevel();
+            }
+            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
 
+            }else {
+                closeMobileClassLevel();
+            }
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
                 b.setTestCaseFinalStatus(runId, 1, "TEST PASSED", method.getName());
@@ -167,22 +188,23 @@ public class TestController extends TestInitialization {
     }
 
     @AfterClass(alwaysRun = true)
-    protected void finalValidation(ITestContext context,XmlTest xmlTest) {
+    protected void finalValidation(ITestContext context, XmlTest xmlTest) {
         try {
             dataTableCollectionApi.remove();
             logger.info("Test Execution Finished for Class  : " + getClass().getSimpleName());
             if(context.getSuite().getName().contains("adhoc")){
                 closeBrowserClassLevel();
             }
-            if(classFailAnalysisThread.get().size()>0){
-                moduleFailAnalysisThread.get().add("FAIL");
-            }else{
-               if( extentClassNode.get()!=null){
-                   extentClassNode.get().getModel().setStatus(Status.PASS);
-               }
+            if (classFailAnalysisThread.get().size() > 0) {
+                if(moduleFailAnalysisThread.get()!=null){
+                    moduleFailAnalysisThread.get().add("FAIL");
+                }
+            } else {
+                if (extentClassNode.get() != null) {
+                    extentClassNode.get().getModel().setStatus(Status.PASS);
+                }
 
             }
-
             classFailAnalysisThread.remove();
         } catch (Exception e) {
             captureException(e);
@@ -190,14 +212,20 @@ public class TestController extends TestInitialization {
     }
 
     @AfterTest(alwaysRun = true)
-    protected void methodClosure(XmlTest xmlTest) {
+    protected void methodClosure(ITestContext context,XmlTest xmlTest) {
         try {
             logger.info("Test Execution Finished for Module : " + xmlTest.getName());
-            if(extentTestNode.get()!=null){
-                if(moduleFailAnalysisThread.get().size()>0){
+            if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")){
+                closeBrowserClassLevel();
+            }
+            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
+                closeMobileClassLevel();
+            }
+            if (extentTestNode.get() != null) {
+                if (moduleFailAnalysisThread.get().size() > 0) {
 
-                }else{
-                    if(extentTestNode.get()!=null){
+                } else {
+                    if (extentTestNode.get() != null) {
                         extentTestNode.get().getModel().setStatus(Status.PASS);
                     }
 
@@ -221,38 +249,24 @@ public class TestController extends TestInitialization {
                     captureException(e);
                 }
             }
-
-            if(cReportPojo.isCustomReportStartFlag()){
-                cReportPojo.getCustomReport().write("    <tr style=\"background: #e0dbdb;height: 40px;\">\n" +
-                        "        <td colspan=\""+cReportPojo.getCustomReportHeaderSize()+"\">© 2021 - Foodhub Automation Team</td>\n" +
-                        "    </tr>\n" +
-                        "    </tbody>\n" +
-                        "</table>\n" +
-                        "</body>\n" +
-                        "</html>");
-                cReportPojo.getCustomReport().flush();
-                cReportPojo.getCustomReport().close();
-
-                JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFileHTMLPath() + "/" + "CustomReport.json")));
-                writer.beginObject().name("subject").value(iTestContext.getSuite().getName());
-                String customData = FileUtils.readFileToString(new File(trigonPaths.getTestResultsPath()+ "/" + "CustomReport.html"), StandardCharsets.UTF_8);
-                String replaceWidth = customData.replace("90%","100%");
-                writer.name("customBody").value(replaceWidth);
-                writer.endObject().flush();
-            }
+            tearDownCustomReport(iTestContext);
 
         } catch (Exception e) {
             captureException(e);
         } finally {
-            if(!iTestContext.getSuite().getName().contains("adhoc")){
-                EmailReport.createEmailReport(trigonPaths.getTestResultsPath(),extent,iTestContext.getSuite().getName(),platformType,executionType,pipelineExecution);
-                if(apiCoverage.size()>0){
+            if (!iTestContext.getSuite().getName().contains("adhoc")) {
+                getGitBranch();
+                if (apiCoverage.size() > 0) {
+                    if (extent != null) {
+                        extent.setSystemInfo("API Endpoints Covered", String.valueOf(totalEndpoints));
+                        extent.flush();
+                    }
                     getAPICoverage(apiCoverage);
                 }
-                if(executionType.equalsIgnoreCase("remote"))
-                {
-                    if(System.getProperty("user.name").equalsIgnoreCase("root")||System.getProperty("user.name").equalsIgnoreCase("ec2-user"))
-                    {
+                EmailReport.createEmailReport(trigonPaths.getTestResultsPath(), extent, iTestContext.getSuite().getName(), platformType, executionType, pipelineExecution);
+
+                if (executionType.equalsIgnoreCase("remote")) {
+                    if (System.getProperty("user.name").equalsIgnoreCase("root") || System.getProperty("user.name").equalsIgnoreCase("ec2-user")) {
                         emailTrigger();
                     }
                 }
@@ -264,19 +278,23 @@ public class TestController extends TestInitialization {
 
     private void emailTrigger() {
         SendEmail sendEmail = new SendEmail();
-        if(email_recipients !=null){
-            if(!failStatus){
-                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients,"true","false");
+        boolean emailTriggerStatus = false;
+
+        if (failure_email_recipients != null) {
+            if (failStatus && !emailTriggerStatus) {
+                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), failure_email_recipients, "true", "false");
+                emailTriggerStatus = true;
             }
         }
-        if(failure_email_recipients !=null){
-            if(failStatus){
-                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), failure_email_recipients,"true","false");
+        if (error_email_recipients != null) {
+            if (exceptionStatus && !emailTriggerStatus) {
+                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients, "true", "false");
+                emailTriggerStatus = true;
             }
         }
-        if(error_email_recipients !=null){
-            if(exceptionStatus){
-                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), error_email_recipients,"true","false");
+        if (email_recipients != null) {
+            if (!failStatus && !emailTriggerStatus) {
+                sendEmail.SendOfflineEmail(trigonPaths.getTestResultsPath(), email_recipients, "true", "false");
             }
         }
     }
@@ -292,10 +310,28 @@ public class TestController extends TestInitialization {
             }
             failStatus = true;
             classFailAnalysisThread.get().add("fail");
-        }else{
-            if(tEnv().getScreenshotPath()!=null){
+        } else {
+            if (tEnv().getScreenshotPath() != null) {
                 CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
             }
+        }
+    }
+
+    private void getGitBranch() {
+        try {
+//            Process process = Runtime.getRuntime().exec( "git branch --show-current" );
+//            Process process = Runtime.getRuntime().exec( "git rev-parse --abbrev-ref HEAD" );
+            Process process = Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD");
+            process.waitFor();
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+            executedGitBranch = reader.readLine();
+            if (executedGitBranch == null) {
+                executedGitBranch = "git-branch";
+            }
+
+        } catch (Exception e) {
+
         }
     }
 

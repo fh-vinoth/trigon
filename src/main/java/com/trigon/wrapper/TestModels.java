@@ -108,6 +108,9 @@ public class TestModels extends PerformElementAction {
         return performElementsAction(locatorString, "lisofvalues", "NA", null, wait_logReport_isPresent_Up_Down_XpathValues);
     }
 
+    public List<WebElement> findElements(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues){
+        return getWebElements(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+    }
 
     public List<String> getValueFromListByIndex(String locatorString, String i, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         return performElementsAction(locatorString, "lisofvalues", "NA", null, wait_logReport_isPresent_Up_Down_XpathValues);
@@ -261,7 +264,7 @@ public class TestModels extends PerformElementAction {
         if (browser() != null) {
             logger.info("Set Current Page url");
             browser().get(appURL);
-            browser().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+            browser().manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
             logReportWithScreenShot("PASS",
                     "Set page URL to : " + appURL);
         }

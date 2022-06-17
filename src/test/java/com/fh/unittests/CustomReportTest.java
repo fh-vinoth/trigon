@@ -3,6 +3,8 @@ package com.fh.unittests;
 import com.fh.core.TestLocalController;
 import org.testng.annotations.Test;
 
+import static com.trigon.reports.Initializers.cUtils;
+
 public class CustomReportTest extends TestLocalController {
 
     @Test
