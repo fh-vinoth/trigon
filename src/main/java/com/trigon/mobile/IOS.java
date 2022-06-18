@@ -79,7 +79,7 @@ public class IOS extends ReportManager {
                 iosCaps.setCapability(MobileCapabilityType.PLATFORM_NAME, "iOS");
                 iosCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getIosOSVersion());
                 iosCaps.setCapability("automationName", "XCUITest");
-                iosCaps.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "10000");
+                //iosCaps.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "10000");
                 iosCaps.setCapability("autoDismissAlerts", true);
                 iosCaps.setCapability("useFirstMatch", true);
                 iosCaps.setCapability("skipLogCapture", false);
@@ -92,6 +92,9 @@ public class IOS extends ReportManager {
                 iosCaps.setCapability("includeNonModalElements", true);
                 iosCaps.setCapability("snapshotTimeout", 1);
                 iosCaps.setCapability("bundleId", tEnv().getIosBundleId());
+                if(tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                    iosCaps.setCapability(MobileCapabilityType.BROWSER_NAME, "Safari");
+                }
 /*                if (tEnv().getIos().getIosLocalAppPath() != null) {
                     File iosapp = new File(tEnv().getIos().getIosLocalAppPath());
                     iosCaps.setCapability("app", iosapp.getAbsolutePath());

@@ -84,6 +84,10 @@ public class Android extends IOS {
                 androidCaps.setCapability("appPackage", tEnv().getAndroidAppPackage());
                 androidCaps.setCapability("appActivity",tEnv().getAndroidAppActivity());
                 androidCaps.setCapability("autoDismissAlerts", true);
+                if(tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+                    androidCaps.setCapability(MobileCapabilityType.BROWSER_NAME,"Chrome");
+
+                }
                 androidCaps.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "10000");
 /*                if (tEnv().getAndroidLocalAppPath() != null) {
                     File app = new File(tEnv().getAndroidLocalAppPath());
