@@ -14,6 +14,8 @@ public class TestEnv {
     private String apiAppSycAuth;
     private String apiVersion;
     private String appType;
+    private String apiPartnerURI;
+
 
     private String apiLocale;
     private String apiRegion;
@@ -598,5 +600,13 @@ public class TestEnv {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getApiPartnerURI() {
+        return apiPartnerURI;
+    }
+
+    public void setApiPartnerURI(String apiPartnerURI) {
+        this.apiPartnerURI = apiPartnerURI;
     }
 }

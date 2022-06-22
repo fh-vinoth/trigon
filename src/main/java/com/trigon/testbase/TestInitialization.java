@@ -552,7 +552,7 @@ public class TestInitialization extends Browsers {
 
     protected void setTestEnvironment(String fileName, String excelFilePath,
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version,
-                                      String URI, String envType,String appSycURI,String appSycAuth,String version, String token,
+                                      String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
                                       String accessToken, String isJWT, String endpointPrefix, String store, String host, String locale,
                                       String region, String country, String currency,
                                       String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName) {
@@ -589,6 +589,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiEnvType(tLocalEnv.getApi().getEnvType());
                 tEnv().setApiAppSycURI(tLocalEnv.getApi().getAppSycURI());
                 tEnv().setApiAppSycAuth(tLocalEnv.getApi().getAppSycAuth());
+                tEnv().setApiPartnerURI(tLocalEnv.getApi().getApiPartnerURI());
             }
 
             if (tLocalEnv.getWeb() != null) {
@@ -747,6 +748,9 @@ public class TestInitialization extends Browsers {
 
             if (version != null) {
                 tEnv().setApiVersion(version);
+            }
+            if (partnerURI != null){
+                tEnv().setApiPartnerURI(partnerURI);
             }
             if (token != null) {
                 tEnv().setApiToken(token);
