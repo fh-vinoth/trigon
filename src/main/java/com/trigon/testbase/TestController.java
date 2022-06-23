@@ -177,14 +177,14 @@ public class TestController extends TestInitialization {
                 for(Log currentLog : currentLogs)
                 {   if(!currentLog.getStatus().toString().equalsIgnoreCase("Fail"))
                 {
-                    logReport("Fail", currentLog.getDetails());  //Initial Execution Failure Reporting
+                    logReport("INFO", "<b>RETRY FAILURE</b> "+ currentLog.getDetails());  //Initial Execution Failure Reporting
                 }
                     initFailedLogs.remove(currentLog.getDetails());
                 }
                 if(!initFailedLogs.isEmpty())
                 {
                     for(String logDetail: initFailedLogs)
-                        logReport("Fail",  logDetail);   //Initial Execution Failure Reporting
+                        logReport("INFO",  "<b>RETRY FAILURE</b> "+logDetail);   //Initial Execution Failure Reporting
                 }
             }
             if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
