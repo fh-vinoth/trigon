@@ -30,6 +30,8 @@ import org.testng.xml.XmlTest;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public class TestInitialization extends Browsers {
@@ -45,6 +47,8 @@ public class TestInitialization extends Browsers {
         trigonPaths = new TrigonPaths();
         String suiteNameReplaced = suiteName.replaceAll("-", "_").replaceAll(" ", "_").trim();
         String[] tType = suiteNameReplaced.split("_");
+        mobileApps = Arrays.asList(propertiesPojo.getMobile_Apps().split(","));
+        webApps = Arrays.asList(propertiesPojo.getWeb_Apps().split(","));
         if (tType.length > 0) {
             if (tType[0].toLowerCase().equalsIgnoreCase("API") ||
                     mobileApps.contains(tType[0].toLowerCase()) || webApps.contains(tType[0].toLowerCase())) {
@@ -54,7 +58,7 @@ public class TestInitialization extends Browsers {
                 System.exit(0);
             }
             if (mobileApps.contains(platformType.toLowerCase())) {
-                if (tType[1].equalsIgnoreCase("Android") || tType[1].equalsIgnoreCase("IOS")) {
+                if (tType[1].equalsIgnoreCase("Android") || tType[1].equalsIgnoreCase("AndroidBrowser") || tType[1].equalsIgnoreCase("IOS") ||tType[1].equalsIgnoreCase("IOSBrowser")) {
                     appType = tType[1].toLowerCase();
                 } else {
                     Assert.fail("Modify Your SuiteName as per standard structure : Example: MOBILE_ANDROID/MYT_ANDROID/D2S_ANDROID/FHAPP_IOS/CA_ANDROID/MYPOS_ANDROID/APOS_ANDROID_FUSIONApp_ANDROID");
@@ -81,19 +85,19 @@ public class TestInitialization extends Browsers {
             }
             trigonPaths.setSupportSubSuiteFilePath(cUtils().createFolder(supportFilePath, "TestResultJSON", ""));
 
-            File file2 = new File("reports-path.json");
-            if (file2.exists()) {
-                file2.delete();
-            }
-            try {
-                JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter("reports-path.json", false)));
-                writer.beginObject().name("path").value(testResultsPath);
-                writer.name("testType").value(platformType);
-                writer.name("platformType").value(appType).endObject().flush();
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            File file2 = new File("reports-path.json");
+//            if (file2.exists()) {
+//                file2.delete();
+//            }
+//            try {
+//                JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter("reports-path.json", false)));
+//                writer.beginObject().name("path").value(testResultsPath);
+//                writer.name("testType").value(platformType);
+//                writer.name("platformType").value(appType).endObject().flush();
+//                writer.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             initializeExtentReport(testResultsPath, suiteNameWithTime);
         }
@@ -101,13 +105,16 @@ public class TestInitialization extends Browsers {
 
     }
 
-    protected void getAPICoverage(TreeSet<String> apiCoverage) {
+    protected void getAPICoverage(List<String> apiCoverage) {
         try {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/TestResultJSON/apiCoverage.json", false)));
+            TreeSet<String> listOfEndpoints = new TreeSet<>(apiCoverage);
+            totalEndpoints = listOfEndpoints.size();
+            Map<String,Long> getEndpointCount = apiCoverage.stream().collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
             writer.beginArray();
-            apiCoverage.forEach(ep -> {
+            getEndpointCount.forEach((k,v) -> {
                 try {
-                    writer.value(ep);
+                    writer.value(k);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -133,10 +140,73 @@ public class TestInitialization extends Browsers {
         sparkFail.config().setTimelineEnabled(false);
         sparkAll.config().setReportName(suiteNameWithTime);
         sparkAll.config().setTimelineEnabled(false);
-        sparkAll.config().setCss(".card {border-radius: 13px;}");
+
+        sparkAll.config().setCss(" .card {\n" +
+                "        border-radius: 13px;\n" +
+                "    }\n" +
+                "\n" +
+                "    .bd-clipboard {\n" +
+                "        position: relative;\n" +
+                "    / / display: none;\n" +
+                "        float: right;\n" +
+                "    }\n" +
+                "\n" +
+                "    .btn-clipboard {\n" +
+                "        position: absolute;\n" +
+                "        top: 0.65rem;\n" +
+                "        right: 0.65rem;\n" +
+                "        z-index: 10;\n" +
+                "        display: block;\n" +
+                "        padding: 0.25rem 0.5rem;\n" +
+                "        font-size: 65%;\n" +
+                "        color: #007bff;\n" +
+                "        background-color: #fff;\n" +
+                "        border: 1px solid;\n" +
+                "        border-radius: 0.25rem;\n" +
+                "        width: max-content;\n" +
+                "    }\n" +
+                "\n" +
+                "    .btn-clipboard:hover, .btn-clipboard:focus {\n" +
+                "        color: #FFFFFF;\n" +
+                "        background-color: #007bff;\n" +
+                "    }\n" +
+                "    .apiSpan{\n" +
+                "        color: #6b6b70;\n" +
+                "        font-weight: bold;\n" +
+                "    }\n" +
+                "    .stepSpan{\n" +
+                "        color: #366792;\n" +
+                "        font-weight: bold;\n" +
+                "    }\n" +
+                "    .scenarioSpan{\n" +
+                "        color: #a98572;\n" +
+                "        font-weight: bold;\n" +
+                "        font-size: 15px;\n" +
+                "    }\n" +
+                "    .btn{\n" +
+                "        background-color: #c5c5d3;\n" +
+                "        border-radius: 10px;\n" +
+                "        color: #6b6b70;\n" +
+                "    }\n" +
+                "    .btn:hover, .btn:focus {\n" +
+                "        color: #FFFFFF;\n" +
+                "        background-color: #007bff;\n" +
+                "    }\n" +
+                "    .preCode{\n" +
+                "        max-width: 90%;\n" +
+                "        background-color: #ffffff;\n" +
+                "        border: none;\n" +
+                "    }");
         sparkAll.config().setJs("$('.test-item').click(function() {\n" +
                 "    $('.test-content').scrollTop(0);\n" +
-                "});");
+                "});</script>\n" +
+                "<script>\n" +
+                "    function copy(id) {\n" +
+                "        navigator.clipboard\n" +
+                "            .writeText(document.getElementById(id).innerText);\n" +
+                "    }\n" +
+                "</script>\n" +
+                "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js\"></script>");
         //htmlReporter.config().enableOfflineMode(true);
         //spark.config().setTheme(Theme.DARK);
         extent.attachReporter(json, sparkFail, sparkAll);
@@ -299,6 +369,9 @@ public class TestInitialization extends Browsers {
             propertiesPojo.setCA_Appcenter_IOS_ProjectName(testConfig.getProperty("CA_Appcenter_IOS_ProjectName"));
             propertiesPojo.setCA_Automation_Branch_Name(testConfig.getProperty("CA_Automation_Branch_Name"));
 
+            propertiesPojo.setMobile_Apps(testConfig.getProperty("Mobile_Apps"));
+            propertiesPojo.setWeb_APPS(testConfig.getProperty("Web_Apps"));
+
         } catch (Exception e) {
             captureException(e);
         }
@@ -340,11 +413,20 @@ public class TestInitialization extends Browsers {
                     //testEnvVariables = "<div>" + tEnv().getAndroidDevice() + "</div><div>" + tEnv().getAndroidOSVersion() + "</div><div>" + tEnv().getAndroidBuildNumber() + "</div>";
                     testEnvVariables = tEnv().getAndroidDevice() + " : " + tEnv().getAndroidOSVersion() + " : " + tEnv().getAndroidBuildNumber();
                 }
+                if (appType.equalsIgnoreCase("androidBrowser")) {
+                    //testEnvVariables = "<div>" + tEnv().getAndroidDevice() + "</div><div>" + tEnv().getAndroidOSVersion() + "</div><div>" + tEnv().getAndroidBuildNumber() + "</div>";
+                    testEnvVariables = tEnv().getAndroidDevice() + " : " + tEnv().getAndroidOSVersion() + " : " + tEnv().getWebBrowserVersion();
+                }
                 try {
                     if (tEnv().getIosDevice() != null) {
                         if (appType.equalsIgnoreCase("ios")) {
                             // testEnvVariables = "<div>" + tEnv().getIosDevice() + "</div><div>" + tEnv().getIosOSVersion() + "</div><div>" + tEnv().getIosBuildNumber() + "</div>";
                             testEnvVariables = tEnv().getIosDevice() + " : " + tEnv().getIosOSVersion() + " : " + tEnv().getIosBuildNumber();
+
+                        }
+                        if (appType.equalsIgnoreCase("iosBrowser")) {
+                            // testEnvVariables = "<div>" + tEnv().getIosDevice() + "</div><div>" + tEnv().getIosOSVersion() + "</div><div>" + tEnv().getIosBuildNumber() + "</div>";
+                            testEnvVariables = tEnv().getIosDevice() + " : " + tEnv().getIosOSVersion() + " : " + tEnv().getWebBrowserVersion();
 
                         }
                     }
@@ -419,8 +501,16 @@ public class TestInitialization extends Browsers {
                     tEnv().setElementLocator("Android");
                     androidNative(context, xmlTest);
                 }
+                if (tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+                    tEnv().setElementLocator("Web");
+                    androidNative(context, xmlTest);
+                }
                 if (tEnv().getAppType().equalsIgnoreCase("ios")) {
                     tEnv().setElementLocator("IOS");
+                    nativeiOS(context, xmlTest);
+                }
+                if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                    tEnv().setElementLocator("Web");
                     nativeiOS(context, xmlTest);
                 }
             }
@@ -435,8 +525,14 @@ public class TestInitialization extends Browsers {
                 if (tEnv().getAppType().equalsIgnoreCase("Android")) {
                     tEnv().setElementLocator("Android");
                 }
+                if (tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+                    tEnv().setElementLocator("Web");
+                }
                 if (tEnv().getAppType().equalsIgnoreCase("ios")) {
                     tEnv().setElementLocator("IOS");
+                }
+                if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                    tEnv().setElementLocator("Web");
                 }
             }
         } catch (Exception e) {
@@ -455,7 +551,8 @@ public class TestInitialization extends Browsers {
     }
 
     protected void setTestEnvironment(String fileName, String excelFilePath,
-                                      String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version, String URI, String version, String token,
+                                      String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version,
+                                      String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
                                       String accessToken, String isJWT, String endpointPrefix, String store, String host, String locale,
                                       String region, String country, String currency,
                                       String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName) {
@@ -489,6 +586,10 @@ public class TestInitialization extends Browsers {
             if (tLocalEnv.getApi() != null) {
                 tEnv().setApiURI(tLocalEnv.getApi().getURI());
                 tEnv().setApiVersion(tLocalEnv.getApi().getVersion());
+                tEnv().setApiEnvType(tLocalEnv.getApi().getEnvType());
+                tEnv().setApiAppSycURI(tLocalEnv.getApi().getAppSycURI());
+                tEnv().setApiAppSycAuth(tLocalEnv.getApi().getAppSycAuth());
+                tEnv().setApiPartnerURI(tLocalEnv.getApi().getApiPartnerURI());
             }
 
             if (tLocalEnv.getWeb() != null) {
@@ -520,6 +621,21 @@ public class TestInitialization extends Browsers {
                             tEnv().setAndroidOSVersion(tLocalEnv.getAndroid().getOs());
                         }
                     }
+                    if (appType.equalsIgnoreCase("AndroidBrowser")) {
+                        try {
+                            tEnv().setAndroidDevice(tLocalEnv.getAndroid().getRegion_android_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("device").getAsString());
+                            tEnv().setAndroidOSVersion(tLocalEnv.getAndroid().getRegion_android_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("os").getAsString());
+                            tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
+                        } catch (Exception e) {
+                            if (tRemoteEnv.getTest_region() != null) {
+                                logger.error("test_region is given as " + tRemoteEnv.getTest_region() + " in remote-env.json; Which is not present in test-env.json under Android devices!! Hence proceeding with default devices");
+                            } else {
+                                logger.error("test_region is not given in remote-env.json; Hence proceeding with default devices");
+                            }
+                            tEnv().setAndroidDevice(tLocalEnv.getAndroid().getDevice());
+                            tEnv().setAndroidOSVersion(tLocalEnv.getAndroid().getOs());
+                        }
+                    }
                 }
             }
 
@@ -532,6 +648,21 @@ public class TestInitialization extends Browsers {
                         try {
                             tEnv().setIosDevice(tLocalEnv.getIos().getRegion_ios_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("device").getAsString());
                             tEnv().setIosOSVersion(tLocalEnv.getIos().getRegion_ios_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("os").getAsString());
+                        } catch (Exception e) {
+                            if (tRemoteEnv.getTest_region() != null) {
+                                logger.error("test_region is given as " + tRemoteEnv.getTest_region() + " in remote-env.json; Which is not present in test-env.json under ios devices!! Hence proceeding with default devices");
+                            } else {
+                                logger.error("test_region is not given in remote-env.json; Hence proceeding with default devices");
+                            }
+                            tEnv().setIosDevice(tLocalEnv.getIos().getDevice());
+                            tEnv().setIosOSVersion(tLocalEnv.getIos().getOs());
+                        }
+                    }
+                    if (appType.equalsIgnoreCase("iosBrowser")) {
+                        try {
+                            tEnv().setIosDevice(tLocalEnv.getIos().getRegion_ios_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("device").getAsString());
+                            tEnv().setIosOSVersion(tLocalEnv.getIos().getRegion_ios_devices().getAsJsonObject(tRemoteEnv.getTest_region()).get("os").getAsString());
+                            tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
                         } catch (Exception e) {
                             if (tRemoteEnv.getTest_region() != null) {
                                 logger.error("test_region is given as " + tRemoteEnv.getTest_region() + " in remote-env.json; Which is not present in test-env.json under ios devices!! Hence proceeding with default devices");
@@ -592,11 +723,11 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebUrl(url);
             }
             if (device != null) {
-                if ((tLocalEnv.getAndroid() != null) && (appType.equalsIgnoreCase("Android"))) {
+                if ((tLocalEnv.getAndroid() != null) && ((appType.equalsIgnoreCase("Android") || appType.equalsIgnoreCase("AndroidBrowser")))) {
                     tEnv().setAndroidDevice(device);
                     tEnv().setAndroidOSVersion(os_version);
                 }
-                if ((tLocalEnv.getIos() != null) && (appType.equalsIgnoreCase("ios"))) {
+                if ((tLocalEnv.getIos() != null) && ((appType.equalsIgnoreCase("ios") || appType.equalsIgnoreCase("iosBrowser")))) {
                     tEnv().setIosDevice(device);
                     tEnv().setIosOSVersion(os_version);
                 }
@@ -604,8 +735,22 @@ public class TestInitialization extends Browsers {
             if (URI != null) {
                 tEnv().setApiURI(URI);
             }
+
+            if (envType != null) {
+                tEnv().setApiEnvType(envType);
+            }
+            if (appSycURI != null) {
+                tEnv().setApiAppSycURI(appSycURI);
+            }
+            if (appSycAuth != null) {
+                tEnv().setApiAppSycAuth(URI);
+            }
+
             if (version != null) {
                 tEnv().setApiVersion(version);
+            }
+            if (partnerURI != null){
+                tEnv().setApiPartnerURI(partnerURI);
             }
             if (token != null) {
                 tEnv().setApiToken(token);

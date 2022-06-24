@@ -22,7 +22,7 @@ public class BrowserTest extends TestLocalController {
             logStepAction(" Performing Search click");
             browser().findElement(By.xpath("(//input[@type=\"submit\"])[1]")).click();
             logReport("PASS","Test Passed");
-            hardFail("test failed");
+
         }catch (Exception e){
             hardFail(e);
         }finally {
@@ -32,7 +32,7 @@ public class BrowserTest extends TestLocalController {
     }
 
     public String createCategory() {
-        logScenario("Creating Categorey");
+        logStepAction("Creating Categorey");
         Map<String, Object> headers = new HashMap<>();
         Map<String, Object> formparams = new HashMap<>();
         Map<String, Object> queryparams = new HashMap<>();

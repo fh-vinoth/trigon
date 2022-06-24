@@ -1,26 +1,30 @@
 {
   "api": {
     "URI": "https://sit-api.t2scdn.com/",
-    "version": "V1.9"
+    "version": "",
+    "envType": "",
+    "appSycURI": "",
+    "appSycAuth": "",
+    "apiPartnerURI":""
   },
   "web": {
     "system_os": "OS X",
     "system_os_version": "Catalina",
     "browser": "chrome",
     "headless": "false",
-    "browser_version": "83",
+    "browser_version": "90",
     "url": "https://amazon.com/",
-    "build_number": "pr-api-108"
+    "build_number": "MYT-MobileWeb"
   },
   "android": {
     "app_package": "com.android.calculator2",
     "app_activity": "com.android.calculator2.Calculator",
     "device": "Google Pixel 4 XL",
-    "os": "11.0",
+    "os": "10.0",
     "region_android_devices": {
       "UK1": {
-        "device": "Samsung Galaxy S20",
-        "os": "11.0"
+        "device": "Google Pixel 4 XL",
+        "os": "10.0"
       },
       "AUS1": {
         "device": "OnePlus 7T",
@@ -108,7 +112,8 @@
       "currency": "£",
       "timezone": "GMT+1",
       "phoneNumber": "07012345679",
-      "emailId": "teamautomation16@gmail.com"
+      "emailId": "teamautomation16@gmail.com",
+      "accessToken": ""
     },
     "UK2": {
       "locale": "united kingdom",
@@ -120,7 +125,8 @@
       "currency": "£",
       "timezone": "GMT+1",
       "phoneNumber": "07032542435",
-      "emailId": "teamautomation16@gmail.com"
+      "emailId": "teamautomation16@gmail.com",
+      "accessToken": ""
     },
     "UK5": {
       "locale": "united kingdom",

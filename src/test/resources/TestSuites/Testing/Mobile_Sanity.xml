@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="MYT_AndroidBrowser_Sample" parallel="none" thread-count="0">
+
+    <parameter name="url" value="https://myt-web.fhcdn.dev/"></parameter>
+    <parameter name="browserstack_execution_local" value="false"></parameter>
+    <parameter name="isJWT" value="false"></parameter>
+    <parameter name="endpointPrefix" value=""></parameter>
+    <parameter name="productName" value="MYT"></parameter>
+
+    <test name="MobileSampleRun">
+        <classes>
+            <class name="com.fh.mobile.MobileTest"/>
+        </classes>
+    </test>
+
+</suite>

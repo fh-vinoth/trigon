@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
+import org.testng.collections.Lists;
 
 import java.io.*;
 import java.net.URL;
@@ -15,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CommonUtils {
 
@@ -560,5 +562,13 @@ public class CommonUtils {
             e.printStackTrace();
         }
         return size;
+    }
+
+    public static String escapeCharacters(String input) {
+        List<String> specialCharacters = Lists.newArrayList("\\");
+        return Arrays.stream(input.split("")).map((c) -> {
+            if (specialCharacters.contains(c)) return "\\" + c;
+            else return c;
+        }).collect(Collectors.joining());
     }
 }

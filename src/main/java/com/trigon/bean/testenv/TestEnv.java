@@ -9,8 +9,13 @@ public class TestEnv {
     // Data belongs to test-env.json
     private String testType;
     private String apiURI;
+    private String apiEnvType;
+    private String apiAppSycURI;
+    private String apiAppSycAuth;
     private String apiVersion;
     private String appType;
+    private String apiPartnerURI;
+
 
     private String apiLocale;
     private String apiRegion;
@@ -96,6 +101,30 @@ public class TestEnv {
 
     public void setApiURI(String apiURI) {
         this.apiURI = apiURI;
+    }
+
+    public String getApiEnvType() {
+        return apiEnvType;
+    }
+
+    public void setApiEnvType(String apiEnvType) {
+        this.apiEnvType = apiEnvType;
+    }
+
+    public String getApiAppSycURI() {
+        return apiAppSycURI;
+    }
+
+    public void setApiAppSycURI(String apiAppSycURI) {
+        this.apiAppSycURI = apiAppSycURI;
+    }
+
+    public String getApiAppSycAuth() {
+        return apiAppSycAuth;
+    }
+
+    public void setApiAppSycAuth(String apiAppSycAuth) {
+        this.apiAppSycAuth = apiAppSycAuth;
     }
 
     public String getApiVersion() {
@@ -571,5 +600,13 @@ public class TestEnv {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getApiPartnerURI() {
+        return apiPartnerURI;
+    }
+
+    public void setApiPartnerURI(String apiPartnerURI) {
+        this.apiPartnerURI = apiPartnerURI;
     }
 }

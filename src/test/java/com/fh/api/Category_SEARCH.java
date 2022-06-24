@@ -17,25 +17,32 @@ public class Category_SEARCH extends TestLocalController {
         try{
             author_ScenarioName("Bhaskar", "Searching the particular category from category/search endpoint");
 
+
+//            System.out.println("Test");
             logStepAction("Creating category and getting the category id");
             String category_id = createCategory();
             logger.info("Created category_id: " + category_id);
 
             logStepAction("Searching the created category");
-            searchCategory(category_id);
+//            searchCategory(category_id);
+
+            createCategory();
+
+           /* updateCategory(category_id, "thursday", "0");
+
 
             logStepAction("Deleting the created category");
             deleteCategory(category_id);
-
+*/
         }catch (Exception e){
-            hardFail(e);
+            hardFail("Failes "+e);
         }finally {
             testTearDown();
         }
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void searchCategory_test2() {
         try{
             author_ScenarioName("Reddy", "Searching the particular category from category/search endpoint2");
@@ -45,14 +52,14 @@ public class Category_SEARCH extends TestLocalController {
             logger.info("Created category_id: " + category_id);
 
         }catch (Exception e){
-            hardFail(e);
+            hardFail("Failed due to :: "+e);
         }finally {
             testTearDown();
         }
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void searchCategory_test3() {
         try{
             author_ScenarioName("Reddy", "Searching the particular category from category/search endpoint3");
@@ -68,7 +75,7 @@ public class Category_SEARCH extends TestLocalController {
         }
 
     }
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void searchCategory_test4() {
         try{
             author_ScenarioName("Bhaskar", "Searching the particular category from category/search endpoint");
@@ -92,7 +99,7 @@ public class Category_SEARCH extends TestLocalController {
     }
 
     public String createCategory() {
-        //logScenario("Creating Categorey");
+        //logStepAction("Creating Categorey");
         Map<String, Object> headers = new HashMap<>();
         Map<String, Object> formparams = new HashMap<>();
         Map<String, Object> queryparams = new HashMap<>();
@@ -104,11 +111,13 @@ public class Category_SEARCH extends TestLocalController {
         String endpoint = "category";
         formparams.put("name", "TestCateg" + cUtils().generateRandomString(4));
         try {
-            Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
-            category_id = postresponse.get("resource_id").toString();
+            /*Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
+            category_id = postresponse.get("resource_id").toString();*/
+            String id = null;
+            id.replace("","re");
 
         } catch (Exception e) {
-            hardFail("Category is not created.");
+            hardFail("Category is not created."+e);
         }
         if (category_id == null) {
             hardFail("Category id is returned as null.");
@@ -127,7 +136,7 @@ public class Category_SEARCH extends TestLocalController {
         queryparams.put("api_token", tEnv().getApiToken());
 
         String endPoint = "category/search";
-        formparams.put("q", category_id);
+        formparams.put("q", "id="+category_id+"" );
 
         try {
             api().validateStaticResponse("POST", endPoint, headers, null, queryparams, formparams, null, null, "201", null);
@@ -135,6 +144,30 @@ public class Category_SEARCH extends TestLocalController {
             hardFail("Searching Category is not found");
         }
     }
+
+
+    public Map<String, Object> updateCategory(String categoryId, String parameterToUpdate, String valueToUpdate) {
+        logStepAction("Update parameter " + parameterToUpdate + " with value " + valueToUpdate + " for the Category with id " + categoryId);
+
+        Map<String, Object> headers = new HashMap<>();
+        Map<String, Object> formparams = new HashMap<>();
+        Map<String, Object> queryparams = new HashMap<>();
+
+        Map<String, Object> response = new HashMap<>();
+        try {
+
+            headers.put("Content-Type", "application/x-www-form-urlencoded");
+            headers.put("Store", tEnv().getApiStore());
+            queryparams.put("api_token", tEnv().getApiToken());
+            formparams.put(parameterToUpdate, valueToUpdate);
+            String endpoint = "category/" + categoryId;
+            response = api().validateStaticResponse("PUT", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
+        } catch (Exception e) {
+            hardFail("Failed to update category");
+        }
+        return response;
+    }
+
 
     public void deleteCategory(String category_id) {
         Map<String, Object> headers = new HashMap<>();
@@ -146,7 +179,7 @@ public class Category_SEARCH extends TestLocalController {
         queryparams.put("api_token", tEnv().getApiToken());
 
         String endpoint = "category/" + category_id;
-        expectedResponse.put("outcome","success2");
+        expectedResponse.put("outcome","success");
 
         try {
             api().validateStaticResponse("DELETE", endpoint, headers, null, queryparams, null, null, null, "200", expectedResponse);

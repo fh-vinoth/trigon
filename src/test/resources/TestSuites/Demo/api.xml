@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="API_Endpoint_Automation_Category" parallel="tests">
+<suite name="API_Endpoint_Automation_Category" parallel="classes">
 <!--    <test name="API-Endpoint_Automation_Category">-->
 <!--        <classes>-->
 <!--            <class name="com.fh.api.CatArray"/>-->
@@ -14,6 +14,15 @@
 <!--        </classes>-->
 <!--    </test>-->
 
+    <test name="abc">
+        <classes>
+
+            <class name="com.fh.api.Category_SEARCH"></class>
+            <!--<class name="com.fh.unittests.database.Queries1"></class>
+            <class name="com.fh.unittests.database.Queries2"></class>
+            <class name="com.fh.unittests.database.Queries3"></class>-->
+        </classes>
+    </test>
 
 
 </suite>

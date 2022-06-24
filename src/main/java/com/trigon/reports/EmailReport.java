@@ -8,10 +8,13 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.trigon.reports.ReportManager.cUtils;
+import static com.trigon.reports.Initializers.*;
+
 
 public class EmailReport {
+
     public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
@@ -20,7 +23,7 @@ public class EmailReport {
             String headers = header(report, suiteName);
             String reportLinks = reportLinks(report);
             String failureData = failureData(report);
-            String body = body(report);
+            String body = body(report, suiteName);
             String footers = footers();
             bf.append(headers);
             bf.append(reportLinks);
@@ -36,7 +39,7 @@ public class EmailReport {
             bfFailure.append(failureData);
             bfFailure.append(footers);
 
-            generateEmailBody(reportPath, report, bf.toString(), bfFailure.toString(), suiteName, testType, executionType,pipelineExecution);
+            generateEmailBody(reportPath, report, bf.toString(), bfFailure.toString(), suiteName, testType, executionType, pipelineExecution);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,7 +89,7 @@ public class EmailReport {
         int skipPercentage = stats.getStats().getGrandchildPercentage().get(Status.SKIP).intValue();
 
         String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
-
+        String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
 
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -127,10 +130,12 @@ public class EmailReport {
                 "                                <tr>\n" +
                 "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_ExecutedBy.png\" height=\"15\" width=\"15\" alt=\"Executed By\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getSystemEnvInfo().get(4).getValue() + "</td>\n" +
+//                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_OS.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
+//                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">"+stats.getReport().getSystemEnvInfo().get(5).getValue()+"</td>"+
                 "                                </tr>\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_OS.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
-                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getSystemEnvInfo().get(5).getValue() + "</td>\n" +
+                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
+                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + executedGitBranch + "</td>\n" +
                 "                                </tr>\n" +
                 "                            </table>\n" +
                 "                        </td>\n" +
@@ -197,6 +202,11 @@ public class EmailReport {
                 "                            <div style=\"font-size: 25px;padding: 2.45rem .20rem;\"></div>\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
+                "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
+                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\">API Endpoints Covered : " + totalEndpoints + "</div> </td>\n" +
+//                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.6/"+suiteWithTime+"/APICoverage.html\"\n" +
+//                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
+                "                    </tr>" +
                 "                    </tbody>\n" +
                 "                </table>\n" +
                 "            </div>\n" +
@@ -217,14 +227,14 @@ public class EmailReport {
                 "                        <td colspan=\"2\">Detailed Analysis Reports</td>\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.6/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
                 "                                style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Report</a></td>\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/" + suiteWithTime + "/EmailReport.html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.6/" + suiteWithTime + "/EmailReport.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Summary Report</a></td>\n" +
                 "\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.6/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Logs</a></td>\n" +
                 "                        <td><a href=\"https://touch2success.testrail.com/index.php?/projects/overview\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">TestRail Report</a></td>\n" +
@@ -237,7 +247,7 @@ public class EmailReport {
                 "    </tr>\n";
     }
 
-    private static String body(ExtentReports stats) {
+    private static String body(ExtentReports stats, String suiteName) {
         StringBuffer bf = new StringBuffer();
 
         // Fixed body Top
@@ -270,7 +280,7 @@ public class EmailReport {
                         "                    </tr>\n");
                 testClass.getChildren().forEach(method -> {
 
-                    try{
+                    try {
                         String methodName = method.getName();
                         String description = method.getDescription();
                         String author = method.getAuthorSet().stream().iterator().next().getName();
@@ -286,7 +296,7 @@ public class EmailReport {
                         }
 
 
-                        bf.append("<tr style=\"text-align: left\">\n" +
+                        bf.append("<tr style=\"text-align: left;border-top: 0.2px solid #ce8c8c;\">\n" +
                                 "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
                                 "                            <div>\n" +
                                 "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"pass\">\n" +
@@ -304,12 +314,34 @@ public class EmailReport {
                                 "                            <div style=\"word-break:break-all\">\n" +
                                 "                                <b>Scenario :</b> " + description + "\n" +
                                 "                            </div>\n");
+                        // Adds Log Steps if the suite is Sanity or Smoke
+                        if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke")) {
+                            AtomicInteger count = new AtomicInteger(1);
+                            bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
+
+                            method.getLogs().forEach(log -> {
+                               // System.out.println(log.getDetails());
+                                if (log.getDetails().contains("STEP ")) {
+                                    bf.append("                            <div style=\"word-break:break-all\">" + log.getDetails().replaceAll("STEP", "STEP " + count) + "</div>\n");
+                                    count.getAndIncrement();
+                                }
+
+                            });
+                        }
+                        method.getLogs().forEach(log -> {
+                            if(log.getDetails().startsWith("<b>BS Video:</b>")){
+                                bf.append("                                <div style=\"word-break:break-all;padding-top: 10px\">\n" +
+                                        ""+log.getDetails()+""+
+                                        "                                </div>");
+                            }
+                        });
+
                         // If Test Fails
                         if (method.getStatus().getName().equals("Fail")) {
                             bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
                             method.getLogs().forEach(log -> {
                                 if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                    if (!log.getDetails().startsWith("<details><summary>")) {
+                                    if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                         bf.append("<div>" + log.getDetails() + "</div>");
                                     }
                                 }
@@ -318,7 +350,7 @@ public class EmailReport {
                                 method.getChildren().forEach(child -> {
                                     child.getLogs().forEach(log -> {
                                         if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                            if (!log.getDetails().startsWith("<details><summary>")) {
+                                            if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                                 bf.append("<div>" + log.getDetails() + "</div>");
                                             }
                                         }
@@ -327,7 +359,7 @@ public class EmailReport {
                             }
                             bf.append("                            </div>\n");
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
 
@@ -349,7 +381,7 @@ public class EmailReport {
 
     private static String footers() {
         return "    <tr style=\"background: #e0dbdb;height: 40px;\">\n" +
-                "        <td colspan=\"2\">© 2021 - Foodhub Automation Team</td>\n" +
+                "        <td colspan=\"2\">© 2022 - Foodhub Automation Team</td>\n" +
                 "    </tr>\n" +
                 "    </tbody>\n" +
                 "</table>\n" +
@@ -394,7 +426,7 @@ public class EmailReport {
 
                         String StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png";
 
-                        bf.append("<tr style=\"text-align: left\">\n" +
+                        bf.append("<tr style=\"text-align: left;border-top: 0.2px solid #ce8c8c;\">\n" +
                                 "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
                                 "                            <div>\n" +
                                 "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"pass\">\n" +
@@ -415,7 +447,7 @@ public class EmailReport {
                         bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
                         method.getLogs().forEach(log -> {
                             if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                if (!log.getDetails().startsWith("<details><summary>")) {
+                                if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                     bf.append("<div>" + log.getDetails() + "</div>");
                                 }
                             }
@@ -424,7 +456,7 @@ public class EmailReport {
                             method.getChildren().forEach(child -> {
                                 child.getLogs().forEach(log -> {
                                     if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                        if (!log.getDetails().startsWith("<details><summary>")) {
+                                        if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                             bf.append("<div>" + log.getDetails() + "</div>");
                                         }
                                     }
@@ -449,6 +481,5 @@ public class EmailReport {
 
         return bf.toString();
     }
-
 
 }

@@ -61,8 +61,8 @@ public class TriggerEmailImpl implements ITriggerEmail {
         props.put("mail.smtp.port", "465");
 
         AWSCredentials credentials = new BasicAWSCredentials(
-                AES.decrypt("LBRGQ0dOh/cfKZtL09GVpwDdzdveukupzmqrY0uIhOE=", "t2sautomation"),
-                AES.decrypt("Aw0HhbPVq78mUnu9AjHgkTn7IWTWPBRRZIeyUniNUeWMqVu1dydCYvT+1IRgTapE", "t2sautomation")
+                AES.decrypt("W2ekXre8CE/HcVRqyloQgvx8gdNF7SukcZP/Gzx2aGY=", "t2sautomation"),
+                AES.decrypt("7vxMJLkwfL7VK8SksBb/ReNbhwbPtwjT9fHRCo1hutb6hXbOH/U/3c8Tad49ieBp", "t2sautomation")
         );
 
         AmazonS3 s3Client = AmazonS3ClientBuilder
@@ -101,8 +101,10 @@ public class TriggerEmailImpl implements ITriggerEmail {
                 message.setFrom(new InternetAddress(from, "FH "+jsonObject.get("testType").toString()+" Report"));
             }
 
+            StringBuffer sb = new StringBuffer(recipients);
+            sb.append(",bhaskar.marrikunta@foodhub.com");
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(recipients));
+                    InternetAddress.parse(sb.toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,7 +143,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
                 String[] folderName = reportPath.split("/");
                 int folderlength = folderName.length;
                 System.out.println("Uploading to S3 Bucket !! It takes a while depending on your network and depending on size of report !! Please, Wait.... ");
-                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("t2s-staging-automation/TestResults",
+                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("t2s-staging-automation/TestResults_2.6",
                         folderName[folderlength - 1], new File(reportPath), true);
                 XferMgrProgress.showTransferProgress(xfer);
                 XferMgrProgress.waitForCompletion(xfer);

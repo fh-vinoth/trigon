@@ -8,10 +8,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -22,6 +26,7 @@ import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -36,8 +41,10 @@ public class Browsers extends Android {
         if ((tEnv().getWebBrowser() != null) || tEnv().getWebBrowser().isEmpty()) {
             browserType = tEnv().getWebBrowser();
         }
-        if(extent!=null){
-            extentClassNode.get().assignDevice(browserType);
+        if (extent != null) {
+            if(extentClassNode.get()!=null){
+                extentClassNode.get().assignDevice(browserType);
+            }
         }
         switch (browserType) {
             case "chrome":
@@ -45,9 +52,9 @@ public class Browsers extends Android {
                     if (executionType.equalsIgnoreCase("local")) {
                         WebDriverManager.chromedriver().setup();
                         //System.setProperty("webdriver.chrome.driver", "src/test/resources/Utilities/chromedriver");
-                        Map < String, Object > prefs = new HashMap < String, Object > ();
-                        Map < String, Object > profile = new HashMap < String, Object > ();
-                        Map< String, Object > contentSettings = new HashMap< String, Object >();
+                        Map<String, Object> prefs = new HashMap<String, Object>();
+                        Map<String, Object> profile = new HashMap<String, Object>();
+                        Map<String, Object> contentSettings = new HashMap<String, Object>();
                         ChromeOptions options = new ChromeOptions();
                         options.addArguments("disable-geolocation");
 
@@ -66,10 +73,11 @@ public class Browsers extends Android {
                     } else {
                         remoteExecution(context, xmlTest);
                     }
-                    launchURL();
+                    launchURL(context);
                 } catch (Exception sn) {
                     captureException(sn);
-                    hardFail("Chrome Session Not created !!");
+                    sn.printStackTrace();
+                    //hardFail("Chrome Session Not created !!");
                 }
                 break;
             case "firefox":
@@ -78,9 +86,9 @@ public class Browsers extends Android {
                         WebDriverManager.firefoxdriver().setup();
                         //System.setProperty("webdriver.gecko.driver", "src/test/resources/Utilities/geckodriver");
                         FirefoxOptions options = new FirefoxOptions();
-                        Map < String, Object > prefs = new HashMap < String, Object > ();
-                        Map < String, Object > profile = new HashMap < String, Object > ();
-                        Map< String, Object > contentSettings = new HashMap< String, Object >();
+                        Map<String, Object> prefs = new HashMap<String, Object>();
+                        Map<String, Object> profile = new HashMap<String, Object>();
+                        Map<String, Object> contentSettings = new HashMap<String, Object>();
                         // SET CHROME OPTIONS
                         // 0 - Default, 1 - Allow, 2 - Block
                         contentSettings.put("geolocation", 1);
@@ -95,10 +103,10 @@ public class Browsers extends Android {
                     } else {
                         remoteExecution(context, xmlTest);
                     }
-                    launchURL();
+                    launchURL(context);
                 } catch (Exception sn) {
                     captureException(sn);
-                    hardFail("Firefox Session Not created !!");
+                    //hardFail("Firefox Session Not created !!");
                 }
                 break;
             case "safari":
@@ -110,10 +118,58 @@ public class Browsers extends Android {
                     } else {
                         remoteExecution(context, xmlTest);
                     }
-                    launchURL();
+                    launchURL(context);
                 } catch (Exception sn) {
                     captureException(sn);
-                    hardFail("Safari Session Not created !!");
+                    //hardFail("Safari Session Not created !!");
+                }
+                break;
+            case "edge":
+                try {
+                    if (executionType.equalsIgnoreCase("local")) {
+                        EdgeDriver options = new EdgeDriver();
+                        //options.setAutomaticInspection(true);
+                        webDriverThreadLocal.set(new EdgeDriver());
+                    } else {
+                        remoteExecution(context, xmlTest);
+                    }
+                    launchURL(context);
+                } catch (Exception sn) {
+                    captureException(sn);
+                    sn.printStackTrace();
+                    //hardFail("Chrome Session Not created !!");
+                }
+                break;
+            case "opera":
+                try {
+                    if (executionType.equalsIgnoreCase("local")) {
+                        OperaDriver options = new OperaDriver();
+                        //options.setAutomaticInspection(true);
+                        webDriverThreadLocal.set(new OperaDriver());
+                    } else {
+                        remoteExecution(context, xmlTest);
+                    }
+                    launchURL(context);
+                } catch (Exception sn) {
+                    captureException(sn);
+                    sn.printStackTrace();
+                    //hardFail("Chrome Session Not created !!");
+                }
+                break;
+            case "ie":
+                try {
+                    if (executionType.equalsIgnoreCase("local")) {
+                        InternetExplorerOptions options = new InternetExplorerOptions();
+                        options.waitForUploadDialogUpTo(Duration.ofSeconds(2));
+                        WebDriver driver = new RemoteWebDriver(options);
+                    } else {
+                        remoteExecution(context, xmlTest);
+                    }
+                    launchURL(context);
+                } catch (Exception sn) {
+                    captureException(sn);
+                    sn.printStackTrace();
+                    //hardFail("Chrome Session Not created !!");
                 }
                 break;
         }
@@ -125,17 +181,29 @@ public class Browsers extends Android {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("project", context.getSuite().getName());
         caps.setCapability("os", tEnv().getWebSystemOS());
-        caps.setCapability("build", tEnv().getWebBuildNumber()+"_"+tEnv().getTest_region());
+        caps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
         caps.setCapability("os_version", tEnv().getWebSystemOSVersion());
         caps.setCapability("browser", tEnv().getWebBrowser());
         caps.setCapability("browser_version", tEnv().getWebBrowserVersion());
-        caps.setCapability("name", xmlTest.getName()+"_"+tEnv().getCurrentTestClassName());
-       // caps.setCapability("browserstack.selenium_version", "4.0.0-alpha-7");
+        caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
+        // caps.setCapability("browserstack.selenium_version", "4.0.0-alpha-7");
         caps.setCapability("browserstack.networkLogs", true);
         caps.setCapability("browserstack.console", "errors");
         caps.setCapability("browserstack.idleTimeout", "300");
         caps.setCapability("browserstack.autoWait", "50");
         caps.setCapability("language", "en");
+       /* String location = tEnv().getApiCountry();
+        if(location.equalsIgnoreCase("AUS")){
+            location = "AU";
+        }
+        else if(location.equalsIgnoreCase("IRE")){
+            location = "IE";
+        }
+        else if(location.equalsIgnoreCase("UK")){
+            location = "GB";
+        }
+        logger.info("Setting location to :: "+location);
+        caps.setCapability("browserstack.geoLocation",location);*/
         caps.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
         caps.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
@@ -161,8 +229,7 @@ public class Browsers extends Android {
             } catch (Exception e) {
                 captureException(e);
             }
-        }else
-        {
+        } else {
             try {
                 webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), caps));
             } catch (Exception e) {
@@ -171,15 +238,19 @@ public class Browsers extends Android {
         }
     }
 
-    private void launchURL() {
+    private void launchURL(ITestContext context) {
         try {
             if ((tEnv().getWebUrl() == null) || (tEnv().getWebUrl().isEmpty())) {
                 Assert.fail("Please provide webURL in TestEnvironment File");
             } else {
                 browser().manage().window().maximize();
-                browser().get(tEnv().getWebUrl());
-                browser().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                browser().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+                if (!context.getSuite().getName().contains("adhoc")) {
+                    browser().get(tEnv().getWebUrl());
+                    browser().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                    browser().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+                } else {
+                    logger.warn("Default URL is not loaded as It is adhoc task. please use navigateToUrl in your method level");
+                }
             }
         } catch (Exception e) {
             captureException(e);
@@ -191,16 +262,17 @@ public class Browsers extends Android {
         if (mobileApps.contains(tEnv().getTestType())) {
             try {
                 if (ios() != null) {
-                    ios().getSessionId();
-                    logger.info("IOS Session ID"+ ios().getSessionId());
                     JavascriptExecutor jse = ios();
                     if (executionType.equalsIgnoreCase("remote")) {
-                        if (classFailAnalysisThread.get().size() > 0) {
-                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
-
+                        getBSVideoSession();
+                        if (classFailAnalysisThread.get() != null) {
+                            if (classFailAnalysisThread.get().size() > 0) {
+                                jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                            }
                         } else {
                             jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
                         }
+
                     }
                     ios().quit();
                     logger.info("IOS App Quit Successful");
@@ -211,13 +283,13 @@ public class Browsers extends Android {
             }
             try {
                 if (android() != null) {
-                    android().getSessionId();
-                    logger.info("Android Session ID"+ android().getSessionId());
                     JavascriptExecutor jse = android();
                     if (executionType.equalsIgnoreCase("remote")) {
-                        if (classFailAnalysisThread.get().size() > 0) {
-                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
-
+                        getBSVideoSession();
+                        if (classFailAnalysisThread.get() != null) {
+                            if (classFailAnalysisThread.get().size() > 0) {
+                                jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                            }
                         } else {
                             jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
                         }
@@ -245,24 +317,22 @@ public class Browsers extends Android {
         if (webApps.contains(tEnv().getTestType())) {
             try {
                 if (browser() != null) {
-                    //browser().close();
-                    browser().getSessionId();
                     JavascriptExecutor jse = browser();
-
-                    if (executionType.equalsIgnoreCase("remote")){
-                        if(classFailAnalysisThread.get().size()>0){
-                            jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
-
-                        }else {
+                    if (executionType.equalsIgnoreCase("remote")) {
+                        getBSVideoSession();
+                        if (classFailAnalysisThread.get()!= null) {
+                            if (classFailAnalysisThread.get().size() > 0) {
+                                jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
+                            }
+                        } else {
                             jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"passed\", \"reason\": \"NA\"}}");
-
                         }
                     }
                     browser().quit();
                     logger.info("Browser Session is closed");
-                    if(tEnv().getBrowserstack_execution_local()!=null){
-                        if(tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")){
-                            if(bsLocal!=null){
+                    if (tEnv().getBrowserstack_execution_local() != null) {
+                        if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
+                            if (bsLocal != null) {
                                 bsLocal.stop();
                                 logger.info("BrowserStack Local Instance Stopped");
                             }

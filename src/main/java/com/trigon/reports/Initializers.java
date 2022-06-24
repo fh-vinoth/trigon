@@ -2,7 +2,6 @@ package com.trigon.reports;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import com.trigon.bean.CReportPojo;
 import com.trigon.bean.ExtentPojo;
 import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.testenv.TestEnv;
@@ -30,10 +29,6 @@ public class Initializers {
     protected static String executionType = "local";
     protected static String pipelineExecution = "false";
 
-    public static CReportPojo cReportPojo = new CReportPojo();
-
-
-
     public static boolean customAPIReportStartFlag = false;
     public static BufferedWriter customAPIReport;
     public static List<String> customAPIHeaderData = new ArrayList<>();
@@ -42,18 +37,22 @@ public class Initializers {
     protected static Hashtable<String, String> customReportStatusMap = new Hashtable();
     protected static Hashtable<Collection<?>, Collection<?>> customReportStatusMap1 = new Hashtable();
 
-    public static List<String> mobileApps = Arrays.asList("mobile","myt","d2s","fhapp","caapp","mypos","apos","fusionapp","digitalboard");
-    public static List<String> webApps = Arrays.asList("web","caweb","fhweb","fhnative","fheatappy","mytweb");
+    public static List<String> mobileApps;
+    public static List<String> webApps;
 
     public static ExtentReports extent = null;
     public static ThreadLocal<ExtentTest> extentTestNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentClassNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentScenarioNode = new ThreadLocal<>();
-    public static TreeSet<String> apiCoverage = new TreeSet();
+    public static List<String> apiCoverage = new ArrayList<>();
+    public static int totalEndpoints = 0;
+    public static String executedGitBranch = "NA";
     public static ExtentPojo extentPojo = null;
     public ExtentTest extentTest = null;
 
+    //variables used for saving failure functionality for retried tests
+    public static List<String> initFailedLogs;
 
     protected static ThreadLocal<AndroidDriver<AndroidElement>> androidDriverThreadLocal = new ThreadLocal<>();
     protected static ThreadLocal<IOSDriver<IOSElement>> iosDriverThreadLocal = new ThreadLocal<>();
@@ -64,9 +63,9 @@ public class Initializers {
     protected static String appType;
     protected static String suiteParallel;
     protected static int totalTestModules;
-    protected static String email_recipients =null;
-    protected static String error_email_recipients =null;
-    protected static String failure_email_recipients =null;
+    protected static String email_recipients = null;
+    protected static String error_email_recipients = null;
+    protected static String failure_email_recipients = null;
     protected static boolean failStatus = false;
     protected static boolean exceptionStatus = false;
 
@@ -90,5 +89,5 @@ public class Initializers {
         return commonUtils;
     }
 
-    public static Database db;
+    public static Database db = new Database();
 }

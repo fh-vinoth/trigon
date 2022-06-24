@@ -11,15 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.collections.CollectionUtils;
 
-import javax.xml.bind.DatatypeConverter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.InflaterOutputStream;
 
 
 public class APICore extends ReportManager {
@@ -113,6 +107,8 @@ public class APICore extends ReportManager {
         try {
             RestAssured.useRelaxedHTTPSValidation();
             requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
+            String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, multiPartMap);
+            dataToJSON("curl", curl);
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
             if (CollectionUtils.hasElements(multiPartMap)) {
                 dataToJSON("multiPart", multiPartMap);
@@ -222,10 +218,14 @@ public class APICore extends ReportManager {
                     failAnalysisThread.get().add("[ACT : " + response.getStatusCode() + "] " + " [EXP : " + StatusCode + "]");
                     dataToJSON("responseJSON", response.getBody().asString());
                     dataToJSON("apiTestStatus", "FAILED");
-                    dataToJSON("failReason","[ACT : " + response.getStatusCode() + "] " + " [EXP : " + StatusCode + "]");
+                    dataToJSON("failReason", "[ACT : " + response.getStatusCode() + "] " + " [EXP : " + StatusCode + "]");
+                    flattenMap = JsonFlattener.flattenAsMap(response.asString());
+                    flattenMap.put("actualStatusCode", response.getStatusCode());
+                    flattenMap.put("actualResponseTime", response.time());
                 } else {
                     flattenMap = JsonFlattener.flattenAsMap(response.asString());
                     flattenMap.put("actualStatusCode", response.getStatusCode());
+                    flattenMap.put("actualResponseTime", response.time());
                     dataToJSON("responseJSON", response.getBody().asString());
 
                     // Added for custom variable extractions
@@ -287,29 +287,30 @@ public class APICore extends ReportManager {
                     try {
                         if (actual.get(k).toString().equals(expectedResponse.get(k).toString())) {
                             actualResponse.put(k, actual.get(k).toString());
-                            logger.info("Actual Text:" + actual.get(k).toString() + " Expected Exact Text:" + expectedResponse.get(k).toString());
+                            logger.info("Actual Data :" + k + " : " + actual.get(k).toString() + " Expected Data: " + k + " : " + expectedResponse.get(k).toString());
                         } else {
                             failStatus.add("FAILED");
                             failAnalysisThread.get().add("[Actual value : " + actual.get(k).toString() + "] " + " [Expected Value : " + expectedResponse.get(k).toString() + "]");
                             actualResponse.put(k, actual.get(k).toString());
-                            dataToJSON("failReason","Actual Text:" + actual.get(k).toString() + " Expected Exact Text:" + expectedResponse.get(k).toString());
-                            sAssert.assertEquals(actual.get(k).toString(), expectedResponse.get(k).toString());
+                            dataToJSON("failReason", "Actual Text :" + actual.get(k).toString() + " <br> Expected Exact Text :" + expectedResponse.get(k).toString());
+                            //sAssert.assertEquals(actual.get(k).toString(), expectedResponse.get(k).toString());
+                            logReport("FAIL", "Actual Data :" + k + " : " + actual.get(k).toString() + " Expected Data: " + k + " : " + expectedResponse.get(k).toString());
                         }
                     } catch (NullPointerException e) {
                         failStatus.add("FAILED");
                         failAnalysisThread.get().add("Expected or Actual Response Key " + k + " NOT Found");
-                        dataToJSON("failReason","Expected or Actual Response Key " + k + " NOT Found");
+                        dataToJSON("failReason", "Expected or Actual Response Key " + k + " NOT Found");
                     }
                 }
             } else {
-                dataToJSON("failReason","Expected or Actual Response Map is Empty or null");
+                dataToJSON("failReason", "Expected or Actual Response Map is Empty or null");
             }
             dataToJSON("expectedResponse", new HashMap<>(expectedResponse));
             dataToJSON("actualResponse", actualResponse);
             if (failStatus.size() > 0) {
                 dataToJSON("apiTestStatus", "FAILED");
             } else {
-               dataToJSON("apiTestStatus", "PASSED");
+                dataToJSON("apiTestStatus", "PASSED");
             }
         } catch (Exception e) {
             captureException(e);
@@ -373,7 +374,8 @@ public class APICore extends ReportManager {
             dataMap.put("Endpoint", Endpoint);
             apiCoverage.add(Endpoint);
             dataMap.put("Expected Status Code", expectedStatusCode);
-
+            String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, null);
+            dataToJSON("curl", curl);
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
             if (requestBody != null) {
                 if (CollectionUtils.hasElements(Collections.singleton(requestBody))) {
@@ -405,6 +407,7 @@ public class APICore extends ReportManager {
                 logger.info(response.asString());
                 dataMap.put("response", response.asString());
                 dataMap.put("Actual Status Code", String.valueOf(response.getStatusCode()));
+                dataMap.put("cURL", curl);
                 dataTableCollectionApi.get().add(new LinkedHashMap<>(dataMap));
             }
         } catch (Exception e) {
@@ -504,14 +507,14 @@ public class APICore extends ReportManager {
         return returnResponse;
     }
 
-    protected Map<String, Object> filterDynamicDataToMapImpl(Map<String, Object> actualResponseMap, String knownKey, String knownValue,String... requiredKeys) {
+    protected Map<String, Object> filterDynamicDataToMapImpl(Map<String, Object> actualResponseMap, String knownKey, String knownValue, String... requiredKeys) {
         Map<String, Object> modifiedExpectedResponse = new HashMap<>();
         try {
             actualResponseMap.forEach((k, v) -> {
                 if ((v != null) && (knownKey != null)) {
                     if (v.toString().equals(knownValue)) {
-                        if(requiredKeys.length>0){
-                            Arrays.stream(requiredKeys).parallel().forEach(item->{
+                        if (requiredKeys.length > 0) {
+                            Arrays.stream(requiredKeys).parallel().forEach(item -> {
                                 String replacedKey = k.replace(knownKey, item);
                                 modifiedExpectedResponse.put(replacedKey, actualResponseMap.get(replacedKey));
                             });
@@ -546,50 +549,50 @@ public class APICore extends ReportManager {
         return new HashSet<>(responseAsMap(response).keySet());
     }
 
-    protected HashMap replaceTestEnvVariables(HashMap map){
+    protected HashMap replaceTestEnvVariables(HashMap map) {
 
-        if(map!=null){
+        if (map != null) {
 
             for (Object key : map.keySet()) {
-                try{
-                    if(map.get(key)!=null & map.get(key).equals("URI")){
-                        map.replace(key,tEnv().getApiURI());
+                try {
+                    if (map.get(key) != null & map.get(key).equals("URI")) {
+                        map.replace(key, tEnv().getApiURI());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("version")){
-                        map.replace(key,tEnv().getApiVersion());
+                    if (map.get(key) != null & map.get(key).equals("version")) {
+                        map.replace(key, tEnv().getApiVersion());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("locale")){
-                        map.replace(key,tEnv().getApiLocale());
+                    if (map.get(key) != null & map.get(key).equals("locale")) {
+                        map.replace(key, tEnv().getApiLocale());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("region")){
-                        map.replace(key,tEnv().getApiRegion());
+                    if (map.get(key) != null & map.get(key).equals("region")) {
+                        map.replace(key, tEnv().getApiRegion());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("store")){
-                        map.replace(key,tEnv().getApiStore());
+                    if (map.get(key) != null & map.get(key).equals("store")) {
+                        map.replace(key, tEnv().getApiStore());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("host")){
-                        map.replace(key,tEnv().getApiHost());
+                    if (map.get(key) != null & map.get(key).equals("host")) {
+                        map.replace(key, tEnv().getApiHost());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("token")){
-                        map.replace(key,tEnv().getApiToken());
+                    if (map.get(key) != null & map.get(key).equals("token")) {
+                        map.replace(key, tEnv().getApiToken());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("country")){
-                        map.replace(key,tEnv().getApiCountry());
+                    if (map.get(key) != null & map.get(key).equals("country")) {
+                        map.replace(key, tEnv().getApiCountry());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("currency")){
-                        map.replace(key,tEnv().getApiCurrency());
+                    if (map.get(key) != null & map.get(key).equals("currency")) {
+                        map.replace(key, tEnv().getApiCurrency());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("timezone")){
-                        map.replace(key,tEnv().getApiTimeZone());
+                    if (map.get(key) != null & map.get(key).equals("timezone")) {
+                        map.replace(key, tEnv().getApiTimeZone());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("phoneNumber")){
-                        map.replace(key,tEnv().getApiPhoneNumber());
+                    if (map.get(key) != null & map.get(key).equals("phoneNumber")) {
+                        map.replace(key, tEnv().getApiPhoneNumber());
                     }
-                    if(map.get(key)!=null & map.get(key).equals("emailId")){
-                        map.replace(key,tEnv().getApiEmailID());
+                    if (map.get(key) != null & map.get(key).equals("emailId")) {
+                        map.replace(key, tEnv().getApiEmailID());
                     }
-                }catch (Exception e){
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -624,18 +627,40 @@ public class APICore extends ReportManager {
                 expectedResponse.clear();
             }
             if (dataTableCollectionApi.get().size() > 0) {
-                Gson pGson = new GsonBuilder().setPrettyPrinting().create();
-                String responseJSON = dataTableCollectionApi.get().get(0).get("responseJSON").toString();
+                Object responseJSON = dataTableCollectionApi.get().get(0).get("responseJSON");
+                String curl = dataTableCollectionApi.get().get(0).get("curl").toString();
+                Object statusCodeData = dataTableCollectionApi.get().get(0).get("statusCode");
+                Object responseTime = dataTableCollectionApi.get().get(0).get("responseTime");
+                String apiTestStatus = dataTableCollectionApi.get().get(0).get("apiTestStatus").toString();
+
+                LinkedHashMap<String, Object> respValidation = new LinkedHashMap();
+                respValidation.put("statusCode",statusCodeData);
+
+                if (dataTableCollectionApi.get().get(0).containsKey("actualResponse")) {
+                    respValidation.put("actualResponse",dataTableCollectionApi.get().get(0).get("actualResponse"));
+                    dataTableCollectionApi.get().get(0).remove("actualResponse");
+                }
+                if (dataTableCollectionApi.get().get(0).containsKey("expectedResponse")) {
+                    respValidation.put("expectedResponse",dataTableCollectionApi.get().get(0).get("expectedResponse"));
+                    dataTableCollectionApi.get().get(0).remove("expectedResponse");
+                }
+
+                respValidation.put("responseTime",responseTime);
+                respValidation.put("apiTestStatus",apiTestStatus);
 
                 dataTableCollectionApi.get().get(0).remove("responseJSON");
+                dataTableCollectionApi.get().get(0).remove("curl");
+                dataTableCollectionApi.get().get(0).remove("statusCode");
+                dataTableCollectionApi.get().get(0).remove("responseTime");
+                dataTableCollectionApi.get().get(0).remove("apiTestStatus");
 
-                if(dataTableCollectionApi.get().get(0).get("apiTestStatus").equals("FAILED")){
-                    logMultipleJSON("FAIL",pGson.toJson(dataTableCollectionApi.get()),responseJSON);
-                    logApiReport("FAIL",dataTableCollectionApi.get().get(0).get("failReason").toString());
-                }else{
-                    logMultipleJSON("PASS",pGson.toJson(dataTableCollectionApi.get()),responseJSON);
+                if (apiTestStatus.equals("FAILED")) {
+                    logMultipleJSON("FAIL", dataTableCollectionApi.get().get(0), responseJSON, curl, respValidation);
+                    logApiReport("FAIL", dataTableCollectionApi.get().get(0).get("failReason").toString());
+                } else {
+                    logMultipleJSON("PASS", dataTableCollectionApi.get().get(0), responseJSON, curl, respValidation);
                 }
-                if(tEnv().getTestType().equalsIgnoreCase("api")){
+                if (tEnv().getTestType().equalsIgnoreCase("api")) {
                     logger.info(responseJSON);
                 }
 
@@ -710,7 +735,73 @@ public class APICore extends ReportManager {
         return respMap;
     }
 
+    protected String getCurl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, Map<String, Object> multiPart) {
+        StringBuffer sb = new StringBuffer();
+        String curl = "";
+        boolean pathParamFlag = false;
+        try {
+            String URI = tEnv().getApiURI();
+            if (!URI.endsWith("/")) {
+                URI = URI.concat("/");
+            }
 
+            sb.append("curl --location --request " + HttpMethod.toUpperCase() + " '" + URI + Endpoint);
+
+            if ((pathParams != null && pathParams.size() > 0)) {
+                pathParams.forEach((k, v) -> sb.append("/" + v));
+                pathParamFlag = true;
+            }
+            if ((queryParams != null && queryParams.size() > 0)) {
+                sb.append("?");
+                sb.append(queryParams.toString().replace("{", "").replace("}", "").replaceAll(", ", "&"));
+                sb.append("' ");
+            } else if (pathParamFlag) {
+                sb.append("'");
+            }
+
+            if (headers != null && headers.size() > 0) {
+                headers.forEach((k, v) -> sb.append("--header '" + k + ": " + v + "' "));
+            }
+            if ((cookies != null && cookies.size() > 0)) {
+                cookies.forEach((k, v) -> sb.append("--header '" + k + ": " + v + "' "));
+            }
+
+            if ((formParams != null && formParams.size() > 0)) {
+                if (headers.containsKey("Content-Type")) {
+                    if (headers.get("Content-Type").toString().endsWith("x-www-form-urlencoded")) {
+                        formParams.forEach((k, v) -> sb.append("--data-urlencode '" + k + "=" + v + "' "));
+                    } else {
+                        formParams.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "' "));
+                    }
+                } else {
+                    formParams.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "' "));
+                }
+            }
+
+            if (requestBody != null && !requestBody.equalsIgnoreCase("")) {
+                sb.append("--data-raw '" + requestBody + "'");
+            }
+
+            if ((multiPart != null && multiPart.size() > 0)) {
+                if (headers.containsKey("Content-Type")) {
+                    if (headers.get("Content-Type").toString().contains("application/x-www-form-urlencoded")) {
+                        multiPart.forEach((k, v) -> sb.append("--data-urlencode '" + k + "=" + v + "' "));
+                    } else {
+                        multiPart.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "' "));
+                    }
+                } else {
+                    multiPart.forEach((k, v) -> sb.append("--form '" + k + "=" + v + "' "));
+                }
+            }
+
+        } catch (Exception e) {
+            captureException(e);
+        }
+
+        curl = commonUtils.escapeCharacters(sb.toString());
+
+        return curl;
+    }
 
 
 }
