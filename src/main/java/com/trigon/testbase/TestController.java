@@ -1,6 +1,7 @@
 package com.trigon.testbase;
 
 import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.model.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -26,6 +27,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class TestController extends TestInitialization {
@@ -155,6 +158,9 @@ public class TestController extends TestInitialization {
             if (result.wasRetried()) {
                 if (result.getStatus() == 3) {
                     if (extentMethodNode.get() != null) {
+                       initFailedLogs= getInitialFailureMessages(xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim(),
+                                                 tEnv().getCurrentTestClassName(),
+                                                 method.getName());
                         extent.removeTest(extentMethodNode.get());
                     }
                 } else {
@@ -162,6 +168,24 @@ public class TestController extends TestInitialization {
                 }
             } else {
                 failStatusCheck(method);
+            }
+
+            if(result.getStatus()==2 && initFailedLogs!=null) {
+                List<Log> currentLogs=  extent.getReport().getTestList().stream().filter(modules -> xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+                        tEnv().getCurrentTestClassName().equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> method.getName().equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> initFailedLogs.contains(logs.getDetails())).collect(Collectors.toList());
+
+                for(Log currentLog : currentLogs)
+                {   if(!currentLog.getStatus().toString().equalsIgnoreCase("Fail"))
+                {
+                    logReport("INFO", "<b>RETRY FAILURE</b> "+ currentLog.getDetails());  //Initial Execution Failure Reporting
+                }
+                    initFailedLogs.remove(currentLog.getDetails());
+                }
+                if(!initFailedLogs.isEmpty())
+                {
+                    for(String logDetail: initFailedLogs)
+                        logReport("INFO",  "<b>RETRY FAILURE</b> "+logDetail);   //Initial Execution Failure Reporting
+                }
             }
             if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
 
@@ -333,6 +357,13 @@ public class TestController extends TestInitialization {
         } catch (Exception e) {
 
         }
+    }
+    public List<String> getInitialFailureMessages(String testName, String className, String methodName)
+    {
+        List<String> failedSteps=new ArrayList<>();
+       extent.getReport().getTestList().stream().filter(modules -> testName.equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+                className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("Fail")).collect(Collectors.toList()).forEach(failLog -> failedSteps.add(failLog.getDetails()));
+     return failedSteps;
     }
 
 }
