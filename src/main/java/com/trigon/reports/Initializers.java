@@ -49,6 +49,8 @@ public class Initializers {
     public static ExtentPojo extentPojo = null;
     public ExtentTest extentTest = null;
 
+    //variables used for saving failure functionality for retried tests
+    public static List<String> initFailedLogs;
 
     protected static ThreadLocal<AndroidDriver> androidDriverThreadLocal = new ThreadLocal<>();
     protected static ThreadLocal<IOSDriver> iosDriverThreadLocal = new ThreadLocal<>();

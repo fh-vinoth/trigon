@@ -1,6 +1,7 @@
 package com.trigon.testbase;
 
 import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.model.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -26,6 +27,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class TestController extends TestInitialization {
@@ -64,14 +67,14 @@ public class TestController extends TestInitialization {
     protected void moduleInitilalization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
                                          @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                                         @Optional String URI,@Optional String envType,@Optional String appSycURI,@Optional String appSycAuth, @Optional String version, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
+                                         @Optional String URI,@Optional String envType,@Optional String appSycURI,@Optional String appSycAuth, @Optional String version,@Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
                                          @Optional String store, @Optional String host, @Optional String locale,
                                          @Optional String region, @Optional String country, @Optional String currency,
                                          @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName) {
         try {
             if (platformType != null) {
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
-                setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI, envType,appSycURI,appSycAuth,version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
+                setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI, envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
 
@@ -92,14 +95,14 @@ public class TestController extends TestInitialization {
     protected void classInitialization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
                                        @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                                        @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                                       @Optional String URI, @Optional String envType,@Optional String appSycURI,@Optional String appSycAuth,@Optional String version, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
+                                       @Optional String URI, @Optional String envType,@Optional String appSycURI,@Optional String appSycAuth,@Optional String version,@Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
                                        @Optional String store, @Optional String host, @Optional String locale,
                                        @Optional String region, @Optional String country, @Optional String currency,
                                        @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName) {
         try {
             logger.info("Test Execution Started for Class  : " + getClass().getSimpleName());
             classFailAnalysisThread.set(new ArrayList<>());
-            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth, version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
+            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth, version,partnerURI, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
             if(context.getSuite().getName().contains("adhoc")){
                 remoteBrowserInit(context, xmlTest);
             }
@@ -114,7 +117,7 @@ public class TestController extends TestInitialization {
     protected void setUp(ITestContext context, XmlTest xmlTest, Method method, @Optional String testEnvPath, @Optional String excelFilePath,
                          @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                         @Optional String URI,@Optional String envType,@Optional String appSycURI,@Optional String appSycAuth, @Optional String version, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
+                         @Optional String URI,@Optional String envType,@Optional String appSycURI,@Optional String appSycAuth, @Optional String version,@Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
                          @Optional String store, @Optional String host, @Optional String locale,
                          @Optional String region, @Optional String country, @Optional String currency,
                          @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName) {
@@ -122,7 +125,7 @@ public class TestController extends TestInitialization {
         try {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
-            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
+            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
 
             if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
 
@@ -155,6 +158,9 @@ public class TestController extends TestInitialization {
             if (result.wasRetried()) {
                 if (result.getStatus() == 3) {
                     if (extentMethodNode.get() != null) {
+                       initFailedLogs= getInitialFailureMessages(xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim(),
+                                                 tEnv().getCurrentTestClassName(),
+                                                 method.getName());
                         extent.removeTest(extentMethodNode.get());
                     }
                 } else {
@@ -162,6 +168,24 @@ public class TestController extends TestInitialization {
                 }
             } else {
                 failStatusCheck(method);
+            }
+
+            if(result.getStatus()==2 && initFailedLogs!=null) {
+                List<Log> currentLogs=  extent.getReport().getTestList().stream().filter(modules -> xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+                        tEnv().getCurrentTestClassName().equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> method.getName().equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> initFailedLogs.contains(logs.getDetails())).collect(Collectors.toList());
+
+                for(Log currentLog : currentLogs)
+                {   if(!currentLog.getStatus().toString().equalsIgnoreCase("Fail"))
+                {
+                    logReport("INFO", "<b>RETRY FAILURE</b> "+ currentLog.getDetails());  //Initial Execution Failure Reporting
+                }
+                    initFailedLogs.remove(currentLog.getDetails());
+                }
+                if(!initFailedLogs.isEmpty())
+                {
+                    for(String logDetail: initFailedLogs)
+                        logReport("INFO",  "<b>RETRY FAILURE</b> "+logDetail);   //Initial Execution Failure Reporting
+                }
             }
             if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
 
@@ -333,6 +357,13 @@ public class TestController extends TestInitialization {
         } catch (Exception e) {
 
         }
+    }
+    public List<String> getInitialFailureMessages(String testName, String className, String methodName)
+    {
+        List<String> failedSteps=new ArrayList<>();
+       extent.getReport().getTestList().stream().filter(modules -> testName.equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+                className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("Fail")).collect(Collectors.toList()).forEach(failLog -> failedSteps.add(failLog.getDetails()));
+     return failedSteps;
     }
 
 }

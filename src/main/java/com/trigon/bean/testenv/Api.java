@@ -20,6 +20,9 @@ public class Api {
     @SerializedName("version")
     @Expose
     private String version;
+    @SerializedName("partnerURI")
+    @Expose
+    private String partnerURI;
 
     public String getURI() {
         return uRI;
@@ -60,5 +63,14 @@ public class Api {
     public void setVersion(String version) {
         this.version = version;
     }
+
+    public String getApiPartnerURI() {
+        return partnerURI;
+    }
+
+    public void setApiPartnerURI(String apiPartnerURI) {
+        this.partnerURI = apiPartnerURI;
+    }
+
 
 }
