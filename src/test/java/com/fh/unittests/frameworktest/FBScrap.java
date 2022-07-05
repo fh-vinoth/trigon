@@ -23,8 +23,8 @@ public class FBScrap extends TestLocalController {
             browser().get(URL);
             l.add(URL);
             l.add(browser().findElement(By.cssSelector("h1[id='seo_h1_tag'] span")).getText());
-            l.add(browser().findElementByCssSelector("h1[id='seo_h1_tag'] div").getText());
-            browser().findElementsByCssSelector("div[class='clearfix _ikh']").forEach(a-> l.add(a.getText()));
+            l.add(browser().findElement(By.cssSelector("h1[id='seo_h1_tag'] div")).getText());
+            browser().findElements(By.cssSelector("div[class='clearfix _ikh']")).forEach(a-> l.add(a.getText()));
         }catch (Exception e){
             e.printStackTrace();
 

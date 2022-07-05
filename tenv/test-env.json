@@ -12,13 +12,13 @@
     "browser": "chrome",
     "headless": "false",
     "browser_version": "90",
-    "url": "https://myt-web.fhcdn.dev/",
+    "url": "https://myt-sit.fhcdn.dev/",
     "build_number": "MYT-MobileWeb"
   },
   "android": {
-    "app_package": "com.android.calculator2",
-    "app_activity": "com.android.calculator2.Calculator",
-    "device": "Google Pixel 4 XL",
+    "app_package": "com.t2s.mytakeaway",
+    "app_activity": "com.t2s.mytakeaway.MainActivity",
+    "device": "Google Pixel 4",
     "os": "10.0",
     "region_android_devices": {
       "UK1": {
@@ -53,9 +53,9 @@
   },
   "ios": {
     "bundleid": "com.ios",
-    "udid": "wrq435erq415553523qrwaf",
-    "device": "iPhone 11 Pro Max",
-    "os": "13.5",
+    "udid": "42EA0470-9BF5-4CE0-83BD-B999ADD686AE",
+    "device": "iPhone 11 Pro",
+    "os": "15.5",
     "region_ios_devices": {
       "UK2": {
         "device": "iPhone 11",
