@@ -39,9 +39,9 @@ public class Android extends IOS {
                     browserstackOptions.put("buildName", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
 
                 } else {
-                    androidCaps.setCapability("osVersion", tEnv().getAndroidOSVersion());
-                    androidCaps.setCapability("deviceName", tEnv().getAndroidDevice());
-                    androidCaps.setCapability("app", tEnv().getAndroidBSAppPath());
+                    androidCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getAndroidOSVersion());
+                    androidCaps.setCapability(MobileCapabilityType.DEVICE_NAME, tEnv().getAndroidDevice());
+                    androidCaps.setCapability(MobileCapabilityType.APP, tEnv().getAndroidBSAppPath());
                     browserstackOptions.put("buildName", tEnv().getAndroidBuildNumber() + "_" + tEnv().getTest_region());
                 }
                 browserstackOptions.put("projectName", context.getSuite().getName());
@@ -69,7 +69,7 @@ public class Android extends IOS {
                 androidCaps.setCapability("browserstack.appiumLogs", "true");
                 androidCaps.setCapability("autoGrantPermissions","true");*/
 
-                /*String location = tEnv().getApiCountry();
+                String location = tEnv().getApiCountry();
                 if(location.equalsIgnoreCase("AUS")){
                     location = "AU";
                 }
@@ -80,7 +80,7 @@ public class Android extends IOS {
                     location = "GB";
                 }
                 logger.info("Setting location to :: "+location);
-                androidCaps.setCapability("browserstack.geoLocation",location);*/
+                androidCaps.setCapability("browserstack.geoLocation",location);
                 if (tEnv().getTestType().equalsIgnoreCase("digitalboard")) {
                     browserstackOptions.put("deviceOrientation", "landscape");
                 }

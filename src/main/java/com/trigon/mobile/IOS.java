@@ -1,20 +1,17 @@
 package com.trigon.mobile;
 
-import com.trigon.appcenter.AppCenterBS;
 import com.trigon.reports.ReportManager;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.MutableCapabilities;
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 
 public class IOS extends ReportManager {
@@ -33,10 +30,8 @@ public class IOS extends ReportManager {
                 if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
                     browserstackOptions.put("osVersion", tEnv().getIosOSVersion());
                     browserstackOptions.put("deviceName", tEnv().getIosDevice());
-                    iosCaps.setCapability(MobileCapabilityType.BROWSER_NAME,tEnv().getWebBrowser());
-                    iosCaps.setCapability(MobileCapabilityType.BROWSER_VERSION,tEnv().getWebBrowserVersion());
-                    //iosCaps.setCapability("browserName", tEnv().getWebBrowser());
-                    //iosCaps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
+                    iosCaps.setCapability(MobileCapabilityType.BROWSER_NAME, tEnv().getWebBrowser());
+                    iosCaps.setCapability(MobileCapabilityType.BROWSER_VERSION, tEnv().getWebBrowserVersion());
                     browserstackOptions.put("buildName", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
 
                 } else {
@@ -44,10 +39,6 @@ public class IOS extends ReportManager {
                     iosCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getIosOSVersion());
                     iosCaps.setCapability(MobileCapabilityType.DEVICE_NAME, tEnv().getIosDevice());
                     iosCaps.setCapability(MobileCapabilityType.APP, tEnv().getIosBSAppPath());
-
-//                    iosCaps.setCapability("osVersion", tEnv().getIosOSVersion());
-//                    iosCaps.setCapability("deviceName", tEnv().getIosDevice());
-//                    iosCaps.setCapability("app", tEnv().getIosBSAppPath());
                     browserstackOptions.put("buildName", tEnv().getIosBuildNumber() + "_" + tEnv().getTest_region());
                 }
                 browserstackOptions.put("projectName", context.getSuite().getName());
@@ -62,7 +53,7 @@ public class IOS extends ReportManager {
                 browserstackOptions.put("debug", "true");
                 browserstackOptions.put("appiumLogs", "true");
 
-                 /* String location = tEnv().getApiCountry();
+                  String location = tEnv().getApiCountry();
                 logger.info("Setting location to :: "+location);
                 if(location.equalsIgnoreCase("AUS")){
                     location = "AU";
@@ -73,8 +64,8 @@ public class IOS extends ReportManager {
                 else if(location.equalsIgnoreCase("UK") || location.equalsIgnoreCase("GT")){
                     location = "GB";
                 }
-                iosCaps.setCapability("browserstack.geoLocation",location);*//*
-                //iosCaps.setCapability("browserstack.geoLocation","NZ");
+                iosCaps.setCapability("browserstack.geoLocation",location);
+                /*//iosCaps.setCapability("browserstack.geoLocation","NZ");
                 //iosCaps.setCapability("autoAcceptAlerts", "true");
                 //iosCaps.setCapability("autoDissmissAlerts", "true");*/
 
@@ -156,6 +147,4 @@ public class IOS extends ReportManager {
             hardFail("Failed to Launch IOS Device : " + tEnv().getIosDevice() + " Check your Test Parameters");
         }
     }
-
-
 }

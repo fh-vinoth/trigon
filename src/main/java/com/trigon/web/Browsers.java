@@ -44,7 +44,7 @@ public class Browsers extends Android {
             browserType = tEnv().getWebBrowser();
         }
         if (extent != null) {
-            if(extentClassNode.get()!=null){
+            if (extentClassNode.get() != null) {
                 extentClassNode.get().assignDevice(browserType);
             }
         }
@@ -181,7 +181,7 @@ public class Browsers extends Android {
 
     private void remoteExecution(ITestContext context, XmlTest xmlTest) {
         DesiredCapabilities caps = new DesiredCapabilities();
-        HashMap<String,Object> browserstackOptions = new HashMap<>();
+        HashMap<String, Object> browserstackOptions = new HashMap<>();
         caps.setCapability("project", context.getSuite().getName());
         caps.setCapability("os", tEnv().getWebSystemOS());
         caps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
@@ -189,21 +189,19 @@ public class Browsers extends Android {
         caps.setCapability("browser", tEnv().getWebBrowser());
         caps.setCapability("browser_version", tEnv().getWebBrowserVersion());
         caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
-        // caps.setCapability("browserstack.selenium_version", "4.0.0-alpha-7");
-
+        caps.setCapability("language", "en");
 
         browserstackOptions.put("os", "Windows");
         browserstackOptions.put("osVersion", "11");
         browserstackOptions.put("debug", "true");
         browserstackOptions.put("networkLogs", "true");
         browserstackOptions.put("seleniumVersion", "4.0.0");
+        browserstackOptions.put("consoleLogs", "errors");
+        browserstackOptions.put("idleTimeout", "300");
+        browserstackOptions.put("autoWait", "30");
 
-       /* caps.setCapability("browserstack.networkLogs", true);
-        caps.setCapability("browserstack.console", "errors");
-        caps.setCapability("browserstack.idleTimeout", "300");
-        caps.setCapability("browserstack.autoWait", "50");*/
-        caps.setCapability("language", "en");
-       /* String location = tEnv().getApiCountry();
+
+        String location = tEnv().getApiCountry();
         if(location.equalsIgnoreCase("AUS")){
             location = "AU";
         }
@@ -214,7 +212,7 @@ public class Browsers extends Android {
             location = "GB";
         }
         logger.info("Setting location to :: "+location);
-        caps.setCapability("browserstack.geoLocation",location);*/
+        caps.setCapability("browserstack.geoLocation",location);
         caps.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, UnhandledPromptBehavior.ACCEPT);
         caps.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
@@ -333,7 +331,7 @@ public class Browsers extends Android {
                     JavascriptExecutor jse = browser();
                     if (executionType.equalsIgnoreCase("remote")) {
                         getBSVideoSession();
-                        if (classFailAnalysisThread.get()!= null) {
+                        if (classFailAnalysisThread.get() != null) {
                             if (classFailAnalysisThread.get().size() > 0) {
                                 jse.executeScript("browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"failed\", \"reason\": \"Check Assertions in Report\"}}");
                             }
