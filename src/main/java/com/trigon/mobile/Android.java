@@ -80,7 +80,8 @@ public class Android extends IOS {
                     location = "GB";
                 }
                 logger.info("Setting location to :: "+location);
-                androidCaps.setCapability("browserstack.geoLocation",location);
+                //androidCaps.setCapability("browserstack.geoLocation",location);
+                browserstackOptions.put("geoLocation",location);
                 if (tEnv().getTestType().equalsIgnoreCase("digitalboard")) {
                     browserstackOptions.put("deviceOrientation", "landscape");
                 }

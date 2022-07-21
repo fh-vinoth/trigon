@@ -64,7 +64,8 @@ public class IOS extends ReportManager {
                 else if(location.equalsIgnoreCase("UK") || location.equalsIgnoreCase("GT")){
                     location = "GB";
                 }
-                iosCaps.setCapability("browserstack.geoLocation",location);
+//                iosCaps.setCapability("browserstack.geoLocation",location);
+                browserstackOptions.put("geoLocation",location);
                 /*//iosCaps.setCapability("browserstack.geoLocation","NZ");
                 //iosCaps.setCapability("autoAcceptAlerts", "true");
                 //iosCaps.setCapability("autoDissmissAlerts", "true");*/

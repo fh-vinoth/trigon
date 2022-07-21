@@ -182,14 +182,14 @@ public class Browsers extends Android {
     private void remoteExecution(ITestContext context, XmlTest xmlTest) {
         DesiredCapabilities caps = new DesiredCapabilities();
         HashMap<String, Object> browserstackOptions = new HashMap<>();
-        caps.setCapability("project", context.getSuite().getName());
-        caps.setCapability("os", tEnv().getWebSystemOS());
+//        caps.setCapability("project", context.getSuite().getName());
+        caps.setCapability("platformName", tEnv().getWebSystemOS());
         caps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
-        caps.setCapability("os_version", tEnv().getWebSystemOSVersion());
-        caps.setCapability("browser", tEnv().getWebBrowser());
-        caps.setCapability("browser_version", tEnv().getWebBrowserVersion());
+//        caps.setCapability("os_version", tEnv().getWebSystemOSVersion());
+        caps.setCapability("browserName", tEnv().getWebBrowser());
+        caps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
         caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
-        caps.setCapability("language", "en");
+//        caps.setCapability("language", "en");
 
         browserstackOptions.put("os", "Windows");
         browserstackOptions.put("osVersion", "11");
@@ -212,9 +212,10 @@ public class Browsers extends Android {
             location = "GB";
         }
         logger.info("Setting location to :: "+location);
-        caps.setCapability("browserstack.geoLocation",location);
+       // caps.setCapability("browserstack.geoLocation",location);
+        browserstackOptions.put("geoLocation",location);
         caps.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, UnhandledPromptBehavior.ACCEPT);
-        caps.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
+//        caps.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
             browserstackOptions.put("local", "true");
             caps.setCapability("forcelocal", "true");

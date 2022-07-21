@@ -57,6 +57,7 @@ public class Initializers {
     protected static ThreadLocal<RemoteWebDriver> webDriverThreadLocal = new ThreadLocal<>();
     protected static CommonUtils commonUtils = new CommonUtils();
     protected static String getSuiteNameWithTime;
+    protected static String getSuiteExecutionDate;
     protected static String platformType;
     protected static String appType;
     protected static String suiteParallel;

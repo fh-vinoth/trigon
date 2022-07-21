@@ -8,6 +8,8 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.transfer.MultipleFileUpload;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
+import com.aventstack.extentreports.model.Report;
+import com.trigon.reports.ReportAnalyser;
 import com.trigon.security.AES;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
@@ -25,9 +27,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 
 public class TriggerEmailImpl implements ITriggerEmail {
@@ -143,8 +143,8 @@ public class TriggerEmailImpl implements ITriggerEmail {
                 String[] folderName = reportPath.split("/");
                 int folderlength = folderName.length;
                 System.out.println("Uploading to S3 Bucket !! It takes a while depending on your network and depending on size of report !! Please, Wait.... ");
-                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("t2s-staging-automation/TestResults_2.6",
-                        folderName[folderlength - 1], new File(reportPath), true);
+                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("t2s-staging-automation/TestResults_2.8",
+                        folderName[folderlength - 2]+"/"+folderName[folderlength - 1], new File(reportPath), true);
                 XferMgrProgress.showTransferProgress(xfer);
                 XferMgrProgress.waitForCompletion(xfer);
                 System.out.println("Reports are Picked from " + reportPath);
