@@ -37,21 +37,23 @@ public class AppiumManager {
 //            env.put("PATH", "/usr/local/bin:" + env.get("PATH"));
 
             //Build the Appium service
-            builder = new AppiumServiceBuilder();
+           // builder = new AppiumServiceBuilder();
+            builder = new AppiumServiceBuilder().withArgument(() -> "--base-path", "/wd/hub");
             builder.withIPAddress("0.0.0.0");
             builder.usingPort(ap.getPort());
             builder.withCapabilities(cap);
             builder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
             builder.withArgument(GeneralServerFlag.LOG_LEVEL, "error");
             if(tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")){
-                builder.usingAnyFreePort().withArgument(()-> "--allow-insecure", "chromedriver_autodownload");
+                builder.withArgument(()-> "--allow-insecure", "chromedriver_autodownload");
             }
-            if (tEnv().getAppType().equalsIgnoreCase("ios")) {
+            //if (tEnv().getAppType().equalsIgnoreCase("ios")) {
                 // builder.withEnvironment(env);
                 builder.usingDriverExecutable(new File("/usr/local/bin/node"));
                 builder.withAppiumJS(new File("/usr/local/lib/node_modules/appium/build/lib/main.js"));
+//                builder.withAppiumJS(new File("/usr/local/lib/node_modules/appium"));
 //                builder.withAppiumJS(new File("/Applications/Appium Server GUI.app/Contents/Resources/app/node_modules/appium/build/lib/main.js"));
-            }
+           // }
 
             //Start the server with the builder
             service = AppiumDriverLocalService.buildService(builder);
@@ -76,6 +78,7 @@ public class AppiumManager {
             logger.info("******************************************************");
 
         } catch (Exception e) {
+            e.printStackTrace();
             logger.info("******************************************************");
             logger.error("FAILED TO START APPIUM");
             logger.info("******************************************************");
