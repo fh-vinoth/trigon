@@ -220,6 +220,9 @@ public class Browsers extends Android {
         caps.setCapability("browserName", tEnv().getWebBrowser());
         caps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
         caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
+        if(tEnv().getWebBrowser().contains("chrome")){
+            caps.setCapability("browserstack.chrome.allowAllCookies", "true");
+        }
 //        caps.setCapability("language", "en");
 
         browserstackOptions.put("os", "Windows");
