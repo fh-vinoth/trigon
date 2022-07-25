@@ -120,11 +120,11 @@ public class TestModelCore extends ReportManager {
 
     protected void alertHandling(String expectedText, String alertAction, String textAction) {
         if (browser() != null) {
-            webDriverWait = new WebDriverWait(browser(), 30);
+            webDriverWait = new WebDriverWait(browser(), Duration.ofSeconds(30));
         } else if (android() != null) {
-            webDriverWait = new WebDriverWait(android(), 30);
+            webDriverWait = new WebDriverWait(android(), Duration.ofSeconds(30));
         } else if (ios() != null) {
-            webDriverWait = new WebDriverWait(ios(), 30);
+            webDriverWait = new WebDriverWait(ios(), Duration.ofSeconds(30));
         }
         String text = "";
         if (browser() != null) {
