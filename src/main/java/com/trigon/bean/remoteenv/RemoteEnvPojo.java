@@ -13,6 +13,9 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("browserstack_execution_local")
     @Expose
     private String browserstack_execution_local;
+    @SerializedName("grid_execution_local")
+    @Expose
+    private String grid_execution_local;
     @SerializedName("jenkins_execution")
     @Expose
     private String jenkins_execution;
@@ -57,6 +60,10 @@ public class RemoteEnvPojo implements Serializable {
 
     public String getBrowserstack_execution_local() {
         return browserstack_execution_local;
+    }
+
+    public String getGrid_execution_local() {
+        return grid_execution_local;
     }
 
     public void setBrowserstack_execution_local(String browserstack_execution_local) {

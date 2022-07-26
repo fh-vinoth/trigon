@@ -7,6 +7,7 @@ import io.appium.java_client.remote.options.UnhandledPromptBehavior;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
@@ -14,10 +15,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -38,8 +42,10 @@ public class Browsers extends Android {
     private static final Logger logger = LogManager.getLogger(Browsers.class);
     Local bsLocal = null;
 
+
     protected void createBrowserInstance(ITestContext context, XmlTest xmlTest) {
         String browserType = "chrome";
+        String grid_Hub_IP = tEnv().getHubIP();
         if ((tEnv().getWebBrowser() != null) || tEnv().getWebBrowser().isEmpty()) {
             browserType = tEnv().getWebBrowser();
         }
@@ -71,7 +77,12 @@ public class Browsers extends Android {
                             options.setHeadless(true);
                         }
                         // options.setLogLevel(OFF);
-                        webDriverThreadLocal.set(new ChromeDriver(options));
+                        if(grid_execution_local.equalsIgnoreCase("true")){
+                            webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP),options));
+                        }else {
+                            webDriverThreadLocal.set(new ChromeDriver(options));
+                        }
+
                     } else {
                         remoteExecution(context, xmlTest);
                     }
@@ -101,7 +112,11 @@ public class Browsers extends Android {
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
                             options.setHeadless(true);
                         }
-                        webDriverThreadLocal.set(new FirefoxDriver(options));
+                        if(grid_execution_local.equalsIgnoreCase("true")){
+                            webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP),options));
+                        }else {
+                            webDriverThreadLocal.set(new FirefoxDriver(options));
+                        }
                     } else {
                         remoteExecution(context, xmlTest);
                     }
@@ -116,7 +131,11 @@ public class Browsers extends Android {
                     if (executionType.equalsIgnoreCase("local")) {
                         SafariOptions options = new SafariOptions();
                         options.setAutomaticInspection(true);
-                        webDriverThreadLocal.set(new SafariDriver(options));
+                        if(grid_execution_local.equalsIgnoreCase("true")){
+                            webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP),options));
+                        }else {
+                            webDriverThreadLocal.set(new SafariDriver(options));
+                        }
                     } else {
                         remoteExecution(context, xmlTest);
                     }
@@ -129,9 +148,13 @@ public class Browsers extends Android {
             case "edge":
                 try {
                     if (executionType.equalsIgnoreCase("local")) {
-                        EdgeDriver options = new EdgeDriver();
+                        EdgeOptions options = new EdgeOptions();
                         //options.setAutomaticInspection(true);
-                        webDriverThreadLocal.set(new EdgeDriver());
+                        if(grid_execution_local.equalsIgnoreCase("true")){
+                            webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP),options));
+                        }else {
+                            webDriverThreadLocal.set(new EdgeDriver());
+                        }
                     } else {
                         remoteExecution(context, xmlTest);
                     }
@@ -145,9 +168,13 @@ public class Browsers extends Android {
             case "opera":
                 try {
                     if (executionType.equalsIgnoreCase("local")) {
-                        OperaDriver options = new OperaDriver();
+                        OperaOptions options = new OperaOptions();
                         //options.setAutomaticInspection(true);
-                        webDriverThreadLocal.set(new OperaDriver());
+                        if(grid_execution_local.equalsIgnoreCase("true")){
+                            webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP), options));
+                        }else {
+                            webDriverThreadLocal.set(new OperaDriver());
+                        }
                     } else {
                         remoteExecution(context, xmlTest);
                     }
@@ -163,7 +190,11 @@ public class Browsers extends Android {
                     if (executionType.equalsIgnoreCase("local")) {
                         InternetExplorerOptions options = new InternetExplorerOptions();
                         options.waitForUploadDialogUpTo(Duration.ofSeconds(2));
-                        WebDriver driver = new RemoteWebDriver(options);
+                        if(grid_execution_local.equalsIgnoreCase("true")){
+                            webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP), options));
+                        }else {
+                            webDriverThreadLocal.set(new InternetExplorerDriver());
+                        }
                     } else {
                         remoteExecution(context, xmlTest);
                     }
@@ -189,6 +220,9 @@ public class Browsers extends Android {
         caps.setCapability("browserName", tEnv().getWebBrowser());
         caps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
         caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
+        if(tEnv().getWebBrowser().contains("chrome")){
+            caps.setCapability("browserstack.chrome.allowAllCookies", "true");
+        }
 //        caps.setCapability("language", "en");
 
         browserstackOptions.put("os", "Windows");

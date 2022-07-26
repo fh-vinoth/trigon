@@ -25,6 +25,8 @@ public class Initializers {
     protected static ThreadLocal<LinkedHashMap<String, Object>> dataTableMapApi = new ThreadLocal<>();
     protected TrigonAsserts sAssert = new TrigonAsserts();
     protected static String executionType = "local";
+
+    protected static String grid_execution_local = "false";
     protected static String pipelineExecution = "false";
 
     public static boolean customAPIReportStartFlag = false;
