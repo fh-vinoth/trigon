@@ -3,6 +3,7 @@
   "jenkins_execution": "false",
   "pipeline_execution": "false",
   "browserstack_execution_local": "false",
+  "grid_execution_local" : "true",
   "test_region": "UK1",
   "app_reset": "NA",
   "random_device": "",
