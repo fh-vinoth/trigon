@@ -14,6 +14,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.HasDevTools;
+import org.openqa.selenium.devtools.v102.network.Network;
+import org.openqa.selenium.devtools.v102.network.model.Request;
+import org.openqa.selenium.devtools.v102.network.model.Response;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -35,6 +40,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 
@@ -59,6 +65,8 @@ public class Browsers extends Android {
                 try {
                     if (executionType.equalsIgnoreCase("local")) {
                         WebDriverManager.chromedriver().setup();
+
+                        ChromeDriver driver = new ChromeDriver();
                         //System.setProperty("webdriver.chrome.driver", "src/test/resources/Utilities/chromedriver");
                         Map<String, Object> prefs = new HashMap<String, Object>();
                         Map<String, Object> profile = new HashMap<String, Object>();
@@ -66,6 +74,28 @@ public class Browsers extends Android {
                         ChromeOptions options = new ChromeOptions();
                         options.addArguments("disable-geolocation");
 
+                        try {
+                            DevTools devTools = driver.getDevTools();
+                            devTools.createSession();
+                            devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+                            devTools.addListener(Network.requestWillBeSent(), request ->
+                            {
+                                Request req = request.getRequest();
+                                System.out.println(req.getUrl());
+                            });
+
+                            devTools.addListener(Network.responseReceived(), response ->
+                            {
+                                Response res = response.getResponse();
+                                System.out.println(res.getStatus());
+
+                                if (res.getStatus().toString().startsWith("4")) {
+                                    System.out.println(res.getUrl() + "is Failing with status code" + res.getStatus());
+                                }
+                            });
+                        }catch(Exception e){
+
+                        }
                         // SET CHROME OPTIONS
                         // 0 - Default, 1 - Allow, 2 - Block
                         contentSettings.put("geolocation", 1);
@@ -97,7 +127,6 @@ public class Browsers extends Android {
                 try {
                     if (executionType.equalsIgnoreCase("local")) {
                         WebDriverManager.firefoxdriver().setup();
-                        //System.setProperty("webdriver.gecko.driver", "src/test/resources/Utilities/geckodriver");
                         FirefoxOptions options = new FirefoxOptions();
                         Map<String, Object> prefs = new HashMap<String, Object>();
                         Map<String, Object> profile = new HashMap<String, Object>();
