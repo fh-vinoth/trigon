@@ -7,13 +7,10 @@ import io.appium.java_client.remote.options.UnhandledPromptBehavior;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.UnexpectedAlertBehaviour;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chromium.ChromiumDriver;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.devtools.v102.network.Network;
@@ -48,7 +45,6 @@ public class Browsers extends Android {
     private static final Logger logger = LogManager.getLogger(Browsers.class);
     Local bsLocal = null;
 
-
     protected void createBrowserInstance(ITestContext context, XmlTest xmlTest) {
         String browserType = "chrome";
         String grid_Hub_IP = tEnv().getHubIP();
@@ -65,37 +61,12 @@ public class Browsers extends Android {
                 try {
                     if (executionType.equalsIgnoreCase("local")) {
                         WebDriverManager.chromedriver().setup();
-
-                        ChromeDriver driver = new ChromeDriver();
                         //System.setProperty("webdriver.chrome.driver", "src/test/resources/Utilities/chromedriver");
                         Map<String, Object> prefs = new HashMap<String, Object>();
                         Map<String, Object> profile = new HashMap<String, Object>();
                         Map<String, Object> contentSettings = new HashMap<String, Object>();
                         ChromeOptions options = new ChromeOptions();
                         options.addArguments("disable-geolocation");
-
-                        try {
-                            DevTools devTools = driver.getDevTools();
-                            devTools.createSession();
-                            devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
-                            devTools.addListener(Network.requestWillBeSent(), request ->
-                            {
-                                Request req = request.getRequest();
-                                System.out.println(req.getUrl());
-                            });
-
-                            devTools.addListener(Network.responseReceived(), response ->
-                            {
-                                Response res = response.getResponse();
-                                System.out.println(res.getStatus());
-
-                                if (res.getStatus().toString().startsWith("4")) {
-                                    System.out.println(res.getUrl() + "is Failing with status code" + res.getStatus());
-                                }
-                            });
-                        }catch(Exception e){
-
-                        }
                         // SET CHROME OPTIONS
                         // 0 - Default, 1 - Allow, 2 - Block
                         contentSettings.put("geolocation", 1);
@@ -182,7 +153,7 @@ public class Browsers extends Android {
                         if(grid_execution_local.equalsIgnoreCase("true")){
                             webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP),options));
                         }else {
-                            webDriverThreadLocal.set(new EdgeDriver());
+                            webDriverThreadLocal.set(new EdgeDriver(options));
                         }
                     } else {
                         remoteExecution(context, xmlTest);
@@ -320,6 +291,27 @@ public class Browsers extends Android {
             } else {
                 browser().manage().window().maximize();
                 if (!context.getSuite().getName().contains("adhoc")) {
+
+                    DevTools devTools = ((HasDevTools)browser()).getDevTools();
+                    devTools.createSession();
+                    devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+
+                    devTools.addListener(Network.requestWillBeSent(), request ->
+                    {
+                        Request req = request.getRequest();
+                       // logReport("INFO",req.getMethod().toUpperCase());
+                        System.out.println(req.getMethod().toUpperCase());
+
+                    });
+
+                    devTools.addListener(Network.responseReceived(), response ->
+                    {
+                        Response res = response.getResponse();
+                        if(res.getStatus().toString().startsWith("4") || res.getStatus().toString().startsWith("5")){
+                            logger.info(res.getUrl()+"is failing with status code"+res.getStatus());
+                            hardFail();
+                        }
+                    });
                     browser().get(tEnv().getWebUrl());
                     browser().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
                     browser().manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
@@ -420,6 +412,12 @@ public class Browsers extends Android {
             }
         }
     }
+    public void chromeNetworklogs(){
+        try{
 
 
+        } catch (Exception e) {
+
+        }
+    }
 }
