@@ -5,9 +5,11 @@ import com.trigon.mobile.Android;
 import com.trigon.mobile.AppiumManager;
 import io.appium.java_client.remote.options.UnhandledPromptBehavior;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.groovy.json.internal.Chr;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.chromium.ChromiumDriver;
@@ -24,6 +26,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -44,9 +47,10 @@ import java.util.concurrent.TimeUnit;
 public class Browsers extends Android {
     private static final Logger logger = LogManager.getLogger(Browsers.class);
     Local bsLocal = null;
+    private String browserType = "chrome";
 
     protected void createBrowserInstance(ITestContext context, XmlTest xmlTest) {
-        String browserType = "chrome";
+
         String grid_Hub_IP = tEnv().getHubIP();
         if ((tEnv().getWebBrowser() != null) || tEnv().getWebBrowser().isEmpty()) {
             browserType = tEnv().getWebBrowser();
@@ -153,7 +157,7 @@ public class Browsers extends Android {
                         if(grid_execution_local.equalsIgnoreCase("true")){
                             webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP),options));
                         }else {
-                            webDriverThreadLocal.set(new EdgeDriver(options));
+                            webDriverThreadLocal.set(new EdgeDriver());
                         }
                     } else {
                         remoteExecution(context, xmlTest);
@@ -292,26 +296,29 @@ public class Browsers extends Android {
                 browser().manage().window().maximize();
                 if (!context.getSuite().getName().contains("adhoc")) {
 
-                    DevTools devTools = ((HasDevTools)browser()).getDevTools();
-                    devTools.createSession();
-                    devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+                    if(browserType.contains("chrome") && executionType.contains("local")) {
 
-                    devTools.addListener(Network.requestWillBeSent(), request ->
-                    {
-                        Request req = request.getRequest();
-                       // logReport("INFO",req.getMethod().toUpperCase());
-                        System.out.println(req.getMethod().toUpperCase());
+                        DevTools devTools = ((HasDevTools) browser()).getDevTools();
+                        devTools.createSession();
+                        devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
 
-                    });
+                        devTools.addListener(Network.requestWillBeSent(), request ->
+                        {
+                            Request req = request.getRequest();
+                            // logReport("INFO",req.getMethod().toUpperCase());
+                            System.out.println(req.getMethod().toUpperCase());
 
-                    devTools.addListener(Network.responseReceived(), response ->
-                    {
-                        Response res = response.getResponse();
-                        if(res.getStatus().toString().startsWith("4") || res.getStatus().toString().startsWith("5")){
-                            logger.info(res.getUrl()+"is failing with status code"+res.getStatus());
-                            hardFail();
-                        }
-                    });
+                        });
+
+                        devTools.addListener(Network.responseReceived(), response ->
+                        {
+                            Response res = response.getResponse();
+                            if (res.getStatus().toString().startsWith("4") || res.getStatus().toString().startsWith("5")) {
+                                logger.info(res.getUrl() + "is failing with status code" + res.getStatus());
+                                hardFail();
+                            }
+                        });
+                    }
                     browser().get(tEnv().getWebUrl());
                     browser().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
                     browser().manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
