@@ -799,7 +799,7 @@ public class APICore extends ReportManager {
         }
 
         curl = commonUtils.escapeCharacters(sb.toString());
-
+        logger.info(curl);
         return curl;
     }
 

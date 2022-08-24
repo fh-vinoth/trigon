@@ -33,6 +33,8 @@ public class TestEnv {
     private String webSystemOS;
     private String webSystemOSVersion;
     private String webBrowser;
+
+    private String hubIP;
     private String webHeadless;
     private String webBrowserVersion;
     private String webUrl;
@@ -56,6 +58,8 @@ public class TestEnv {
 
     // Data belongs to remote-env.json
     private String execution_type;
+
+    private  String grid_execution_local;
     private String jenkins_execution;
     private String pipeline_execution;
     private String test_region;
@@ -251,8 +255,16 @@ public class TestEnv {
         return webBrowser;
     }
 
+    public String getHubIP() {
+        return hubIP;
+    }
+
     public void setWebBrowser(String webBrowser) {
         this.webBrowser = webBrowser;
+    }
+
+    public void setHubIP(String getHubIP) {
+        this.hubIP = getHubIP;
     }
 
     public String getWebHeadless() {
@@ -405,6 +417,10 @@ public class TestEnv {
 
     public void setExecution_type(String execution_type) {
         this.execution_type = execution_type;
+    }
+
+    public void setGridExecution_type(String gridExecution_type) {
+        this.grid_execution_local = gridExecution_type;
     }
 
     public String getJenkins_execution() {

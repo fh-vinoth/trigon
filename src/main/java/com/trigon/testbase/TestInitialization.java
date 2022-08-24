@@ -72,7 +72,9 @@ public class TestInitialization extends Browsers {
         }
         String suiteNameWithTime = suiteNameReplaced + "_" + cUtils().getCurrentTimeStamp();
         getSuiteNameWithTime = suiteNameWithTime;
-        String testResultsPath = cUtils().createFolder("src/test/resources", "TestResults", suiteNameWithTime);
+        getSuiteExecutionDate = cUtils().getCurrentDate();
+        String datePath = cUtils().createFolder("src/test/resources","TestResults",getSuiteExecutionDate);
+        String testResultsPath = cUtils().createFolder(datePath,  suiteNameWithTime,"");
         trigonPaths.setTestResultsPath(testResultsPath);
         String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
         trigonPaths.setSupportFilePath(supportFilePath);
@@ -555,7 +557,7 @@ public class TestInitialization extends Browsers {
                                       String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
                                       String accessToken, String isJWT, String endpointPrefix, String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -578,6 +580,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setAppType(appType.toLowerCase());
             }
             tEnv().setExecution_type(tRemoteEnv.getExecution_type());
+            tEnv().setGridExecution_type(tRemoteEnv.getGrid_execution_local());
             tEnv().setJenkins_execution(tRemoteEnv.getJenkins_execution());
             tEnv().setPipeline_execution(tRemoteEnv.getPipeline_execution());
             //tEnv().setTest_region(tRemoteEnv.getTest_region());
@@ -715,6 +718,9 @@ public class TestInitialization extends Browsers {
 
             if (browser != null) {
                 tEnv().setWebBrowser(browser);
+            }
+            if (grid_Hub_IP != null) {
+                tEnv().setHubIP(grid_Hub_IP);
             }
             if (browserVersion != null) {
                 tEnv().setWebBrowserVersion(browserVersion);

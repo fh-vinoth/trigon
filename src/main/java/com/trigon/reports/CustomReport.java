@@ -101,6 +101,29 @@ public class CustomReport extends Initializers {
         }
     }
 
+    public void addRowToCustomReportForFailure(String... values) {
+        try {
+            if (values.length > 0) {
+                String csvFile = trigonPaths.getTestResultsPath() + "/CustomReport.csv";
+                String htmlFile = trigonPaths.getTestResultsPath() + "/CustomReport.html";
+
+                CSVWriter csvWriter = new CSVWriter(new FileWriter(csvFile, true));
+                csvWriter.writeNext(values);
+                csvWriter.close();
+
+                BufferedWriter htmlWriter = new BufferedWriter(new FileWriter(htmlFile, true));
+                htmlWriter.write(" <tr style=\"height: 40px;\">\n");
+                for (int i = 0; i < values.length; i++) {
+                    htmlWriter.write("<td style=color:red> " + values[i] + "</td>\n");
+                }
+                htmlWriter.write("                    </tr>\n");
+                htmlWriter.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void addRowToCustomReport(List<String> values) {
         try {
             if (values.size() > 0) {

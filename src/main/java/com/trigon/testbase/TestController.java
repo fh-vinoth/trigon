@@ -43,6 +43,7 @@ public class TestController extends TestInitialization {
             JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
             tre = pGson.fromJson(element1, RemoteEnvPojo.class);
             executionType = tre.getExecution_type();
+            grid_execution_local=tre.getGrid_execution_local();
             pipelineExecution = tre.getPipeline_execution();
             propertiesPojo = setProperties();
             reportsInitialization(iTestContext.getSuite().getName());
@@ -67,22 +68,19 @@ public class TestController extends TestInitialization {
     protected void moduleInitilalization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
                                          @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                                         @Optional String URI,@Optional String envType,@Optional String appSycURI,@Optional String appSycAuth, @Optional String version,@Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
+                                         @Optional String URI, @Optional String envType, @Optional String appSycURI, @Optional String appSycAuth, @Optional String version, @Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
                                          @Optional String store, @Optional String host, @Optional String locale,
                                          @Optional String region, @Optional String country, @Optional String currency,
-                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName) {
+                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName, @Optional String grid_Hub_IP) {
         try {
             if (platformType != null) {
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
-                setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI, envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
+                setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI, envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName, grid_Hub_IP);
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
 
-                if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")){
+                if (context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
                     remoteBrowserInit(context, xmlTest);
-                }
-                if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
-                    remoteMobileInit(context, xmlTest);
                 }
                 moduleFailAnalysisThread.set(new ArrayList<>());
                 testModuleCollection(xmlTest.getName());
@@ -95,14 +93,14 @@ public class TestController extends TestInitialization {
     protected void classInitialization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
                                        @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                                        @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                                       @Optional String URI, @Optional String envType,@Optional String appSycURI,@Optional String appSycAuth,@Optional String version,@Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
+                                       @Optional String URI, @Optional String envType, @Optional String appSycURI, @Optional String appSycAuth, @Optional String version, @Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
                                        @Optional String store, @Optional String host, @Optional String locale,
                                        @Optional String region, @Optional String country, @Optional String currency,
-                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName) {
+                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName, @Optional String grid_Hub_IP) {
         try {
             logger.info("Test Execution Started for Class  : " + getClass().getSimpleName());
             classFailAnalysisThread.set(new ArrayList<>());
-            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth, version,partnerURI, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
+            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth, version,partnerURI, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName, grid_Hub_IP);
             if(context.getSuite().getName().contains("adhoc")){
                 remoteBrowserInit(context, xmlTest);
             }
@@ -120,25 +118,26 @@ public class TestController extends TestInitialization {
                          @Optional String URI,@Optional String envType,@Optional String appSycURI,@Optional String appSycAuth, @Optional String version,@Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,
                          @Optional String store, @Optional String host, @Optional String locale,
                          @Optional String region, @Optional String country, @Optional String currency,
-                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName) {
+                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName,@Optional String grid_Hub_IP) {
         logger.info("Test Execution Started for Method : " + method.getName());
         try {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
-            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName);
+            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName,grid_Hub_IP);
 
-            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
+            if (context.getSuite().getName().contains("adhoc") || context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
 
-            }else{
+            } else {
                 remoteBrowserInit(context, xmlTest);
             }
             if (context.getSuite().getName().contains("adhoc_parallel")) {
                 remoteBrowserInit(context, xmlTest);
             }
-            if (context.getSuite().getName().toLowerCase().startsWith("fusionapp")) {
-
-            }else{
-                remoteMobileInit(context, xmlTest);
+            remoteMobileInit(context, xmlTest);
+            if (!context.getSuite().getName().toLowerCase().startsWith("api") && (executionType.equalsIgnoreCase("remote"))) {
+                logger.info("########################################################################################################");
+                logger.info("BS Interactive Session -> " + bsVideo().get("public_url").toString());
+                logger.info("########################################################################################################");
             }
             setMobileLocator();
             setWebLocator();
@@ -158,9 +157,9 @@ public class TestController extends TestInitialization {
             if (result.wasRetried()) {
                 if (result.getStatus() == 3) {
                     if (extentMethodNode.get() != null) {
-                       initFailedLogs= getInitialFailureMessages(xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim(),
-                                                 tEnv().getCurrentTestClassName(),
-                                                 method.getName());
+                        initFailedLogs = getInitialFailureMessages(xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim(),
+                                tEnv().getCurrentTestClassName(),
+                                method.getName());
                         extent.removeTest(extentMethodNode.get());
                     }
                 } else {
@@ -170,36 +169,30 @@ public class TestController extends TestInitialization {
                 failStatusCheck(method);
             }
 
-            if(result.getStatus()==2 && initFailedLogs!=null) {
-                List<Log> currentLogs=  extent.getReport().getTestList().stream().filter(modules -> xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+            if (result.getStatus() == 2 && initFailedLogs != null) {
+                List<Log> currentLogs = extent.getReport().getTestList().stream().filter(modules -> xmlTest.getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0, modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
                         tEnv().getCurrentTestClassName().equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> method.getName().equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> initFailedLogs.contains(logs.getDetails())).collect(Collectors.toList());
 
-                for(Log currentLog : currentLogs)
-                {   if(!currentLog.getStatus().toString().equalsIgnoreCase("Fail"))
-                {
-                    logReport("INFO", "<b>RETRY FAILURE</b> "+ currentLog.getDetails());  //Initial Execution Failure Reporting
-                }
+                for (Log currentLog : currentLogs) {
+                    if (!currentLog.getStatus().toString().equalsIgnoreCase("Fail")) {
+                        logReport("INFO", "<b>RETRY FAILURE</b> " + currentLog.getDetails());  //Initial Execution Failure Reporting
+                    }
                     initFailedLogs.remove(currentLog.getDetails());
                 }
-                if(!initFailedLogs.isEmpty())
-                {
-                    for(String logDetail: initFailedLogs)
-                        logReport("INFO",  "<b>RETRY FAILURE</b> "+logDetail);   //Initial Execution Failure Reporting
+                if (!initFailedLogs.isEmpty()) {
+                    for (String logDetail : initFailedLogs)
+                        logReport("INFO", "<b>RETRY FAILURE</b> " + logDetail);   //Initial Execution Failure Reporting
                 }
             }
-            if (context.getSuite().getName().contains("adhoc")||context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
+            if (context.getSuite().getName().contains("adhoc") || context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
 
-            }else{
+            } else {
                 closeBrowserClassLevel();
             }
             if (context.getSuite().getName().contains("adhoc_parallel")) {
                 closeBrowserClassLevel();
             }
-            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
-
-            }else {
-                closeMobileClassLevel();
-            }
+            closeMobileClassLevel();
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
                 b.setTestCaseFinalStatus(runId, 1, "TEST PASSED", method.getName());
@@ -216,11 +209,11 @@ public class TestController extends TestInitialization {
         try {
             dataTableCollectionApi.remove();
             logger.info("Test Execution Finished for Class  : " + getClass().getSimpleName());
-            if(context.getSuite().getName().contains("adhoc")){
+            if (context.getSuite().getName().contains("adhoc")) {
                 closeBrowserClassLevel();
             }
             if (classFailAnalysisThread.get().size() > 0) {
-                if(moduleFailAnalysisThread.get()!=null){
+                if (moduleFailAnalysisThread.get() != null) {
                     moduleFailAnalysisThread.get().add("FAIL");
                 }
             } else {
@@ -236,14 +229,11 @@ public class TestController extends TestInitialization {
     }
 
     @AfterTest(alwaysRun = true)
-    protected void methodClosure(ITestContext context,XmlTest xmlTest) {
+    protected void methodClosure(ITestContext context, XmlTest xmlTest) {
         try {
             logger.info("Test Execution Finished for Module : " + xmlTest.getName());
-            if(context.getSuite().getName().contains("msweb")||context.getSuite().getName().toLowerCase().startsWith("mytweb")|| context.getSuite().getName().toLowerCase().startsWith("fhnative")){
+            if (context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
                 closeBrowserClassLevel();
-            }
-            if(context.getSuite().getName().toLowerCase().startsWith("fusionapp")){
-                closeMobileClassLevel();
             }
             if (extentTestNode.get() != null) {
                 if (moduleFailAnalysisThread.get().size() > 0) {
@@ -358,12 +348,12 @@ public class TestController extends TestInitialization {
 
         }
     }
-    public List<String> getInitialFailureMessages(String testName, String className, String methodName)
-    {
-        List<String> failedSteps=new ArrayList<>();
-       extent.getReport().getTestList().stream().filter(modules -> testName.equalsIgnoreCase(modules.getName().substring(0,modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+
+    public List<String> getInitialFailureMessages(String testName, String className, String methodName) {
+        List<String> failedSteps = new ArrayList<>();
+        extent.getReport().getTestList().stream().filter(modules -> testName.equalsIgnoreCase(modules.getName().substring(0, modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
                 className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("Fail")).collect(Collectors.toList()).forEach(failLog -> failedSteps.add(failLog.getDetails()));
-     return failedSteps;
+        return failedSteps;
     }
 
 }

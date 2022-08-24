@@ -1,10 +1,10 @@
 package com.trigon.elements;
 
 
+import com.aventstack.extentreports.App;
 import com.trigon.constants.Message;
 import com.trigon.exceptions.RetryOnException;
-import io.appium.java_client.android.AndroidElement;
-import io.appium.java_client.ios.IOSElement;
+import io.appium.java_client.AppiumBy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
@@ -20,8 +20,8 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     private static final Logger logger = LogManager.getLogger(ElementStrategyImpl.class);
 
     @Override
-    public AndroidElement getAndroidElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        AndroidElement result = null;
+    public WebElement getAndroidElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
+        WebElement result = null;
         try{
             if (android() != null) {
                 RetryOnException retryHandler = new RetryOnException();
@@ -35,59 +35,59 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                     try {
                         switch (locatorArr[0]) {
                             case "accessibilityid":
-                                result = android().findElementByAccessibilityId(locatorArr[1]);
+                                result = android().findElement(AppiumBy.accessibilityId(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "id":
-                                result = android().findElementById(locatorArr[1]);
+                                result = android().findElement(AppiumBy.id(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "uiautomator":
-                                result = android().findElementByAndroidUIAutomator(locatorArr[1]);
+                                result = android().findElement(AppiumBy.androidUIAutomator((locatorArr[1])));
                                 elementStatus = false;
                                 break;
                             case "name":
-                                result = android().findElementByName(locatorArr[1]);
+                                result = android().findElement(AppiumBy.name(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "xpath":
-                                result = android().findElementByXPath(locatorArr[1]);
+                                result = android().findElement(AppiumBy.xpath(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "datamatcher":
-                                result = android().findElementByAndroidDataMatcher(locatorArr[1]);
+                                result = android().findElement(AppiumBy.androidDataMatcher(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "classname":
-                                result = android().findElementByClassName(locatorArr[1]);
+                                result = android().findElement(By.className(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "viewtag":
-                                result = android().findElementByAndroidViewTag(locatorArr[1]);
+                                result = android().findElement(AppiumBy.androidViewTag(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "image":
-                                result = android().findElementByImage(locatorArr[1]);
+                                result = android().findElement(AppiumBy.image(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "custom":
-                                result = android().findElementByCustom(locatorArr[1]);
+                                result = android().findElement(AppiumBy.custom(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "partiallinktext":
-                                result = android().findElementByPartialLinkText(locatorArr[1]);
+                                result = android().findElement(AppiumBy.partialLinkText(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "linktext":
-                                result = android().findElementByLinkText(locatorArr[1]);
+                                result = android().findElement(AppiumBy.linkText(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "tagname":
-                                result = android().findElementByTagName(locatorArr[1]);
+                                result = android().findElement(By.tagName(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "css":
-                                result = android().findElementByCssSelector(locatorArr[1]);
+                                result = android().findElement(By.cssSelector(locatorArr[1]));
                                 elementStatus = false;
                                 break;
 
@@ -209,8 +209,8 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     }
 
     @Override
-    public IOSElement getIOSElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        IOSElement result = null;
+    public WebElement getIOSElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
+        WebElement result = null;
         try{
             if (ios() != null) {
                 RetryOnException retryHandler = new RetryOnException();
@@ -224,55 +224,55 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                     try {
                         switch (locatorArr[0]) {
                             case "predicate":
-                                result = ios().findElementByIosNsPredicate(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "classchain":
-                                result = ios().findElementByIosClassChain(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.iOSClassChain(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "accessibilityid":
-                                result = ios().findElementByAccessibilityId(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.accessibilityId(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "name":
-                                result = ios().findElementByName(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.name(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "image":
-                                result = ios().findElementByImage(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.image(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "custom":
-                                result = ios().findElementByCustom(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.custom(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "xpath":
-                                result = ios().findElementByXPath(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.xpath(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "classname":
-                                result = ios().findElementByClassName(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.className(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "partiallinktext":
-                                result = ios().findElementByPartialLinkText(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.partialLinkText(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "linktext":
-                                result = ios().findElementByLinkText(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.linkText(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "tagname":
-                                result = ios().findElementByTagName(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.tagName(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "css":
-                                result = ios().findElementByCssSelector(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.cssSelector(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "id":
-                                result = ios().findElementById(locatorArr[1]);
+                                result = ios().findElement(AppiumBy.id(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             default:
@@ -299,8 +299,8 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     }
 
     @Override
-    public List<AndroidElement> getAndroidElements(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        List<AndroidElement> result = new ArrayList<>();
+    public List<WebElement> getAndroidElements(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
+        List<WebElement> result = new ArrayList<>();
         try{
             if (android() != null) {
                 RetryOnException retryHandler = new RetryOnException();
@@ -314,59 +314,59 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                     try {
                         switch (locatorArr[0]) {
                             case "datamatcher":
-                                result = android().findElementsByAndroidDataMatcher(locatorArr[1]);
+                                result = android().findElements(AppiumBy.androidDataMatcher(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "uiautomator":
-                                result = android().findElementsByAndroidUIAutomator(locatorArr[1]);
+                                result = android().findElements(AppiumBy.androidUIAutomator(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "viewtag":
-                                result = android().findElementsByAndroidViewTag(locatorArr[1]);
+                                result = android().findElements(AppiumBy.androidViewTag(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "accessibilityid":
-                                result = android().findElementsByAccessibilityId(locatorArr[1]);
+                                result = android().findElements(AppiumBy.accessibilityId(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "name":
-                                result = android().findElementsByName(locatorArr[1]);
+                                result = android().findElements(AppiumBy.name(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "image":
-                                result = android().findElementsByImage(locatorArr[1]);
+                                result = android().findElements(AppiumBy.image(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "custom":
-                                result = android().findElementsByCustom(locatorArr[1]);
+                                result = android().findElements(AppiumBy.custom(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "xpath":
-                                result = android().findElementsByXPath(locatorArr[1]);
+                                result = android().findElements(AppiumBy.xpath(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "classname":
-                                result = android().findElementsByClassName(locatorArr[1]);
+                                result = android().findElements(AppiumBy.className(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "partiallinktext":
-                                result = android().findElementsByPartialLinkText(locatorArr[1]);
+                                result = android().findElements(AppiumBy.partialLinkText(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "linktext":
-                                result = android().findElementsByLinkText(locatorArr[1]);
+                                result = android().findElements(AppiumBy.linkText(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "tagname":
-                                result = android().findElementsByTagName(locatorArr[1]);
+                                result = android().findElements(AppiumBy.tagName(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "css":
-                                result = android().findElementsByCssSelector(locatorArr[1]);
+                                result = android().findElements(AppiumBy.cssSelector(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "id":
-                                result = android().findElementsById(locatorArr[1]);
+                                result = android().findElements(AppiumBy.id(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             default:
@@ -488,8 +488,8 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     }
 
     @Override
-    public List<IOSElement> getIOSElements(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        List<IOSElement> result = new ArrayList<>();
+    public List<WebElement> getIOSElements(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
+        List<WebElement> result = new ArrayList<>();
         try{
             if (ios() != null) {
                 RetryOnException retryHandler = new RetryOnException();
@@ -503,55 +503,55 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                     try {
                         switch (locatorArr[0]) {
                             case "predicate":
-                                result = ios().findElementsByIosNsPredicate(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.iOSNsPredicateString(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "classchain":
-                                result = ios().findElementsByIosClassChain(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.iOSClassChain(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "accessibilityid":
-                                result = ios().findElementsByAccessibilityId(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.accessibilityId(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "name":
-                                result = ios().findElementsByName(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.name(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "image":
-                                result = ios().findElementsByImage(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.image(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "custom":
-                                result = ios().findElementsByCustom(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.custom(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "xpath":
-                                result = ios().findElementsByXPath(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.xpath(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "classname":
-                                result = ios().findElementsByClassName(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.className(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "partiallinktext":
-                                result = ios().findElementsByPartialLinkText(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.partialLinkText(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "linktext":
-                                result = ios().findElementsByLinkText(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.linkText(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "tagname":
-                                result = ios().findElementsByTagName(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.tagName(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "css":
-                                result = ios().findElementsByCssSelector(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.cssSelector(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             case "id":
-                                result = ios().findElementsById(locatorArr[1]);
+                                result = ios().findElements(AppiumBy.id(locatorArr[1]));
                                 elementStatus = false;
                                 break;
                             default:

@@ -74,9 +74,13 @@ public class ReportManager extends CustomReport {
     }
 
     public void getBSVideoSession(){
+        logReport("INFO", "<b>BS Video:</b> <a href=\""+bsVideo().get("public_url").toString()+"\" target=\"_blank\"> View Recorded Video </a>");
+    }
+
+    public JSONObject bsVideo(){
         Object response = null;
         if(ios()!=null) {
-           response  = ios().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+            response  = ios().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
         if(android()!=null) {
             response  = android().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
@@ -86,7 +90,7 @@ public class ReportManager extends CustomReport {
         }
 
         JSONObject bsResponse = new JSONObject(response.toString());
-        logReport("INFO", "<b>BS Video:</b> <a href=\""+bsResponse.get("public_url").toString()+"\" target=\"_blank\"> View Recorded Video </a>");
+        return bsResponse;
     }
 
     public void logMultipleJSON(String status, LinkedHashMap message, Object responseJSON, String curl, LinkedHashMap responseValidation) {
@@ -126,6 +130,9 @@ public class ReportManager extends CustomReport {
                     failAnalysisThread.get().add(pGson.toJson(message));
                 }
                 logger.error(apiName + " is FAILED !! Check your API Parameters ");
+                logger.info("*******************************************************************************");
+                logger.info("Failed curl : \n"+curl);
+                logger.info("*******************************************************************************");
             }
         } catch (Exception e) {
             captureException(e);
