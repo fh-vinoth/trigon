@@ -225,8 +225,8 @@ public class Browsers extends Android {
         }
 //        caps.setCapability("language", "en");
 
-        browserstackOptions.put("os", "Windows");
-        browserstackOptions.put("osVersion", "11");
+        browserstackOptions.put("os", tEnv().getWebSystemOS());
+        browserstackOptions.put("osVersion", tEnv().getWebSystemOSVersion());
         browserstackOptions.put("debug", "true");
         browserstackOptions.put("networkLogs", "true");
         browserstackOptions.put("seleniumVersion", "4.0.0");
