@@ -552,8 +552,11 @@ public class EmailReport {
                                 }
                                 finalJsonWriter.name("failure-reason").value(sb.toString());
                                 finalJsonWriter.name("status").value("fail");
-                                finalJsonWriter.endObject();
+                            }else{
+                                finalJsonWriter.name("status").value("pass");
                             }
+
+                            finalJsonWriter.endObject();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
