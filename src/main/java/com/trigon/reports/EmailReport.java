@@ -513,62 +513,52 @@ public class EmailReport {
 
             JsonWriter finalJsonWriter = jsonWriter;
             stats.getReport().getTestList().forEach(module -> {
-                try {
-                    finalJsonWriter.beginObject();
-                    String moduleName = module.getName();
-                    String[] moduleSplit = module.getName().split("<div");
-                    finalJsonWriter.name("module-name").value(moduleSplit[0]);
-                    module.getChildren().forEach(testClass -> {
-                        String className = testClass.getName();
-                        try {
-                            finalJsonWriter.name("class-name").value(className);
-                            testClass.getChildren().forEach(method -> {
-                                String methodName = method.getName();
-                                String description = method.getDescription();
-                                try {
-                                    finalJsonWriter.name("method-name").value(methodName);
-                                    finalJsonWriter.name("description").value(description);
-                                    finalJsonWriter.name("author").value(method.hasAuthor());
-                                    // If Test Fails
-                                    if (method.getStatus().getName().equals("Fail")) {
 
-                                        StringBuffer sb = new StringBuffer();
-                                        method.getLogs().forEach(log -> {
+                String moduleName = module.getName();
+                String[] moduleSplit = module.getName().split("<div");
+
+                module.getChildren().forEach(testClass -> {
+                    String innerClassName = testClass.getName();
+                    testClass.getChildren().forEach(method -> {
+                        String methodName = method.getName();
+                        String description = method.getDescription();
+                        try {
+                            finalJsonWriter.beginObject();
+                            finalJsonWriter.name("module-name").value(moduleSplit[0]);
+                            finalJsonWriter.name("class-name").value(innerClassName);
+                            finalJsonWriter.name("method-name").value(methodName);
+                            finalJsonWriter.name("description").value(description);
+                            finalJsonWriter.name("author").value(method.hasAuthor());
+                            // If Test Fails
+                            if (method.getStatus().getName().equals("Fail")) {
+                                StringBuffer sb = new StringBuffer();
+                                method.getLogs().forEach(log -> {
+                                    if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
+                                        if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
+                                            sb.append(log.getDetails());
+                                        }
+                                    }
+                                });
+                                if (method.hasChildren()) {
+                                    method.getChildren().forEach(child -> {
+                                        child.getLogs().forEach(log -> {
                                             if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
                                                 if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                                     sb.append(log.getDetails());
                                                 }
                                             }
                                         });
-                                        if (method.hasChildren()) {
-                                            method.getChildren().forEach(child -> {
-                                                child.getLogs().forEach(log -> {
-                                                    if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                                        if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
-                                                            sb.append(log.getDetails());
-                                                        }
-                                                    }
-                                                });
-                                            });
-                                        }
-                                        finalJsonWriter.name("failure-reason").value(sb.toString());
-                                        finalJsonWriter.name("status").value("fail");
-                                    }
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
+                                    });
                                 }
-
-                            });
-
+                                finalJsonWriter.name("failure-reason").value(sb.toString());
+                                finalJsonWriter.name("status").value("fail");
+                                finalJsonWriter.endObject();
+                            }
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                     });
-                    finalJsonWriter.endObject();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
+                });
             });
 
             jsonWriter.endArray();
