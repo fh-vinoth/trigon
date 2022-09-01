@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GetAPIEndpointCount_New {
-    public static Map<String,String> endpointList = new HashMap<>();
     public static Map<String,String> endpointCount = new HashMap<>();
     public static Map<String,Integer> allEndpointHitCount = new HashMap<>();
     public static Map<String,Integer> allHTTPHitCount = new HashMap<>();
