@@ -220,7 +220,7 @@ public class Browsers extends Android {
 //        caps.setCapability("project", context.getSuite().getName());
         caps.setCapability("platformName", tEnv().getWebSystemOS());
         caps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
-//        caps.setCapability("os_version", tEnv().getWebSystemOSVersion());
+        caps.setCapability("os_version", tEnv().getWebSystemOSVersion());
         caps.setCapability("browserName", tEnv().getWebBrowser());
         caps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
         caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
@@ -229,11 +229,11 @@ public class Browsers extends Android {
         }
 //        caps.setCapability("language", "en");
 
-        browserstackOptions.put("os", "Windows");
-        browserstackOptions.put("osVersion", "11");
+        browserstackOptions.put("os", tEnv().getWebSystemOS());
+        browserstackOptions.put("osVersion", tEnv().getWebSystemOSVersion());
         browserstackOptions.put("debug", "true");
         browserstackOptions.put("networkLogs", "true");
-        browserstackOptions.put("seleniumVersion", "4.0.0");
+        //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
         browserstackOptions.put("idleTimeout", "300");
         browserstackOptions.put("autoWait", "30");
@@ -306,7 +306,7 @@ public class Browsers extends Android {
                         {
                             Request req = request.getRequest();
                             // logReport("INFO",req.getMethod().toUpperCase());
-                            System.out.println(req.getMethod().toUpperCase());
+                            //System.out.println(req.getMethod().toUpperCase());
 
                         });
 
