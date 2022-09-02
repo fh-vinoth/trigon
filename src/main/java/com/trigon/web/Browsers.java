@@ -37,10 +37,9 @@ import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -313,9 +312,9 @@ public class Browsers extends Android {
                         devTools.addListener(Network.responseReceived(), response ->
                         {
                             Response res = response.getResponse();
+                            //List<String> str = Collections.singletonList(res.getUrl());
                             if (res.getStatus().toString().startsWith("4") || res.getStatus().toString().startsWith("5")) {
                                 logger.info(res.getUrl() + "is failing with status code" + res.getStatus());
-                                hardFail();
                             }
                         });
                     }
