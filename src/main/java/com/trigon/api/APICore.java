@@ -738,7 +738,7 @@ public class APICore extends ReportManager {
     protected String getCurl(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, Map<String, Object> multiPart) {
         StringBuffer sb = new StringBuffer();
         String curl = "";
-        boolean pathParamFlag = false;
+        //boolean pathParamFlag = false;
         try {
             String URI = tEnv().getApiURI();
             if (!URI.endsWith("/")) {
@@ -749,15 +749,19 @@ public class APICore extends ReportManager {
 
             if ((pathParams != null && pathParams.size() > 0)) {
                 pathParams.forEach((k, v) -> sb.append("/" + v));
-                pathParamFlag = true;
+                //pathParamFlag = true;
             }
             if ((queryParams != null && queryParams.size() > 0)) {
                 sb.append("?");
                 sb.append(queryParams.toString().replace("{", "").replace("}", "").replaceAll(", ", "&"));
+                //sb.append("' ");
+            } //else if (pathParamFlag) {
+                //sb.append("'");
+            //}
+            if(!sb.toString().trim().endsWith("'")){
                 sb.append("' ");
-            } else if (pathParamFlag) {
-                sb.append("'");
             }
+
 
             if (headers != null && headers.size() > 0) {
                 headers.forEach((k, v) -> sb.append("--header '" + k + ": " + v + "' "));
