@@ -419,12 +419,4 @@ public class Browsers extends Android {
             }
         }
     }
-    public void chromeNetworklogs(){
-        try{
-
-
-        } catch (Exception e) {
-
-        }
-    }
 }
