@@ -3,6 +3,8 @@ package com.trigon.listeners;
 import com.trigon.reports.ReportManager;
 import org.testng.*;
 import org.testng.annotations.ITestAnnotation;
+import org.influxdb.dto.Point;
+import java.util.concurrent.TimeUnit;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -43,18 +45,36 @@ public class TestListener extends ReportManager implements IAnnotationTransforme
     }
 
     public void onTestSuccess(ITestResult result) {
+        this.postTestMethodStatus(result, "PASS");
     }
 
     public void onTestFailure(ITestResult result) {
+        this.postTestMethodStatus(result, "FAIL");
     }
 
     public void onTestSkipped(ITestResult result) {
+        this.postTestMethodStatus(result, "SKIPPED");
     }
 
     public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
     }
 
     public void onStart(ITestContext context) {
+    }
+
+    private void postTestMethodStatus(ITestResult iTestResult, String status) {
+        Point point = Point.measurement("testmethod").time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .tag("testclass", iTestResult.getTestClass().getName()).tag("name", iTestResult.getName())
+                .tag("description", iTestResult.getMethod().getDescription()).tag("result", status)
+                .addField("duration", (iTestResult.getEndMillis() - iTestResult.getStartMillis())).build();
+        UpdateResults.post(point);
+    }
+    private void postTestClassStatus(ITestContext iTestContext) {
+        Point point = Point.measurement("testclass").time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .tag("name", iTestContext.getAllTestMethods()[0].getTestClass().getName())
+                .addField("duration", (iTestContext.getEndDate().getTime() - iTestContext.getStartDate().getTime()))
+                .build();
+        UpdateResults.post(point);
     }
 
     @Override

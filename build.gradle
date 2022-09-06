@@ -48,6 +48,7 @@ dependencies {
     implementation group: 'com.browserstack', name: 'browserstack-local-java', version: '1.0.6'
     implementation group: 'org.apache.commons',name:'commons-dbcp2', version:'2.9.0'
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
+    implementation group: 'org.influxdb', name: 'influxdb-java', version: '2.23'
 
 
 }
