@@ -54,7 +54,7 @@ public class GetAPIEndpointCount_New {
      * @return
      */
     public int getEndpointListCount(){
-        int count = endpointCount.size();
+        int count = allEndpointHitCount.size();
         return count;
     }
 
