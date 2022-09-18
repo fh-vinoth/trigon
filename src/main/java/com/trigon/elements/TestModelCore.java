@@ -208,7 +208,7 @@ public class TestModelCore extends ReportManager {
                     customAssertEquals(actual, expected);
                 } else {
                     logger.error("Actual or Expected value is null");
-                    //logReport("FAIL", "Actual or Expected value is null");
+                    logReport("FAIL", "Actual or Expected value is null");
                 }
             }
         } catch (Exception e) {

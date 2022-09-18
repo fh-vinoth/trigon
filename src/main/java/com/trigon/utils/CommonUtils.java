@@ -82,6 +82,12 @@ public class CommonUtils {
         return dateFormat.format(cal.getTime());
     }
 
+    public String getRunId() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssms");
+        Calendar cal = Calendar.getInstance();
+        return dateFormat.format(cal.getTime());
+    }
+
     public String getCurrentDate() {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d-MMM-yyyy");
