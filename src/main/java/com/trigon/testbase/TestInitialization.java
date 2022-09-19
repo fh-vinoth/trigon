@@ -213,7 +213,9 @@ public class TestInitialization extends Browsers {
         //spark.config().setTheme(Theme.DARK);
         extent.attachReporter(json, sparkFail, sparkAll);
         extent.setSystemInfo("frameworkVersion", getFrameworkVersion());
-        extent.setSystemInfo("SuiteName", suiteNameWithTime);
+        extent.setSystemInfo("suite-name", suiteNameWithTime);
+        extent.setSystemInfo("run-id", cUtils().getRunId());
+
     }
 
     public void createExtentClassName(XmlTest xmlTest) {
