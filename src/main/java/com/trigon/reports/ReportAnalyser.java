@@ -52,7 +52,7 @@ public class ReportAnalyser {
                 throw new AmazonClientException("No reports available for the selected date " + date_DMMMYYYY + ". Please check the date format or the date again.");
             }
             Collections.sort(reportUrlList);
-            reportUrl = reportUrl + reportUrlList.get(reportUrlList.size() - 1)+"EmailReport.html";
+            reportUrl = reportUrl + reportUrlList.get(reportUrlList.size() - 1)+"testSummary.json";
         } catch (AmazonClientException e) {
             e.printStackTrace();
         }
