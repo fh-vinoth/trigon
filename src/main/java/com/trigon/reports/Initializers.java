@@ -5,6 +5,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.trigon.bean.ExtentPojo;
 import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.testenv.TestEnv;
+import com.trigon.database.ADatabase;
 import com.trigon.database.Database;
 import com.trigon.exceptions.TrigonAsserts;
 import com.trigon.utils.CommonUtils;
@@ -70,6 +71,7 @@ public class Initializers {
     protected static boolean failStatus = false;
     protected static boolean exceptionStatus = false;
 
+    public static String suiteRunId;
     public static RemoteWebDriver browser() {
         return webDriverThreadLocal.get();
     }
@@ -91,4 +93,5 @@ public class Initializers {
     }
 
     public static Database db = new Database();
+    public static ADatabase adb = new ADatabase();
 }

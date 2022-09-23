@@ -214,7 +214,8 @@ public class TestInitialization extends Browsers {
         extent.attachReporter(json, sparkFail, sparkAll);
         extent.setSystemInfo("frameworkVersion", getFrameworkVersion());
         extent.setSystemInfo("suite-name", suiteNameWithTime);
-        extent.setSystemInfo("run-id", cUtils().getRunId());
+        suiteRunId = cUtils().getRunId();
+        extent.setSystemInfo("run-id", suiteRunId);
 
     }
 
