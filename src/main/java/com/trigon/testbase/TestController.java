@@ -154,6 +154,7 @@ public class TestController extends TestInitialization {
     @AfterMethod(alwaysRun = true)
     protected void processTearDown(Method method, XmlTest xmlTest, ITestContext context, ITestResult result) {
         try {
+            String status = "NA";
             if (result.wasRetried()) {
                 if (result.getStatus() == 3) {
                     if (extentMethodNode.get() != null) {
@@ -163,10 +164,10 @@ public class TestController extends TestInitialization {
                         extent.removeTest(extentMethodNode.get());
                     }
                 } else {
-                    failStatusCheck(method);
+                    status = failStatusCheck(method);
                 }
             } else {
-                failStatusCheck(method);
+                status = failStatusCheck(method);
             }
 
             if (result.getStatus() == 2 && initFailedLogs != null) {
@@ -193,6 +194,9 @@ public class TestController extends TestInitialization {
                 closeBrowserClassLevel();
             }
             closeMobileClassLevel();
+            if (executionType.equalsIgnoreCase("remote")) {
+                adb.insertData(method, xmlTest, context, result,status);
+            }
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
                 b.setTestCaseFinalStatus(runId, 1, "TEST PASSED", method.getName());
@@ -313,7 +317,8 @@ public class TestController extends TestInitialization {
         }
     }
 
-    private void failStatusCheck(Method method) {
+    private String failStatusCheck(Method method) {
+        String status= "NA";
         if (failAnalysisThread.get().size() > 0) {
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
@@ -324,11 +329,14 @@ public class TestController extends TestInitialization {
             }
             failStatus = true;
             classFailAnalysisThread.get().add("fail");
+            status = "FAIL";
         } else {
+            status = "PASS";
             if (tEnv().getScreenshotPath() != null) {
                 CommonUtils.fileOrFolderDelete(tEnv().getScreenshotPath());
             }
         }
+        return status;
     }
 
     private void getGitBranch() {
