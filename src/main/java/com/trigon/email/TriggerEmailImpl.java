@@ -8,8 +8,6 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.transfer.MultipleFileUpload;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
-import com.aventstack.extentreports.model.Report;
-import com.trigon.reports.ReportAnalyser;
 import com.trigon.security.AES;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;

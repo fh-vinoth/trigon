@@ -1,6 +1,7 @@
 package com.trigon.reports.model;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -61,7 +62,7 @@ public class TestSummary {
     private String suiteStatus;
     @SerializedName("results")
     @Expose
-    private JsonArray results = null;
+    private List<JsonObject> results = null;
 
     public String getSuiteName() {
         return suiteName;
@@ -199,11 +200,11 @@ public class TestSummary {
         this.suiteStatus = suiteStatus;
     }
 
-    public JsonArray getResults() {
+    public List<JsonObject> getResults() {
         return results;
     }
 
-    public void setResults(JsonArray results) {
+    public void setResults(List<JsonObject> results) {
         this.results = results;
     }
 }

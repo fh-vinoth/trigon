@@ -486,28 +486,37 @@ public class EmailReport {
 
     private static void generateTestSummary(ExtentReports stats, String reportPath,String suiteName) {
         JsonWriter jsonWriter = null;
+
+        int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
+        int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
+        int skipPercentage = stats.getStats().getGrandchildPercentage().get(Status.SKIP).intValue();
+        String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
+        String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
         try {
             jsonWriter = new JsonWriter(new FileWriter(reportPath + "testSummary.json", false));
             jsonWriter.setIndent(" ");
             jsonWriter.setLenient(true);
             jsonWriter.beginObject();
             jsonWriter.name("suite-name").value(suiteName);
-            jsonWriter.name("run-id").value("");
-            jsonWriter.name("start-time").value("");
-            jsonWriter.name("end-time").value("");
-            jsonWriter.name("total-time").value("");
+            jsonWriter.name("run-id").value(stats.getReport().getSystemEnvInfo().get(1).getValue());
+            jsonWriter.name("start-time").value(String.valueOf(stats.getReport().getStartTime()));
+            jsonWriter.name("end-time").value(String.valueOf(stats.getReport().getEndTime()));
+            jsonWriter.name("total-time").value(timeTaken);
             jsonWriter.name("build").value("");
-            jsonWriter.name("executed-by").value("");
-            jsonWriter.name("execution-type").value("");
-            jsonWriter.name("test-type").value("");
-            jsonWriter.name("platform-type").value("");
-            jsonWriter.name("region").value("");
-            jsonWriter.name("takeaway").value("");
-            jsonWriter.name("host").value("");
-            jsonWriter.name("api-uri").value("");
+//            jsonWriter.name("executed-by").value(tEnv().getExecution_type());
+//            jsonWriter.name("execution-type").value(tEnv().getExecution_type());
+//            jsonWriter.name("test-type").value(tEnv().getTestType());
+//            jsonWriter.name("platform-type").value(tEnv().getAppType());
+//            jsonWriter.name("region").value(tEnv().getApiRegion());
+//            jsonWriter.name("country").value(tEnv().getApiCountry());
+//            jsonWriter.name("host").value(tEnv().getApiHost());
+//            jsonWriter.name("api-uri").value(tEnv().getApiURI());
             jsonWriter.name("appsync-uri").value("");
             jsonWriter.name("tpi-uri").value("");
-            jsonWriter.name("suite-status").value("");
+            jsonWriter.name("suite-status").value(stats.getReport().getStatus().getName());
+            jsonWriter.name("pass-percentage").value(passPercentage);
+            jsonWriter.name("fail-percentage").value(failPercentage);
+            jsonWriter.name("skip-percentage").value(skipPercentage);
 
             jsonWriter.name("results").beginArray();
 
