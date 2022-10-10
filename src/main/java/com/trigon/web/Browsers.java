@@ -5,15 +5,19 @@ import com.trigon.mobile.Android;
 import com.trigon.mobile.AppiumManager;
 import io.appium.java_client.remote.options.UnhandledPromptBehavior;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.groovy.json.internal.Chr;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chromium.ChromiumDriver;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.HasDevTools;
+import org.openqa.selenium.devtools.v102.network.Network;
+import org.openqa.selenium.devtools.v102.network.model.Request;
+import org.openqa.selenium.devtools.v102.network.model.Response;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -22,6 +26,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -32,19 +37,19 @@ import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
 public class Browsers extends Android {
     private static final Logger logger = LogManager.getLogger(Browsers.class);
     Local bsLocal = null;
-
+    private String browserType = "chrome";
 
     protected void createBrowserInstance(ITestContext context, XmlTest xmlTest) {
-        String browserType = "chrome";
+
         String grid_Hub_IP = tEnv().getHubIP();
         if ((tEnv().getWebBrowser() != null) || tEnv().getWebBrowser().isEmpty()) {
             browserType = tEnv().getWebBrowser();
@@ -65,7 +70,6 @@ public class Browsers extends Android {
                         Map<String, Object> contentSettings = new HashMap<String, Object>();
                         ChromeOptions options = new ChromeOptions();
                         options.addArguments("disable-geolocation");
-
                         // SET CHROME OPTIONS
                         // 0 - Default, 1 - Allow, 2 - Block
                         contentSettings.put("geolocation", 1);
@@ -97,7 +101,6 @@ public class Browsers extends Android {
                 try {
                     if (executionType.equalsIgnoreCase("local")) {
                         WebDriverManager.firefoxdriver().setup();
-                        //System.setProperty("webdriver.gecko.driver", "src/test/resources/Utilities/geckodriver");
                         FirefoxOptions options = new FirefoxOptions();
                         Map<String, Object> prefs = new HashMap<String, Object>();
                         Map<String, Object> profile = new HashMap<String, Object>();
@@ -216,7 +219,7 @@ public class Browsers extends Android {
 //        caps.setCapability("project", context.getSuite().getName());
         caps.setCapability("platformName", tEnv().getWebSystemOS());
         caps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
-//        caps.setCapability("os_version", tEnv().getWebSystemOSVersion());
+        caps.setCapability("os_version", tEnv().getWebSystemOSVersion());
         caps.setCapability("browserName", tEnv().getWebBrowser());
         caps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
         caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
@@ -225,11 +228,11 @@ public class Browsers extends Android {
         }
 //        caps.setCapability("language", "en");
 
-        browserstackOptions.put("os", "Windows");
-        browserstackOptions.put("osVersion", "11");
+        browserstackOptions.put("os", tEnv().getWebSystemOS());
+        browserstackOptions.put("osVersion", tEnv().getWebSystemOSVersion());
         browserstackOptions.put("debug", "true");
         browserstackOptions.put("networkLogs", "true");
-        browserstackOptions.put("seleniumVersion", "4.0.0");
+        //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
         browserstackOptions.put("idleTimeout", "300");
         browserstackOptions.put("autoWait", "30");
@@ -291,6 +294,30 @@ public class Browsers extends Android {
             } else {
                 browser().manage().window().maximize();
                 if (!context.getSuite().getName().contains("adhoc")) {
+
+                    if(browserType.contains("chrome") && executionType.contains("local")) {
+
+                        DevTools devTools = ((HasDevTools) browser()).getDevTools();
+                        devTools.createSession();
+                        devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+
+                        devTools.addListener(Network.requestWillBeSent(), request ->
+                        {
+                            Request req = request.getRequest();
+                            // logReport("INFO",req.getMethod().toUpperCase());
+                            //System.out.println(req.getMethod().toUpperCase());
+
+                        });
+
+                        devTools.addListener(Network.responseReceived(), response ->
+                        {
+                            Response res = response.getResponse();
+                            //List<String> str = Collections.singletonList(res.getUrl());
+                            if (res.getStatus().toString().startsWith("4") || res.getStatus().toString().startsWith("5")) {
+                                logger.info(res.getUrl() + "is failing with status code" + res.getStatus());
+                            }
+                        });
+                    }
                     browser().get(tEnv().getWebUrl());
                     browser().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
                     browser().manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
@@ -391,6 +418,4 @@ public class Browsers extends Android {
             }
         }
     }
-
-
 }

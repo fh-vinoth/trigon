@@ -53,9 +53,9 @@ public class EmailReport {
             String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
 
             String subject;
-            if(pipelineExecution.equalsIgnoreCase("true")){
-                subject = "Pipeline|BVT : "+"" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
-            }else{
+            if (pipelineExecution.equalsIgnoreCase("true")) {
+                subject = "Pipeline|BVT : " + "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
+            } else {
                 subject = "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
             }
 
@@ -71,6 +71,8 @@ public class EmailReport {
             writer.name("testCoverage").value("60%");
             writer.endObject().flush();
             writer.close();
+
+            generateTestSummary(stats,reportPath, suiteName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -227,14 +229,14 @@ public class EmailReport {
                 "                        <td colspan=\"2\">Detailed Analysis Reports</td>\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate +"/"+ suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
                 "                                style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Report</a></td>\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/"+ getSuiteExecutionDate +"/" + suiteWithTime + "/EmailReport.html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/EmailReport.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Summary Report</a></td>\n" +
                 "\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/"+ getSuiteExecutionDate +"/"+ suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
+                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Logs</a></td>\n" +
                 "                        <td><a href=\"https://touch2success.testrail.com/index.php?/projects/overview\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">TestRail Report</a></td>\n" +
@@ -320,7 +322,7 @@ public class EmailReport {
                             bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
 
                             method.getLogs().forEach(log -> {
-                               // System.out.println(log.getDetails());
+                                // System.out.println(log.getDetails());
                                 if (log.getDetails().contains("STEP ")) {
                                     bf.append("                            <div style=\"word-break:break-all\">" + log.getDetails().replaceAll("STEP", "STEP " + count) + "</div>\n");
                                     count.getAndIncrement();
@@ -329,9 +331,9 @@ public class EmailReport {
                             });
                         }
                         method.getLogs().forEach(log -> {
-                            if(log.getDetails().startsWith("<b>BS Video:</b>")){
+                            if (log.getDetails().startsWith("<b>BS Video:</b>")) {
                                 bf.append("                                <div style=\"word-break:break-all;padding-top: 10px\">\n" +
-                                        ""+log.getDetails()+""+
+                                        "" + log.getDetails() + "" +
                                         "                                </div>");
                             }
                         });
@@ -482,4 +484,108 @@ public class EmailReport {
         return bf.toString();
     }
 
+    private static void generateTestSummary(ExtentReports stats, String reportPath,String suiteName) {
+        JsonWriter jsonWriter = null;
+
+        int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
+        int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
+        int skipPercentage = stats.getStats().getGrandchildPercentage().get(Status.SKIP).intValue();
+        String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
+        String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
+        try {
+            jsonWriter = new JsonWriter(new FileWriter(reportPath + "testSummary.json", false));
+            jsonWriter.setIndent(" ");
+            jsonWriter.setLenient(true);
+            jsonWriter.beginObject();
+            jsonWriter.name("suite-name").value(suiteName);
+            jsonWriter.name("run-id").value(stats.getReport().getSystemEnvInfo().get(1).getValue());
+            jsonWriter.name("start-time").value(String.valueOf(stats.getReport().getStartTime()));
+            jsonWriter.name("end-time").value(String.valueOf(stats.getReport().getEndTime()));
+            jsonWriter.name("total-time").value(timeTaken);
+            jsonWriter.name("build").value("");
+//            jsonWriter.name("executed-by").value(tEnv().getExecution_type());
+//            jsonWriter.name("execution-type").value(tEnv().getExecution_type());
+//            jsonWriter.name("test-type").value(tEnv().getTestType());
+//            jsonWriter.name("platform-type").value(tEnv().getAppType());
+//            jsonWriter.name("region").value(tEnv().getApiRegion());
+//            jsonWriter.name("country").value(tEnv().getApiCountry());
+//            jsonWriter.name("host").value(tEnv().getApiHost());
+//            jsonWriter.name("api-uri").value(tEnv().getApiURI());
+            jsonWriter.name("appsync-uri").value("");
+            jsonWriter.name("tpi-uri").value("");
+            jsonWriter.name("suite-status").value(stats.getReport().getStatus().getName());
+            jsonWriter.name("pass-percentage").value(passPercentage);
+            jsonWriter.name("fail-percentage").value(failPercentage);
+            jsonWriter.name("skip-percentage").value(skipPercentage);
+
+            jsonWriter.name("results").beginArray();
+
+            JsonWriter finalJsonWriter = jsonWriter;
+            stats.getReport().getTestList().forEach(module -> {
+
+                String moduleName = module.getName();
+                String[] moduleSplit = module.getName().split("<div");
+
+                module.getChildren().forEach(testClass -> {
+                    String innerClassName = testClass.getName();
+                    testClass.getChildren().forEach(method -> {
+                        String methodName = method.getName();
+                        String description = method.getDescription();
+                        try {
+                            finalJsonWriter.beginObject();
+                            finalJsonWriter.name("module-name").value(moduleSplit[0]);
+                            finalJsonWriter.name("class-name").value(innerClassName);
+                            finalJsonWriter.name("method-name").value(methodName);
+                            finalJsonWriter.name("description").value(description);
+                            finalJsonWriter.name("author").value(method.hasAuthor());
+                            // If Test Fails
+                            if (method.getStatus().getName().equals("Fail")) {
+                                StringBuffer sb = new StringBuffer();
+                                method.getLogs().forEach(log -> {
+                                    if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
+                                        if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
+                                            sb.append(log.getDetails());
+                                        }
+                                    }
+                                });
+                                if (method.hasChildren()) {
+                                    method.getChildren().forEach(child -> {
+                                        child.getLogs().forEach(log -> {
+                                            if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
+                                                if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
+                                                    sb.append(log.getDetails());
+                                                }
+                                            }
+                                        });
+                                    });
+                                }
+                                finalJsonWriter.name("failure-reason").value(sb.toString());
+                                finalJsonWriter.name("status").value("fail");
+                            }else{
+                                finalJsonWriter.name("status").value("pass");
+                            }
+
+                            finalJsonWriter.endObject();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                });
+            });
+
+            jsonWriter.endArray();
+            jsonWriter.endObject().flush();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (jsonWriter != null) {
+                    jsonWriter.close();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

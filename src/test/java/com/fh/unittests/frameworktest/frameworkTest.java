@@ -10,12 +10,12 @@ import org.testng.annotations.Test;
 
 public class frameworkTest extends TestLocalController {
 
-    @Test(enabled = false)
+    /*@Test(enabled = false)
     public void unitTest() {
         browser().findElement(By.id("twotabsearchtextbox")).sendKeys("iphone");
         author_ScenarioName("bhaskar_parallelClass1_Method1", "parallelClass1_Method1 scenario");
         logReport("PASS", "parallelClass1_Method1 PASSED");
-    }
+    }*/
 
     @Test
     public void testGoogleSearch() {
@@ -26,6 +26,7 @@ public class frameworkTest extends TestLocalController {
         //tObj().frameworkTest().searchTextBox_enterText("bhaskar");
         author_ScenarioName("bhaskar_parallelClass1_Method2", "parallelClass1_Method2 scenario");
         logReport("PASS", "parallelClass1_Method2 PASSED");
+
 
     }
 }

@@ -13,7 +13,7 @@ import java.util.Properties;
 
 public class DBController extends TrigonUtils {
 
-    private static final Logger logger = LogManager.getLogger(Database.class);
+    private static final Logger logger = LogManager.getLogger(DBController.class);
     private static Session session = null;
     private static AvailablePorts ap = new AvailablePorts();
     private static BasicDataSource dataSource;
