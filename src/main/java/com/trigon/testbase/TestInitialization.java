@@ -606,6 +606,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
                 tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
                 tEnv().setWebBuildNumber(tLocalEnv.getWeb().getWebBuildNumber());
+                tEnv().setWebNetworkLogs(tLocalEnv.getWeb().getWebNetworkLogs());
             }
 
             if (tLocalEnv.getAndroid() != null) {

@@ -295,28 +295,31 @@ public class Browsers extends Android {
                 browser().manage().window().maximize();
                 if (!context.getSuite().getName().contains("adhoc")) {
 
-                    if(browserType.contains("chrome") && executionType.contains("local")) {
+                    if(tEnv().getWebNetworkLogs()) {
 
-                        DevTools devTools = ((HasDevTools) browser()).getDevTools();
-                        devTools.createSession();
-                        devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+                        if (browserType.contains("chrome") && executionType.contains("local")) {
 
-                        devTools.addListener(Network.requestWillBeSent(), request ->
-                        {
-                            Request req = request.getRequest();
-                            // logReport("INFO",req.getMethod().toUpperCase());
-                            //System.out.println(req.getMethod().toUpperCase());
+                            DevTools devTools = ((HasDevTools) browser()).getDevTools();
+                            devTools.createSession();
+                            devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
 
-                        });
+                            devTools.addListener(Network.requestWillBeSent(), request ->
+                            {
+                                Request req = request.getRequest();
+                                // logReport("INFO",req.getMethod().toUpperCase());
+                                //System.out.println(req.getMethod().toUpperCase());
 
-                        devTools.addListener(Network.responseReceived(), response ->
-                        {
-                            Response res = response.getResponse();
-                            //List<String> str = Collections.singletonList(res.getUrl());
-                            if (res.getStatus().toString().startsWith("4") || res.getStatus().toString().startsWith("5")) {
-                                logger.info(res.getUrl() + "is failing with status code" + res.getStatus());
-                            }
-                        });
+                            });
+
+                            devTools.addListener(Network.responseReceived(), response ->
+                            {
+                                Response res = response.getResponse();
+                                //List<String> str = Collections.singletonList(res.getUrl());
+                                if (res.getStatus().toString().startsWith("4") || res.getStatus().toString().startsWith("5")) {
+                                    logger.info(res.getUrl() + "is failing with status code" + res.getStatus());
+                                }
+                            });
+                        }
                     }
                     browser().get(tEnv().getWebUrl());
                     browser().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));

@@ -22,7 +22,7 @@ public class Result {
     private String description;
     @SerializedName("author")
     @Expose
-    private Boolean author;
+    private String author;
     @SerializedName("status")
     @Expose
     private String status;
@@ -62,11 +62,11 @@ public class Result {
         this.description = description;
     }
 
-    public Boolean getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(Boolean author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 

@@ -194,7 +194,7 @@ public class TestController extends TestInitialization {
                 closeBrowserClassLevel();
             }
             closeMobileClassLevel();
-            if (executionType.equalsIgnoreCase("remote")) {
+            if (executionType.equalsIgnoreCase("remote")  && tEnv().getApiEnvType().equalsIgnoreCase("SIT")) {
                 adb.insertData(method, xmlTest, context, result,status);
             }
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {

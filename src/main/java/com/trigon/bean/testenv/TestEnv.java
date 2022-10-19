@@ -39,6 +39,7 @@ public class TestEnv {
     private String webBrowserVersion;
     private String webUrl;
     private String webBuildNumber;
+    private Boolean webNetworkLogs;
 
     private String app_reset;
     private String random_device;
@@ -624,5 +625,13 @@ public class TestEnv {
 
     public void setApiPartnerURI(String apiPartnerURI) {
         this.apiPartnerURI = apiPartnerURI;
+    }
+
+    public Boolean getWebNetworkLogs() {
+        return webNetworkLogs;
+    }
+
+    public void setWebNetworkLogs(Boolean webNetworkLogs) {
+        this.webNetworkLogs = webNetworkLogs;
     }
 }
