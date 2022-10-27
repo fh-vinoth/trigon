@@ -59,7 +59,7 @@ public class TestEnv {
     // Data belongs to remote-env.json
     private String execution_type;
 
-    private  String grid_execution_local;
+    private String grid_execution_local;
     private String jenkins_execution;
     private String pipeline_execution;
     private String test_region;
@@ -90,6 +90,11 @@ public class TestEnv {
     private String isJWT;
     private String endpointPrefix;
     private String productName;
+
+
+    private String franchiseId;
+    private String dbType;
+    private String serviceType;
 
     public String getTestType() {
         return testType;
@@ -520,7 +525,7 @@ public class TestEnv {
     }
 
     public String getJsonDirectory() {
-        if(jsonDirectory==null){
+        if (jsonDirectory == null) {
             jsonDirectory = "src/test/resources/TestData";
         }
         return jsonDirectory;
@@ -625,4 +630,29 @@ public class TestEnv {
     public void setApiPartnerURI(String apiPartnerURI) {
         this.apiPartnerURI = apiPartnerURI;
     }
+
+    public String getFranchiseId() {
+        return franchiseId;
+    }
+
+    public void setFranchiseId(String franchiseId) {
+        this.franchiseId = franchiseId;
+    }
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
 }
