@@ -242,8 +242,12 @@ public class TestModelCore extends ReportManager {
             } else {
                 if (expected.equals(actual)) {
                     customAssertEquals(actual, expected);
-                } else {
-                    logger.error("Actual or Expected value is null");
+                } else if(expected==null && actual ==null) {
+                    logReport("PASS", "Actual and Expected value is null");
+                }else if(expected==null && actual !=null) {
+                    logger.error("Actual is ["+actual+"] but the Expected value is null");
+                }else if (expected!=null && actual ==null){
+                    logger.error("Actual is null but the Expected value is ["+expected+"]");
                     //logReport("FAIL", "Actual or Expected value is null");
                 }
             }
