@@ -94,6 +94,7 @@ public class TestEnv {
 
     private String franchiseId;
     private String dbType;
+    private String serviceType;
 
     public String getTestType() {
         return testType;
@@ -645,4 +646,13 @@ public class TestEnv {
     public void setDbType(String dbType) {
         this.dbType = dbType;
     }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
 }
