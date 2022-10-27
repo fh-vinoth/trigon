@@ -96,8 +96,50 @@ public class TriageFailureReport {
             bw.close();
 
 
-        } else {
+        }
+        else if (dbyMap.containsKey("no-report") && yMap.containsKey("no-report") && tMap.containsKey("no-report")) {
+            String noReportContent = "No Reports generated for the past 3 days";
+            String html = "<!DOCTYPE html>\n" +
+                    "<html lang=\"en\">\n" +
+                    "<head>\n" +
+                    "<meta charset=\"UTF-8\">\n" +
+                    "<title>FoodHub Failure Triage Report</title>\n" +
+                    "</head>\n" +
+                    "<body>\n" +
+                    "<table style=\"width: 90%;font-family: Roboto,sans-serif;font-size: 13px;color: #555555;text-align: center;border-radius: 20px;margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse;background-color: #f5f2f2\"><thead>\n" +
+                    "<style>\n" +
+                    "  table, th, td {\n" +
+                    "  border: 1px solid black;\n" +
+                    "  border-collapse: collapse;\n" +
+                    "}</style>\n" +
+                    "<thead>\r\n" +
+                    "<tr>\r\n" +
+                    "<th style=\"padding-left: 30px;text-align: left;background: #e0dbdb;height: 60px;\"><img alt=\"FoodHub\" height=\"20\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"114\"></th>\n" +
+                    "<th colspan=\"3\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th>" +
+                    "</tr>\r\n" +
+                    "</thead>\r\n" +
+                    "\r\n" +
 
+
+                    "<thead>\r\n" +
+                    "<tr>\r\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">Module : Scenario</th>\r\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + daybeforeyesterday + "</th>\r\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + yesterday + "</th>\r\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + today + "</th>\r\n" +
+                    "</tr>\r\n" +
+                    "</thead>\r\n" +
+                    "<tbody border=\"0\">\r\n" +
+                    "<tr>\r\n" +
+                    "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%; colspan=\"4\"\">" + noReportContent + "</td>\r\n" +
+                    "</tr>\r\n" +
+                    "</tbody>\n" +
+                    "</table>";
+
+            bw.write(html);
+            bw.close();
+        }
+        else {
             AtomicReference<String> html = new AtomicReference<>("<!DOCTYPE html>\n" +
                     "<html lang=\"en\">\n" +
                     "<head>\n" +
@@ -141,12 +183,10 @@ public class TriageFailureReport {
                 } else if (yMap.get(module).equalsIgnoreCase(tMap.get(module))) {
                     yesterdayBGColor.set("background-color: #ccccccc4;color:#f74242;");
                     todayBGColor.set("background-color: #ccccccc4;color:#f74242;");
-                    //daybeforeYesterdayBGColor.set("background-color: #ccccccc4");
                 } else if (result.equalsIgnoreCase(tMap.get(module))) {
                     daybeforeYesterdayBGColor.set("background-color: #ccccccc4;color:#f74242;");
                     todayBGColor.set("background-color: #ccccccc4;color:#f74242;");
-                    //yesterdayBGColor.set("background-color: #ccccccc4");
-                } else{
+                } else {
                     daybeforeYesterdayBGColor.set("background-color: #ccccccc4");
                     yesterdayBGColor.set("background-color: #ccccccc4");
                     todayBGColor.set("background-color: #ccccccc4");
@@ -171,18 +211,18 @@ public class TriageFailureReport {
                 } else {
                     backgroundColor.set("background-color:  #ccccccc4;");
                 }
-            html.set(html +
-                    "<tr>\r\n" +
-                    "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word width:25%;\">" + module+ "</td>\r\n" +
-                    "<td style=\"white-space:pre-wrap; word-break:break-word width:25%;font-style:calibri;font-size:14px;\">" + empty + "</td>\r\n" +
-                    "<td style=\"white-space:pre-wrap; word-break:break-word width:25%;" + backgroundColor + ";font-style:calibri;font-size:14px;\">" + result + "</td>\r\n" +
-                    "<td style=\"white-space:pre-wrap; word-break:break-word width:25%;" + backgroundColor + ";font-style:calibri;font-size:14px;\">" + tMap.get(module) + "</td>\r\n" +
-                    "</tr>\r\n");
+                html.set(html +
+                        "<tr>\r\n" +
+                        "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word width:25%;\">" + module + "</td>\r\n" +
+                        "<td style=\"white-space:pre-wrap; word-break:break-word width:25%;font-style:calibri;font-size:14px;\">" + empty + "</td>\r\n" +
+                        "<td style=\"white-space:pre-wrap; word-break:break-word width:25%;" + backgroundColor + ";font-style:calibri;font-size:14px;\">" + result + "</td>\r\n" +
+                        "<td style=\"white-space:pre-wrap; word-break:break-word width:25%;" + backgroundColor + ";font-style:calibri;font-size:14px;\">" + tMap.get(module) + "</td>\r\n" +
+                        "</tr>\r\n");
 
                 tMap.remove(module);
             });
 
-            tMap.forEach((module,result)->{
+            tMap.forEach((module, result) -> {
                 String empty = "---";
                 html.set(html +
                         "<tr>\r\n" +
@@ -202,22 +242,26 @@ public class TriageFailureReport {
     }
 
     public Map<String, String> capturingFailures(String URL) {
-        RestAssured.useRelaxedHTTPSValidation();
-        RequestSpecification requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
-        String resp = requestSpecification.get(URL).then().extract().response().getBody().prettyPrint();
-
-        Gson pGson = new GsonBuilder().setPrettyPrinting().create();
-        JsonElement jsonElement = JsonParser.parseString(resp);
-        TestSummary summary = pGson.fromJson(jsonElement, TestSummary.class);
         Map<String, String> failureTriageMap = new TreeMap<>();
-        summary.getResults().forEach(result -> {
-            if ((result.get("status").getAsString().equalsIgnoreCase("fail"))) {
-                String failureKey = result.get("class-name").toString() + "_" + result.get("method-name").toString();
-                String failureValue = result.get("failure-reason").toString();
-                failureTriageMap.put(failureKey, failureValue);
-            }
-        });
+        if (URL.equalsIgnoreCase("no-report")) {
+            failureTriageMap.put("no-report", "no-report");
+        } else {
+            RestAssured.useRelaxedHTTPSValidation();
+            RequestSpecification requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
+            String resp = requestSpecification.get(URL).then().extract().response().getBody().prettyPrint();
 
+            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            JsonElement jsonElement = JsonParser.parseString(resp);
+            TestSummary summary = pGson.fromJson(jsonElement, TestSummary.class);
+
+            summary.getResults().forEach(result -> {
+                if ((result.get("status").getAsString().equalsIgnoreCase("fail"))) {
+                    String failureKey = result.get("class-name").toString() + "_" + result.get("method-name").toString();
+                    String failureValue = result.get("failure-reason").toString();
+                    failureTriageMap.put(failureKey, failureValue);
+                }
+            });
+        }
         return failureTriageMap;
     }
 }

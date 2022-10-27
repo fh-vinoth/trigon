@@ -49,11 +49,13 @@ public class ReportAnalyser {
                 }
             });
             if (reportUrlList.size() < 1) {
-                throw new AmazonClientException("No reports available for the selected date " + date_DMMMYYYY + ". Please check the date format or the date again.");
+                //throw new AmazonClientException("No reports available for the selected date " + date_DMMMYYYY + ". Please check the date format or the date again.");
+                reportUrl = "no-report";
+            }else {
+                Collections.sort(reportUrlList);
+                reportUrl = reportUrl + reportUrlList.get(reportUrlList.size() - 1) + "testSummary.json";
             }
-            Collections.sort(reportUrlList);
-            reportUrl = reportUrl + reportUrlList.get(reportUrlList.size() - 1)+"testSummary.json";
-        } catch (AmazonClientException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return reportUrl;
