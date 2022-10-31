@@ -46,12 +46,12 @@ public class TriggerEmailImpl implements ITriggerEmail {
     public void triggerEmail(String reportPath, String recipients, String uploadToAWS, String sendFailedReport) {
         String decryptedString = AES.decrypt("dxoS+CjoM/WctAD5Svfq/g==", "t2sautomation");
 
-        String from = "t2semailnotifications@gmail.com";
-        final String username = "t2semailnotifications@gmail.com";
-        final String password = "ffwyvmzikvyacmpi";
+        String from = "automation@foodhub.com";
+        final String username = "automation@foodhub.com";
+        final String password = "LkdfL7!VK8ksBb";
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.host", "smtppro.zoho.com");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class",
                 "javax.net.ssl.SSLSocketFactory");
@@ -167,12 +167,12 @@ public class TriggerEmailImpl implements ITriggerEmail {
     }
 
     public void triggerCustomEmail(String reportPath, String recipients) throws IOException, ParseException {
-        String from = "t2semailnotifications@gmail.com";
-        final String username = "t2semailnotifications@gmail.com";
-        final String password = "ffwyvmzikvyacmpi";
+        String from = "automation@foodhub.com";
+        final String username = "automation@foodhub.com";
+        final String password = "LkdfL7!VK8ksBb";
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.host", "smtppro.zoho.com");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class",
                 "javax.net.ssl.SSLSocketFactory");
@@ -251,5 +251,4 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
 
     }
-
 }
