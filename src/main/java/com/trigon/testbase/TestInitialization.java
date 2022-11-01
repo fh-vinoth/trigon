@@ -214,7 +214,8 @@ public class TestInitialization extends Browsers {
         extent.attachReporter(json, sparkFail, sparkAll);
         extent.setSystemInfo("frameworkVersion", getFrameworkVersion());
         extent.setSystemInfo("suite-name", suiteNameWithTime);
-        extent.setSystemInfo("run-id", cUtils().getRunId());
+        suiteRunId = cUtils().getRunId();
+        extent.setSystemInfo("run-id", suiteRunId);
 
     }
 
@@ -605,6 +606,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
                 tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
                 tEnv().setWebBuildNumber(tLocalEnv.getWeb().getWebBuildNumber());
+                tEnv().setWebNetworkLogs(tLocalEnv.getWeb().getWebNetworkLogs());
             }
 
             if (tLocalEnv.getAndroid() != null) {

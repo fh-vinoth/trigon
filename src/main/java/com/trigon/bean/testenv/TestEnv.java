@@ -39,6 +39,7 @@ public class TestEnv {
     private String webBrowserVersion;
     private String webUrl;
     private String webBuildNumber;
+    private Boolean webNetworkLogs;
 
     private String app_reset;
     private String random_device;
@@ -525,7 +526,7 @@ public class TestEnv {
     }
 
     public String getJsonDirectory() {
-        if (jsonDirectory == null) {
+        if(jsonDirectory==null){
             jsonDirectory = "src/test/resources/TestData";
         }
         return jsonDirectory;
@@ -655,4 +656,12 @@ public class TestEnv {
         this.serviceType = serviceType;
     }
 
+
+    public Boolean getWebNetworkLogs() {
+        return webNetworkLogs;
+    }
+
+    public void setWebNetworkLogs(Boolean webNetworkLogs) {
+        this.webNetworkLogs = webNetworkLogs;
+    }
 }

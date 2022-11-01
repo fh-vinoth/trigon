@@ -43,7 +43,7 @@ public class IOS extends ReportManager {
                 }
                 browserstackOptions.put("projectName", context.getSuite().getName());
                 browserstackOptions.put("sessionName", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
-                browserstackOptions.put("appiumVersion", "1.22.0");
+                browserstackOptions.put("appiumVersion", "1.21.0");
                 browserstackOptions.put("realMobile", "true");
                 browserstackOptions.put("acceptInsecureCerts", "true");
                 browserstackOptions.put("networkLogs", "true");

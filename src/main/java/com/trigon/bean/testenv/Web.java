@@ -27,6 +27,10 @@ public class Web {
     @Expose
     private String webBuildNumber;
 
+    @SerializedName("network_logs")
+    @Expose
+    private Boolean webNetworkLogs;
+
     public String getSystemOs() {
         return systemOs;
     }
@@ -81,6 +85,14 @@ public class Web {
 
     public void setWebBuildNumber(String webBuildNumber) {
         this.webBuildNumber = webBuildNumber;
+    }
+
+    public Boolean getWebNetworkLogs() {
+        return webNetworkLogs;
+    }
+
+    public void setWebNetworkLogs(Boolean webNetworkLogs) {
+        this.webNetworkLogs = webNetworkLogs;
     }
 
 }

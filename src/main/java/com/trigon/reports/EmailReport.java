@@ -537,7 +537,7 @@ public class EmailReport {
                             finalJsonWriter.name("class-name").value(innerClassName);
                             finalJsonWriter.name("method-name").value(methodName);
                             finalJsonWriter.name("description").value(description);
-                            finalJsonWriter.name("author").value(method.hasAuthor());
+                            finalJsonWriter.name("author").value(method.getAuthorSet().stream().iterator().next().getName());
                             // If Test Fails
                             if (method.getStatus().getName().equals("Fail")) {
                                 StringBuffer sb = new StringBuffer();
