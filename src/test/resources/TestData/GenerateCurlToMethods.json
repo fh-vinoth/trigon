@@ -1,0 +1,28 @@
+{
+  "modules": [
+    {
+      "modulename": "API_METHOD",
+      "authorname": "Automation",
+      "testdata": {
+        "generateAPIMethods": [
+          {
+            "executeTest": "yes",
+            "Curl": "curl --location --request GET 'https://sit-api.t2scdn.com/orders/330690248?api_token=936127570443a960a612620b0b06b21b&includes=items'",
+            "MethodName": "test1",
+            "API_Type": "legacy"
+          }, {
+            "executeTest": "Yes",
+            "Curl": "curl --location --request POST 'https://sit-api.fhcdn.dev/driver_location/all' \\\n--header 'Content-Type: application/x-www-form-urlencoded' \\\n--data-urlencode 'lat=53.060237' \\\n--data-urlencode 'lng=-2.2051169' \\\n--data-urlencode 'driver_phone=07346243547'",
+            "MethodName": "test2",
+            "API_Type": "legacy"
+          }, {
+            "executeTest": "Yes",
+            "Curl": "curl --location --request POST 'https://zmpjapgiejgj3hokmnmv3bcrl4.appsync-api.us-east-1.amazonaws.dev/graphql' \\\n--header 'content-type: application/json' \\\n--header 'authorization: 7688ba77eb606fa1c6f844417e350820' \\\n--data-raw '{\"query\":\"query MyMutation {\\n  syncDBorders(filter: {and : [{statusCode: { in: [\\\"2\\\",\\\"6\\\"] }, serviceType: {in: [ \\\"collection\\\",\\\"delivery\\\",\\\"waiting\\\",\\\"restaurant\\\"]}} ]},\\n    limit: 1000) {\\n    nextToken\\n    startedAt\\n    items {\\n      _deleted\\n_lastChangedAt\\n_version\\naction\\ntoken\\n__typename\\nlastSyncUser\\nonlinePlatform\\npreOrderLabel\\ntaxIncluded\\nchangePrice\\nallergy\\nappTag\\nasap\\ncancelInfo {\\n  cancelReasonID\\n  cancelReasonMessage\\n  consumerRequest\\n  refund\\n  refundRequestId\\n  refundedAmount\\n}\\ntender {\\n  label\\n  value\\n}\\ncompleted\\nconversionSource\\ncreatedAt\\ncustomer {\\n  email\\n  firstName\\n  lastName\\n  phone\\n}\\ncustomerId\\ndeliveryAt\\ndelivery {\\n  driverFee\\n  deliverySequence\\n  address {\\n    addressLine1\\n    addressLine2\\n    area\\n    city\\n    countryCode\\n    flat\\n    houseNo\\n    landmark\\n    latitude\\n    longitude\\n    state\\n    zipcode\\n  }\\n  driver {\\n    mobile\\n    name\\n  }\\n  notes {\\n    id\\n    label\\n    value\\n  }\\n  status\\n  window {\\n    duration\\n    endAt\\n    notifyAt\\n    startAt\\n  }\\n}\\ndevice {\\n  ipAddress\\n  model\\n  id\\n  os\\n  platform\\n}\\nid\\nlegacyCustomerId\\nlegacyDriverId\\nlegacyFranchiseId\\nlegacyOfflineId\\nlegacyOrderId\\nlegacyStoreHost\\nloyaltyPoints {\\n  pointsGained {\\n    label\\n    value\\n  }\\n  pointsRemaining {\\n    label\\n    value\\n  }\\n  pointsUsed {\\n    label\\n    value\\n  }\\n  redeem\\n  redeemAmount {\\n    label\\n    value\\n  }\\n}\\nlegacyStoreId\\nmode\\nmodeProductId\\nnotes {\\n  id\\n  label\\n  value\\n}\\nnotify {\\n  consumerRequestNotifyStatus\\n  driverNotifyStatus\\n  preOrderNotifyStatus\\n  notifyToken\\n}\\nid\\norderNumber\\npaid\\npayByLink {\\n  key\\n  label\\n  timestamp\\n  value\\n}\\nprovider {\\n  id\\n  name\\n}\\npayment {\\n  charges {\\n    adminFee {\\n      label\\n      value\\n    }\\n    onlineCharge {\\n      label\\n      value\\n    }\\n    perCarryBagCharge {\\n      label\\n      value\\n    }\\n    totalCarryBags {\\n      label\\n      value\\n    }\\n    vatCharge {\\n      label\\n      value\\n    }\\n    deliveryCost {\\n      label\\n      value\\n    }\\n    driverTips {\\n      label\\n      value\\n    }\\n  }\\n  consumerTotal\\n  discounts {\\n    collectionDiscount {\\n      label\\n      percentage\\n      type\\n      value\\n    }\\n    collectionDiscountValue {\\n      label\\n      type\\n      percentage\\n      value\\n    }\\n    coupon {\\n      couponCode\\n      couponTypeId\\n      label\\n      type\\n      value\\n    }\\n    fhCoupon {\\n      fhCouponCode\\n      fhCouponTypeId\\n      label\\n      type\\n      value\\n    }\\n    manualDiscount {\\n      label\\n      percentage\\n      value\\n      type\\n    }\\n    onlineDiscount {\\n      label\\n      percentage\\n      type\\n      value\\n    }\\n  }\\n  lines {\\n    pdq\\n    type\\n    value\\n  }\\n  subTotal {\\n    label\\n    value\\n  }\\n  total {\\n    label\\n    value\\n  }\\n}\\npaymentStatus\\nplacedAt\\npreOrderTime\\nprinter {\\n  aPrinter1\\n  aPrinter2\\n  labelPrint\\n}\\nproduct\\nproducts {\\n  addons {\\n    host\\n    description\\n    id\\n    itemAddonId\\n    itemId\\n    menuItemAddonId\\n    menuPrice\\n    name\\n    offer\\n    offlineId\\n    price\\n    quantity\\n    type\\n    secondLanguageName\\n    version\\n    taxPercentage\\n  }\\n  taxPercentage\\n  addon\\n  bogoFree\\n  catname\\n  catId\\n  catPos\\n  collectionDiscountAllowed\\n  comments\\n  completedAt\\n  completed\\n  couponAllowed\\n  courses\\n  createdAt\\n  day\\n  description\\n  host\\n  id\\n  isPrintLabel\\n  isVatIncluded\\n  itemId\\n  itemCode\\n  menuItemId\\n  menuPrice\\n  month\\n  name\\n  offer\\n  offlineId\\n  onlineDiscountAllowed\\n  orderInfoId\\n  position\\n  price\\n  printer\\n  printerSections\\n  quantity\\n  seats\\n  secondLanguageName\\n  section\\n  sequence\\n  type\\n  subcat\\n  updatedAt\\n  year\\n  version\\n  collectionAllowed\\n}\\nserviceType\\nskipCartOrderId\\nskipCartQuoteId\\nstatus\\nstoreId\\ntableId\\ntableName\\ntimeStamps {\\n  actionedBy\\n  key\\n  label\\n  value\\n}\\ntransactionId\\nupdatedAt\\nwait\\nvatSplit {\\n  label\\n  value {\\n    amount\\n    label\\n    percentage\\n    value\\n  }\\n}\\nshopName\\nstatusCode\\nversion\\n    }\\n  }\\n}\",\"variables\":{}}'",
+            "MethodName": "teyst3",
+            "API_Type": "appsync"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -25,7 +25,7 @@ public class GenerateApiMethod {
         try {
             String method = null;
             JSONParser parser = new JSONParser();
-            FileWriter fw = new FileWriter("src/test/resources/TestData/CreatedAPIMethods");
+            FileWriter fw = new FileWriter("src/test/resources/TestData/api/GeneratedCurlMethods");
             Object obj = parser.parse(new FileReader(path));
             Map<String, Object> map = JsonFlattener.flattenAsMap(((JSONObject) obj).toJSONString());
             for (Map.Entry<String, Object> i : map.entrySet()) {
@@ -53,7 +53,7 @@ public class GenerateApiMethod {
                 method = buildMethod(headder, formparam, queryparam, httpMethod, methodName, endpoint, appsyncbody, type);
                 fw.write("*******" + methodName + "**********\n\n" + method + "\n\n\n");
             }
-            System.out.println("******* Created Method in the Below File Path *******\nsrc/test/resources/TestData/CreatedAPIMethods");
+            System.out.println("******* Created Method in the Below File Path *******\n\nsrc/test/resources/TestData/GeneratedCurlMethods");
             fw.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -268,7 +268,7 @@ public class GenerateApiMethod {
                 System.out.print(i + "\n");
             });*/
         } else {
-            requestBody = " String requestBody = \"\";";
+            requestBody = " String requestBody = \"\";\n";
             /*System.out.println(requestBody);*/
         }
         String validateStaticResponse = null;
