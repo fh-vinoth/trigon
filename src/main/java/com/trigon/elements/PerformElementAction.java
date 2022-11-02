@@ -2,8 +2,6 @@ package com.trigon.elements;
 
 import com.trigon.constants.Message;
 import io.appium.java_client.TouchAction;
-import io.appium.java_client.android.AndroidElement;
-import io.appium.java_client.ios.IOSElement;
 import io.appium.java_client.touch.WaitOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,8 +23,8 @@ public class PerformElementAction extends ElementStrategyImpl {
 
         String returnvalue = null;
         long startTime5 = System.currentTimeMillis();
-        IOSElement iOSElement = getIOSElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
-        AndroidElement androidElement = getAndroidElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+        WebElement iOSElement = getIOSElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+        WebElement androidElement = getAndroidElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
         WebElement webElement = getWebElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
         String navigation = Message.NAVIGATED_TO_PAGE + Thread.currentThread().getStackTrace()[3].getFileName().replace(".java", "");
 
@@ -41,7 +39,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                             }
                         } catch (WebDriverException e) {
                             try {
-                                WebDriverWait wait = new WebDriverWait(browser(), 5);
+                                WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
                                 wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                 browser().executeScript("arguments[0].click();", webElement);
                                 browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
@@ -246,8 +244,8 @@ public class PerformElementAction extends ElementStrategyImpl {
 
     protected boolean performElementActionWithPresent(String locatorString, String action, String getElementValue, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         boolean returnvalue = false;
-        IOSElement iOSElement1 = getIOSElement(locatorString, true, wait_logReport_isPresent_Up_Down_XpathValues);
-        AndroidElement androidElement1 = getAndroidElement(locatorString, true, wait_logReport_isPresent_Up_Down_XpathValues);
+        WebElement iOSElement1 = getIOSElement(locatorString, true, wait_logReport_isPresent_Up_Down_XpathValues);
+        WebElement androidElement1 = getAndroidElement(locatorString, true, wait_logReport_isPresent_Up_Down_XpathValues);
         WebElement webElement1 = getWebElement(locatorString, true, wait_logReport_isPresent_Up_Down_XpathValues);
         long startTime5 = System.currentTimeMillis();
 
@@ -361,8 +359,8 @@ public class PerformElementAction extends ElementStrategyImpl {
         long startTime5 = System.currentTimeMillis();
         List<String> Values = new ArrayList<>();
         startTime = System.currentTimeMillis();
-        List<IOSElement> iOSElements = getIOSElements(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
-        List<AndroidElement> androidElements = getAndroidElements(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+        List<WebElement> iOSElements = getIOSElements(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+        List<WebElement> androidElements = getAndroidElements(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
         List<WebElement> webElements = getWebElements(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
 
         switch (action) {
@@ -377,7 +375,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                         }
                     }
                     if (androidElements != null) {
-                        for (AndroidElement tablevalues : androidElements) {
+                        for (WebElement tablevalues : androidElements) {
                             Values.add(tablevalues.getText());
                             if (!(expected.equals("NA"))) {
                                 textVerification(tablevalues.getText(), expected, textAction);
@@ -385,7 +383,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                         }
                     }
                     if (iOSElements != null) {
-                        for (IOSElement tablevalues : iOSElements) {
+                        for (WebElement tablevalues : iOSElements) {
                             Values.add(tablevalues.getText());
                             if (!(expected.equals("NA"))) {
                                 textVerification(tablevalues.getText(), expected, textAction);
@@ -409,8 +407,8 @@ public class PerformElementAction extends ElementStrategyImpl {
     }
 
     public void horizontalSwipeToElement1(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        AndroidElement androidElement = getAndroidElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
-        IOSElement iOSElement = getIOSElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+        WebElement androidElement = getAndroidElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+        WebElement iOSElement = getIOSElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
         try {
             if (android() != null) {
                 int screenWidth = android().manage().window().getSize().width;

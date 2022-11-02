@@ -1,19 +1,17 @@
 package com.trigon.mobile;
 
-import com.trigon.appcenter.AppCenterBS;
 import com.trigon.reports.ReportManager;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.MutableCapabilities;
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 
 public class IOS extends ReportManager {
@@ -21,39 +19,41 @@ public class IOS extends ReportManager {
 
     protected void nativeiOS(ITestContext context, XmlTest xmlTest) {
         MutableCapabilities iosCaps = new MutableCapabilities();
+        HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
         long startTime = System.currentTimeMillis();
         try {
-            if(extentTestNode.get()!=null){
+            if (extentTestNode.get() != null) {
                 extentClassNode.get().assignDevice(tEnv().getIosDevice());
             }
             if (executionType.equalsIgnoreCase("remote")) {
-                iosCaps.setCapability("os_version", tEnv().getIosOSVersion());
-                iosCaps.setCapability("deviceName", tEnv().getIosDevice());
-                logger.info("Setting IOS Native capabilities in BrowserStack Device : " + tEnv().getIosDevice());
 
-                //HashMap<String,String> buildData = get_bs_ios_app_url();
+                if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                    browserstackOptions.put("osVersion", tEnv().getIosOSVersion());
+                    browserstackOptions.put("deviceName", tEnv().getIosDevice());
+                    iosCaps.setCapability(MobileCapabilityType.BROWSER_NAME, tEnv().getWebBrowser());
+                    iosCaps.setCapability(MobileCapabilityType.BROWSER_VERSION, tEnv().getWebBrowserVersion());
+                    browserstackOptions.put("buildName", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
 
-                if(tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
-                    iosCaps.setCapability("browser", tEnv().getWebBrowser());
-                    iosCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
-                }else {
-                    iosCaps.setCapability("app", tEnv().getIosBSAppPath());
-                    iosCaps.setCapability("build", tEnv().getIosBuildNumber()+"_"+tEnv().getTest_region());
+                } else {
+                    logger.info("Setting IOS Native capabilities in BrowserStack Device : " + tEnv().getIosDevice());
+                    iosCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getIosOSVersion());
+                    iosCaps.setCapability(MobileCapabilityType.DEVICE_NAME, tEnv().getIosDevice());
+                    iosCaps.setCapability(MobileCapabilityType.APP, tEnv().getIosBSAppPath());
+                    browserstackOptions.put("buildName", tEnv().getIosBuildNumber() + "_" + tEnv().getTest_region());
                 }
+                browserstackOptions.put("projectName", context.getSuite().getName());
+                browserstackOptions.put("sessionName", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
+                browserstackOptions.put("appiumVersion", "1.21.0");
+                browserstackOptions.put("realMobile", "true");
+                browserstackOptions.put("acceptInsecureCerts", "true");
+                browserstackOptions.put("networkLogs", "true");
+                browserstackOptions.put("networkProfile", "reset");
+                browserstackOptions.put("idleTimeout", "300");
+                browserstackOptions.put("autoWait", "50");
+                browserstackOptions.put("debug", "true");
+                browserstackOptions.put("appiumLogs", "true");
 
-
-                iosCaps.setCapability("project", context.getSuite().getName());
-                iosCaps.setCapability("name", xmlTest.getName()+"_"+tEnv().getCurrentTestClassName());
-                iosCaps.setCapability("browserstack.appium_version", "1.22.0");
-                iosCaps.setCapability("browserstack.acceptInsecureCerts", "true");
-                iosCaps.setCapability("browserstack.networkLogs",true);
-                iosCaps.setCapability("browserstack.console","errors");
-                iosCaps.setCapability("browserstack.idleTimeout","300");
-                iosCaps.setCapability("browserstack.autoWait","50");
-                iosCaps.setCapability("browserstack.debug", "true");
-                iosCaps.setCapability("browserstack.networkLogs", "true");
-                iosCaps.setCapability("browserstack.appiumLogs", "true");
-               /* String location = tEnv().getApiCountry();
+                  String location = tEnv().getApiCountry();
                 logger.info("Setting location to :: "+location);
                 if(location.equalsIgnoreCase("AUS")){
                     location = "AU";
@@ -64,13 +64,21 @@ public class IOS extends ReportManager {
                 else if(location.equalsIgnoreCase("UK") || location.equalsIgnoreCase("GT")){
                     location = "GB";
                 }
-                iosCaps.setCapability("browserstack.geoLocation",location);*/
-                //iosCaps.setCapability("browserstack.geoLocation","NZ");
+//                iosCaps.setCapability("browserstack.geoLocation",location);
+                browserstackOptions.put("geoLocation",location);
+                /*//iosCaps.setCapability("browserstack.geoLocation","NZ");
                 //iosCaps.setCapability("autoAcceptAlerts", "true");
-                //iosCaps.setCapability("autoDissmissAlerts", "true");
-                iosDriverThreadLocal.set(new IOSDriver<>(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), iosCaps));
+                //iosCaps.setCapability("autoDissmissAlerts", "true");*/
+
+                iosCaps.setCapability("bstack:options", browserstackOptions);
+                iosDriverThreadLocal.set(new IOSDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), iosCaps));
 
             } else {
+                iosCaps.setCapability(MobileCapabilityType.NO_RESET, false);
+                if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                    iosCaps.setCapability(MobileCapabilityType.BROWSER_NAME, "Safari");
+
+                }
                 if (tEnv().getIosUDID() != null) {
                     iosCaps.setCapability("udid", tEnv().getIosUDID());
                 }
@@ -78,7 +86,7 @@ public class IOS extends ReportManager {
                 logger.info("Setting IOS Native capabilities in Local Device : " + tEnv().getIosDevice());
                 iosCaps.setCapability(MobileCapabilityType.PLATFORM_NAME, "iOS");
                 iosCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getIosOSVersion());
-                iosCaps.setCapability("automationName", "XCUITest");
+                iosCaps.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
                 //iosCaps.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "10000");
                 iosCaps.setCapability("autoDismissAlerts", true);
                 iosCaps.setCapability("useFirstMatch", true);
@@ -92,7 +100,7 @@ public class IOS extends ReportManager {
                 iosCaps.setCapability("includeNonModalElements", true);
                 iosCaps.setCapability("snapshotTimeout", 1);
                 iosCaps.setCapability("bundleId", tEnv().getIosBundleId());
-                if(tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+                if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
                     iosCaps.setCapability(MobileCapabilityType.BROWSER_NAME, "Safari");
                 }
 /*                if (tEnv().getIos().getIosLocalAppPath() != null) {
@@ -118,28 +126,26 @@ public class IOS extends ReportManager {
                     iosCaps.setCapability(MobileCapabilityType.FULL_RESET, false);
                     iosCaps.setCapability(MobileCapabilityType.NO_RESET, true);
                 }*/
-                    iosDriverThreadLocal.set(new IOSDriver<>(new URL(tEnv().getAppiumURL()), iosCaps));
+                iosDriverThreadLocal.set(new IOSDriver(new URL(tEnv().getAppiumURL()), iosCaps));
             }
-            ios().manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
-            ios().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+            ios().manage().timeouts().implicitlyWait(Duration.ofSeconds(8));
+            ios().manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
             String iOSType = "Native App";
-            if(tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
+            if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
                 ios().navigate().to(tEnv().getWebUrl());
-                iOSType = tEnv().getWebBrowser()+" Browser on "+tEnv().getWebBrowserVersion();
+                iOSType = tEnv().getWebBrowser() + " Browser on " + tEnv().getWebBrowserVersion();
             }
             logger.info("*****************************************");
-            logger.info("IOS "+iOSType+" Launched Successfully in Device " + tEnv().getIosDevice());
+            logger.info("IOS " + iOSType + " Launched Successfully in Device " + tEnv().getIosDevice());
             logger.info("*****************************************");
             long endTime = System.currentTimeMillis();
-            logger.info("Time Taken to Launch IOS "+iOSType+" : : " + cUtils().getRunDuration(startTime, endTime));
+            logger.info("Time Taken to Launch IOS " + iOSType + " : : " + cUtils().getRunDuration(startTime, endTime));
         } catch (Exception e) {
             captureException(e);
-            hardFail("Failed to Launch IOS Device : "+tEnv().getIosDevice() +" Check your Test Parameters");
+            hardFail("Failed to Launch IOS Device : " + tEnv().getIosDevice() + " Check your Test Parameters");
         }
         if (ios() == null) {
-            hardFail("Failed to Launch IOS Device : "+tEnv().getIosDevice() +" Check your Test Parameters");
+            hardFail("Failed to Launch IOS Device : " + tEnv().getIosDevice() + " Check your Test Parameters");
         }
     }
-
-
 }

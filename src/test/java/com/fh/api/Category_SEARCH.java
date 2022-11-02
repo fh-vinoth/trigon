@@ -111,10 +111,8 @@ public class Category_SEARCH extends TestLocalController {
         String endpoint = "category";
         formparams.put("name", "TestCateg" + cUtils().generateRandomString(4));
         try {
-            /*Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
-            category_id = postresponse.get("resource_id").toString();*/
-            String id = null;
-            id.replace("","re");
+            Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
+            category_id = postresponse.get("resource_id").toString();
 
         } catch (Exception e) {
             hardFail("Category is not created."+e);

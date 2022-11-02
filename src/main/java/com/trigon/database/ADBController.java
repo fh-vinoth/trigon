@@ -11,9 +11,9 @@ import org.apache.logging.log4j.Logger;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-public class DBController extends TrigonUtils {
+public class ADBController extends TrigonUtils {
 
-    private static final Logger logger = LogManager.getLogger(DBController.class);
+    private static final Logger logger = LogManager.getLogger(ADBController.class);
     private static Session session = null;
     private static AvailablePorts ap = new AvailablePorts();
     private static BasicDataSource dataSource;
@@ -24,17 +24,12 @@ public class DBController extends TrigonUtils {
 
     static {
         dataSource = new BasicDataSource();
+        String dbName = "trigon";
         try {
             if (tEnv().getJenkins_execution().equalsIgnoreCase("false") && tEnv().getPipeline_execution().equalsIgnoreCase("false")) {
                 String sshHost = tEnv().getDbSSHHost();
                 String sshuser = tEnv().getDbSSHUser();
                 int sshPort = 22;
-                if(tEnv().getApiEnvType().equalsIgnoreCase("PRE-PROD") || tEnv().getApiEnvType().equalsIgnoreCase("PROD")){
-                    sshPort = 5457;
-                    if(tEnv().getDbName().equalsIgnoreCase("sit_foxy_project56")){
-                        logger.error("Please check your DB config based on "+tEnv().getApiEnvType()+" environment");
-                    }
-                }
                 String SshKeyFilepath;
                 int localPort = ap.getPort();
                 try {
@@ -65,11 +60,11 @@ public class DBController extends TrigonUtils {
                 session.connect();
                 session.setPortForwardingL(localPort, remoteHost, remotePort);
                 String localSSHUrl = "localhost";
-                String connectionUrl = "jdbc:mysql://" + localSSHUrl + ":" + localPort + "/" + tEnv().getDbName();
+                String connectionUrl = "jdbc:mysql://" + localSSHUrl + ":" + localPort + "/" + dbName;
                 dataSource.setUrl(connectionUrl);
             } else {
                 String remoteConnectionUrl = tEnv().getDbHost();
-                String connectionUrl = "jdbc:mysql://" + remoteConnectionUrl + ":" + connectionPort + "/" + tEnv().getDbName();
+                String connectionUrl = "jdbc:mysql://" + remoteConnectionUrl + ":" + connectionPort + "/" + dbName;
                 dataSource.setUrl(connectionUrl);
             }
 
