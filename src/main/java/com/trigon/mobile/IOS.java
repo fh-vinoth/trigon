@@ -54,7 +54,6 @@ public class IOS extends ReportManager {
                 browserstackOptions.put("appiumLogs", "true");
 
                   String location = tEnv().getApiCountry();
-                logger.info("Setting location to :: "+location);
                 if(location.equalsIgnoreCase("AUS")){
                     location = "AU";
                 }
@@ -64,6 +63,7 @@ public class IOS extends ReportManager {
                 else if(location.equalsIgnoreCase("UK") || location.equalsIgnoreCase("GT")){
                     location = "GB";
                 }
+                logger.info("Setting location to :: "+location);
 //                iosCaps.setCapability("browserstack.geoLocation",location);
                 browserstackOptions.put("geoLocation",location);
                 /*//iosCaps.setCapability("browserstack.geoLocation","NZ");

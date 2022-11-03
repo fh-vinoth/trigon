@@ -245,7 +245,7 @@ public class Browsers extends Android {
         else if(location.equalsIgnoreCase("IRE")){
             location = "IE";
         }
-        else if(location.equalsIgnoreCase("UK")){
+        else if(location.equalsIgnoreCase("UK") || location.equalsIgnoreCase("GT")){
             location = "GB";
         }
         logger.info("Setting location to :: "+location);
