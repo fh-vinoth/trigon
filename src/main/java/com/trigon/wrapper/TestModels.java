@@ -3,8 +3,8 @@ package com.trigon.wrapper;
 import com.trigon.annotations.Obfuscation;
 import com.trigon.elements.PerformElementAction;
 import com.trigon.exceptions.RetryOnException;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.MobileBy;
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.MultiTouchAction;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.Activity;
@@ -360,8 +360,8 @@ public class TestModels extends PerformElementAction {
         hardWait(2000);
         if (browser() != null) {
             WebElement element = null; //relook
-            JavascriptExecutor js = (JavascriptExecutor) browser();
-            js.executeScript("arguments[0].scrollIntoView();", element);
+            //JavascriptExecutor js = (JavascriptExecutor) browser();
+            browser().executeScript("arguments[0].scrollIntoView();", element);
         }
         hardWait(3000);
     }
@@ -370,8 +370,8 @@ public class TestModels extends PerformElementAction {
 
     public void scrollToBottomPage() {
         hardWait(2000);
-        JavascriptExecutor js = (JavascriptExecutor) browser();
-        js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+        //JavascriptExecutor js = (JavascriptExecutor) browser();
+        browser().executeScript("window.scrollTo(0, document.body.scrollHeight)");
         hardWait(3000);
     }
 
@@ -428,11 +428,10 @@ public class TestModels extends PerformElementAction {
      */
 
     public void androidScrollToVisibleTextInListAndClick(String elementName) {
-        MobileElement element = android()
-                .findElementByAndroidUIAutomator("new UiScrollable(new UiSelector()"
+        WebElement element = android().findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()"
                         // +".resourceId(\"android:id/list\")).scrollIntoView("
                         + ".className(\"android.widget.ListView\")).scrollIntoView("
-                        + "new UiSelector().text(\"" + elementName + "\"));");
+                        + "new UiSelector().text(\"" + elementName + "\"));"));
         element.click();
         logReport("INFO", "Scrolled to element in list succesfully");
     }
@@ -452,7 +451,7 @@ public class TestModels extends PerformElementAction {
         for (int i = 0; i < list.length; i++) {
             By meX = By.xpath("//android.widget.NumberPicker[" + (i + 1)
                     + "]/android.widget.EditText[1]");
-            MobileElement me = android().findElement(meX);
+            WebElement me = android().findElement(meX);
             TouchAction touchAction6 = new TouchAction(android());
             // touchAction6.longPress().release();
             android().performTouchAction(touchAction6);
@@ -475,8 +474,7 @@ public class TestModels extends PerformElementAction {
 
     public void setDateOrTimeInIos(String[] list) {
         for (int i = 0; i < list.length; i++) {
-            MobileElement me = ios()
-                    .findElementByXPath("//UIAPickerWheel[" + (i + 1) + "]");
+            WebElement me = ios().findElement(AppiumBy.xpath("//UIAPickerWheel[" + (i + 1) + "]"));
             me.sendKeys(list[i]);
         }
         logReport("INFO",
@@ -493,7 +491,7 @@ public class TestModels extends PerformElementAction {
 
     public boolean androidScrollToTextAndClick(String text) {
         try {
-            MobileElement el = android()
+            WebElement el = android()
                     .findElement(MobileBy
                             .AndroidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView("
                                     + "new UiSelector().text(\""
@@ -510,8 +508,8 @@ public class TestModels extends PerformElementAction {
 
     public boolean iOSScrollToTextAndClick(String text) {
         try {
-            MobileElement el = ios()
-                    .findElement(MobileBy.iOSNsPredicateString(text));
+            WebElement el = ios()
+                    .findElement(AppiumBy.iOSNsPredicateString(text));
             el.click();
         } catch (Exception e) {
             logger.error(e);
@@ -523,8 +521,8 @@ public class TestModels extends PerformElementAction {
 
     public boolean iOSScrollToText(String text) {
         try {
-            MobileElement el = ios()
-                    .findElement(MobileBy.iOSNsPredicateString(text));
+            WebElement el = ios()
+                    .findElement(AppiumBy.iOSNsPredicateString(text));
         } catch (Exception e) {
             logger.error(e);
             return false;
@@ -542,8 +540,8 @@ public class TestModels extends PerformElementAction {
     public boolean androidScrollToText(String text) {
         try {
             android()
-                    .findElement(MobileBy
-                            .AndroidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView("
+                    .findElement(AppiumBy
+                            .androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView("
                                     + "new UiSelector().text(\""
                                     + text
                                     + "\"));"));
@@ -562,10 +560,9 @@ public class TestModels extends PerformElementAction {
      * @return element
      */
 
-    public MobileElement androidScrollToTextAndGetElement(String text) {
+    public WebElement androidScrollToTextAndGetElement(String text) {
         return android()
-                .findElement(MobileBy
-                        .AndroidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView("
+                .findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView("
                                 + "new UiSelector().text(\"" + text + "\"));"));
     }
 
@@ -585,7 +582,7 @@ public class TestModels extends PerformElementAction {
 
 
     //Tap to an element for 250 milliseconds
-//    public void tapByElement(MobileElement element) {
+//    public void tapByElement(WebElement element) {
 //        new TouchAction(android())
 //                .tap(tapOptions().withElement(element(element)))
 //                .waitAction(waitOptions(ofMillis(250))).perform();
@@ -596,14 +593,24 @@ public class TestModels extends PerformElementAction {
     public void tapByCoordinates(int x, int y) {
         try {
             if (android() != null) {
-                new TouchAction(android())
+              /*  new TouchAction(android())
                         .tap(point(x, y))
-                        .waitAction(waitOptions(ofMillis(250))).perform();
+                        .waitAction(waitOptions(ofMillis(250))).perform();*/
+
+                Map<String, Object> args = new HashMap<>();
+                args.put("x", x);
+                args.put("y", y);
+                android().executeScript("mobile: tap", args);
             }
             if (ios() != null) {
-                new TouchAction(ios())
+               /* new TouchAction(ios())
                         .tap(point(x, y))
-                        .waitAction(waitOptions(ofMillis(250))).perform();
+                        .waitAction(waitOptions(ofMillis(250))).perform();*/
+
+                Map<String, Object> args = new HashMap<>();
+                args.put("x", x);
+                args.put("y", y);
+                ios().executeScript("mobile: tap", args);
             }
         } catch (InvalidArgumentException iae) {
             logger.error("Provide Co-Ordinates with in range. The given Co-Ordinates crossed beyond screen range : " + x + " : " + y);
@@ -613,7 +620,7 @@ public class TestModels extends PerformElementAction {
 
     //Press by element
 
-    public void pressByElement(MobileElement element, long seconds) {
+    public void pressByElement(WebElement element, long seconds) {
         if (android() != null) {
             new TouchAction(android())
                     .press(element(element))
@@ -699,7 +706,7 @@ public class TestModels extends PerformElementAction {
     public void swipeToMobileElement(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         System.out.println("Under Construction");
 
-//        MobileElement element = null; //relook
+//        WebElement element = null; //relook
 //        int numberOfTimes = 10;
 //        for (int i = 0; i < numberOfTimes; i++) {
 //            verticalSwipeByPercentages(0.6, 0.3, 0.5);
@@ -712,7 +719,7 @@ public class TestModels extends PerformElementAction {
 
     //Swipe by elements
 
-    public void swipeByElements(MobileElement startElement, MobileElement endElement) {
+    public void swipeByElements(WebElement startElement, WebElement endElement) {
         int startX = startElement.getLocation().getX() + (startElement.getSize().getWidth() / 2);
         int startY = startElement.getLocation().getY() + (startElement.getSize().getHeight() / 2);
 
@@ -742,7 +749,7 @@ public class TestModels extends PerformElementAction {
 
     //Multitouch action by using an android element
 
-    public void multiTouchByElement(MobileElement element) {
+    public void multiTouchByElement(WebElement element) {
         if (android() != null) {
             TouchAction press = new TouchAction(android())
                     .press(element(element))
@@ -770,13 +777,13 @@ public class TestModels extends PerformElementAction {
     public void singleTap(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
         if (android() != null) {
-            MobileElement element = android().findElement(By.xpath(locatorArr[1]));
+            WebElement element = android().findElement(By.xpath(locatorArr[1]));
             TouchActions action = new TouchActions(android());
             action.singleTap(element);
             action.perform();
         }
         if (ios() != null) {
-            MobileElement element = ios().findElementByIosNsPredicate(locatorArr[1]);
+            WebElement element = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1]));
             TouchActions action = new TouchActions(ios());
             action.singleTap(element);
             action.perform();
@@ -787,16 +794,17 @@ public class TestModels extends PerformElementAction {
     public void doubleTap(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
         if (android() != null) {
-            MobileElement element = android().findElement(By.xpath(locatorArr[1]));
+            WebElement element = android().findElement(By.xpath(locatorArr[1]));
             TouchActions action = new TouchActions(android());
             action.doubleTap(element);
             action.perform();
         }
         if (ios() != null) {
-            MobileElement element = ios().findElementByIosNsPredicate(locatorArr[1]);
+            WebElement element = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1]));
             TouchActions action = new TouchActions(ios());
             action.doubleTap(element);
             action.perform();
+            ios().executeScript("mobile: doubleTap", element);
         }
     }
 
@@ -804,13 +812,13 @@ public class TestModels extends PerformElementAction {
     public void longPress(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
         if (android() != null) {
-            MobileElement element = android().findElement(By.xpath(locatorArr[1]));
+            WebElement element = android().findElement(By.xpath(locatorArr[1]));
             TouchActions action = new TouchActions(android());
             action.longPress(element);
             action.perform();
         }
         if (ios() != null) {
-            MobileElement element = ios().findElementByIosNsPredicate(locatorArr[1]);
+            WebElement element = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1]));
             TouchActions action = new TouchActions(ios());
             action.longPress(element);
             action.perform();
@@ -821,13 +829,13 @@ public class TestModels extends PerformElementAction {
     public void scroll(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
         if (android() != null) {
-            MobileElement element = android().findElement(By.xpath(locatorArr[1]));
+            WebElement element = android().findElement(By.xpath(locatorArr[1]));
             TouchActions action = new TouchActions(android());
             action.scroll(element, 10, 100);
             action.perform();
         }
         if (ios() != null) {
-            MobileElement element = ios().findElementByIosNsPredicate(locatorArr[1]);
+            WebElement element = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1]));
             TouchActions action = new TouchActions(ios());
             action.scroll(element, 10, 100);
             action.perform();
@@ -836,14 +844,14 @@ public class TestModels extends PerformElementAction {
 
 
     public List<String> getElementsFromGroup(String className1, String className2, String className3, String SearchText) {
-        MobileElement superParent = android().findElement(By.className(className1));
-        List<MobileElement> parent = superParent.findElements(By.className(className2));
+        WebElement superParent = android().findElement(By.className(className1));
+        List<WebElement> parent = superParent.findElements(By.className(className2));
         List<String> returnList = new ArrayList<>();
         int i;
         int j;
         int k = 0;
         for (i = 0; i < parent.size(); i++) {
-            List<MobileElement> child = parent.get(i).findElements(By.className(className3));
+            List<WebElement> child = parent.get(i).findElements(By.className(className3));
             for (j = 0; j < child.size(); j++) {
                 if (child.get(j).getText().contains(SearchText)) {
                     for (k = 0; k < i + 2; k++) {
@@ -944,7 +952,7 @@ public class TestModels extends PerformElementAction {
             if (ios() != null) {
                 while (true) {
                     try {
-                        Point XY = ios().findElementByIosNsPredicate(locatorArr[1]).getLocation();
+                        Point XY = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1])).getLocation();
                         int X = XY.x;
                         int Y = XY.y;
                         Coordinates.add(X);

@@ -3,12 +3,13 @@
   "jenkins_execution": "false",
   "pipeline_execution": "false",
   "browserstack_execution_local": "false",
+  "grid_execution_local" : "false",
   "test_region": "UK1",
   "app_reset": "NA",
   "random_device": "",
-  "email_recipients":"srikrishna.n@foodhub.com",
-  "error_email_recipients":"srikrishna.n@foodhub.com",
-  "failure_email_recipients":"srikrishna.n@foodhub.com",
+  "email_recipients":"",
+  "error_email_recipients":"",
+  "failure_email_recipients":"",
   "products": {
     "D2S": {
       "android": {
@@ -22,11 +23,11 @@
     },
     "MYT": {
       "android": {
-        "bs_app_path": "bs://c9d90d194b868862c026d60ff44a9abce3de3a8d",
+        "bs_app_path": "bs://9c3e51a7a92d8263c19d248c8f3f99ad101916f0",
         "build_number": "MYT2.0_Android_10.4_940"
       },
       "ios": {
-        "bs_app_path": "bs://1efbfc6c57e8c9331ff85daec2d0c88c146b3053",
+        "bs_app_path": "bs://1adfc233dc1b27a75372d32931fffd537e3d4453",
         "build_number": "MYT2.0_iOS_10.4_806"
       }
     },

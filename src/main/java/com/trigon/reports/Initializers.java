@@ -5,13 +5,12 @@ import com.aventstack.extentreports.ExtentTest;
 import com.trigon.bean.ExtentPojo;
 import com.trigon.bean.PropertiesPojo;
 import com.trigon.bean.testenv.TestEnv;
+import com.trigon.database.ADatabase;
 import com.trigon.database.Database;
 import com.trigon.exceptions.TrigonAsserts;
 import com.trigon.utils.CommonUtils;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.BufferedWriter;
@@ -27,6 +26,8 @@ public class Initializers {
     protected static ThreadLocal<LinkedHashMap<String, Object>> dataTableMapApi = new ThreadLocal<>();
     protected TrigonAsserts sAssert = new TrigonAsserts();
     protected static String executionType = "local";
+
+    protected static String grid_execution_local = "false";
     protected static String pipelineExecution = "false";
 
     public static boolean customAPIReportStartFlag = false;
@@ -54,11 +55,12 @@ public class Initializers {
     //variables used for saving failure functionality for retried tests
     public static List<String> initFailedLogs;
 
-    protected static ThreadLocal<AndroidDriver<AndroidElement>> androidDriverThreadLocal = new ThreadLocal<>();
-    protected static ThreadLocal<IOSDriver<IOSElement>> iosDriverThreadLocal = new ThreadLocal<>();
+    protected static ThreadLocal<AndroidDriver> androidDriverThreadLocal = new ThreadLocal<>();
+    protected static ThreadLocal<IOSDriver> iosDriverThreadLocal = new ThreadLocal<>();
     protected static ThreadLocal<RemoteWebDriver> webDriverThreadLocal = new ThreadLocal<>();
     protected static CommonUtils commonUtils = new CommonUtils();
     protected static String getSuiteNameWithTime;
+    protected static String getSuiteExecutionDate;
     protected static String platformType;
     protected static String appType;
     protected static String suiteParallel;
@@ -69,15 +71,16 @@ public class Initializers {
     protected static boolean failStatus = false;
     protected static boolean exceptionStatus = false;
 
+    public static String suiteRunId;
     public static RemoteWebDriver browser() {
         return webDriverThreadLocal.get();
     }
 
-    public static AndroidDriver<AndroidElement> android() {
+    public static AndroidDriver android() {
         return androidDriverThreadLocal.get();
     }
 
-    public static IOSDriver<IOSElement> ios() {
+    public static IOSDriver ios() {
         return iosDriverThreadLocal.get();
     }
 
@@ -90,4 +93,5 @@ public class Initializers {
     }
 
     public static Database db = new Database();
+    public static ADatabase adb = new ADatabase();
 }

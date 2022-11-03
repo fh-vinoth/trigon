@@ -120,11 +120,11 @@ public class TestModelCore extends ReportManager {
 
     protected void alertHandling(String expectedText, String alertAction, String textAction) {
         if (browser() != null) {
-            webDriverWait = new WebDriverWait(browser(), 30);
+            webDriverWait = new WebDriverWait(browser(), Duration.ofSeconds(30));
         } else if (android() != null) {
-            webDriverWait = new WebDriverWait(android(), 30);
+            webDriverWait = new WebDriverWait(android(), Duration.ofSeconds(30));
         } else if (ios() != null) {
-            webDriverWait = new WebDriverWait(ios(), 30);
+            webDriverWait = new WebDriverWait(ios(), Duration.ofSeconds(30));
         }
         String text = "";
         if (browser() != null) {
@@ -208,7 +208,7 @@ public class TestModelCore extends ReportManager {
                     customAssertEquals(actual, expected);
                 } else {
                     logger.error("Actual or Expected value is null");
-                    //logReport("FAIL", "Actual or Expected value is null");
+                    logReport("FAIL", "Actual or Expected value is null");
                 }
             }
         } catch (Exception e) {
@@ -242,8 +242,12 @@ public class TestModelCore extends ReportManager {
             } else {
                 if (expected.equals(actual)) {
                     customAssertEquals(actual, expected);
-                } else {
-                    logger.error("Actual or Expected value is null");
+                } else if(expected==null && actual ==null) {
+                    logReport("PASS", "Actual and Expected value is null");
+                }else if(expected==null && actual !=null) {
+                    logger.error("Actual is ["+actual+"] but the Expected value is null");
+                }else if (expected!=null && actual ==null){
+                    logger.error("Actual is null but the Expected value is ["+expected+"]");
                     //logReport("FAIL", "Actual or Expected value is null");
                 }
             }

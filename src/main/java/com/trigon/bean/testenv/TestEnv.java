@@ -33,10 +33,13 @@ public class TestEnv {
     private String webSystemOS;
     private String webSystemOSVersion;
     private String webBrowser;
+
+    private String hubIP;
     private String webHeadless;
     private String webBrowserVersion;
     private String webUrl;
     private String webBuildNumber;
+    private Boolean webNetworkLogs;
 
     private String app_reset;
     private String random_device;
@@ -56,6 +59,8 @@ public class TestEnv {
 
     // Data belongs to remote-env.json
     private String execution_type;
+
+    private String grid_execution_local;
     private String jenkins_execution;
     private String pipeline_execution;
     private String test_region;
@@ -86,6 +91,11 @@ public class TestEnv {
     private String isJWT;
     private String endpointPrefix;
     private String productName;
+
+
+    private String franchiseId;
+    private String dbType;
+    private String serviceType;
 
     public String getTestType() {
         return testType;
@@ -251,8 +261,16 @@ public class TestEnv {
         return webBrowser;
     }
 
+    public String getHubIP() {
+        return hubIP;
+    }
+
     public void setWebBrowser(String webBrowser) {
         this.webBrowser = webBrowser;
+    }
+
+    public void setHubIP(String getHubIP) {
+        this.hubIP = getHubIP;
     }
 
     public String getWebHeadless() {
@@ -405,6 +423,10 @@ public class TestEnv {
 
     public void setExecution_type(String execution_type) {
         this.execution_type = execution_type;
+    }
+
+    public void setGridExecution_type(String gridExecution_type) {
+        this.grid_execution_local = gridExecution_type;
     }
 
     public String getJenkins_execution() {
@@ -608,5 +630,38 @@ public class TestEnv {
 
     public void setApiPartnerURI(String apiPartnerURI) {
         this.apiPartnerURI = apiPartnerURI;
+    }
+
+    public String getFranchiseId() {
+        return franchiseId;
+    }
+
+    public void setFranchiseId(String franchiseId) {
+        this.franchiseId = franchiseId;
+    }
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+
+    public Boolean getWebNetworkLogs() {
+        return webNetworkLogs;
+    }
+
+    public void setWebNetworkLogs(Boolean webNetworkLogs) {
+        this.webNetworkLogs = webNetworkLogs;
     }
 }

@@ -72,7 +72,9 @@ public class TestInitialization extends Browsers {
         }
         String suiteNameWithTime = suiteNameReplaced + "_" + cUtils().getCurrentTimeStamp();
         getSuiteNameWithTime = suiteNameWithTime;
-        String testResultsPath = cUtils().createFolder("src/test/resources", "TestResults", suiteNameWithTime);
+        getSuiteExecutionDate = cUtils().getCurrentDate();
+        String datePath = cUtils().createFolder("src/test/resources","TestResults",getSuiteExecutionDate);
+        String testResultsPath = cUtils().createFolder(datePath,  suiteNameWithTime,"");
         trigonPaths.setTestResultsPath(testResultsPath);
         String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
         trigonPaths.setSupportFilePath(supportFilePath);
@@ -211,7 +213,10 @@ public class TestInitialization extends Browsers {
         //spark.config().setTheme(Theme.DARK);
         extent.attachReporter(json, sparkFail, sparkAll);
         extent.setSystemInfo("frameworkVersion", getFrameworkVersion());
-        extent.setSystemInfo("SuiteName", suiteNameWithTime);
+        extent.setSystemInfo("suite-name", suiteNameWithTime);
+        suiteRunId = cUtils().getRunId();
+        extent.setSystemInfo("run-id", suiteRunId);
+
     }
 
     public void createExtentClassName(XmlTest xmlTest) {
@@ -553,9 +558,9 @@ public class TestInitialization extends Browsers {
     protected void setTestEnvironment(String fileName, String excelFilePath,
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version,
                                       String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
-                                      String accessToken, String isJWT, String endpointPrefix, String store, String host, String locale,
+                                      String accessToken, String isJWT, String endpointPrefix,String franchiseId,String dbType,String serviceType, String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -578,6 +583,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setAppType(appType.toLowerCase());
             }
             tEnv().setExecution_type(tRemoteEnv.getExecution_type());
+            tEnv().setGridExecution_type(tRemoteEnv.getGrid_execution_local());
             tEnv().setJenkins_execution(tRemoteEnv.getJenkins_execution());
             tEnv().setPipeline_execution(tRemoteEnv.getPipeline_execution());
             //tEnv().setTest_region(tRemoteEnv.getTest_region());
@@ -600,6 +606,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
                 tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
                 tEnv().setWebBuildNumber(tLocalEnv.getWeb().getWebBuildNumber());
+                tEnv().setWebNetworkLogs(tLocalEnv.getWeb().getWebNetworkLogs());
             }
 
             if (tLocalEnv.getAndroid() != null) {
@@ -716,6 +723,9 @@ public class TestInitialization extends Browsers {
             if (browser != null) {
                 tEnv().setWebBrowser(browser);
             }
+            if (grid_Hub_IP != null) {
+                tEnv().setHubIP(grid_Hub_IP);
+            }
             if (browserVersion != null) {
                 tEnv().setWebBrowserVersion(browserVersion);
             }
@@ -794,6 +804,17 @@ public class TestInitialization extends Browsers {
             if (endpointPrefix != null) {
                 tEnv().setEndpointPrefix(endpointPrefix);
             }
+            if (franchiseId != null) {
+                tEnv().setFranchiseId(franchiseId);
+            }
+            if (dbType != null) {
+                tEnv().setDbType(dbType);
+            }
+
+            if (serviceType != null) {
+                tEnv().setServiceType(serviceType);
+            }
+
             if (jsonFilePath != null) {
                 logger.info("JSON File Path Set to " + jsonFilePath);
                 tEnv().setJsonFilePath(jsonFilePath);

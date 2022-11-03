@@ -22,7 +22,7 @@ public class BrowserTest extends TestLocalController {
             logStepAction(" Performing Search click");
             browser().findElement(By.xpath("(//input[@type=\"submit\"])[1]")).click();
             logReport("PASS","Test Passed");
-            hardFail("test failed");
+
         }catch (Exception e){
             hardFail(e);
         }finally {

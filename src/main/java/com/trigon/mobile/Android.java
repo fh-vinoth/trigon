@@ -1,6 +1,7 @@
 package com.trigon.mobile;
 
 import com.trigon.appcenter.AppCenterBS;
+import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +11,7 @@ import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -21,31 +23,42 @@ public class Android extends IOS {
     public void androidNative(ITestContext context, XmlTest xmlTest) {
 
         MutableCapabilities androidCaps = new MutableCapabilities();
-
+        HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
         long startTime = System.currentTimeMillis();
         try {
-            if(extentTestNode.get()!=null){
+            if (extentTestNode.get() != null) {
                 extentClassNode.get().assignDevice(tEnv().getAndroidDevice());
             }
             if (executionType.equalsIgnoreCase("remote")) {
-                androidCaps.setCapability("os_version", tEnv().getAndroidOSVersion());
-                androidCaps.setCapability("device", tEnv().getAndroidDevice());
-                //logger.info("Setting Android Native capabilities in BrowserStack Device : " + tEnv().getAndroidDevice());
 
-                //HashMap<String,String> buildData = get_bs_android_app_url();
+                if (tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+                    browserstackOptions.put("osVersion", tEnv().getAndroidOSVersion());
+                    browserstackOptions.put("deviceName", tEnv().getAndroidDevice());
+                    androidCaps.setCapability("browserName", tEnv().getWebBrowser());
+                    androidCaps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
+                    browserstackOptions.put("buildName", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
 
-                if(tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
-                    androidCaps.setCapability("browser", tEnv().getWebBrowser());
-                    androidCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
-
-                }else {
-                    androidCaps.setCapability("app", tEnv().getAndroidBSAppPath());
-                    androidCaps.setCapability("build", tEnv().getAndroidBuildNumber()+"_"+tEnv().getTest_region());
+                } else {
+                    androidCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getAndroidOSVersion());
+                    androidCaps.setCapability(MobileCapabilityType.DEVICE_NAME, tEnv().getAndroidDevice());
+                    androidCaps.setCapability(MobileCapabilityType.APP, tEnv().getAndroidBSAppPath());
+                    browserstackOptions.put("buildName", tEnv().getAndroidBuildNumber() + "_" + tEnv().getTest_region());
                 }
-                androidCaps.setCapability("project", context.getSuite().getName());
+                browserstackOptions.put("projectName", context.getSuite().getName());
+                browserstackOptions.put("sessionName", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
+                browserstackOptions.put("appiumVersion", "1.22.0");
+                browserstackOptions.put("realMobile", "true");
+                browserstackOptions.put("acceptInsecureCerts", "true");
+                browserstackOptions.put("networkLogs", "true");
+                browserstackOptions.put("networkProfile", "reset");
+                browserstackOptions.put("idleTimeout", "300");
+                browserstackOptions.put("autoWait", "50");
+                browserstackOptions.put("debug", "true");
+                browserstackOptions.put("appiumLogs", "true");
 
-                androidCaps.setCapability("name", xmlTest.getName()+"_"+tEnv().getCurrentTestClassName());
-                androidCaps.setCapability("browserstack.appium_version", "1.22.0");
+
+
+               /* androidCaps.setCapability("browserstack.appium_version", "1.22.0");
                 androidCaps.setCapability("browserstack.acceptInsecureCerts", "true");
                 androidCaps.setCapability("browserstack.networkLogs",true);
                 androidCaps.setCapability("browserstack.console","errors");
@@ -54,38 +67,41 @@ public class Android extends IOS {
                 androidCaps.setCapability("browserstack.debug", "true");
                 androidCaps.setCapability("browserstack.networkLogs", "true");
                 androidCaps.setCapability("browserstack.appiumLogs", "true");
-                androidCaps.setCapability("autoGrantPermissions","true");
+                androidCaps.setCapability("autoGrantPermissions","true");*/
 
-                /*String location = tEnv().getApiCountry();
+                String location = tEnv().getApiCountry();
                 if(location.equalsIgnoreCase("AUS")){
                     location = "AU";
                 }
                 else if(location.equalsIgnoreCase("IRE")){
                     location = "IE";
                 }
-                else if(location.equalsIgnoreCase("UK")){
+                else if(location.equalsIgnoreCase("UK") || location.equalsIgnoreCase("GT")){
                     location = "GB";
                 }
                 logger.info("Setting location to :: "+location);
-                androidCaps.setCapability("browserstack.geoLocation",location);*/
-                if(tEnv().getTestType().equalsIgnoreCase("digitalboard")){
-                    androidCaps.setCapability("orientation", "landscape");
+                //androidCaps.setCapability("browserstack.geoLocation",location);
+                browserstackOptions.put("geoLocation",location);
+                if (tEnv().getTestType().equalsIgnoreCase("digitalboard")) {
+                    browserstackOptions.put("deviceOrientation", "landscape");
                 }
 
+                androidCaps.setCapability("bstack:options", browserstackOptions);
+
                 //androidCaps.setCapability("browserstack.networkProfile", "4g-lte-good");
-                androidDriverThreadLocal.set(new AndroidDriver<>(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), androidCaps));
+                androidDriverThreadLocal.set(new AndroidDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), androidCaps));
 
             } else {
-                androidCaps.setCapability(MobileCapabilityType.PLATFORM_NAME, ANDROID);
-                androidCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getAndroidOSVersion());
-                androidCaps.setCapability(MobileCapabilityType.DEVICE_NAME, tEnv().getAndroidDevice());
+                androidCaps.setCapability("osVersion", tEnv().getAndroidOSVersion());
+                androidCaps.setCapability("deviceName", tEnv().getAndroidDevice());
+                androidCaps.setCapability("automationName", "uiautomator2");
                 //logger.info("Setting Android Native capabilities in Local Device :: " + tEnv().getAndroidDevice());
 
                 androidCaps.setCapability("appPackage", tEnv().getAndroidAppPackage());
-                androidCaps.setCapability("appActivity",tEnv().getAndroidAppActivity());
+                androidCaps.setCapability("appActivity", tEnv().getAndroidAppActivity());
                 androidCaps.setCapability("autoDismissAlerts", true);
-                if(tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
-                    androidCaps.setCapability(MobileCapabilityType.BROWSER_NAME,"Chrome");
+                if (tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+                    androidCaps.setCapability(MobileCapabilityType.BROWSER_NAME, "Chrome");
 
                 }
                 androidCaps.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "10000");
@@ -112,48 +128,50 @@ public class Android extends IOS {
                     androidCaps.setCapability(MobileCapabilityType.FULL_RESET, false);
                     androidCaps.setCapability(MobileCapabilityType.NO_RESET, true);
                 }
-                androidDriverThreadLocal.set(new AndroidDriver<>(new URL(tEnv().getAppiumURL()), androidCaps));
+                androidDriverThreadLocal.set(new AndroidDriver(new URL(tEnv().getAppiumURL()), androidCaps));
             }
-            android().manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
-            android().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+            android().manage().timeouts().implicitlyWait(Duration.ofSeconds(8));
+            android().manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
             String AndroidType = "Native App";
-            if(tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
+            if (tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
                 android().navigate().to(tEnv().getWebUrl());
-                AndroidType = tEnv().getWebBrowser()+" Browser on "+tEnv().getWebBrowserVersion();
+                AndroidType = tEnv().getWebBrowser() + " Browser on " + tEnv().getWebBrowserVersion();
             }
             logger.info("*****************************************");
-            logger.info("Android "+AndroidType+" Launched Successfully in Device " + tEnv().getAndroidDevice());
+            logger.info("Android " + AndroidType + " Launched Successfully in Device " + tEnv().getAndroidDevice());
             logger.info("*****************************************");
             long endTime = System.currentTimeMillis();
-            logger.info("Time Taken to Launch "+AndroidType+" App: : " + cUtils().getRunDuration(startTime, endTime));
+            logger.info("Time Taken to Launch " + AndroidType + " App: : " + cUtils().getRunDuration(startTime, endTime));
         } catch (Exception e) {
             captureException(e);
-            hardFail("Failed to Launch Android Device : "+tEnv().getAndroidDevice() +" Check your Test Parameters");        }
+            hardFail("Failed to Launch Android Device : " + tEnv().getAndroidDevice() + " Check your Test Parameters");
+        }
         if (android() == null) {
-            hardFail("Failed to Launch Android Device : "+tEnv().getAndroidDevice() +" Check your Test Parameters");        }
+            hardFail("Failed to Launch Android Device : " + tEnv().getAndroidDevice() + " Check your Test Parameters");
+        }
     }
 
-    private HashMap<String,String> get_bs_android_app_url() {
+    private HashMap<String, String> get_bs_android_app_url() {
         AppCenterBS appCenter = new AppCenterBS();
-        HashMap<String,String> buildData=new HashMap<>();
-        if(platformType.equalsIgnoreCase("D2S")){
-            buildData = appCenter.getBSAppURL(propertiesPojo.getD2S_Appcenter_Android_ProjectName(),propertiesPojo.getD2S_Automation_Branch_Name());
-        }else if(platformType.equalsIgnoreCase("MYT")){
-            buildData = appCenter.getBSAppURL(propertiesPojo.getMYT_Appcenter_Android_ProjectName(),propertiesPojo.getMYT_Automation_Branch_Name());
-        }else if(platformType.equalsIgnoreCase("FHAPP")){
-            buildData = appCenter.getBSAppURL(propertiesPojo.getFHApp_Appcenter_Android_ProjectName(),propertiesPojo.getFHApp_Automation_Branch_Name());
-        }else if(platformType.equalsIgnoreCase("CA")){
-            buildData = appCenter.getBSAppURL(propertiesPojo.getCA_Appcenter_Android_ProjectName(),propertiesPojo.getCA_Automation_Branch_Name());
-        }else if(platformType.equalsIgnoreCase("MOBILE")){
-            if(tEnv().getAndroidBSAppPath()!=null){
-                buildData.put("app_url",tEnv().getAndroidBSAppPath());
-                buildData.put("releaseId",tEnv().getAndroidBuildNumber());
-            }else{
+        HashMap<String, String> buildData = new HashMap<>();
+        if (platformType.equalsIgnoreCase("D2S")) {
+            buildData = appCenter.getBSAppURL(propertiesPojo.getD2S_Appcenter_Android_ProjectName(), propertiesPojo.getD2S_Automation_Branch_Name());
+        } else if (platformType.equalsIgnoreCase("MYT")) {
+            buildData = appCenter.getBSAppURL(propertiesPojo.getMYT_Appcenter_Android_ProjectName(), propertiesPojo.getMYT_Automation_Branch_Name());
+        } else if (platformType.equalsIgnoreCase("FHAPP")) {
+            buildData = appCenter.getBSAppURL(propertiesPojo.getFHApp_Appcenter_Android_ProjectName(), propertiesPojo.getFHApp_Automation_Branch_Name());
+        } else if (platformType.equalsIgnoreCase("CA")) {
+            buildData = appCenter.getBSAppURL(propertiesPojo.getCA_Appcenter_Android_ProjectName(), propertiesPojo.getCA_Automation_Branch_Name());
+        } else if (platformType.equalsIgnoreCase("MOBILE")) {
+            if (tEnv().getAndroidBSAppPath() != null) {
+                buildData.put("app_url", tEnv().getAndroidBSAppPath());
+                buildData.put("releaseId", tEnv().getAndroidBuildNumber());
+            } else {
                 hardFail("Add App URL in TestEnv JSON file");
             }
         }
 
-        if(buildData.size()==0){
+        if (buildData.size() == 0) {
             hardFail("Issue with Browserstack/Appcenter Configurations");
         }
         return buildData;
