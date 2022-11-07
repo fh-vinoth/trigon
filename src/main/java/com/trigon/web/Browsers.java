@@ -236,6 +236,9 @@ public class Browsers extends Android {
         browserstackOptions.put("consoleLogs", "errors");
         browserstackOptions.put("idleTimeout", "300");
         browserstackOptions.put("autoWait", "30");
+        if(tEnv().getGps_location()!=null){
+            browserstackOptions.put("gpsLocation", tEnv().getGps_location());
+        }
 
 
         String location = tEnv().getApiCountry();

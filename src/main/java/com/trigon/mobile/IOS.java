@@ -52,6 +52,9 @@ public class IOS extends ReportManager {
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
                 browserstackOptions.put("appiumLogs", "true");
+                if(tEnv().getGps_location()!=null){
+                    browserstackOptions.put("gpsLocation", tEnv().getGps_location());
+                }
 
                   String location = tEnv().getApiCountry();
                 if(location.equalsIgnoreCase("AUS")){

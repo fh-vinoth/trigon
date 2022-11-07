@@ -91,6 +91,7 @@ public class TestEnv {
     private String isJWT;
     private String endpointPrefix;
     private String productName;
+    private String gps_location;
 
 
     private String franchiseId;
@@ -663,5 +664,13 @@ public class TestEnv {
 
     public void setWebNetworkLogs(Boolean webNetworkLogs) {
         this.webNetworkLogs = webNetworkLogs;
+    }
+
+    public String getGps_location() {
+        return gps_location;
+    }
+
+    public void setGps_location(String gps_location) {
+        this.gps_location = gps_location;
     }
 }
