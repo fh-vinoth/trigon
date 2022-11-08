@@ -49,6 +49,9 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("db_config")
     @Expose
     private JsonObject db_config;
+    @SerializedName("browserstack_midSessionInstallApps")
+    @Expose
+    private String browserstack_midSessionInstallApps;
 
     public String getExecution_type() {
         return execution_type;
@@ -157,4 +160,11 @@ public class RemoteEnvPojo implements Serializable {
     public void setFailure_email_recipients(String failure_email_recipients) {
         this.failure_email_recipients = failure_email_recipients;
     }
+
+    public String getBrowserstack_midSessionInstallApps() { return browserstack_midSessionInstallApps; }
+
+    public void setBrowserstack_midSessionInstallApps(String browserstack_midSessionInstallApps){
+        this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
+        }
+
 }

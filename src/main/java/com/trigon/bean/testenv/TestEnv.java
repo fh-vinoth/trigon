@@ -88,6 +88,7 @@ public class TestEnv {
     private String currentTestClassName;
     private File screenshotPath;
     private String browserstack_execution_local;
+    private String browserstack_midSessionInstallApps;
     private String isJWT;
     private String endpointPrefix;
     private String productName;
@@ -590,6 +591,12 @@ public class TestEnv {
 
     public void setBrowserstack_execution_local(String browserstack_execution_local) {
         this.browserstack_execution_local = browserstack_execution_local;
+    }
+
+    public String getBrowserstack_midSessionInstallApps() { return browserstack_midSessionInstallApps; }
+
+    public void setBrowserstack_midSessionInstallApps(String browserstack_midSessionInstallApps) {
+        this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
     }
 
     public String getIsJWT() {
