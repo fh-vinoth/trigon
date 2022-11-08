@@ -62,10 +62,14 @@ public class TriageFailureReport {
                     "<title>FoodHub Failure Triage Report</title>\n" +
                     "</head>\n" +
                     "<style>\n" +
-                    "table, th, td {\n" +
-                    "border: 1px solid black;\n" +
-                    "border-collapse: collapse;\n" +
-                    "}</style>\n" +
+                    "table, th,\n" +
+                    "td {border: 1px solid black;border-collapse: collapse;word-wrap: break-word;}\n" +
+                    "table {display: block;}\n" +
+                    "td, th {display: inline-block;width: 25%;}\n" +
+                    "td {text-align: center !important;}\n" +
+                    "th {text-align: center !important;}\n" +
+                    "tbody {background-color: #ccccc4 !important;}\n" +
+                    "</style>\n" +
                     "<body>\n" +
                     "<!DOCTYPE html>\n" +
                     "<html lang=\"en\">\n" +
@@ -78,23 +82,37 @@ public class TriageFailureReport {
                     "</head>\n" +
                     "<body>\n" +
                     "<div>\n" +
-                    "<div class=\"table-responsive\">\n" +
-                    "<table class=\"table\">\n" +
-                    "<thead >\n" +
+                    "<div>\n" +
+                    "<div style=\"display: flex; justify-content: center; align-items: center;\">\n" +
+                    "<div style=\"flex: 1;\"><img alt=\"FoodHub\"\n" +
+                    "src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\"\n" +
+                    "width=\"150px\">\n" +
+                    "</div>\n" +
+                    "<div style=\"text-align: center; background: #e0dbdb; height: 60px; flex: 1;\">Failure Triage\n" +
+                    "Report</div>\n" +
+                    "</div>\n" +
+                    "<table style=\"margin-top: auto;\">\n" +
+                    "<thead>" +
                     "<tr>\n" +
-                    "<th><img alt=\"FoodHub\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
-                    "<th width=\"75%\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th></tr>\n" +
-                    "</thead>\n" +
-                    "<table class=\"table table-bordered\" style=\"margin-top: auto;\">\n" +
-                    "<thead>\n" +
-                    "<tr>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">Module : Scenario</th>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">"+TURL+"</th>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">"+YURL+"</th>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">"+DBYURL+"</th>\n" +
+                    "<th\n" +
+                    "style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;\">\n" +
+                    "Module : Scenario</th>\n" +
+                    "<th\n" +
+                    "style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-\67p0-=-amily: calibri, arial, sans-serif\">\n" +
+                    DBYURL +
+                    "</th>\n" +
+                    "<th\n" +
+                    "style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">\n" +
+                    YURL +
+                    "</th>\n" +
+                    "<th\n" +
+                    "style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">\n" +
+                    TURL +
+                    "</th>\n" +
                     "</tr>\n" +
                     "</thead>\n" +
-                    "<tbody>\n" +
+
+            "<tbody>\n" +
                     "<tr>\r\n" +
                     "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%; colspan=\"4\"\">" + passContent + "</td>\r\n" +
                     "</tr>\r\n" +
