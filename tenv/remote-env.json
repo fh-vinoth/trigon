@@ -3,6 +3,7 @@
   "jenkins_execution": "false",
   "pipeline_execution": "false",
   "browserstack_execution_local": "false",
+  "browserstack_midSessionInstallApps": "bs://9943c4406ed94b03b47d6fb0e6d0d9f7bd1e49f4",
   "grid_execution_local" : "false",
   "test_region": "UK1",
   "app_reset": "NA",
@@ -13,7 +14,7 @@
   "products": {
     "D2S": {
       "android": {
-        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "bs_app_path": "bs://d6a4fe2b603e6908ce27da27c1635bd4c92ffa0d",
         "build_number": "1234"
       },
       "ios": {
