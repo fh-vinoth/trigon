@@ -165,9 +165,9 @@ public class TriageFailureReport {
                     "<thead>\n" +
                     "<tr>\n" +
                     "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">Module : Scenario</th>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">"+daybeforeyesterday+"</th>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">"+yesterday+"</th>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">"+today+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+daybeforeyesterday+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+yesterday+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+today+"</th>\n" +
                     "</tr>\n" +
                     "</thead>\n" +
                     "<tbody>\n" +
@@ -224,9 +224,9 @@ public class TriageFailureReport {
                     "<thead>\n" +
                     "<tr>\n" +
                     "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">Module : Scenario</th>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">"+daybeforeyesterday+"</th>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">"+yesterday+"</th>\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">"+today+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+daybeforeyesterday+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+yesterday+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+today+"</th>\n" +
                     "</tr>\n" +
                     "</thead>\n" +
                     "<tbody>\n");
