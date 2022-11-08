@@ -3,7 +3,7 @@
     "URI": "https://sit-api.fhcdn.dev",
     "partnerURI": "https://partner-api-sit.stage.t2sonline.com",
     "version": "v2022_05_05",
-    "envType": "SIT",
+    "envType": "PROD",
     "appSycURI": "https://zmpjapgiejgj3hokmnmv3bcrl4.appsync-api.us-east-1.amazonaws.com",
     "appSycAuth": "da2-gqy2zguabrgxlbiww5ezfi4r5u"
   },

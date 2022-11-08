@@ -96,6 +96,7 @@ public class TestEnv {
     private String franchiseId;
     private String dbType;
     private String serviceType;
+    private String moduleNames;
 
     public String getTestType() {
         return testType;
@@ -663,5 +664,13 @@ public class TestEnv {
 
     public void setWebNetworkLogs(Boolean webNetworkLogs) {
         this.webNetworkLogs = webNetworkLogs;
+    }
+
+    public String getModuleNames() {
+        return moduleNames;
+    }
+
+    public void setModuleNames(String moduleNames) {
+        this.moduleNames = moduleNames;
     }
 }

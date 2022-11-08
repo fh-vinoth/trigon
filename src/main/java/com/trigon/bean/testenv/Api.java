@@ -23,6 +23,9 @@ public class Api {
     @SerializedName("partnerURI")
     @Expose
     private String partnerURI;
+    @SerializedName("moduleNames")
+    @Expose
+    private String moduleNames;
 
     public String getURI() {
         return uRI;
@@ -72,5 +75,12 @@ public class Api {
         this.partnerURI = apiPartnerURI;
     }
 
+    public String getModuleNames() {
+        return moduleNames;
+    }
+
+    public void setModuleNames(String moduleNames) {
+        this.moduleNames = moduleNames;
+    }
 
 }

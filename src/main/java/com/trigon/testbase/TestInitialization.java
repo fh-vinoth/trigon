@@ -560,7 +560,7 @@ public class TestInitialization extends Browsers {
                                       String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
                                       String accessToken, String isJWT, String endpointPrefix,String franchiseId,String dbType,String serviceType, String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP,String moduleNames) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -813,6 +813,10 @@ public class TestInitialization extends Browsers {
 
             if (serviceType != null) {
                 tEnv().setServiceType(serviceType);
+            }
+
+            if (moduleNames!=null){
+                tEnv().setModuleNames(moduleNames);
             }
 
             if (jsonFilePath != null) {
