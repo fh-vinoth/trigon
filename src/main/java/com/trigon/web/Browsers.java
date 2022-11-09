@@ -237,10 +237,6 @@ public class Browsers extends Android {
         browserstackOptions.put("idleTimeout", "300");
         browserstackOptions.put("autoWait", "30");
 
-        if(tEnv().getBrowserstack_midSessionInstallApps()!=null)
-        {
-            browserstackOptions.put("midSessionInstallApps",new String[]{tEnv().getBrowserstack_midSessionInstallApps()});
-        }
 
         String location = tEnv().getApiCountry();
         if(location.equalsIgnoreCase("AUS")){
