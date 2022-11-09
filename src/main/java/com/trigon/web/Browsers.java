@@ -237,10 +237,6 @@ public class Browsers extends Android {
             browserstackOptions.put("gpsLocation", tEnv().getGps_location());
         }
 
-        if(tEnv().getBrowserstack_midSessionInstallApps()!=null)
-        {
-            browserstackOptions.put("midSessionInstallApps",new String[]{tEnv().getBrowserstack_midSessionInstallApps()});
-        }
 
         String location = tEnv().getApiCountry();
         if(location.equalsIgnoreCase("AUS")){
