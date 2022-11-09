@@ -55,6 +55,9 @@ public class Android extends IOS {
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
                 browserstackOptions.put("appiumLogs", "true");
+                if(tEnv().getGps_location()!=null){
+                    browserstackOptions.put("gpsLocation", tEnv().getGps_location());
+                }
 
                 if(tEnv().getBrowserstack_midSessionInstallApps()!=null)
                 {

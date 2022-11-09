@@ -16,6 +16,9 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("grid_execution_local")
     @Expose
     private String grid_execution_local;
+    @SerializedName("gps_location")
+    @Expose
+    private String gps_location;
     @SerializedName("jenkins_execution")
     @Expose
     private String jenkins_execution;
@@ -159,6 +162,14 @@ public class RemoteEnvPojo implements Serializable {
 
     public void setFailure_email_recipients(String failure_email_recipients) {
         this.failure_email_recipients = failure_email_recipients;
+    }
+
+    public String getGps_location() {
+        return gps_location;
+    }
+
+    public void setGps_location(String gps_location) {
+        this.gps_location = gps_location;
     }
 
     public String getBrowserstack_midSessionInstallApps() { return browserstack_midSessionInstallApps; }
