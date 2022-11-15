@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="D2S_Android_Regression_UK" parallel="classes" thread-count="4">
+<suite name="Web Parallel Template" parallel="classes" thread-count="4">
 
-<!--    <parameter name="testType" value="ios"></parameter>-->
-<!--    <parameter name="testEnvPath" value="test-env.json"></parameter>-->
-<!--    <parameter name="browserstack_midSessionInstallApps" value="bs://9943c4406ed94b03b47d6fb0e6d0d9f7bd1e49f4"></parameter>-->
+    <parameter name="testType" value="ios"></parameter>
+    <parameter name="testEnvPath" value="test-env.json"></parameter>
     <test name="Web Parallel Bulk">
         <!--        <groups>-->
         <!--            <run>-->
         <!--                <include name="bhaskar"/>-->
         <!--            </run>-->
         <!--        </groups>-->
-        <classes>
-            <class name="com.fh.applunach"></class>
-        </classes>
-<!--        <packages>-->
-<!--            <package name="com.t2s.trigon.test.paralleltest"/>-->
-<!--        </packages>-->
+        <packages>
+            <package name="com.t2s.trigon.test.paralleltest"/>
+        </packages>
     </test>
 </suite>
