@@ -596,6 +596,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiAppSycURI(tLocalEnv.getApi().getAppSycURI());
                 tEnv().setApiAppSycAuth(tLocalEnv.getApi().getAppSycAuth());
                 tEnv().setApiPartnerURI(tLocalEnv.getApi().getApiPartnerURI());
+                tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
             if (tLocalEnv.getWeb() != null) {
@@ -607,6 +608,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
                 tEnv().setWebBuildNumber(tLocalEnv.getWeb().getWebBuildNumber());
                 tEnv().setWebNetworkLogs(tLocalEnv.getWeb().getWebNetworkLogs());
+                tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
             if (tLocalEnv.getAndroid() != null) {
@@ -644,6 +646,7 @@ public class TestInitialization extends Browsers {
                         }
                     }
                 }
+                tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
             if (tLocalEnv.getIos() != null) {
@@ -681,6 +684,7 @@ public class TestInitialization extends Browsers {
                         }
                     }
                 }
+                tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
 
@@ -815,7 +819,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setServiceType(serviceType);
             }
 
-            if (moduleNames!=null){
+            if (moduleNames !=null){
                 tEnv().setModuleNames(moduleNames);
             }
 
