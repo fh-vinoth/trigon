@@ -584,6 +584,7 @@ public class TestInitialization extends Browsers {
             }
             tEnv().setExecution_type(tRemoteEnv.getExecution_type());
             tEnv().setGridExecution_type(tRemoteEnv.getGrid_execution_local());
+            tEnv().setGps_location(tRemoteEnv.getGps_location());
             tEnv().setJenkins_execution(tRemoteEnv.getJenkins_execution());
             tEnv().setPipeline_execution(tRemoteEnv.getPipeline_execution());
             //tEnv().setTest_region(tRemoteEnv.getTest_region());
@@ -729,6 +730,9 @@ public class TestInitialization extends Browsers {
             }
             if (grid_Hub_IP != null) {
                 tEnv().setHubIP(grid_Hub_IP);
+            }
+            if (gps_location != null) {
+                tEnv().setGps_location(gps_location);
             }
             if (browserVersion != null) {
                 tEnv().setWebBrowserVersion(browserVersion);
