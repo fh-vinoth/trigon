@@ -80,8 +80,9 @@ public class TestController extends TestInitialization {
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
 
-                if (context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
+                if (context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative") || context.getSuite().getName().contains("msapp") ) {
                     remoteBrowserInit(context, xmlTest);
+                    remoteMobileInit(context, xmlTest);
                 }
                 moduleFailAnalysisThread.set(new ArrayList<>());
                 testModuleCollection(xmlTest.getName());
@@ -126,15 +127,17 @@ public class TestController extends TestInitialization {
             dataTableMapApi.set(new LinkedHashMap<>());
             setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT, endpointPrefix,franchiseId,dbType,serviceType, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName,grid_Hub_IP,gps_location,  browserstack_midSessionInstallApps);
 
-            if (context.getSuite().getName().contains("adhoc") || context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
+            if (context.getSuite().getName().contains("adhoc") || context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative") || context.getSuite().getName().contains("msapp") ) {
 
             } else {
                 remoteBrowserInit(context, xmlTest);
+                remoteMobileInit(context, xmlTest);
             }
             if (context.getSuite().getName().contains("adhoc_parallel")) {
                 remoteBrowserInit(context, xmlTest);
+                remoteMobileInit(context, xmlTest);
             }
-            remoteMobileInit(context, xmlTest);
+
             if (!context.getSuite().getName().toLowerCase().startsWith("api") && (executionType.equalsIgnoreCase("remote"))) {
                 logger.info("########################################################################################################");
                 logger.info("BS Interactive Session -> " + bsVideo().get("public_url").toString());
@@ -186,15 +189,17 @@ public class TestController extends TestInitialization {
                         logReport("INFO", "<b>RETRY FAILURE</b> " + logDetail);   //Initial Execution Failure Reporting
                 }
             }
-            if (context.getSuite().getName().contains("adhoc") || context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
+            if (context.getSuite().getName().contains("adhoc") || context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative") || context.getSuite().getName().contains("msapp")) {
 
             } else {
                 closeBrowserClassLevel();
+                closeMobileClassLevel();
             }
             if (context.getSuite().getName().contains("adhoc_parallel")) {
                 closeBrowserClassLevel();
+                closeMobileClassLevel();
             }
-            closeMobileClassLevel();
+
             if (executionType.equalsIgnoreCase("remote")  && tEnv().getApiEnvType().equalsIgnoreCase("SIT")) {
                 adb.insertData(method, xmlTest, context, result,status);
             }
@@ -237,8 +242,9 @@ public class TestController extends TestInitialization {
     protected void methodClosure(ITestContext context, XmlTest xmlTest) {
         try {
             logger.info("Test Execution Finished for Module : " + xmlTest.getName());
-            if (context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
+            if (context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative") || context.getSuite().getName().contains("msapp") ) {
                 closeBrowserClassLevel();
+                closeMobileClassLevel();
             }
             if (extentTestNode.get() != null) {
                 if (moduleFailAnalysisThread.get().size() > 0) {
