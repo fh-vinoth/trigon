@@ -236,6 +236,22 @@ public class Browsers extends Android {
         if(tEnv().getGps_location()!=null){
             browserstackOptions.put("gpsLocation", tEnv().getGps_location());
         }
+        if (tEnv().getWebBrowser().equalsIgnoreCase("chrome")){
+            ChromeOptions options = new ChromeOptions();
+            Map < String, Object > prefs = new HashMap < String, Object > ();
+            Map < String, Object > profile = new HashMap < String, Object > ();
+            Map < String, Object > contentSettings = new HashMap < String, Object > ();
+
+            // SET CHROME OPTIONS
+            // 0 - Default, 1 - Allow, 2 - Block
+            contentSettings.put("geolocation", 1);
+            profile.put("managed_default_content_settings", contentSettings);
+            prefs.put("profile", profile);
+            options.setExperimentalOption("prefs", prefs);
+
+            // SET CAPABILITY
+            caps.setCapability(ChromeOptions.CAPABILITY, options);
+        }
 
 
         String location = tEnv().getApiCountry();
