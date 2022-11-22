@@ -105,6 +105,7 @@ public class TestController extends TestInitialization {
             setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth, version,partnerURI, token, accessToken, isJWT,franchiseId,dbType,serviceType, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName, grid_Hub_IP, gps_location,  browserstack_midSessionInstallApps);
             if(context.getSuite().getName().contains("adhoc")){
                 remoteBrowserInit(context, xmlTest);
+                remoteMobileInit(context, xmlTest);
             }
 
             createExtentClassName(xmlTest);
@@ -221,6 +222,7 @@ public class TestController extends TestInitialization {
             logger.info("Test Execution Finished for Class  : " + getClass().getSimpleName());
             if (context.getSuite().getName().contains("adhoc")) {
                 closeBrowserClassLevel();
+                closeMobileClassLevel();
             }
             if (classFailAnalysisThread.get().size() > 0) {
                 if (moduleFailAnalysisThread.get() != null) {
