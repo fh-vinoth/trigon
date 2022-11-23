@@ -560,7 +560,7 @@ public class TestInitialization extends Browsers {
                                       String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
                                       String accessToken, String isJWT, String endpointPrefix, String franchiseId, String dbType, String serviceType, String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames,String test_email_recipients,String test_error_email_recipients,String test_failure_email_recipients) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames,String test_email_recipients,String test_error_email_recipients,String test_failure_email_recipients,String browserstack_midSessionInstallApps) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -906,6 +906,13 @@ public class TestInitialization extends Browsers {
             }
             if (browserstack_execution_local != null) {
                 tEnv().setBrowserstack_execution_local(browserstack_execution_local);
+            }
+            if(tRemoteEnv.getBrowserstack_midSessionInstallApps()!=null){
+                tEnv().setBrowserstack_midSessionInstallApps((tRemoteEnv.getBrowserstack_midSessionInstallApps()));
+            }
+            if(browserstack_midSessionInstallApps!=null)
+            {
+                tEnv().setBrowserstack_midSessionInstallApps(browserstack_midSessionInstallApps);
             }
             if (productName != null) {
                 tEnv().setProductName(productName);

@@ -56,7 +56,31 @@ public class IOS extends ReportManager {
                     browserstackOptions.put("gpsLocation", tEnv().getGps_location());
                 }
 
-                  String location = tEnv().getApiCountry();
+                if(tEnv().getBrowserstack_midSessionInstallApps()!=null)
+                {
+                    try {
+                        String obj[] = tEnv().getBrowserstack_midSessionInstallApps().split(",", 3);
+                        switch (obj.length) {
+                            case 1:
+                                browserstackOptions.put("midSessionInstallApps", new String[]{obj[0].trim()});
+                                break;
+                            case 2:
+                                browserstackOptions.put("midSessionInstallApps", new String[]{obj[0].trim(), obj[1].trim()});
+                                break;
+                            case 3:
+                                browserstackOptions.put("midSessionInstallApps", new String[]{obj[0].trim(), obj[1].trim(), obj[2].trim()});
+                                break;
+                            case 0:
+                                logStepAction("No valid BS apppaths param provided for browserstack_midSessionInstallApps");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        hardFail(e+"\nNote : In case of multiple app BS paths, use commas(,) to separate. Maximum 3 apps allowed to install mid session by BS");
+                    }
+                }
+
+                String location = tEnv().getApiCountry();
                 if(location.equalsIgnoreCase("AUS")){
                     location = "AU";
                 }

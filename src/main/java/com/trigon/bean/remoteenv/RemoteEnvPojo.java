@@ -52,6 +52,9 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("db_config")
     @Expose
     private JsonObject db_config;
+    @SerializedName("browserstack_midSessionInstallApps")
+    @Expose
+    private String browserstack_midSessionInstallApps;
 
     public String getExecution_type() {
         return execution_type;
@@ -168,4 +171,11 @@ public class RemoteEnvPojo implements Serializable {
     public void setGps_location(String gps_location) {
         this.gps_location = gps_location;
     }
+
+    public String getBrowserstack_midSessionInstallApps() { return browserstack_midSessionInstallApps; }
+
+    public void setBrowserstack_midSessionInstallApps(String browserstack_midSessionInstallApps){
+        this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
+        }
+
 }
