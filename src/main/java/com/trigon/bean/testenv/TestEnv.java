@@ -177,6 +177,7 @@ public class TestEnv {
 
     public void setApiRegion(String apiRegion) {
         this.apiRegion = apiRegion;
+        
     }
 
     public String getApiStore() {
