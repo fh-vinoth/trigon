@@ -58,7 +58,7 @@ public class TestInitialization extends Browsers {
                 System.exit(0);
             }
             if (mobileApps.contains(platformType.toLowerCase())) {
-                if (tType[1].equalsIgnoreCase("Android") || tType[1].equalsIgnoreCase("AndroidBrowser") || tType[1].equalsIgnoreCase("IOS") ||tType[1].equalsIgnoreCase("IOSBrowser")) {
+                if (tType[1].equalsIgnoreCase("Android") || tType[1].equalsIgnoreCase("AndroidBrowser") || tType[1].equalsIgnoreCase("IOS") || tType[1].equalsIgnoreCase("IOSBrowser")) {
                     appType = tType[1].toLowerCase();
                 } else {
                     Assert.fail("Modify Your SuiteName as per standard structure : Example: MOBILE_ANDROID/MYT_ANDROID/D2S_ANDROID/FHAPP_IOS/CA_ANDROID/MYPOS_ANDROID/APOS_ANDROID_FUSIONApp_ANDROID");
@@ -73,8 +73,8 @@ public class TestInitialization extends Browsers {
         String suiteNameWithTime = suiteNameReplaced + "_" + cUtils().getCurrentTimeStamp();
         getSuiteNameWithTime = suiteNameWithTime;
         getSuiteExecutionDate = cUtils().getCurrentDate();
-        String datePath = cUtils().createFolder("src/test/resources","TestResults",getSuiteExecutionDate);
-        String testResultsPath = cUtils().createFolder(datePath,  suiteNameWithTime,"");
+        String datePath = cUtils().createFolder("src/test/resources", "TestResults", getSuiteExecutionDate);
+        String testResultsPath = cUtils().createFolder(datePath, suiteNameWithTime, "");
         trigonPaths.setTestResultsPath(testResultsPath);
         String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
         trigonPaths.setSupportFilePath(supportFilePath);
@@ -82,7 +82,7 @@ public class TestInitialization extends Browsers {
 
         if (!suiteName.contains("adhoc")) {
             trigonPaths.setLogsPath(cUtils().createFolder(testResultsPath, "RunTimeLogs", ""));
-            if(!platformType.equalsIgnoreCase("API")){
+            if (!platformType.equalsIgnoreCase("API")) {
                 trigonPaths.setScreenShotsPath(cUtils().createFolder(testResultsPath, "ScreenShots", ""));
             }
             trigonPaths.setSupportSubSuiteFilePath(cUtils().createFolder(supportFilePath, "TestResultJSON", ""));
@@ -112,9 +112,9 @@ public class TestInitialization extends Browsers {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/TestResultJSON/apiCoverage.json", false)));
             TreeSet<String> listOfEndpoints = new TreeSet<>(apiCoverage);
             totalEndpoints = listOfEndpoints.size();
-            Map<String,Long> getEndpointCount = apiCoverage.stream().collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+            Map<String, Long> getEndpointCount = apiCoverage.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
             writer.beginArray();
-            getEndpointCount.forEach((k,v) -> {
+            getEndpointCount.forEach((k, v) -> {
                 try {
                     writer.value(k);
                 } catch (IOException e) {
@@ -558,9 +558,9 @@ public class TestInitialization extends Browsers {
     protected void setTestEnvironment(String fileName, String excelFilePath,
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version,
                                       String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
-                                      String accessToken, String isJWT, String endpointPrefix,String franchiseId,String dbType,String serviceType, String store, String host, String locale,
+                                      String accessToken, String isJWT, String endpointPrefix, String franchiseId, String dbType, String serviceType, String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP,String gps_location,String moduleNames) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames,String test_email_recipients,String test_error_email_recipients,String test_failure_email_recipients) {
         try {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -767,7 +767,7 @@ public class TestInitialization extends Browsers {
             if (version != null) {
                 tEnv().setApiVersion(version);
             }
-            if (partnerURI != null){
+            if (partnerURI != null) {
                 tEnv().setApiPartnerURI(partnerURI);
             }
             if (token != null) {
@@ -823,7 +823,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setServiceType(serviceType);
             }
 
-            if (moduleNames !=null){
+            if (moduleNames != null) {
                 tEnv().setModuleNames(moduleNames);
             }
 
@@ -840,48 +840,67 @@ public class TestInitialization extends Browsers {
             if (test_region != null) {
                 tEnv().setTest_region(test_region);
                 try {
-                    tEnv().setApiLocale(tLocalEnv.getRegion().getAsJsonObject(test_region).get("locale").getAsString());
-                    tEnv().setApiRegion(tLocalEnv.getRegion().getAsJsonObject(test_region).get("region").getAsString());
-                    tEnv().setApiStore(tLocalEnv.getRegion().getAsJsonObject(test_region).get("store").getAsString());
-                    tEnv().setApiHost(tLocalEnv.getRegion().getAsJsonObject(test_region).get("host").getAsString());
-                    tEnv().setApiToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("token").getAsString());
-                    tEnv().setApiAccessToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("accessToken").getAsString());
-                    tEnv().setApiCountry(tLocalEnv.getRegion().getAsJsonObject(test_region).get("country").getAsString());
-                    tEnv().setApiCurrency(tLocalEnv.getRegion().getAsJsonObject(test_region).get("currency").getAsString());
-                    tEnv().setApiTimeZone(tLocalEnv.getRegion().getAsJsonObject(test_region).get("timezone").getAsString());
-                    tEnv().setApiPhoneNumber(tLocalEnv.getRegion().getAsJsonObject(test_region).get("phoneNumber").getAsString());
-                    tEnv().setApiEmailID(tLocalEnv.getRegion().getAsJsonObject(test_region).get("emailId").getAsString());
+//                    tEnv().setApiLocale(tLocalEnv.getRegion().getAsJsonObject(test_region).get("locale").getAsString());
+//                    tEnv().setApiRegion(tLocalEnv.getRegion().getAsJsonObject(test_region).get("region").getAsString());
+//                    tEnv().setApiStore(tLocalEnv.getRegion().getAsJsonObject(test_region).get("store").getAsString());
+//                    tEnv().setApiHost(tLocalEnv.getRegion().getAsJsonObject(test_region).get("host").getAsString());
+//                    tEnv().setApiToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("token").getAsString());
+//                    tEnv().setApiAccessToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("accessToken").getAsString());
+//                    tEnv().setApiCountry(tLocalEnv.getRegion().getAsJsonObject(test_region).get("country").getAsString());
+//                    tEnv().setApiCurrency(tLocalEnv.getRegion().getAsJsonObject(test_region).get("currency").getAsString());
+//                    tEnv().setApiTimeZone(tLocalEnv.getRegion().getAsJsonObject(test_region).get("timezone").getAsString());
+//                    tEnv().setApiPhoneNumber(tLocalEnv.getRegion().getAsJsonObject(test_region).get("phoneNumber").getAsString());
+//                    tEnv().setApiEmailID(tLocalEnv.getRegion().getAsJsonObject(test_region).get("emailId").getAsString());
+                    setTakeawayDetails(tLocalEnv, tEnv().getTest_region());
                 } catch (Exception e) {
                     Assert.fail("Provided test_region " + test_region + " in remote-env.json is not found in test-env.json");
                 }
             } else {
                 tEnv().setTest_region(tRemoteEnv.getTest_region());
                 try {
-                    tEnv().setApiLocale(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("locale").getAsString());
-                    tEnv().setApiRegion(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("region").getAsString());
-                    tEnv().setApiStore(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("store").getAsString());
-                    tEnv().setApiHost(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("host").getAsString());
-                    tEnv().setApiToken(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("token").getAsString());
-                    tEnv().setApiAccessToken(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("accessToken").getAsString());
-                    tEnv().setApiCountry(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("country").getAsString());
-                    tEnv().setApiCurrency(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("currency").getAsString());
-                    tEnv().setApiTimeZone(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("timezone").getAsString());
-                    tEnv().setApiPhoneNumber(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("phoneNumber").getAsString());
-                    tEnv().setApiEmailID(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("emailId").getAsString());
+//                    tEnv().setApiLocale(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("locale").getAsString());
+//                    tEnv().setApiRegion(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("region").getAsString());
+//                    tEnv().setApiStore(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("store").getAsString());
+//                    tEnv().setApiHost(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("host").getAsString());
+//                    tEnv().setApiToken(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("token").getAsString());
+//                    tEnv().setApiAccessToken(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("accessToken").getAsString());
+//                    tEnv().setApiCountry(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("country").getAsString());
+//                    tEnv().setApiCurrency(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("currency").getAsString());
+//                    tEnv().setApiTimeZone(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("timezone").getAsString());
+//                    tEnv().setApiPhoneNumber(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("phoneNumber").getAsString());
+//                    tEnv().setApiEmailID(tLocalEnv.getRegion().getAsJsonObject(tRemoteEnv.getTest_region()).get("emailId").getAsString());
+                    setTakeawayDetails(tLocalEnv, tEnv().getTest_region());
                 } catch (Exception e) {
                     Assert.fail("Provided test_region " + tRemoteEnv.getTest_region() + " in remote-env.json is not found in test-env.json or some mandatory keys in " + tRemoteEnv.getTest_region() + " are missed, Please check all keys");
                 }
             }
 
-            if (tRemoteEnv.getEmail_recipients() != null) {
+//            if (tRemoteEnv.getEmail_recipients() != null) {
+//                email_recipients = tRemoteEnv.getEmail_recipients();
+//            }
+//            if (tRemoteEnv.getError_email_recipients() != null) {
+//                error_email_recipients = tRemoteEnv.getError_email_recipients();
+//            }
+//            if (tRemoteEnv.getFailure_email_recipients() != null) {
+//                failure_email_recipients = tRemoteEnv.getFailure_email_recipients();
+//            }
+
+            if (test_email_recipients != null) {
+                email_recipients = test_email_recipients;
+            } else if (tRemoteEnv.getEmail_recipients() != null) {
                 email_recipients = tRemoteEnv.getEmail_recipients();
             }
-            if (tRemoteEnv.getError_email_recipients() != null) {
+            if (test_error_email_recipients != null) {
+                error_email_recipients = test_error_email_recipients;
+            } else if (tRemoteEnv.getError_email_recipients() != null) {
                 error_email_recipients = tRemoteEnv.getError_email_recipients();
             }
-            if (tRemoteEnv.getFailure_email_recipients() != null) {
+            if(test_failure_email_recipients !=null){
+                failure_email_recipients = test_failure_email_recipients;
+            } else if (tRemoteEnv.getFailure_email_recipients() != null) {
                 failure_email_recipients = tRemoteEnv.getFailure_email_recipients();
             }
+
             if (tRemoteEnv.getBrowserstack_execution_local() != null) {
                 tEnv().setBrowserstack_execution_local(tRemoteEnv.getBrowserstack_execution_local());
             }
@@ -898,6 +917,23 @@ public class TestInitialization extends Browsers {
         }
     }
 
+    public void setTakeawayDetails(TestEnvPojo tLocalEnv, String test_region) {
+        try {
+            tEnv().setApiLocale(tLocalEnv.getRegion().getAsJsonObject(test_region).get("locale").getAsString());
+            tEnv().setApiRegion(tLocalEnv.getRegion().getAsJsonObject(test_region).get("region").getAsString());
+            tEnv().setApiStore(tLocalEnv.getRegion().getAsJsonObject(test_region).get("store").getAsString());
+            tEnv().setApiHost(tLocalEnv.getRegion().getAsJsonObject(test_region).get("host").getAsString());
+            tEnv().setApiToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("token").getAsString());
+            tEnv().setApiAccessToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("accessToken").getAsString());
+            tEnv().setApiCountry(tLocalEnv.getRegion().getAsJsonObject(test_region).get("country").getAsString());
+            tEnv().setApiCurrency(tLocalEnv.getRegion().getAsJsonObject(test_region).get("currency").getAsString());
+            tEnv().setApiTimeZone(tLocalEnv.getRegion().getAsJsonObject(test_region).get("timezone").getAsString());
+            tEnv().setApiPhoneNumber(tLocalEnv.getRegion().getAsJsonObject(test_region).get("phoneNumber").getAsString());
+            tEnv().setApiEmailID(tLocalEnv.getRegion().getAsJsonObject(test_region).get("emailId").getAsString());
+        } catch (Exception e) {
+            System.out.println();
+        }
+    }
 
     public void hardWait(long delay, String... message) {
         try {
