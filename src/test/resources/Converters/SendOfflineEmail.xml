@@ -3,10 +3,10 @@
     <test name="SendOfflineReportsToEmail">
         <!-- Add recipients as comma separated -->
         <parameter name="recipients"
-                          value="bhaskar.marrikunta@foodhub.com"></parameter>
+                          value="srikrishna.n@foodhub.com"></parameter>
                 <!-- Dont Include Sub folder path in reportsPath-->
         <parameter name="reportPath"
-                   value="/Users/bhaskarreddy/Desktop/Data/Automation/Development/trigon/src/test/resources/TestResults/API_Endpoint_Automation_Category_2021-07-22-005944"/>
+                   value="src/test/resources/TestResults/6-Sep-2022/MYT_Android_Sample_2022-09-06-065641"/>
 <!--        <parameter name="uploadToAWS" value="false"/>-->
         <parameter name="sendFailedReport" value="true"/>
         <classes>

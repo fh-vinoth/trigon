@@ -6,7 +6,7 @@
                           value="srikrishna.n@foodhub.com"></parameter>-->
                 <!-- Dont Include Sub folder path in reportsPath-->
         <parameter name="suiteName"
-                   value="MYT_Android"/>
+                   value="FUSIONApp_Android"/>
 <!--        <parameter name="uploadToAWS" value="false"/>-->
         <classes>
             <class name="com.trigon.reports.TriageFailureReport"/>

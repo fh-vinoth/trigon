@@ -8,18 +8,17 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.transfer.MultipleFileUpload;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
+import com.github.wnameless.json.flattener.JsonFlattener;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.trigon.security.AES;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
 import jakarta.mail.*;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeBodyPart;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMultipart;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import jakarta.mail.internet.*;
 
 import java.io.File;
 import java.io.FileReader;
@@ -79,35 +78,33 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
         // Create a default MimeMessage object.
         Message message = new MimeMessage(session);
-
-        JSONParser parser = new JSONParser();
         Map<String, Object> obj = null;
         try {
-            obj = (HashMap) parser.parse(new FileReader(reportPath + "/SupportFiles/HTML/emailBody.json"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+            Gson gson = new Gson();
+            obj = gson.fromJson(new FileReader(reportPath + "/SupportFiles/HTML/emailBody.json"), Map.class);
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
 
-        JSONObject jsonObject = (JSONObject) obj;
-
         try {
-            if((String.valueOf(jsonObject.get("testType")) == null) || String.valueOf(jsonObject.get("testType")).isEmpty()){
+            if((String.valueOf(obj.get("testType")) == null) || String.valueOf(obj.get("testType")).isEmpty()){
                 message.setFrom(new InternetAddress(from, "FH AutomationReport"));
             }else{
-                message.setFrom(new InternetAddress(from, "FH "+jsonObject.get("testType").toString()+" Report"));
+                message.setFrom(new InternetAddress(from, "FH "+obj.get("testType").toString()+" Report"));
             }
 
-            StringBuffer sb = new StringBuffer(recipients);
+            /*StringBuffer sb = new StringBuffer(recipients);
             sb.append(",bhaskar.marrikunta@foodhub.com");
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(sb.toString()));
+                    InternetAddress.parse(sb.toString()));*/
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(recipients));
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            message.setSubject(String.valueOf(jsonObject.get("subject")));
+            message.setSubject(String.valueOf(obj.get("subject")));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,9 +120,9 @@ public class TriggerEmailImpl implements ITriggerEmail {
         }
 
         if ((sendFailedReport != null) && (sendFailedReport.equalsIgnoreCase("true"))) {
-            writer.append(String.valueOf(jsonObject.get("failedData")));
+            writer.append(String.valueOf(obj.get("failedData")));
         } else {
-            writer.append(String.valueOf(jsonObject.get("body")));
+            writer.append(String.valueOf(obj.get("body")));
         }
 
         try {
@@ -166,7 +163,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
         }
     }
 
-    public void triggerCustomEmail(String reportPath, String recipients) throws IOException, ParseException {
+    public void triggerCustomEmail(String reportPath, String recipients) throws IOException {
         String from = "automation@foodhub.com";
         final String username = "automation@foodhub.com";
         final String password = "LkdfL7!VK8ksBb";
@@ -191,11 +188,14 @@ public class TriggerEmailImpl implements ITriggerEmail {
         // Create a default MimeMessage object.
         Message message = new MimeMessage(session);
 
+        Map customEmail = null;
 
-        JSONParser parser = new JSONParser();
-        Map<String, Object> obj = (HashMap) parser.parse(new FileReader(reportPath + File.separator + "SupportFiles/HTML" + "/" + "CustomReport.json"));
-
-        JSONObject jsonObject = (JSONObject) obj;
+        try {
+            Gson gson = new Gson();
+            customEmail = gson.fromJson(new FileReader(reportPath + File.separator + "SupportFiles/HTML" + "/" + "CustomReport.json"),Map.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         try {
@@ -208,7 +208,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
         }
 
         try {
-            message.setSubject(String.valueOf(jsonObject.get("subject")));
+            message.setSubject(String.valueOf(customEmail.get("subject")));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -224,7 +224,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
             e.printStackTrace();
         }
 
-        writer.append(String.valueOf(jsonObject.get("customBody")));
+        writer.append(String.valueOf(customEmail.get("customBody")));
 
         try {
             ((MimeBodyPart) messageBodyPart).setText(writer.toString(), "UTF-8", "html");
@@ -248,7 +248,6 @@ public class TriggerEmailImpl implements ITriggerEmail {
             e.printStackTrace();
         }
         System.out.println("Email Triggered successfully to Recipients " + recipients);
-
 
     }
 }

@@ -1,9 +1,8 @@
 package com.trigon.tribot;
 
 import com.github.wnameless.json.flattener.JsonFlattener;
-import com.trigon.api.APICoreController;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -24,10 +23,9 @@ public class GenerateApiMethod {
         String curl = null;
         try {
             String method = null;
-            JSONParser parser = new JSONParser();
             FileWriter fw = new FileWriter("src/test/resources/TestData/api/GeneratedCurlMethods");
-            Object obj = parser.parse(new FileReader(path));
-            Map<String, Object> map = JsonFlattener.flattenAsMap(((JSONObject) obj).toJSONString());
+            Object obj = JsonParser.parseReader(new FileReader(path));
+            Map<String, Object> map = JsonFlattener.flattenAsMap(String.valueOf(((JsonObject) obj).getAsJsonObject()));
             for (Map.Entry<String, Object> i : map.entrySet()) {
                 String key = i.getKey();
                 String value = i.getValue().toString();
