@@ -55,7 +55,6 @@ public class TriBot {
             obj = gson.fromJson(jsonObject, Map.class);
         } catch (JsonParseException e) {
             errorCollection.add("Please check your json structure.. look for missing commas,parameters at "+path+" and "+e.getMessage());
-            System.err.println("Please check your json structure.. look for missing commas,parameters at "+path+" and "+e.getMessage());
         }
         try {
             List<String> stringList = new ArrayList<>();
