@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="GenerateTriageReport">
+    <test name="GenerateFailureReport">
+        <!-- Add recipients as comma separated -->
+        <!--<parameter name="recipients"
+                          value="srikrishna.n@foodhub.com"></parameter>-->
+                <!-- Dont Include Sub folder path in reportsPath-->
+        <parameter name="suiteName"
+                   value="FUSIONApp_Android"/>
+<!--        <parameter name="uploadToAWS" value="false"/>-->
+        <classes>
+            <class name="com.trigon.reports.TriageFailureReport"/>
+        </classes>
+    </test>
+</suite>
