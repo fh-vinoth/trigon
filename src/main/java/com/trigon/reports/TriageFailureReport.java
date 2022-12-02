@@ -61,37 +61,69 @@ public class TriageFailureReport {
                     "<meta charset=\"UTF-8\">\n" +
                     "<title>FoodHub Failure Triage Report</title>\n" +
                     "</head>\n" +
-                    "<body>\n" +
-                    "<table style=\"width: 90%;font-family: Roboto,sans-serif;font-size: 13px;color: #555555;text-align: center;border-radius: 20px;margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse;background-color: #f5f2f2\"><thead>\n" +
                     "<style>\n" +
-                    "  table, th, td {\n" +
-                    "  border: 1px solid black;\n" +
-                    "  border-collapse: collapse;\n" +
-                    "}</style>\n" +
-                    "<thead>\r\n" +
-                    "<tr>\r\n" +
-                    "<th style=\"padding-left: 30px;text-align: left;background: #e0dbdb;height: 60px;\"><img alt=\"FoodHub\" height=\"20\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"114\"></th>\n" +
-                    "<th colspan=\"3\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th>" +
-                    "</tr>\r\n" +
-                    "</thead>\r\n" +
-                    "\r\n" +
+                    "table, th,\n" +
+                    "td {border: 1px solid black;border-collapse: collapse;word-wrap: break-word;}\n" +
+                    "table {display: block;}\n" +
+                    "td, th {display: inline-block;width: 25%;}\n" +
+                    "td {text-align: center !important;}\n" +
+                    "th {text-align: center !important;}\n" +
+                    "tbody {background-color: #ccccc4 !important;}\n" +
+                    "</style>\n" +
+                    "<body>\n" +
+                    "<!DOCTYPE html>\n" +
+                    "<html lang=\"en\">\n" +
+                    "<head>\n" +
+                    "<title>Failure Triage Report</title>\n" +
+                    "<meta charset=\"utf-8\">\n" +
+                    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                    "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n" +
+                    "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js\"></script>\n" +
+                    "</head>\n" +
+                    "<body>\n" +
+                    "<div>\n" +
+                    "<div>\n" +
+                    "<div style=\"display: flex; justify-content: center; align-items: center;\">\n" +
+                    "<div style=\"flex: 1;\"><img alt=\"FoodHub\"\n" +
+                    "src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\"\n" +
+                    "width=\"150px\">\n" +
+                    "</div>\n" +
+                    "<div style=\"text-align: center; background: #e0dbdb; height: 60px; flex: 1;\">Failure Triage\n" +
+                    "Report</div>\n" +
+                    "</div>\n" +
+                    "<table style=\"margin-top: auto;\">\n" +
+                    "<thead>" +
+                    "<tr>\n" +
+                    "<th\n" +
+                    "style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;\">\n" +
+                    "Module : Scenario</th>\n" +
+                    "<th\n" +
+                    "style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-\67p0-=-amily: calibri, arial, sans-serif\">\n" +
+                    DBYURL +
+                    "</th>\n" +
+                    "<th\n" +
+                    "style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">\n" +
+                    YURL +
+                    "</th>\n" +
+                    "<th\n" +
+                    "style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">\n" +
+                    TURL +
+                    "</th>\n" +
+                    "</tr>\n" +
+                    "</thead>\n" +
 
-
-                    "<thead>\r\n" +
-                    "<tr>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">Module : Scenario</th>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + daybeforeyesterday + "</th>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + yesterday + "</th>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + today + "</th>\r\n" +
-                    "</tr>\r\n" +
-                    "</thead>\r\n" +
-                    "<tbody border=\"0\">\r\n" +
+            "<tbody>\n" +
                     "<tr>\r\n" +
                     "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%; colspan=\"4\"\">" + passContent + "</td>\r\n" +
                     "</tr>\r\n" +
                     "</tbody>\n" +
-                    "</table>";
-
+                    "</table>\n" +
+                    "</table>\n" +
+                    "</div>\n" +
+                    "</body>\n" +
+                    "</html>\n" +
+                    "</body>\n" +
+                    "</html>\n";
             bw.write(html);
             bw.close();
 
@@ -105,36 +137,54 @@ public class TriageFailureReport {
                     "<meta charset=\"UTF-8\">\n" +
                     "<title>FoodHub Failure Triage Report</title>\n" +
                     "</head>\n" +
-                    "<body>\n" +
-                    "<table style=\"width: 90%;font-family: Roboto,sans-serif;font-size: 13px;color: #555555;text-align: center;border-radius: 20px;margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse;background-color: #f5f2f2\"><thead>\n" +
                     "<style>\n" +
-                    "  table, th, td {\n" +
-                    "  border: 1px solid black;\n" +
-                    "  border-collapse: collapse;\n" +
+                    "table, th, td {\n" +
+                    "border: 1px solid black;\n" +
+                    "border-collapse: collapse;\n" +
                     "}</style>\n" +
-                    "<thead>\r\n" +
+                    "<body>\n" +
+                    "<!DOCTYPE html>\n" +
+                    "<html lang=\"en\">\n" +
+                    "<head>\n" +
+                    "<title>Failure Triage Report</title>\n" +
+                    "<meta charset=\"utf-8\">\n" +
+                    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                    "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n" +
+                    "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js\"></script>\n" +
+                    "</head>\n" +
+                    "<body>\n" +
+                    "<div>\n" +
+                    "<div class=\"table-responsive\">\n" +
+                    "<table class=\"table\">\n" +
+                    "<thead >\n" +
+                    "<tr>\n" +
+                    "<th><img alt=\"FoodHub\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
+                    "<th width=\"75%\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th></tr>\n" +
+                    "</thead>\n" +
+                    "<table class=\"table table-bordered\" style=\"margin-top: auto;\">\n" +
+                    "<thead>\n" +
+                    "<tr>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">Module : Scenario</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+daybeforeyesterday+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+yesterday+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+today+"</th>\n" +
+                    "</tr>\n" +
+                    "</thead>\n" +
+                    "<tbody>\n" +
                     "<tr>\r\n" +
-                    "<th style=\"padding-left: 30px;text-align: left;background: #e0dbdb;height: 60px;\"><img alt=\"FoodHub\" height=\"20\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"114\"></th>\n" +
-                    "<th colspan=\"3\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th>" +
-                    "</tr>\r\n" +
-                    "</thead>\r\n" +
-                    "\r\n" +
-
-
-                    "<thead>\r\n" +
-                    "<tr>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">Module : Scenario</th>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + daybeforeyesterday + "</th>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + yesterday + "</th>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + today + "</th>\r\n" +
-                    "</tr>\r\n" +
-                    "</thead>\r\n" +
-                    "<tbody border=\"0\">\r\n" +
-                    "<tr>\r\n" +
-                    "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%; colspan=\"4\"\">" + noReportContent + "</td>\r\n" +
+                    "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%; colspan=4\"></td>\r\n" +
+                    "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%; colspan=4\">" + noReportContent + "</td>\r\n" +
+                    "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%; colspan=4\">" + noReportContent + "</td>\r\n" +
+                    "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%; colspan=4\">" + noReportContent + "</td>\r\n" +
                     "</tr>\r\n" +
                     "</tbody>\n" +
-                    "</table>";
+                    "</table>\n" +
+                    "</table>\n" +
+                    "</div>\n" +
+                    "</body>\n" +
+                    "</html>\n" +
+                    "</body>\n" +
+                    "</html>\n";
 
             bw.write(html);
             bw.close();
@@ -146,62 +196,71 @@ public class TriageFailureReport {
                     "<meta charset=\"UTF-8\">\n" +
                     "<title>FoodHub Failure Triage Report</title>\n" +
                     "</head>\n" +
-                    "<body>\n" +
-                    "<table style=\"width: 90%;font-family: Roboto,sans-serif;font-size: 13px;color: #555555;text-align: center;border-radius: 20px;margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse;background-color: #f5f2f2\"><thead>\n" +
                     "<style>\n" +
-                    "  table, th, td {\n" +
-                    "  border: 1px solid black;\n" +
-                    "  border-collapse: collapse;\n" +
+                    "table, th, td {\n" +
+                    "border: 1px solid black;\n" +
+                    "border-collapse: collapse;\n" +
                     "}</style>\n" +
-                    "<thead>\r\n" +
-                    "<tr>\r\n" +
-                    "<th style=\"padding-left: 30px;text-align: left;background: #e0dbdb;height: 60px;\"><img alt=\"FoodHub\" height=\"20\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"114\"></th>\n" +
-                    "<th colspan=\"3\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th>" +
-                    "</tr>\r\n" +
-                    "</thead>\r\n" +
-                    "\r\n" +
-
-
-                    "<thead>\r\n" +
-                    "<tr>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">Module : Scenario</th>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + daybeforeyesterday + "</th>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + yesterday + "</th>\r\n" +
-                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">" + today + "</th>\r\n" +
-                    "</tr>\r\n" +
-                    "</thead>\r\n" +
-                    "<tbody border=\"0\">\r\n");
+                    "<body>\n" +
+                    "<!DOCTYPE html>\n" +
+                    "<html lang=\"en\">\n" +
+                    "<head>\n" +
+                    "<title>Failure Triage Report</title>\n" +
+                    "<meta charset=\"utf-8\">\n" +
+                    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                    "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n" +
+                    "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js\"></script>\n" +
+                    "</head>\n" +
+                    "<body>\n" +
+                    "<div>\n" +
+                    "<div class=\"table-responsive\">\n" +
+                    "<table class=\"table\">\n" +
+                    "<thead >\n" +
+                    "<tr>\n" +
+                    "<th><img alt=\"FoodHub\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
+                    "<th width=\"75%\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th></tr>\n" +
+                    "</thead>\n" +
+                    "<table class=\"table table-bordered\" style=\"margin-top: auto;\">\n" +
+                    "<thead>\n" +
+                    "<tr>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif\">Module : Scenario</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+daybeforeyesterday+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+yesterday+"</th>\n" +
+                    "<th style=\"background-color: #1E7778;color:#fff;  font-size: 25px; font-family: calibri, arial, sans-serif;text-align: center;\">"+today+"</th>\n" +
+                    "</tr>\n" +
+                    "</thead>\n" +
+                    "<tbody>\n");
 
             AtomicReference<String> daybeforeYesterdayBGColor = new AtomicReference<>("background-color: #ccccccc4");
             AtomicReference<String> yesterdayBGColor = new AtomicReference<>("background-color: #ccccccc4");
             AtomicReference<String> todayBGColor = new AtomicReference<>("background-color: #ccccccc4");
             dbyMap.forEach((module, result) -> {
-                if (result.equalsIgnoreCase(yMap.get(module)) && result.equalsIgnoreCase(tMap.get(module))) {
+                if (result.equalsIgnoreCase(String.valueOf(yMap.get(module))) && result.equalsIgnoreCase(String.valueOf(tMap.get(module)))) {
                     daybeforeYesterdayBGColor.set("background-color: #ccccccc4;color:#f74242;");
                     yesterdayBGColor.set("background-color: #ccccccc4;color:#f74242;");
                     todayBGColor.set("background-color: #ccccccc4;color:#f74242;");
-                } else if (yMap.get(module).equalsIgnoreCase(tMap.get(module))) {
+                } else if (String.valueOf(yMap.get(module)).equalsIgnoreCase(String.valueOf(tMap.get(module)))){
                     yesterdayBGColor.set("background-color: #ccccccc4;color:#f74242;");
                     todayBGColor.set("background-color: #ccccccc4;color:#f74242;");
-                } else if (result.equalsIgnoreCase(tMap.get(module))) {
+                } else if (result.equalsIgnoreCase(String.valueOf(tMap.get(module)))) {
                     daybeforeYesterdayBGColor.set("background-color: #ccccccc4;color:#f74242;");
                     todayBGColor.set("background-color: #ccccccc4;color:#f74242;");
                 } else {
-                    daybeforeYesterdayBGColor.set("background-color: #ccccccc4");
-                    yesterdayBGColor.set("background-color: #ccccccc4");
-                    todayBGColor.set("background-color: #ccccccc4");
+                    daybeforeYesterdayBGColor.set("background-color: #ccccccc4;");
+                    yesterdayBGColor.set("background-color: #ccccccc4;");
+                    todayBGColor.set("background-color: #ccccccc4;");
                 }
-
                 html.set(html +
-                        "<tr>\r\n" +
-                        "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%;\">" + module + "</td>\r\n" +
-                        "<td style=\"white-space:pre-wrap; word-break:break-word; width:25%;" + daybeforeYesterdayBGColor + "; font-style:calibri;font-size:14px;\">" + result + "</td>\r\n" +
-                        "<td style=\"white-space:pre-wrap; word-break:break-word; width:25%;" + yesterdayBGColor + ";font-style:calibri;font-size:14px;\">" + yMap.get(module) + "</td>\r\n" +
-                        "<td style=\"white-space:pre-wrap; word-break:break-word; width:25%;" + todayBGColor + ";font-style:calibri;font-size:14px;\">" + tMap.get(module) + "</td>\r\n" +
+                        "<tr>\r\n"+
+                        "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%;\">"+module+"</td>\r\n"+
+                        "<td style=\"white-space:pre-wrap; word-break:break-word; width:25%;"+daybeforeYesterdayBGColor+"font-style:calibri;font-size:14px;\">"+result+"</td>\r\n" +
+                        "<td style=\"white-space:pre-wrap; word-break:break-word; width:25%;" + yesterdayBGColor + "font-style:calibri;font-size:14px;\">"+ yMap.get(module) + "</td>\r\n" +
+                        "<td style=\"white-space:pre-wrap; word-break:break-word; width:25%;"+todayBGColor+"font-style:calibri;font-size:14px;\">" +tMap.get(module) + "</td>\r\n" +
                         "</tr>\r\n");
                 yMap.remove(module);
                 tMap.remove(module);
             });
+
 
             yMap.forEach((module, result) -> {
                 AtomicReference<String> backgroundColor = new AtomicReference<>("");
@@ -212,11 +271,11 @@ public class TriageFailureReport {
                     backgroundColor.set("background-color:  #ccccccc4;");
                 }
                 html.set(html +
-                        "<tr>\r\n" +
-                        "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word width:25%;\">" + module + "</td>\r\n" +
-                        "<td style=\"white-space:pre-wrap; word-break:break-word width:25%;font-style:calibri;font-size:14px;\">" + empty + "</td>\r\n" +
-                        "<td style=\"white-space:pre-wrap; word-break:break-word width:25%;" + backgroundColor + ";font-style:calibri;font-size:14px;\">" + result + "</td>\r\n" +
-                        "<td style=\"white-space:pre-wrap; word-break:break-word width:25%;" + backgroundColor + ";font-style:calibri;font-size:14px;\">" + tMap.get(module) + "</td>\r\n" +
+                        "<tr>\r\n"+
+                        "<td style=\"background-color: #ccccccc4; white-space:pre-wrap; word-break:break-word; width:25%;\">" + module  +"</td>\r\n"+
+                        "<td style=\"white-space:pre-wrap; word-break:break-word; width:25%;font-style:calibri;font-size:14px;\">"+empty+"</td>\r\n" +
+                        "<td style=\"white-space:pre-wrap; word-break:break-word; width:25%;" + backgroundColor + "font-style:calibri;font-size:14px;\">"+ result + "</td>\r\n" +
+                        "<td style=\"white-space:pre-wrap; word-break:break-word; width:25%;"+backgroundColor+"font-style:calibri;font-size:14px;\">" +tMap.get(module) + "</td>\r\n" +
                         "</tr>\r\n");
 
                 tMap.remove(module);
@@ -234,7 +293,13 @@ public class TriageFailureReport {
             });
 
             html.set(html + "</tbody>\n" +
-                    "</table>");
+                    "</table>\n" +
+                    "</table>\n" +
+                    "</div>\n" +
+                    "</body>\n" +
+                    "</html>\n" +
+                    "</body>\n" +
+                    "</html>");
 
             bw.write(html.get());
             bw.close();
@@ -253,11 +318,10 @@ public class TriageFailureReport {
             Gson pGson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement jsonElement = JsonParser.parseString(resp);
             TestSummary summary = pGson.fromJson(jsonElement, TestSummary.class);
-
             summary.getResults().forEach(result -> {
                 if ((result.get("status").getAsString().equalsIgnoreCase("fail"))) {
-                    String failureKey = result.get("class-name").toString() + "_" + result.get("method-name").toString();
-                    String failureValue = result.get("failure-reason").toString();
+                    String failureKey = result.get("class-name").getAsString() + "_" + result.get("method-name").getAsString();
+                    String failureValue = result.get("failure-reason").getAsString();
                     failureTriageMap.put(failureKey, failureValue);
                 }
             });

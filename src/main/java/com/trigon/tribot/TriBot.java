@@ -1,9 +1,7 @@
 package com.trigon.tribot;
 
+import com.google.gson.*;
 import com.trigon.wrapper.TestModels;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -25,8 +23,8 @@ public class TriBot {
     private static String JSON_MAIN_ELEMENT_NAME1 = "authorname";
     private static String JSON_PAGE_TITLE = "pageTitle";
     private static String ELEMENTS = "elements";
-    private static String AUTOGEN_PATH = "../../fh_trigon/src/test/";
-    //private static String AUTOGEN_PATH = "src/test/";
+        private static String AUTOGEN_PATH = "../../fh_trigon/src/test/";
+//    private static String AUTOGEN_PATH = "src/test/";
     private List<String> errorCollection = new ArrayList<>();
 
     private String currentFolderName;
@@ -47,21 +45,21 @@ public class TriBot {
         this.currentFolderName = currentFolderName;
     }
 
-    public void createJavaFile(String elemPath, String jsonFile, String originalname, String path, String folderName, BufferedWriter bw) throws IOException, ParseException {
-
-        JSONParser parser = new JSONParser();
+    public void createJavaFile(String elemPath, String jsonFile, String originalname, String path, String folderName, BufferedWriter bw) throws IOException {
 
         Map<String, Object> obj = null;
+        JsonObject jsonObject = null;
         try {
-            obj = (HashMap) parser.parse(new FileReader(path));
-        } catch (ParseException e) {
-            e.printStackTrace();
+            Gson gson = new Gson();
+            jsonObject = JsonParser.parseReader(new FileReader(path)).getAsJsonObject();
+            obj = gson.fromJson(jsonObject, Map.class);
+        } catch (JsonParseException e) {
+            errorCollection.add("Please check your json structure.. look for missing commas,parameters at "+path+" and "+e.getMessage());
         }
-
         try {
             List<String> stringList = new ArrayList<>();
             List<String> aList = new ArrayList<>();
-            JSONObject jsonObject = (JSONObject) obj;
+
             obj.forEach((k, v) -> {
                 stringList.add(k);
             });
@@ -89,7 +87,7 @@ public class TriBot {
             bw.write(constructorCreation);
 
             if (stringList.contains(JSON_PAGE_TITLE)) {
-                String pageTitle = (String) jsonObject.get(JSON_PAGE_TITLE);
+                String pageTitle = obj.get(JSON_PAGE_TITLE).toString();
                 bw.write("\n");
 
                 String pageTitleMethod = pageTitleMethodCreation(pageTitle);
@@ -101,14 +99,10 @@ public class TriBot {
             }
 
             if (stringList.contains(ELEMENTS)) {
-                Map map = (Map) jsonObject.get(ELEMENTS);
-                map.forEach((key, value) -> {
-                    aList.add(key.toString());
-                });
-
-
-                String createEwlementsMethod = createElementsMethod(aList, map, originalname);
-                bw.write(createEwlementsMethod);
+                JsonObject elementsObject = jsonObject.get(ELEMENTS).getAsJsonObject();
+                elementsObject.keySet().forEach(k -> aList.add(k));
+                String createElementsMethod = createElementsMethod(aList, elementsObject, originalname);
+                bw.write(createElementsMethod);
 
             } else {
                 System.err.println("Please add elements Key to JSON File" + " : JSON FILE NAME :" + originalname);
@@ -122,9 +116,8 @@ public class TriBot {
         }
     }
 
-    private String createElementsMethod(List<String> aList, Map map, String jsonFilename) {
+    private String createElementsMethod(List<String> aList, JsonObject map, String jsonFilename) {
         StringBuffer stringBuffer = new StringBuffer();
-        JSONObject jsonObject = (JSONObject) map;
 
         List<String> CommonActionAttribute = Arrays.asList("verifyAttribute");
 
@@ -143,8 +136,11 @@ public class TriBot {
         }
         long t1 = System.currentTimeMillis();
         // Get the methods
-        for (String methodName : aList) {
-            Map map1 = (Map) jsonObject.get(methodName);
+        Gson gson = new Gson();
+        /*for (String methodName : aList) {
+            Map map1 = gson.fromJson(map.get(methodName), Map.class);*/
+        aList.forEach(methodName -> {
+            Map map1 = gson.fromJson(map.get(methodName), Map.class);
             AtomicBoolean actionflag = new AtomicBoolean(false);
             map1.forEach((key, value) -> {
 
@@ -195,18 +191,18 @@ public class TriBot {
 
                     }
             );
-
             if (!actionflag.get()) {
                 System.err.println("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
                 errorCollection.add("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
             }
-
-        }
+        });
         long t2 = System.currentTimeMillis();
         //System.out.println("Filter Time Taken?= " + (t2 - t1) + "\n");
 
         return stringBuffer.toString();
     }
+
+    ;
 
     @Test
     public void autoCodeGenerator() throws IOException {
@@ -298,14 +294,12 @@ public class TriBot {
 //        objectRepo(allObjList, objImportList, objFactoryPath,"TestObjects",AUTOGEN_PATH + "java/com/fh");
         if (errorCollection.size() > 0) {
             System.out.println("\n" + "###################################### ERROR ALERT !!!!! ##### Please FIX BELOW ISSUES in JSON files ######################################\n");
-            errorCollection.forEach(item -> {
-                System.out.println(item);
-            });
+            errorCollection.forEach(System.out::println);
             Assert.fail("###### ALERT !!!!! ###################################### Please fix Above errors ###############################");
         } else {
             locatorList();
             System.out.println("\n\n" + "####################################################################");
-            System.out.println(" Congratulations!!! All Pages were generated successfully !!! ");
+            System.out.println(" Congratulations!!! All Pages are generated successfully !!! ");
             System.out.println("####################################################################");
         }
 
@@ -337,38 +331,38 @@ public class TriBot {
 
     public void objectRepo(List<String> objList, List<String> objImportList, String objFactoryPath, String className, String commonPath) throws IOException {
 
-        if(!className.equals(".DS_Store")){
-       // System.out.println("Creating Java file for class : " + className);
-        File AUTO_JAVA_OBJECTS_PATH = cUtils().createOrReadFile(null, "", objFactoryPath);
+        if (!className.equals(".DS_Store")) {
+            // System.out.println("Creating Java file for class : " + className);
+            File AUTO_JAVA_OBJECTS_PATH = cUtils().createOrReadFile(null, "", objFactoryPath);
 
-        File file = cUtils().createOrReadFile(AUTO_JAVA_OBJECTS_PATH, "",
-                className + ".java");
-        boolean mkdirs = file.getParentFile().mkdirs();
-        //System.out.println(mkdirs ? "Folders Created Exits" : "Folder Creation Unsuccessful or Already Exists");
+            File file = cUtils().createOrReadFile(AUTO_JAVA_OBJECTS_PATH, "",
+                    className + ".java");
+            boolean mkdirs = file.getParentFile().mkdirs();
+            //System.out.println(mkdirs ? "Folders Created Exits" : "Folder Creation Unsuccessful or Already Exists");
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        StringBuffer objectBuffer = new StringBuffer();
-        objectBuffer.append("/////////////////////////////////////////////////////////////////////////////////////\n" +
-                "//\n" +
-                "// This file was automatically generated by CODE GENERATOR.\n" +
-                "// DO NOT MODIFY THIS FILE! All your modifications will be lost!\n" +
-                "// Modify all your changes in your respective JSON Files only.\n" +
-                "// You can regenerate this file by executing GenerateCode.xml\n" +
-                "// You DON'T need to regenerate code if there is change in Locators.\n" +
-                "// You must regenerate code, When ever you add new element or modify/add actionevent.\n" +
-                "//\n" +
-                "// Contact bhaskar.marrikunta@foodhub.com for any issues.\n" +
-                "//\n" +
-                "/////////////////////////////////////////////////////////////////////////////////////\n\n");
-        objectBuffer.append("package autogenerated." + file.getParentFile().getName().toLowerCase() + ";\n");
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            StringBuffer objectBuffer = new StringBuffer();
+            objectBuffer.append("/////////////////////////////////////////////////////////////////////////////////////\n" +
+                    "//\n" +
+                    "// This file was automatically generated by CODE GENERATOR.\n" +
+                    "// DO NOT MODIFY THIS FILE! All your modifications will be lost!\n" +
+                    "// Modify all your changes in your respective JSON Files only.\n" +
+                    "// You can regenerate this file by executing GenerateCode.xml\n" +
+                    "// You DON'T need to regenerate code if there is change in Locators.\n" +
+                    "// You must regenerate code, When ever you add new element or modify/add actionevent.\n" +
+                    "//\n" +
+                    "// Contact bhaskar.marrikunta@foodhub.com for any issues.\n" +
+                    "//\n" +
+                    "/////////////////////////////////////////////////////////////////////////////////////\n\n");
+            objectBuffer.append("package autogenerated." + file.getParentFile().getName().toLowerCase() + ";\n");
 
-        identifyRequiredCommonPackages(objectBuffer, null, commonPath);
-        //objectBuffer.append("import com.trigon.api.APICoreController;\n");
-        if(objImportList!=null){
-            objImportList.forEach(item -> {
-                objectBuffer.append("import autogenerated.pages." + item + ".*;\n");
-            });
-        }
+            identifyRequiredCommonPackages(objectBuffer, null, commonPath);
+            //objectBuffer.append("import com.trigon.api.APICoreController;\n");
+            if (objImportList != null) {
+                objImportList.forEach(item -> {
+                    objectBuffer.append("import autogenerated.pages." + item + ".*;\n");
+                });
+            }
             if (className.equalsIgnoreCase("APIObjects")) {
                 objectBuffer.append("\n" +
                         "import java.util.HashMap;\n" +
@@ -377,7 +371,7 @@ public class TriBot {
                         "import static com.trigon.reports.ReportManager.tEnv;\n");
             }
 
-        String content = "public class " + className + " {\n\n";
+            String content = "public class " + className + " {\n\n";
             objectBuffer.append(content);
             if (className.equalsIgnoreCase("APIObjects")) {
                 objectBuffer.append("    public Map<String, Object> headers;\n" +
@@ -404,28 +398,28 @@ public class TriBot {
                         "    }\n\n");
             }
 
-        //objectBuffer.append("    public TestModels tModels() { \n        return new TestModels();\n    }\n\n");
-        //objectBuffer.append("    public APICoreController api() { \n        return new APICoreController();\n    }\n\n");
+            //objectBuffer.append("    public TestModels tModels() { \n        return new TestModels();\n    }\n\n");
+            //objectBuffer.append("    public APICoreController api() { \n        return new APICoreController();\n    }\n\n");
 
-        if(objList!=null){
-            objList.forEach(item -> {
+            if (objList != null) {
+                objList.forEach(item -> {
 
-                String methodNameLower = Character.toLowerCase(item.charAt(0)) + item.substring(1);
+                    String methodNameLower = Character.toLowerCase(item.charAt(0)) + item.substring(1);
 
-                objectBuffer.append("    public " + item + " " + methodNameLower + "() {\n" +
-                        "        return new " + item + "();\n" +
-                        "    }\n\n");
+                    objectBuffer.append("    public " + item + " " + methodNameLower + "() {\n" +
+                            "        return new " + item + "();\n" +
+                            "    }\n\n");
 
-            });
-        }
+                });
+            }
 
 
-        identifyRequiredCommonPackages(null, objectBuffer, commonPath);
-        objectBuffer.append("}");
-        bw.write(objectBuffer.toString());
-        bw.flush();
-        bw.close();
-        }else{
+            identifyRequiredCommonPackages(null, objectBuffer, commonPath);
+            objectBuffer.append("}");
+            bw.write(objectBuffer.toString());
+            bw.flush();
+            bw.close();
+        } else {
             //System.out.println("File Ignored" +commonPath);
         }
 
@@ -451,27 +445,27 @@ public class TriBot {
     private void methodGenerator(List<String> wrapperList, List<String> wrapperSubList, String jsonKey, String methodNameLower, StringBuffer stringBuffer, String methodName, String mapFunction, String mapBody, String regFunction, String regBody, AtomicBoolean flag) {
         wrapperList.parallelStream()
                 .filter(e -> wrapperSubList.parallelStream().anyMatch(d -> d.equalsIgnoreCase(e.split("##")[0]))).filter(f -> f.contains(jsonKey)).forEach(item -> {
-            if (item.split("##")[1].equalsIgnoreCase("void")) {
-                if (mapFunction.equals("(")) {
-                    methodVoidType(item.split("##")[0], methodNameLower, jsonKey, stringBuffer, methodName, regFunction, regBody);
-                    flag.set(true);
-                } else {
-                    methodVoidType(item.split("##")[0], methodNameLower, jsonKey, stringBuffer, methodName, mapFunction, mapBody);
-                    methodVoidType(item.split("##")[0], methodNameLower, jsonKey, stringBuffer, methodName, regFunction, regBody);
-                    flag.set(true);
-                }
+                    if (item.split("##")[1].equalsIgnoreCase("void")) {
+                        if (mapFunction.equals("(")) {
+                            methodVoidType(item.split("##")[0], methodNameLower, jsonKey, stringBuffer, methodName, regFunction, regBody);
+                            flag.set(true);
+                        } else {
+                            methodVoidType(item.split("##")[0], methodNameLower, jsonKey, stringBuffer, methodName, mapFunction, mapBody);
+                            methodVoidType(item.split("##")[0], methodNameLower, jsonKey, stringBuffer, methodName, regFunction, regBody);
+                            flag.set(true);
+                        }
 
-            } else {
-                if (mapFunction.equals("(")) {
-                    methodReturnType(item.split("##")[0], item.split("##")[1], methodNameLower, jsonKey, stringBuffer, methodName, regFunction, regBody);
-                    flag.set(true);
-                } else {
-                    methodReturnType(item.split("##")[0], item.split("##")[1], methodNameLower, jsonKey, stringBuffer, methodName, mapFunction, mapBody);
-                    methodReturnType(item.split("##")[0], item.split("##")[1], methodNameLower, jsonKey, stringBuffer, methodName, regFunction, regBody);
-                    flag.set(true);
-                }
-            }
-        });
+                    } else {
+                        if (mapFunction.equals("(")) {
+                            methodReturnType(item.split("##")[0], item.split("##")[1], methodNameLower, jsonKey, stringBuffer, methodName, regFunction, regBody);
+                            flag.set(true);
+                        } else {
+                            methodReturnType(item.split("##")[0], item.split("##")[1], methodNameLower, jsonKey, stringBuffer, methodName, mapFunction, mapBody);
+                            methodReturnType(item.split("##")[0], item.split("##")[1], methodNameLower, jsonKey, stringBuffer, methodName, regFunction, regBody);
+                            flag.set(true);
+                        }
+                    }
+                });
     }
 
     private void locatorValidation(Object value, String methodName, String testType, String jsonFilename) {
@@ -533,10 +527,10 @@ public class TriBot {
                 StringBuffer fPath = new StringBuffer();
                 if (!filePath.toFile().isDirectory()) {
                     List<String> pathEx;
-                    if(System.getProperty("os.name").contains("Windows")||System.getProperty("os.name").contains("windows")){
-                        pathEx= Arrays.asList(filePath.toString().split("\\\\"));
-                    }else{
-                        pathEx= Arrays.asList(filePath.toString().split("/"));
+                    if (System.getProperty("os.name").contains("Windows") || System.getProperty("os.name").contains("windows")) {
+                        pathEx = Arrays.asList(filePath.toString().split("\\\\"));
+                    } else {
+                        pathEx = Arrays.asList(filePath.toString().split("/"));
                     }
                     int j = 0;
                     for (int i = 0; i < pathEx.size(); i++) {
@@ -547,7 +541,7 @@ public class TriBot {
                     for (int k = j; k < pathEx.size() - 1; k++) {
                         fPath.append(pathEx.get(k) + ".");
                     }
-                    if((filePath.toString().contains("common"))||(filePath.toString().contains("Common"))||(filePath.toString().contains("util"))||(filePath.toString().contains("Util"))){
+                    if ((filePath.toString().contains("common")) || (filePath.toString().contains("Common")) || (filePath.toString().contains("util")) || (filePath.toString().contains("Util"))) {
                         if (filePath.toFile().getName().contains(".java")) {
                             String removeExtn = filePath.toFile().getName().substring(0, filePath.toFile().getName().lastIndexOf('.'));
                             //System.out.println("--------------------------------------------------------------------");
@@ -592,7 +586,7 @@ public class TriBot {
                 }
             });
         } catch (Exception e) {
-            System.err.println("Matching ElementRepositories Folder path "+path+" is not available in fh directory!! Ignore this error if you are not using the folder");
+            System.err.println("Matching ElementRepositories Folder path " + path + " is not available in fh directory!! Ignore this error if you are not using the folder");
             //e.printStackTrace();
         }
 
