@@ -1,13 +1,13 @@
 package com.trigon.testrail;
 
-import org.json.simple.JSONArray;
+import com.google.gson.JsonArray;
 
 import java.io.IOException;
 
 public class Projects extends Client {
 
-    public JSONArray getProjects() throws IOException, APIException {
-        return (JSONArray) apiClient.sendGet("get_projects");
+    public JsonArray getProjects() throws IOException, APIException {
+        return (JsonArray) apiClient.sendGet("get_projects");
     }
 
 }
