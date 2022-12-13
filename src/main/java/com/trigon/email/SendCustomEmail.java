@@ -1,8 +1,8 @@
 package com.trigon.email;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import org.json.simple.parser.ParseException;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -16,7 +16,7 @@ public class SendCustomEmail {
 
     @Test
     @Parameters({"recipients"})
-    public void sendCustomEmail(@Optional String recipients) throws IOException, ParseException {
+    public void sendCustomEmail(@Optional String recipients) throws IOException, JsonParseException {
         File file2 = new File("reports-path.json");
         String reportPath = null;
         if (file2.exists()) {
