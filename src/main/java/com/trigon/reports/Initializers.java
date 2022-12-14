@@ -8,6 +8,7 @@ import com.trigon.bean.testenv.TestEnv;
 import com.trigon.database.ADatabase;
 import com.trigon.database.Database;
 import com.trigon.exceptions.TrigonAsserts;
+import com.trigon.tribot.GenerateSuiteForModules;
 import com.trigon.utils.CommonUtils;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -103,4 +104,6 @@ public class Initializers {
 
     public static Database db = new Database();
     public static ADatabase adb = new ADatabase();
+    public static GenerateSuiteForModules gs = new GenerateSuiteForModules();
+
 }
