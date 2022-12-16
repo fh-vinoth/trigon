@@ -1,6 +1,7 @@
 package com.trigon.testrail;
 
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -8,8 +9,8 @@ import java.util.Map;
 
 public class Runs extends Client {
 
-    public JSONObject getRun(String runId) throws IOException, APIException {
-        return (JSONObject) apiClient.sendGet("get_run/" + runId);
+    public JsonObject getRun(String runId) throws IOException, APIException {
+        return (JsonObject) apiClient.sendGet("get_run/" + runId);
     }
 
     /**
@@ -19,19 +20,19 @@ public class Runs extends Client {
      * @throws IOException
      * @throws APIException
      */
-    public JSONObject createRunForProject(String projectId, String runName) throws IOException, APIException {
+    public JsonObject createRunForProject(String projectId, String runName) throws IOException, APIException {
         Map<String, java.io.Serializable> data = new HashMap<>();
         data.put("name", runName);
         data.put("include_all", true);
 
-        return (JSONObject) apiClient.sendPost("add_run/" + projectId, data);
+        return (JsonObject) apiClient.sendPost("add_run/" + projectId, data);
     }
 
     public String createRunAndGetRunId(String projectId, String runName) throws IOException, APIException {
         Map<String, java.io.Serializable> data = new HashMap<>();
         data.put("name", runName);
         data.put("include_all", true);
-        JSONObject obj = (JSONObject) apiClient.sendPost("add_run/" + projectId, data);
+        JsonObject obj = (JsonObject) apiClient.sendPost("add_run/" + projectId, data);
         return obj.get("id").toString();
     }
 

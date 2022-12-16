@@ -1,7 +1,7 @@
 package com.trigon.testrail;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class Cases extends Client {
      * @throws APIException
      */
     public String getTestCaseTitle(String caseId) throws IOException, APIException {
-        JSONObject c = (JSONObject) apiClient.sendGet("get_case/" + caseId);
+        JsonObject c = (JsonObject) apiClient.sendGet("get_case/" + caseId);
         return c.get("title").toString();
     }
 
@@ -43,7 +43,7 @@ public class Cases extends Client {
      * @throws IOException
      * @throws APIException
      */
-    public JSONArray getTestCasesOfRun(String runId) throws IOException, APIException {
-        return (JSONArray) apiClient.sendGet("get_tests/" + runId);
+    public JsonArray getTestCasesOfRun(String runId) throws IOException, APIException {
+        return (JsonArray) apiClient.sendGet("get_tests/" + runId);
     }
 }
