@@ -261,14 +261,11 @@ public class Browsers extends Android {
         profile.put("managed_default_content_settings", contentSettings);
         prefs.put("profile", profile);
         options.setExperimentalOption("prefs", prefs);
+        options.setExperimentalOption("excludeSwitches",Arrays.asList("disable-popup-blocking"));
+
+        caps.setCapability("browserstack.ie.enablePopups", "true");
         caps.setCapability(ChromeOptions.CAPABILITY, options);
-
-
         caps.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, UnhandledPromptBehavior.ACCEPT);
-        caps.setCapability("UNEXPECTED_ALERT_BEHAVIOUR", "ACCEPT");
-        caps.setCapability("unexpectedAlertBehaviour", "accept");
-        caps.setCapability("CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR", UnexpectedAlertBehaviour.ACCEPT);
-        caps.setCapability("UnexpectedAlertBehaviour", "ACCEPT");
         if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
             browserstackOptions.put("local", "true");
             caps.setCapability("forcelocal", "true");
