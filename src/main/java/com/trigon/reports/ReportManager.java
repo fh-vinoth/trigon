@@ -388,12 +388,8 @@ public class ReportManager extends CustomReport {
     }
 
     public void logStepAction(String message, String testcaseId) {
+        extentTestCaseNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message+testcaseId);
 
-        if (extentScenarioNode.get() != null) {
-            extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
-        } else {
-            extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
-        }
     }
 
 //    public void logStepAction(String ScenarioName) {

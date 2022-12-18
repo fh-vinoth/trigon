@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestRailClass extends TestLocalController {
+public class TestRailClass extends TestLocalController implements Runnable {
     String TestCaseId = "";
     String TestRunId = "8818";
     List<String> testcaseIds = new ArrayList<>(Arrays.asList("170051", "170052", "170053"));
@@ -22,7 +22,17 @@ public class TestRailClass extends TestLocalController {
         try {
             //TestCaseId = "265935";
             //TestRunId = "8828";
+            Thread t1 = new Thread(new TestRailClass(), "FirstThread");
             logStepAction("Get testcase11","535");
+            t1.start();
+
+            // Check to see if the first thread is alive or not.
+            if (t1.isAlive()) {
+                System.out.format("%s is alive.%n", t1.getName());
+            } else {
+                System.out.format("%s is not alive.%n", t1.getName());
+            }
+
             logStepAction("Get testcase1");
             TestCaseId = "170051";
             System.out.println("SUCCESS");
@@ -77,5 +87,11 @@ public class TestRailClass extends TestLocalController {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Running [" +
+                Thread.currentThread().getName() + "].");
     }
 }
