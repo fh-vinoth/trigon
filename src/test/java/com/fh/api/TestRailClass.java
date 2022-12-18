@@ -22,6 +22,7 @@ public class TestRailClass extends TestLocalController {
         try {
             //TestCaseId = "265935";
             //TestRunId = "8828";
+            logStepAction("Get testcase11","535");
             logStepAction("Get testcase1");
             TestCaseId = "170051";
             System.out.println("SUCCESS");
@@ -32,7 +33,10 @@ public class TestRailClass extends TestLocalController {
             TestCaseId = "170053";
             System.out.println("FAILED");
 
-        } finally {
+        } catch(Exception e){
+          System.out.println(e.toString());
+        }
+        finally {
             String result = "PASS";
             try {
                 if (result.equalsIgnoreCase("PASS")) {

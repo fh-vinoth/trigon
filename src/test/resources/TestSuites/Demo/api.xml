@@ -17,7 +17,9 @@
     <test name="abc">
         <classes>
 
-            <class name="com.fh.api.Category_SEARCH"></class>
+         <!--   <class name="com.fh.api.Category_SEARCH"></class>-->
+          <!--  <class name="com.fh.api.TestRailClass"></class>-->
+            <class name="com.trigon.testrail.TestRailJsonCreation"/>
             <!--<class name="com.fh.unittests.database.Queries1"></class>
             <class name="com.fh.unittests.database.Queries2"></class>
             <class name="com.fh.unittests.database.Queries3"></class>-->
