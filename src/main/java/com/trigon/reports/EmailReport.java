@@ -228,7 +228,7 @@ public class EmailReport {
         else if(ios()!=null){
             buildNumber=tEnv().getIosBuildNumber();
         }else {
-            buildNumber="";
+            buildNumber=tEnv().getWebBuildNumber();
         }
         return  buildNumber;
     }
