@@ -35,6 +35,8 @@ public class PerformElementAction extends ElementStrategyImpl {
                         try {
                             if (webElement.isEnabled()) {
                                 browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
+                                WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                 webElement.click();
                             }
                         } catch (WebDriverException e) {
@@ -50,8 +52,9 @@ public class PerformElementAction extends ElementStrategyImpl {
                                     scrollToElement(webElement);
                                     hardWait(1000);
                                     if (webElement.isEnabled()) {
-                                        
                                         browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
+                                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                         webElement.click();
                                     }
                                 } catch (WebDriverException e1) {
@@ -60,8 +63,9 @@ public class PerformElementAction extends ElementStrategyImpl {
                                             JavascriptExecutor js = browser();
                                             js.executeScript("window.scrollBy(0,-450)", "");
                                             if (webElement.isEnabled()) {
-                                                
                                                 browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
+                                                WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                                wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                                 webElement.click();
                                             }
                                             break;
@@ -79,11 +83,15 @@ public class PerformElementAction extends ElementStrategyImpl {
                                 navigation + Message.CLICKED + locatorString);
                     }
                     if (androidElement != null) {
+                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(androidElement)));
                         androidElement.click();
                         logReportWithScreenShot("PASS",
                                 navigation + Message.CLICKED + locatorString);
                     }
                     if (iOSElement != null) {
+                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(iOSElement)));
                         iOSElement.click();
                         logReportWithScreenShot("PASS",
                                 navigation + Message.CLICKED + locatorString);
@@ -158,9 +166,10 @@ public class PerformElementAction extends ElementStrategyImpl {
                     if (webElement != null) {
                         try {
                             if (webElement.isEnabled()) {
+                                WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                 webElement.clear();
                                 webElement.sendKeys(getElementValue);
-                                
                                 browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                             }
                         } catch (WebDriverException e) {
@@ -169,6 +178,8 @@ public class PerformElementAction extends ElementStrategyImpl {
                                 scrollToElement(webElement);
                                 hardWait(1000);
                                 if (webElement.isEnabled()) {
+                                    WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                    wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                     webElement.clear();
                                     webElement.sendKeys(getElementValue);
                                 }
@@ -189,10 +200,14 @@ public class PerformElementAction extends ElementStrategyImpl {
 
                     }
                     if (androidElement != null) {
+                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(androidElement)));
                         androidElement.clear();
                         androidElement.sendKeys(getElementValue);
                     }
                     if (iOSElement != null) {
+                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(iOSElement)));
                         iOSElement.clear();
                         iOSElement.sendKeys(getElementValue);
                     }
