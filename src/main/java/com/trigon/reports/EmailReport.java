@@ -132,9 +132,11 @@ public class EmailReport {
                 "                                <tr>\n" +
                 "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_ExecutedBy.png\" height=\"15\" width=\"15\" alt=\"Executed By\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getSystemEnvInfo().get(4).getValue() + "</td>\n" +
+                "                                <tr>\n" +
+                "                                <tr>\n" +
                 "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_OS.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
-                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">"+tEnv().getAndroidBuildNumber()+"</td>"+
-                "                                </tr>\n" +
+                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">"+getBuildNumber()+"</td>"+
+                "                                <tr>\n"+
                 "                                <tr>\n" +
                 "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + executedGitBranch + "</td>\n" +
@@ -215,6 +217,22 @@ public class EmailReport {
                 "        </td>\n" +
                 "    </tr>";
     }
+
+
+
+    private static String getBuildNumber(){
+        String buildNumber=null;
+        if(android()!=null){
+            buildNumber=tEnv().getAndroidBuildNumber();
+        }
+        else if(ios()!=null){
+            buildNumber=tEnv().getIosBuildNumber();
+        }else {
+            buildNumber="WEB";
+        }
+        return  buildNumber;
+    }
+
 
     private static String reportLinks(ExtentReports stats) {
 
@@ -389,19 +407,6 @@ public class EmailReport {
                 "</table>\n" +
                 "</body>\n" +
                 "</html>";
-    }
-
-    public String getBuildNumber(){
-        String buildNumber=null;
-        if(android()!=null){
-            buildNumber=tEnv().getAndroidBuildNumber();
-        }
-        else if(ios()!=null){
-            buildNumber=tEnv().getIosBuildNumber();
-        }else {
-            buildNumber="WEB";
-        }
-        return  buildNumber;
     }
 
     private static String failureData(ExtentReports stats) {
