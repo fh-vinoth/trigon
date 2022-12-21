@@ -83,14 +83,14 @@ public class PerformElementAction extends ElementStrategyImpl {
                                 navigation + Message.CLICKED + locatorString);
                     }
                     if (androidElement != null) {
-                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                        WebDriverWait wait = new WebDriverWait(android(),Duration.ofSeconds(5));
                         wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(androidElement)));
                         androidElement.click();
                         logReportWithScreenShot("PASS",
                                 navigation + Message.CLICKED + locatorString);
                     }
                     if (iOSElement != null) {
-                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                        WebDriverWait wait = new WebDriverWait(ios(),Duration.ofSeconds(5));
                         wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(iOSElement)));
                         iOSElement.click();
                         logReportWithScreenShot("PASS",
@@ -200,13 +200,13 @@ public class PerformElementAction extends ElementStrategyImpl {
 
                     }
                     if (androidElement != null) {
-                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                        WebDriverWait wait = new WebDriverWait(android(),Duration.ofSeconds(5));
                         wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(androidElement)));
                         androidElement.clear();
                         androidElement.sendKeys(getElementValue);
                     }
                     if (iOSElement != null) {
-                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                        WebDriverWait wait = new WebDriverWait(ios(),Duration.ofSeconds(5));
                         wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(iOSElement)));
                         iOSElement.clear();
                         iOSElement.sendKeys(getElementValue);
