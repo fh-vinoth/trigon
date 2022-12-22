@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+
 public class TestRailJsonCreation{
     public static JsonWriter writer;
 
@@ -32,7 +33,7 @@ public class TestRailJsonCreation{
         System.out.println(userData.get("API"));
         System.out.println(userData.get("MYT"));*/
 
-       /* JsonParser parser = new JSONParser();
+   /*     JsonParser parser = new JSONParser();
         Object obj = parser.parse(new FileReader("tenv/test-env.json"));
         Map<String, Object> map = JsonFlattener.flattenAsMap(String.valueOf(fileObj));
         System.out.println(map);*/
