@@ -63,7 +63,7 @@ public class TestRailJsonCreationNewMap extends IOException{
         setJson("C1234454","Get statistics3","Failed",getClass().getSimpleName(),m.getName());
         setJson("C1234455","Get order1","Failed","OrderPlacement","OrderPlacement1");
         setJson("C1234456","Get order2","Passed","OrderPlacement","OrderPlacement2");
-        setJson("C1234457","Get driver","Skipped","Driver","Skipped");
+        setJson("C1234457","Get driver","Skipped","Driver","DriverStatus");
         generateJsonFile(classNameArray);
         updateTestRailStatus();
     }
