@@ -15,7 +15,7 @@ public class UploadTestStatusToTestRail {
     public void updateTestRailTestStatus(String testRailStatusPath, String product) {
         try {
             String testRunId = getTestRunId(product);
-            uploadTestcaseStatus(testRunId,testRailStatusPath);
+            uploadTestcaseStatus(testRunId, testRailStatusPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,7 +32,7 @@ public class UploadTestStatusToTestRail {
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         System.out.println(String.valueOf(passedCase.getAsNumber()).substring(1));
-                        t.addTestResultForTestCase(testRunId,String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS);
+                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -47,7 +47,7 @@ public class UploadTestStatusToTestRail {
 
                 class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
                     try {
-                       t.addTestResultForTestCase(testRunId,String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS);
+                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
