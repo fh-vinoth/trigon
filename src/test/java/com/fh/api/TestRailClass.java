@@ -23,7 +23,7 @@ public class TestRailClass extends TestLocalController implements Runnable {
             //TestCaseId = "265935";
             //TestRunId = "8828";
             Thread t1 = new Thread(new TestRailClass(), "FirstThread");
-            logStepAction("Get testcase11","535,767");
+           // logStepAction("Get testcase11","535,767");
             t1.start();
 
             // Check to see if the first thread is alive or not.

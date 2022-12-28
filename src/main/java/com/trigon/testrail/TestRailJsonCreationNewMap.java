@@ -89,11 +89,11 @@ public class TestRailJsonCreationNewMap extends IOException {
         addToMap(testInfo);
         testInfo = setJson("C1234457", "Get driver", "Skipped", "Driver", "DriverStatus");
         addToMap(testInfo);*/
-        setJson("C1234452", "Get statistics1", "Passed", getClass().getSimpleName(), m.getName());
-        setJson("C1234453", "Get statistics2", "Passed", getClass().getSimpleName(), m.getName());
-        setJson("C1234454", "Get statistics3", "Failed", getClass().getSimpleName(), m.getName());
-        setJson("C1234455", "Get order1", "Failed", "OrderPlacement", "OrderPlacement1");
-        setJson("C1234456", "Get order2", "Passed", "OrderPlacement", "OrderPlacement2");
+        setJson("C1234452", "Get statistics and validate for delivery", "Passed", getClass().getSimpleName(), m.getName());
+        setJson("C1234453", "Get statistics and validate for collection", "Passed", getClass().getSimpleName(), m.getName());
+        setJson("C1234454", "502 Bad Gateway Error", "Failed", getClass().getSimpleName(), m.getName());
+        setJson("C1234455", "401 Unauthorized Exception", "Failed", "OrderPlacement", "OrderPlacement1");
+        setJson("C1234456", "Order Placement validation for collection", "Passed", "OrderPlacement", "OrderPlacement2");
         setJson("C1234457", "Get driver", "Skipped", "Driver", "DriverStatus");
         generateJsonFile(classNameArray);
     }
