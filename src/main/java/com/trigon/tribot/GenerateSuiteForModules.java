@@ -45,29 +45,33 @@ public class GenerateSuiteForModules extends TrigonUtils {
                     "    <parameter name=\"isJWT\" value=\"false\"></parameter>\n" +
                     "    <parameter name=\"endpointPrefix\" value=\"client/v1/\"></parameter>");
 
-            if (suiteName.equalsIgnoreCase("FUSIONApp_Android")) {
-                fWriter.write("<parameter name=\"device\" value=\"Samsung Galaxy Tab S8\"></parameter>\n" +
-                        "        <parameter name=\"os\" value=\"12.0\"></parameter>");
-            } else if (suiteName.equalsIgnoreCase("MYT") && tEnv().getAppType().equalsIgnoreCase("android")) {
-                fWriter.write("<parameter name=\"os\" value=\"11.0\"/>\n" +
-                        "        <parameter name=\"device\" value=\"One Plus 9\"></parameter>");
-            } else if (suiteName.equalsIgnoreCase("MYT") && tEnv().getAppType().equalsIgnoreCase("ios")) {
-                fWriter.write("<parameter name=\"os\" value=\"14.0\"/>\n" +
-                        "        <parameter name=\"device\" value=\"iPhone XS\"></parameter>");
-            } else if (suiteName.equalsIgnoreCase("MYTWeb") && tEnv().getApiEnvType().equalsIgnoreCase("sit")) {
-                fWriter.write("<parameter name=\"url\" value=\"https://myt-sit.fhcdn.dev/\"></parameter>\n");
-            } else if (suiteName.equalsIgnoreCase("MYTWeb") && tEnv().getApiEnvType().equalsIgnoreCase("prod")) {
-                fWriter.write("<parameter name=\"url\" value=\"https://my.foodhub.com\"></parameter>\n");
-            } else if (suiteName.equalsIgnoreCase("APOS")) {
-                fWriter.write("<parameter name=\"os\" value=\"10.0\"/>\n" +
-                        "    <parameter name=\"device\" value=\"onePlus 8\"/>");
-            } else if (suiteName.equalsIgnoreCase("MYPOS")) {
-                fWriter.write(" <parameter name=\"os\" value=\"10.0\"/>\n" +
-                        "    <parameter name=\"device\" value=\"Samsung Galaxy Tab S7\"/>");
-            }else if (suiteName.equalsIgnoreCase("MYPOS")) {
-                fWriter.write(" <parameter name=\"os\" value=\"10.0\"/>\n" +
-                        "    <parameter name=\"device\" value=\"Samsung Galaxy Tab S7\"/>");
+            switch (suiteName.toLowerCase()) {
+                case "fusionapp_android":
+                    fWriter.write("<parameter name=\"device\" value=\"Samsung Galaxy Tab S8\"></parameter>\n" +
+                            "        <parameter name=\"os\" value=\"12.0\"></parameter>");
+                case "myt":
+                    if (tEnv().getAppType().equalsIgnoreCase("android")) {
+                        fWriter.write("<parameter name=\"os\" value=\"11.0\"/>\n" +
+                                "        <parameter name=\"device\" value=\"One Plus 9\"></parameter>");
+                    } else {
+                        fWriter.write("<parameter name=\"os\" value=\"14.0\"/>\n" +
+                                "        <parameter name=\"device\" value=\"iPhone XS\"></parameter>");
+                    }
+                case "mytweb":
+                    if (tEnv().getApiEnvType().equalsIgnoreCase("sit")) {
+                        fWriter.write("<parameter name=\"url\" value=\"https://myt-sit.fhcdn.dev/\"></parameter>\n");
+                    } else {
+                        fWriter.write("<parameter name=\"url\" value=\"https://my.foodhub.com\"></parameter>\n");
+                    }
+                case "apos":
+                    fWriter.write("<parameter name=\"os\" value=\"10.0\"/>\n" +
+                            "    <parameter name=\"device\" value=\"onePlus 8\"/>");
+                case "mypos":
+                    fWriter.write(" <parameter name=\"os\" value=\"10.0\"/>\n" +
+                            "    <parameter name=\"device\" value=\"Samsung Galaxy Tab S7\"/>");
+
             }
+
             for (int i = 0; i < moduleListToRun.length; i++) {
                 moduleName = moduleListToRun[i];
                 System.out.println("<test name=\"" + moduleListToRun[i] + "\">");
@@ -121,13 +125,13 @@ public class GenerateSuiteForModules extends TrigonUtils {
                 file = new File(System.getProperty("user.dir") + "/src/test/resources/TestSuites/moduleExecution/API_Regression.xml");
             } else if (testType.equalsIgnoreCase("FUSION") || testType.equalsIgnoreCase("MYT") || testType.equalsIgnoreCase("MYTWeb") || testType.equalsIgnoreCase("Apos") || testType.equalsIgnoreCase("mypos")) {
                 file = new File(System.getProperty("user.dir") + "/src/test/resources/TestSuites/moduleExecution/MYT_Regression.xml");
-            } else if (testType.equalsIgnoreCase("fhapp") || testType.equalsIgnoreCase("fhweb") || testType.equalsIgnoreCase("eatappyapp") || testType.equalsIgnoreCase("bigfoodieapp") ) {
+            } else if (testType.equalsIgnoreCase("fhapp") || testType.equalsIgnoreCase("fhweb") || testType.equalsIgnoreCase("eatappyapp") || testType.equalsIgnoreCase("bigfoodieapp")) {
                 file = new File(System.getProperty("user.dir") + "/src/test/resources/TestSuites/moduleExecution/FH_Regression.xml");
-            }else if (testType.equalsIgnoreCase("digitalboard") ) {
+            } else if (testType.equalsIgnoreCase("digitalboard")) {
                 file = new File(System.getProperty("user.dir") + "/src/test/resources/TestSuites/moduleExecution/DB_Regression.xml");
-            }else if (testType.equalsIgnoreCase("kdsapp") ) {
+            } else if (testType.equalsIgnoreCase("kdsapp")) {
                 file = new File(System.getProperty("user.dir") + "/src/test/resources/TestSuites/moduleExecution/KDS_Regression.xml");
-            }else if (testType.equalsIgnoreCase("d2s") ) {
+            } else if (testType.equalsIgnoreCase("d2s")) {
                 file = new File(System.getProperty("user.dir") + "/src/test/resources/TestSuites/moduleExecution/D2S_Regression.xml");
             }
             BufferedReader br = new BufferedReader(new FileReader(file));

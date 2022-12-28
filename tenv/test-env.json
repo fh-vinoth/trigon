@@ -9,6 +9,7 @@
     "moduleNames": ""
   },
   "web": {
+    "network_logs" : true,
     "system_os": "Windows",
     "system_os_version": "10",
     "browser": "chrome",
