@@ -18,7 +18,7 @@
         <parameter name="TestRailStatusPath"
                    value="src/test/resources/Configuration/TestStatus.json"></parameter>
         <parameter name="product"
-                   value="API_Foodhub"></parameter>
+                   value="API_MYT"></parameter>
         <classes>
 
          <!--   <class name="com.fh.api.Category_SEARCH"></class>-->
