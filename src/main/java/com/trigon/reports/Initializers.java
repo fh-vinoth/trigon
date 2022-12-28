@@ -72,6 +72,13 @@ public class Initializers {
     protected static boolean failStatus = false;
     protected static boolean exceptionStatus = false;
 
+    protected static ThreadLocal<List<String>> testCaseIDThread = new ThreadLocal<>();
+    public static ThreadLocal<ArrayList> passedTCs = new ThreadLocal<>();
+    public static ThreadLocal<HashMap<String,String>> failedTCs = new ThreadLocal<>();
+    public static ThreadLocal<ArrayList> skippedTCs = new ThreadLocal<>();
+    public static ThreadLocal<HashMap<String, Object>> resultTCs = new ThreadLocal<>();
+    public static LinkedHashMap resultTCCollectionMap = new LinkedHashMap();
+
     public static String suiteRunId;
     public static RemoteWebDriver browser() {
         return webDriverThreadLocal.get();

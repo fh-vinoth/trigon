@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web Parallel Template" parallel="classes" thread-count="4">
+<suite name="API_DemoRun" parallel="tests">
 
-    <parameter name="testType" value="ios"></parameter>
-    <parameter name="testEnvPath" value="test-env.json"></parameter>
-    <test name="Web Parallel Bulk">
+<!--    <parameter name="testType" value="ios"></parameter>-->
+<!--    <parameter name="testEnvPath" value="test-env.json"></parameter>-->
+    <test name="Test Rail Demo">
         <!--        <groups>-->
         <!--            <run>-->
         <!--                <include name="bhaskar"/>-->
         <!--            </run>-->
         <!--        </groups>-->
-        <packages>
-            <package name="com.t2s.trigon.test.paralleltest"/>
-        </packages>
+<!--        <packages>-->
+<!--            <package name="com.t2s.trigon.test.paralleltest"/>-->
+<!--        </packages>-->
+        <classes>
+            <class name="com.fh.unittests.testrail.testraildemo1"></class>
+        </classes>
     </test>
+
+<!--    <test name="Test Rail Demo1">-->
+<!--        &lt;!&ndash;        <groups>&ndash;&gt;-->
+<!--        &lt;!&ndash;            <run>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <include name="bhaskar"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;            </run>&ndash;&gt;-->
+<!--        &lt;!&ndash;        </groups>&ndash;&gt;-->
+<!--        &lt;!&ndash;        <packages>&ndash;&gt;-->
+<!--        &lt;!&ndash;            <package name="com.t2s.trigon.test.paralleltest"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;        </packages>&ndash;&gt;-->
+<!--        <classes>-->
+<!--            <class name="com.fh.unittests.testrail.testraildemo1"></class>-->
+<!--        </classes>-->
+
 </suite>

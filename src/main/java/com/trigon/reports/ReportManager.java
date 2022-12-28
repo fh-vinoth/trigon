@@ -16,8 +16,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.Assert;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import static com.trigon.testbase.TestInitialization.trigonPaths;
@@ -46,9 +45,29 @@ public class ReportManager extends CustomReport {
     }
 
     public void testTearDown() {
-        if (failAnalysisThread.get().size() > 0) {
-            Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+        Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+    }
+
+    public void testTearDown(ArrayList<String> allTestCaseIDs) {
+
+        if (failAnalysisThread.get().size() == 0) {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
+            testCaseIDThread.remove();
+        } else {
+            allTestCaseIDs.removeAll(passedTCs.get());
+            allTestCaseIDs.removeAll(failedTCs.get().keySet());
+            for (String testCaseID : allTestCaseIDs) {
+                updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
         }
+        resultTCs.get().put("passed", passedTCs.get());
+        resultTCs.get().put("failed", failedTCs.get());
+        resultTCs.get().put("skipped", skippedTCs.get());
+        resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName(), resultTCs.get());
+
+        Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
 
     public void logReport(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
@@ -140,31 +159,31 @@ public class ReportManager extends CustomReport {
 
     }
 
-    private String navTabs(){
+    private String navTabs() {
 
-        int random = commonUtils.getRandomNumber(100,100000);
+        int random = commonUtils.getRandomNumber(100, 100000);
 
         String a = "<div class=\"col-md-12 col-sm-12\">\n" +
                 "            <!-- Nav tabs -->\n" +
                 "            <ul class=\"nav nav-tabs\" role=\"tablist\">\n" +
                 "                <li class=\"nav-item\">\n" +
-                "                    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#request_"+random+"\">Request</a>\n" +
+                "                    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#request_" + random + "\">Request</a>\n" +
                 "                </li>\n" +
                 "                <li class=\"nav-item\">\n" +
-                "                    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#response_"+random+"\">Response</a>\n" +
+                "                    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#response_" + random + "\">Response</a>\n" +
                 "                </li>\n" +
                 "                <li class=\"nav-item\">\n" +
-                "                    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#curl_"+random+"\">Curl</a>\n" +
+                "                    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#curl_" + random + "\">Curl</a>\n" +
                 "                </li>\n" +
                 "            </ul>\n" +
                 "\n" +
                 "            <!-- Tab panes -->\n" +
                 "            <div class=\"tab-content\">\n" +
-                "                <div id=\"request_"+random+"\" class=\"container tab-pane active\"><br>\n" +
-                "                    <div class=\"bd-clipboard\"><button type=\"button\" class=\"btn-clipboard\" data-clipboard-target=\"#responseCopy_1-"+random+"-1\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Copy\" data-original-title=\"Copy to clipboard\">Copy</button></div>\n" +
-                "                    <div><pre><div class='json-tree' id='responseCopy_1-"+random+"-1'></div>\n" +
+                "                <div id=\"request_" + random + "\" class=\"container tab-pane active\"><br>\n" +
+                "                    <div class=\"bd-clipboard\"><button type=\"button\" class=\"btn-clipboard\" data-clipboard-target=\"#responseCopy_1-" + random + "-1\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Copy\" data-original-title=\"Copy to clipboard\">Copy</button></div>\n" +
+                "                    <div><pre><div class='json-tree' id='responseCopy_1-" + random + "-1'></div>\n" +
                 "                                                            <script>function jsonTreeCreate1() {\n" +
-                "                                                                document.getElementById('responseCopy_1-"+random+"-1').innerHTML = JSONTree.create({\n" +
+                "                                                                document.getElementById('responseCopy_1-" + random + "-1').innerHTML = JSONTree.create({\n" +
                 "                                                                    \"URI\": \"https://api-preprod.t2sonline.com\",\n" +
                 "                                                                    \"queryParams\": {\n" +
                 "                                                                        \"api_token\": \"J6WDf00hQKGhfYhQkbRCjwraBS11JYuIDx\"\n" +
@@ -193,11 +212,11 @@ public class ReportManager extends CustomReport {
                 "                                                            jsonTreeCreate1();</script>\n" +
                 "                                                    </pre></div>\n" +
                 "                </div>\n" +
-                "                <div id=\"response_"+random+"\" class=\"container tab-pane fade\"><br>\n" +
-                "                    <div class=\"bd-clipboard\"><button type=\"button\" class=\"btn-clipboard\" data-clipboard-target=\"#responseCopy_1-"+random+"-2\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Copy\" data-original-title=\"Copy to clipboard\">Copy</button></div>\n" +
-                "                    <div><pre><div class='json-tree' id='responseCopy_1-"+random+"-2'></div>\n" +
+                "                <div id=\"response_" + random + "\" class=\"container tab-pane fade\"><br>\n" +
+                "                    <div class=\"bd-clipboard\"><button type=\"button\" class=\"btn-clipboard\" data-clipboard-target=\"#responseCopy_1-" + random + "-2\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Copy\" data-original-title=\"Copy to clipboard\">Copy</button></div>\n" +
+                "                    <div><pre><div class='json-tree' id='responseCopy_1-" + random + "-2'></div>\n" +
                 "                                                            <script>function jsonTreeCreate1() {\n" +
-                "                                                                document.getElementById('responseCopy_1-"+random+"-2').innerHTML = JSONTree.create({\n" +
+                "                                                                document.getElementById('responseCopy_1-" + random + "-2').innerHTML = JSONTree.create({\n" +
                 "                                                                    \"Outcome\": \"Success\",\n" +
                 "\n" +
                 "                                                                });\n" +
@@ -205,9 +224,9 @@ public class ReportManager extends CustomReport {
                 "                                                            jsonTreeCreate1();</script>\n" +
                 "                                                    </pre></div>\n" +
                 "                </div>\n" +
-                "                <div id=\"curl_"+random+"\" class=\"container tab-pane fade\"><br>\n" +
-                "                    <div class=\"bd-clipboard\"><button type=\"button\" class=\"btn-clipboard\" data-clipboard-target=\"#responseCopy_1-"+random+"-3\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Copy\" data-original-title=\"Copy to clipboard\">Copy</button></div>\n" +
-                "                    <div><pre><div id='responseCopy_1-"+random+"-3'>curl --location --request POST 'https://api-cloud.browserstack.com/app-automate/upload' \\\n" +
+                "                <div id=\"curl_" + random + "\" class=\"container tab-pane fade\"><br>\n" +
+                "                    <div class=\"bd-clipboard\"><button type=\"button\" class=\"btn-clipboard\" data-clipboard-target=\"#responseCopy_1-" + random + "-3\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Copy\" data-original-title=\"Copy to clipboard\">Copy</button></div>\n" +
+                "                    <div><pre><div id='responseCopy_1-" + random + "-3'>curl --location --request POST 'https://api-cloud.browserstack.com/app-automate/upload' \\\n" +
                 "--header 'Authorization: Basic dG91Y2hzdWNjZXNzMTpVakJSTHNzOUFUYVRDZWFId3RkYw==' \\\n" +
                 "--header 'Cookie: tracking_id=56ce83d7-b830-44ce-82a4-0a9f31be2d17' \\\n" +
                 "--form 'data=\"{\\\"custom_id\\\": \\\"MYT_Android\\\"}\"' \\\n" +
@@ -219,101 +238,101 @@ public class ReportManager extends CustomReport {
         return a;
     }
 
-    private String apiCard(String status,String apiName, String request,String response,String curl,String responseValidation){
-        int random = commonUtils.getRandomNumber(100,100000);
-        String jsonRequestId = "json-request-"+random+"";
-        String jsonResponseValidationId = "json-response-validation-"+random+"";
-        String jsonResponseId = "json-response-"+random+"";
-        String curlId = "json-curl-"+random+"";
+    private String apiCard(String status, String apiName, String request, String response, String curl, String responseValidation) {
+        int random = commonUtils.getRandomNumber(100, 100000);
+        String jsonRequestId = "json-request-" + random + "";
+        String jsonResponseValidationId = "json-response-validation-" + random + "";
+        String jsonResponseId = "json-response-" + random + "";
+        String curlId = "json-curl-" + random + "";
         String bColor = "#efebeb";
-        if(status.equalsIgnoreCase("FAIL")){
+        if (status.equalsIgnoreCase("FAIL")) {
             bColor = "#e47373";
         }
 
-        String apiFormat = "<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color: "+bColor+"\">\n" +
+        String apiFormat = "<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color: " + bColor + "\">\n" +
                 "               <div class=\"card-header\">\n" +
                 "                   <div class=\"card-title\">\n" +
-                "                       <a class=\"node\" ><span class=\"apiSpan\">"+apiName+"</span></a>\n" +
+                "                       <a class=\"node\" ><span class=\"apiSpan\">" + apiName + "</span></a>\n" +
                 "                   </div>\n" +
                 "               </div>\n" +
                 "               <div class=\"collapse\">\n" +
                 "                   <div class=\"card-body\">\n" +
                 "                       <p>\n" +
-                "                           <button class=\"btn\" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_request_"+random+"\" aria-expanded=\"false\" >\n" +
+                "                           <button class=\"btn\" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_request_" + random + "\" aria-expanded=\"false\" >\n" +
                 "                               Request\n" +
                 "                           </button>\n" +
-                "                           <button class=\"btn \" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_response_"+random+"\" aria-expanded=\"false\" >\n" +
+                "                           <button class=\"btn \" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_response_" + random + "\" aria-expanded=\"false\" >\n" +
                 "                               Response\n" +
                 "                           </button>\n" +
-                "                           <button class=\"btn \" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_response-validation_"+random+"\" aria-expanded=\"false\" >\n" +
+                "                           <button class=\"btn \" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_response-validation_" + random + "\" aria-expanded=\"false\" >\n" +
                 "                               ResponseValidation\n" +
                 "                           </button>\n" +
-                "                           <button class=\"btn \" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_curl_"+random+"\" aria-expanded=\"false\" >\n" +
+                "                           <button class=\"btn \" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse_curl_" + random + "\" aria-expanded=\"false\" >\n" +
                 "                               Curl\n" +
                 "                           </button>\n" +
                 "                       </p>\n" +
-                "                       <div class=\"collapse\" id=\"collapse_request_"+random+"\">\n" +
+                "                       <div class=\"collapse\" id=\"collapse_request_" + random + "\">\n" +
                 "                           <div class=\"card card-body\">\n" +
                 "                               <div class=\"bd-clipboard\">\n" +
                 "                                   <button type=\"button\"\n" +
-                "                                           onclick=\"copy('"+jsonRequestId+"')\"\n" +
+                "                                           onclick=\"copy('" + jsonRequestId + "')\"\n" +
                 "                                           class=\"btn-clipboard\">\n" +
                 "                                       Copy\n" +
                 "                                   </button>\n" +
                 "                               </div>\n" +
                 "                               <div>\n" +
-                "                                   <pre class=\"preCode\"><code  id=\""+jsonRequestId+"\"></code></pre>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\"" + jsonRequestId + "\"></code></pre>\n" +
                 "                               </div>\n" +
                 "                               <script>\n" +
-                "                                   document.getElementById('"+jsonRequestId+"').innerHTML = JSON.stringify(JSON.parse('"+request+"'), undefined, 4);\n" +
+                "                                   document.getElementById('" + jsonRequestId + "').innerHTML = JSON.stringify(JSON.parse('" + request + "'), undefined, 4);\n" +
                 "                               </script>\n" +
                 "                           </div>\n" +
                 "                       </div>\n" +
-                "                       <div class=\"collapse\" id=\"collapse_response_"+random+"\">\n" +
+                "                       <div class=\"collapse\" id=\"collapse_response_" + random + "\">\n" +
                 "                           <div class=\"card card-body\">\n" +
                 "                               <div class=\"bd-clipboard\">\n" +
                 "                                   <button type=\"button\"\n" +
-                "                                           onclick=\"copy('"+jsonResponseId+"')\"\n" +
+                "                                           onclick=\"copy('" + jsonResponseId + "')\"\n" +
                 "                                           class=\"btn-clipboard\">\n" +
                 "                                       Copy\n" +
                 "                                   </button>\n" +
                 "                               </div>\n" +
                 "                               <div>\n" +
-                "                                   <pre class=\"preCode\"><code  id=\""+jsonResponseId+"\"></code></pre>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\"" + jsonResponseId + "\"></code></pre>\n" +
                 "                               </div>\n" +
                 "                               <script>\n" +
-                "                                   document.getElementById('"+jsonResponseId+"').innerHTML = JSON.stringify(JSON.parse('"+response+"'), undefined, 4);\n" +
+                "                                   document.getElementById('" + jsonResponseId + "').innerHTML = JSON.stringify(JSON.parse('" + response + "'), undefined, 4);\n" +
                 "                               </script>\n" +
                 "                           </div>\n" +
                 "                       </div>\n" +
-                "                       <div class=\"collapse\" id=\"collapse_response-validation_"+random+"\">\n" +
+                "                       <div class=\"collapse\" id=\"collapse_response-validation_" + random + "\">\n" +
                 "                           <div class=\"card card-body\">\n" +
                 "                               <div class=\"bd-clipboard\">\n" +
                 "                                   <button type=\"button\"\n" +
-                "                                           onclick=\"copy('"+jsonResponseValidationId+"')\"\n" +
+                "                                           onclick=\"copy('" + jsonResponseValidationId + "')\"\n" +
                 "                                           class=\"btn-clipboard\">\n" +
                 "                                       Copy\n" +
                 "                                   </button>\n" +
                 "                               </div>\n" +
                 "                               <div>\n" +
-                "                                   <pre class=\"preCode\"><code  id=\""+jsonResponseValidationId+"\"></code></pre>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\"" + jsonResponseValidationId + "\"></code></pre>\n" +
                 "                               </div>\n" +
                 "                               <script>\n" +
-                "                                   document.getElementById('"+jsonResponseValidationId+"').innerHTML = JSON.stringify(JSON.parse('"+responseValidation+"'), undefined, 4);\n" +
+                "                                   document.getElementById('" + jsonResponseValidationId + "').innerHTML = JSON.stringify(JSON.parse('" + responseValidation + "'), undefined, 4);\n" +
                 "                               </script>\n" +
                 "                           </div>\n" +
                 "                       </div>\n" +
-                "                       <div class=\"collapse\" id=\"collapse_curl_"+random+"\">\n" +
+                "                       <div class=\"collapse\" id=\"collapse_curl_" + random + "\">\n" +
                 "                           <div class=\"card card-body\">\n" +
                 "                               <div class=\"bd-clipboard\">\n" +
                 "                                   <button type=\"button\"\n" +
-                "                                           onclick=\"copy('"+curlId+"')\"\n" +
+                "                                           onclick=\"copy('" + curlId + "')\"\n" +
                 "                                           class=\"btn-clipboard\">\n" +
                 "                                       Copy\n" +
                 "                                   </button>\n" +
                 "                               </div>\n" +
                 "                               <div>\n" +
-                "                                   <pre class=\"preCode\"><code  id=\""+curlId+"\">"+curl+"</code></pre>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\"" + curlId + "\">" + curl + "</code></pre>\n" +
                 "                               </div>\n" +
                 "                           </div>\n" +
                 "                       </div>\n" +
@@ -326,11 +345,11 @@ public class ReportManager extends CustomReport {
     }
 
     public void logDBData(String query, String dbResponse) {
-        logger.info("Query : "+query);
-        if(dbResponse ==null){
+        logger.info("Query : " + query);
+        if (dbResponse == null) {
             dbResponse = "No Data found or returned null";
         }
-        String m = "<details><summary><font color=\"green\"><b>DBQuery</b></font></summary> "+MarkupHelper.createCodeBlock(query, dbResponse).getMarkup()+"</details>";
+        String m = "<details><summary><font color=\"green\"><b>DBQuery</b></font></summary> " + MarkupHelper.createCodeBlock(query, dbResponse).getMarkup() + "</details>";
         extentMethodNode.get().info(m);
     }
 
@@ -380,12 +399,49 @@ public class ReportManager extends CustomReport {
 
     public void logStepAction(String message) {
 
-        if(extentScenarioNode.get()!=null){
-            extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>"+message);
-        }else{
-            extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>"+message);
+        if (extentScenarioNode.get() != null) {
+            extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
+        } else {
+            extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
         }
     }
+
+    public void logStepAction(String message, String testCaseIDs) {
+
+        if(!testCaseIDs.contains(","))
+            testCaseIDs=testCaseIDs+",";
+
+        if (testCaseIDThread.get().size() == 0) {
+            testCaseIDThread.get().add(testCaseIDs);
+        } else if (failedTCs.get().size() > 0 && failedTCs.get().containsKey(testCaseIDThread.get().get(0).split(","))) {
+            testCaseIDThread.get().clear();
+            testCaseIDThread.get().add(testCaseIDs);
+        } else {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
+            testCaseIDThread.get().clear();            //removing previous TC
+            testCaseIDThread.get().add(testCaseIDs);     //Adding next TC
+        }
+        if (extentScenarioNode.get() != null) {
+            extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message + " - " + testCaseIDs);
+        } else {
+            extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message + " - " + testCaseIDs);
+        }
+    }
+
+    public void updateHashMapWithTCDetails(String tcId, String status, String className, String methodName) {
+        if (status.equalsIgnoreCase("PASS")) {
+            passedTCs.get().add(tcId);
+        } else if (status.equalsIgnoreCase("FAIL")) {
+            String failure = extent.getReport().getTestList().stream().filter(modules -> tEnv().getContext().getCurrentXmlTest().getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0, modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+                    className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("Fail")).findAny().get().getDetails();
+            failedTCs.get().put(tcId, failure);
+        } else {
+            skippedTCs.get().add(tcId);
+        }
+    }
+
 
 //    public void logStepAction(String ScenarioName) {
 //        logger.info("Scenario : " + ScenarioName);
@@ -763,7 +819,7 @@ public class ReportManager extends CustomReport {
         Assert.fail(message);
     }
 
-    protected void hardFail(String message,Exception e) {
+    protected void hardFail(String message, Exception e) {
         logReport("FAIL", message);
         e.printStackTrace();
         Assert.fail(message + e.getMessage());
@@ -1031,6 +1087,9 @@ public class ReportManager extends CustomReport {
         }
         if (failAnalysisThread.get() != null) {
             failAnalysisThread.get().add(message);
+        }
+        for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+            updateHashMapWithTCDetails(tcID, "FAIL", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
         }
     }
 

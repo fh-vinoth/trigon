@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import org.testng.annotations.Optional;
 import org.testng.xml.XmlTest;
 
 import java.io.BufferedReader;
@@ -24,10 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -147,6 +145,12 @@ public class TestController extends TestInitialization {
             setMobileLocator();
             setWebLocator();
             failAnalysisThread.set(new ArrayList<>());
+            testCaseIDThread.set(new ArrayList<>());
+            passedTCs.set(new ArrayList<>());
+            failedTCs.set(new HashMap<>());
+            skippedTCs.set(new ArrayList<>());
+            resultTCs.set(new HashMap<>());
+
             tEnv().setContext(context);
             tEnv().setCurrentTestMethodName(method.getName());
             createExtentMethod(context, xmlTest, method);
