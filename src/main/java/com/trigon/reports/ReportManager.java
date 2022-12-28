@@ -6,6 +6,7 @@ import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -16,7 +17,9 @@ import org.json.JSONObject;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.Assert;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -28,7 +31,7 @@ import static org.openqa.selenium.OutputType.FILE;
 public class ReportManager extends CustomReport {
 
     private static final Logger logger = LogManager.getLogger(ReportManager.class);
-
+    static JsonWriter writer;
     public void author_ScenarioName(String author, String scenario) {
         try {
             captureScenarioAndAuthor(author, scenario);
@@ -385,11 +388,6 @@ public class ReportManager extends CustomReport {
         } else {
             extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
         }
-    }
-
-    public void logStepAction(String message, String testcaseId) {
-        extentTestCaseNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message+testcaseId);
-
     }
 
 //    public void logStepAction(String ScenarioName) {
@@ -1069,6 +1067,18 @@ public class ReportManager extends CustomReport {
             node.pass(message, MediaEntityBuilder.createScreenCaptureFromPath(Screenshot).build());
         } else {
             node.pass(message);
+        }
+    }
+
+    public  void generateTestcaseJsonFile(){
+        Gson gson = new Gson();
+        //String val = gson.toJson(collectionResultMap,LinkedHashMap.class);
+        try {
+            writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getTestResultsPath()+"/TestStatus.json")));
+           // writer.jsonValue(val);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
