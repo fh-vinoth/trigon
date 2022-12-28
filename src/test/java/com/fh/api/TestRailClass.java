@@ -2,9 +2,7 @@ package com.fh.api;
 
 import com.fh.core.TestLocalController;
 import com.trigon.testrail.APIException;
-import com.trigon.testrail.TestRailBaseClass;
 import com.trigon.testrail.TestRailManager;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;

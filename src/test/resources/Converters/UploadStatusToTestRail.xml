@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="UploadStatusToTestRail">
+    <test name="UploadTestStatusToTestRail">
+        <!-- Add Single File Path for Testrail status updation -->
+        <parameter name="TestRailStatusPath"
+                   value="src/test/resources/Configuration/TestStatus.json"></parameter>
+        <parameter name="product"
+                   value="API_MYT"></parameter>
+        <classes>
+            <class name="com.trigon.testrail.UploadTestStatusToTestRail"/>
+        </classes>
+    </test>
+</suite>
