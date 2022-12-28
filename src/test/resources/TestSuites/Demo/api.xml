@@ -15,11 +15,17 @@
 <!--    </test>-->
 
     <test name="abc">
+        <parameter name="TestRailStatusPath"
+                   value="src/test/resources/Configuration/TestStatus.json"></parameter>
+        <parameter name="product"
+                   value="API_Foodhub"></parameter>
         <classes>
 
          <!--   <class name="com.fh.api.Category_SEARCH"></class>-->
-          <!--  <class name="com.fh.api.TestRailClass"></class>-->
-            <class name="com.trigon.testrail.TestRailJsonCreation"/>
+           <!-- <class name="com.fh.api.TestRailClass"></class>-->
+           <!-- <class name="com.trigon.testrail.TestRailJsonCreation"/>-->
+           <!-- <class name="com.trigon.testrail.TestRailTestStatusMap"/>-->
+            <class name="com.trigon.testrail.UploadTestStatusToTestRail"/>
             <!--<class name="com.fh.unittests.database.Queries1"></class>
             <class name="com.fh.unittests.database.Queries2"></class>
             <class name="com.fh.unittests.database.Queries3"></class>-->
