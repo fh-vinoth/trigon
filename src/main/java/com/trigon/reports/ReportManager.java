@@ -62,10 +62,10 @@ public class ReportManager extends CustomReport {
                 updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
         }
-        resultTCs.get().put("passed", passedTCs.get());
-        resultTCs.get().put("failed", failedTCs.get());
-        resultTCs.get().put("skipped", skippedTCs.get());
-        resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName(), resultTCs.get());
+        resultTCs.get().put("Passed", passedTCs.get());
+        resultTCs.get().put("Failed", failedTCs.get());
+        resultTCs.get().put("Skipped", skippedTCs.get());
+        resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName(), new HashMap(resultTCs.get()));
 
         Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
@@ -407,9 +407,6 @@ public class ReportManager extends CustomReport {
     }
 
     public void logStepAction(String message, String testCaseIDs) {
-
-        if(!testCaseIDs.contains(","))
-            testCaseIDs=testCaseIDs+",";
 
         if (testCaseIDThread.get().size() == 0) {
             testCaseIDThread.get().add(testCaseIDs);
