@@ -280,6 +280,7 @@ public class TestController extends TestInitialization {
                     captureException(e);
                 }
             }
+            tearDownGenerateTCStatusJson();
             tearDownCustomReport(iTestContext);
 
         } catch (Exception e) {
