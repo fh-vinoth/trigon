@@ -14,12 +14,14 @@ import static com.trigon.reports.Initializers.*;
 
 
 public class EmailReport {
+    static String name="";
 
     public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
             StringBuffer bf = new StringBuffer();
             StringBuffer bfFailure = new StringBuffer();
+            name=suiteName.toUpperCase();
             String headers = header(report, suiteName);
             String reportLinks = reportLinks(report);
             String failureData = failureData(report);
@@ -222,10 +224,10 @@ public class EmailReport {
 
     private static String getBuildNumber(){
         String buildNumber=null;
-        if(android()!=null){
+        if(name.contains("ANDROID")&&!name.contains("ANDROIDBROWSER")){
             buildNumber=tEnv().getAndroidBuildNumber();
         }
-        else if(ios()!=null){
+        else if(name.contains("IOS")&&!name.contains("IOSBROWSER")){
             buildNumber=tEnv().getIosBuildNumber();
         }else {
             buildNumber=tEnv().getWebBuildNumber();
