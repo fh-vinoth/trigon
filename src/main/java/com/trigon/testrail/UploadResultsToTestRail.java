@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 import java.io.FileReader;
 
-public class UploadTestStatusToTestRail {
+public class UploadResultsToTestRail {
     @Parameters({"TestRailStatusPath", "product"})
     @Test
     public void updateTestRailTestStatus(String testRailStatusPath, String product) {
