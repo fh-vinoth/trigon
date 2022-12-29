@@ -46,6 +46,7 @@ public class Initializers {
     public static ThreadLocal<ExtentTest> extentTestNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentClassNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
+    public static ThreadLocal<ExtentTest> extentTestCaseNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentScenarioNode = new ThreadLocal<>();
     public static List<String> apiCoverage = new ArrayList<>();
     public static int totalEndpoints = 0;
