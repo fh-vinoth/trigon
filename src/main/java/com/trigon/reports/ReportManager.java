@@ -4,9 +4,9 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.github.wnameless.json.flattener.JsonFlattener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
+import com.trigon.testrail.TestRailManager;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -17,10 +17,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.Assert;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import static com.trigon.testbase.TestInitialization.trigonPaths;
@@ -1080,5 +1077,61 @@ public class ReportManager extends CustomReport {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void uploadTestcaseStatus(String testRunId, String path) {
+        TestRailManager t = new TestRailManager();
+        Gson gson = new Gson();
+        try {
+            JsonElement ele = JsonParser.parseReader(new FileReader(path));
+            JsonObject result = gson.fromJson(ele, JsonObject.class);
+            result.getAsJsonObject().entrySet().forEach(class_methodName -> {
+                class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
+                    try {
+                        System.out.println(String.valueOf(passedCase.getAsNumber()).substring(1));
+                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
+                    try {
+                        t.addTestResultForTestCase(testRunId, failedCase.getKey().substring(1), TestRailManager.TEST_CASE_FAILED_STATUS);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
+                    try {
+                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getTestRunId(String product) {
+        final String[] runId = {""};
+        Gson gson = new Gson();
+        try {
+            JsonElement ele = JsonParser.parseReader(new FileReader("src/test/resources/Configuration/TestRunIds.json"));
+            JsonObject result = gson.fromJson(ele, JsonObject.class);
+            result.entrySet().stream()
+                    .filter(MainProduct -> MainProduct.getKey().equalsIgnoreCase(product.split("_")[0]))
+                    .forEach(subProduct -> {
+                        subProduct.getValue().getAsJsonObject().entrySet().stream().filter(getSubProduct -> getSubProduct.getKey().equalsIgnoreCase(product.split("_")[1]))
+                                .forEach(subProductRunId -> {
+                                    runId[0] = String.valueOf(subProductRunId.getValue());
+                                });
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return runId[0];
     }
 }
