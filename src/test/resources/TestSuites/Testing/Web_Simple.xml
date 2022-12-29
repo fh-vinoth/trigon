@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="API_DemoRun" parallel="tests">
+<suite name="API_DemoRun" parallel="classes">
 
 <!--    <parameter name="testType" value="ios"></parameter>-->
 <!--    <parameter name="testEnvPath" value="test-env.json"></parameter>-->
@@ -14,6 +14,7 @@
 <!--            <package name="com.t2s.trigon.test.paralleltest"/>-->
 <!--        </packages>-->
         <classes>
+            <class name="com.fh.unittests.testrail.testraildemo"></class>
             <class name="com.fh.unittests.testrail.testraildemo1"></class>
         </classes>
     </test>
