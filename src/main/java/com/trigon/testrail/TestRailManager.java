@@ -1,8 +1,7 @@
 package com.trigon.testrail;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TestRailManager {
     public static String TEST_USERNAME = "testrail@foodhub.com";
@@ -14,15 +13,20 @@ public class TestRailManager {
     static APIClient client = new APIClient(RAILS_ENGINE_URL);
 
 
-    public static void addTestResultForTestCase(String testRunId, String testcaseId, int status) throws IOException, APIException {
+    public static void addTestResultForTestCase(String testRunId, String testcaseId, int status,String ...comment) throws IOException, APIException {
         System.out.println("testRunId:" + testRunId);
         System.out.println("testcaseId:" + testcaseId);
         System.out.println("status:" + status);
+
         client.setUser(TEST_USERNAME);
         client.setPassword(TEST_PASSWORD);
         Map data = new HashMap();
         data.put("status_id", status);
-        data.put("comment", "Test Executed and add the result into testrail");
+        if(comment.length>0 && comment!=null){
+            data.put("comment", comment[0]);
+        }else{
+            data.put("comment", "Test Executed and add the result into testrail");
+        }
         client.sendPost("add_result_for_case/" + testRunId + "/" + testcaseId + "", data);
     }
 
@@ -53,6 +57,14 @@ public class TestRailManager {
     public static void getTestCaseByUser(String projectId, String suiteId, String userId) throws IOException, APIException {
         Object ob = client.sendGet("get_cases/" + projectId + "&suite_id=" + suiteId + "&created_by=" + userId);
         System.out.println(ob.toString());
+    }
+
+    public static void addTestResultForTestCases( List<Map<String, Object>> results,String testRunId) throws IOException, APIException {
+        client.setUser(TEST_USERNAME);
+        client.setPassword(TEST_PASSWORD);
+        Map<String,List<Map<String,Object>>> resultData = new LinkedHashMap<>();
+        resultData.put("results",results);
+        client.sendPost("add_results_for_cases/" + testRunId, resultData);
     }
 }
 
