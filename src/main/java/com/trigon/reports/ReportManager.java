@@ -1205,7 +1205,7 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         String testCaseId = String.valueOf(passedCase.getAsNumber()).substring(1);
-                        markTestCase(testCaseId,"1","Executed Test got passed after test execution");
+                        addTestCase(testCaseId,"1","Executed Test got passed after test execution");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1213,7 +1213,7 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
                     try {
                         String testCaseId = failedCase.getKey().substring(1);
-                        markTestCase(testCaseId,"4",failedCase.getValue().toString());
+                        addTestCase(testCaseId,"4",failedCase.getValue().toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1222,7 +1222,7 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
                     try {
                         String testCaseId =  String.valueOf(skippedCase.getAsNumber()).substring(1);
-                        markTestCase(testCaseId,"5","Test got skipped due to some error occured in previous tests");
+                        addTestCase(testCaseId,"5","Test got skipped due to some error occured in previous tests");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1234,7 +1234,7 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void markTestCase(String testCaseId,String statusId,String comment){
+    public void addTestCase(String testCaseId, String statusId, String comment){
         resultMap = new HashMap<>();
         resultMap.put("case_id",testCaseId);
         resultMap.put("status_id", statusId);
