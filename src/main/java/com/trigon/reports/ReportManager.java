@@ -29,6 +29,8 @@ public class ReportManager extends CustomReport {
 
     private static final Logger logger = LogManager.getLogger(ReportManager.class);
     static JsonWriter writer;
+    List<Map<String, Object>> resultList = new ArrayList<>();
+    Map<String, Object> resultMap = new HashMap<>();
     public void author_ScenarioName(String author, String scenario) {
         try {
             captureScenarioAndAuthor(author, scenario);
@@ -1078,7 +1080,7 @@ public class ReportManager extends CustomReport {
             e.printStackTrace();
         }
     }
-    public void uploadTestcaseStatus(String testRunId, String path) {
+    public void uploadSingleTestcaseStatus(String testRunId, String path) {
         TestRailManager t = new TestRailManager();
         Gson gson = new Gson();
         try {
@@ -1088,14 +1090,14 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         System.out.println(String.valueOf(passedCase.getAsNumber()).substring(1));
-                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS);
+                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS,"Executed Test got passed after test execution");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
                 class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
                     try {
-                        t.addTestResultForTestCase(testRunId, failedCase.getKey().substring(1), TestRailManager.TEST_CASE_FAILED_STATUS);
+                        t.addTestResultForTestCase(testRunId, failedCase.getKey().substring(1), TestRailManager.TEST_CASE_FAILED_STATUS,failedCase.getValue().toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1103,7 +1105,7 @@ public class ReportManager extends CustomReport {
 
                 class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
                     try {
-                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS);
+                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS,"Test got skipped due to some error occured in previous tests");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1134,4 +1136,63 @@ public class ReportManager extends CustomReport {
         }
         return runId[0];
     }
+
+    public void getJsonToResultUpload(String path) {
+        Gson gson = new Gson();
+        try {
+            JsonElement ele = JsonParser.parseReader(new FileReader(path));
+            JsonObject result = gson.fromJson(ele, JsonObject.class);
+            result.getAsJsonObject().entrySet().forEach(class_methodName -> {
+                class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
+                    try {
+                       String testCaseId = String.valueOf(passedCase.getAsNumber()).substring(1);
+                        markTestCase(testCaseId,"1","Executed Test got passed after test execution");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
+                    try {
+                        String testCaseId = failedCase.getKey().substring(1);
+                        markTestCase(testCaseId,"4",failedCase.getValue().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
+                    try {
+                        String testCaseId =  String.valueOf(skippedCase.getAsNumber()).substring(1);
+                        markTestCase(testCaseId,"5","Test got skipped due to some error occured in previous tests");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void markTestCase(String testCaseId,String statusId,String comment){
+        resultMap = new HashMap<>();
+        resultMap.put("case_id",testCaseId);
+        resultMap.put("status_id", statusId);
+        resultMap.put("comment", comment);
+        resultList.add(resultMap);
+    }
+
+    public void uploadBulkTestResultToTestRail(String testRunId, String path){
+        TestRailManager trm = new TestRailManager();
+        getJsonToResultUpload(path);
+        try {
+            trm.addTestResultForTestCases(resultList, testRunId);
+        }catch ( Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
 }
