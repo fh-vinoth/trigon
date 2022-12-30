@@ -3,9 +3,9 @@
     <test name="UploadResultsToTestRail">
         <!-- Add Single File Path for Testrail tests status updation -->
         <parameter name="TestRailStatusPath"
-                   value="src/test/resources/Configuration/TestStatus.json"></parameter>
+                   value="src/test/resources/Configuration/TestCaseAnalysis.json"></parameter>
         <parameter name="product"
-                   value="API_MYT"></parameter>
+                   value="API_DigitalBoard"></parameter>
         <classes>
             <class name="com.trigon.testrail.UploadResultsToTestRail"/>
         </classes>
