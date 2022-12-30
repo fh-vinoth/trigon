@@ -29,8 +29,7 @@ public class ReportManager extends CustomReport {
 
     private static final Logger logger = LogManager.getLogger(ReportManager.class);
     static JsonWriter writer;
-    List<Map<String, Object>> resultList = new ArrayList<>();
-    Map<String, Object> resultMap = new HashMap<>();
+
     public void author_ScenarioName(String author, String scenario) {
         try {
             captureScenarioAndAuthor(author, scenario);
@@ -48,9 +47,29 @@ public class ReportManager extends CustomReport {
     }
 
     public void testTearDown() {
-        if (failAnalysisThread.get().size() > 0) {
-            Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+        Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+    }
+
+    public void testTearDown(ArrayList<String> allTestCaseIDs) {
+
+        if (failAnalysisThread.get().size() == 0) {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
+            testCaseIDThread.remove();
+        } else {
+            allTestCaseIDs.removeAll(passedTCs.get());
+            allTestCaseIDs.removeAll(failedTCs.get().keySet());
+            for (String testCaseID : allTestCaseIDs) {
+                updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
         }
+        resultTCs.get().put("Passed", passedTCs.get());
+        resultTCs.get().put("Failed", failedTCs.get());
+        resultTCs.get().put("Skipped", skippedTCs.get());
+        resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName(), new HashMap(resultTCs.get()));
+
+        Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
 
     public void logReport(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
@@ -75,20 +94,20 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void getBSVideoSession() {
-        logReport("INFO", "<b>BS Video:</b> <a href=\"" + bsVideo().get("public_url").toString() + "\" target=\"_blank\"> View Recorded Video </a>");
+    public void getBSVideoSession(){
+        logReport("INFO", "<b>BS Video:</b> <a href=\""+bsVideo().get("public_url").toString()+"\" target=\"_blank\"> View Recorded Video </a>");
     }
 
-    public JSONObject bsVideo() {
+    public JSONObject bsVideo(){
         Object response = null;
-        if (ios() != null) {
-            response = ios().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        if(ios()!=null) {
+            response  = ios().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
-        if (android() != null) {
-            response = android().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        if(android()!=null) {
+            response  = android().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
-        if (browser() != null) {
-            response = browser().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        if(browser()!=null) {
+            response  = browser().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
 
         JSONObject bsResponse = new JSONObject(response.toString());
@@ -96,15 +115,15 @@ public class ReportManager extends CustomReport {
     }
 
     public void logMultipleJSON(String status, LinkedHashMap message, Object responseJSON, String curl, LinkedHashMap responseValidation) {
-        String apiName = "API : " + getAPIMethodName();
+        String apiName = "API : "+getAPIMethodName();
         Gson pGson1 = new GsonBuilder().create();
         Gson pGson = new GsonBuilder().setPrettyPrinting().create();
-        String m = apiCard(status, apiName, pGson1.toJson(message), String.valueOf(responseJSON), curl, pGson1.toJson(responseValidation));
+        String m = apiCard(status,apiName,pGson1.toJson(message),String.valueOf(responseJSON),curl,pGson1.toJson(responseValidation));
         try {
             if (status.equalsIgnoreCase("PASS")) {
 
-                if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")) {
-                    m = apiName + " is PASSED";
+                if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
+                     m = apiName + " is PASSED";
                 }
                 if (extentScenarioNode.get() != null) {
                     extentScenarioNode.get().pass(m);
@@ -133,7 +152,7 @@ public class ReportManager extends CustomReport {
                 }
                 logger.error(apiName + " is FAILED !! Check your API Parameters ");
                 logger.info("*******************************************************************************");
-                logger.info("Failed curl : \n" + curl);
+                logger.info("Failed curl : \n"+curl);
                 logger.info("*******************************************************************************");
             }
         } catch (Exception e) {
@@ -388,6 +407,40 @@ public class ReportManager extends CustomReport {
             extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
         }
     }
+
+    public void logStepAction(String message, String testCaseIDs) {
+
+        if (testCaseIDThread.get().size() == 0) {
+            testCaseIDThread.get().add(testCaseIDs);
+        } else if (failedTCs.get().size() > 0 && failedTCs.get().containsKey(testCaseIDThread.get().get(0).split(","))) {
+            testCaseIDThread.get().clear();
+            testCaseIDThread.get().add(testCaseIDs);
+        } else {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
+            testCaseIDThread.get().clear();            //removing previous TC
+            testCaseIDThread.get().add(testCaseIDs);     //Adding next TC
+        }
+        if (extentScenarioNode.get() != null) {
+            extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message + " - " + testCaseIDs);
+        } else {
+            extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message + " - " + testCaseIDs);
+        }
+    }
+
+    public void updateHashMapWithTCDetails(String tcId, String status, String className, String methodName) {
+        if (status.equalsIgnoreCase("PASS")) {
+            passedTCs.get().add(tcId);
+        } else if (status.equalsIgnoreCase("FAIL")) {
+            String failure = extent.getReport().getTestList().stream().filter(modules -> tEnv().getContext().getCurrentXmlTest().getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0, modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+                    className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("Fail")).findAny().get().getDetails();
+            failedTCs.get().put(tcId, failure);
+        } else {
+            skippedTCs.get().add(tcId);
+        }
+    }
+
 
 //    public void logStepAction(String ScenarioName) {
 //        logger.info("Scenario : " + ScenarioName);
@@ -900,15 +953,15 @@ public class ReportManager extends CustomReport {
     }
 
     private void captureScenarioAndAuthor(String author, String scenario) {
-        if (extentMethodNode.get() != null) {
+        if(extentMethodNode.get()!=null){
             extentMethodNode.get().assignAuthor(author);
             extentMethodNode.get().getModel().setDescription(scenario);
-            extentMethodNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
+            extentMethodNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>"+scenario);
         }
-        if (extentScenarioNode.get() != null) {
+        if(extentScenarioNode.get()!=null){
             extentScenarioNode.get().assignAuthor(author);
             extentScenarioNode.get().getModel().setDescription(scenario);
-            extentScenarioNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
+            extentScenarioNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>"+scenario);
         }
     }
 
@@ -1000,10 +1053,10 @@ public class ReportManager extends CustomReport {
 
     private void logInfo(String message, boolean screenshotMode) {
         String replacedMessage = message;
-        logger.info(replacedMessage.replace("<br>", ""));
-        if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")) {
+        logger.info(replacedMessage.replace("<br>",""));
+        if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
 
-        } else {
+        }else{
             if (extentScenarioNode.get() != null) {
                 screenshotInfo(extentScenarioNode.get(), message, screenshotMode);
             } else if (extentMethodNode.get() != null) {
@@ -1024,7 +1077,7 @@ public class ReportManager extends CustomReport {
 
     private void logFail(String message, boolean screenshotMode) {
         String replacedMessage = message;
-        logger.error(replacedMessage.replace("<br>", ""));
+        logger.error(replacedMessage.replace("<br>",""));
         Thread.dumpStack();
         if (extentScenarioNode.get() != null) {
             screenshotFail(extentScenarioNode.get(), message, screenshotMode);
@@ -1033,6 +1086,9 @@ public class ReportManager extends CustomReport {
         }
         if (failAnalysisThread.get() != null) {
             failAnalysisThread.get().add(message);
+        }
+        for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+            updateHashMapWithTCDetails(tcID, "FAIL", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
         }
     }
 
@@ -1047,10 +1103,10 @@ public class ReportManager extends CustomReport {
 
     private void logPass(String message, boolean screenshotMode) {
         String replacedMessage = message;
-        logger.info(replacedMessage.replace("<br>", ""));
-        if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")) {
+        logger.info(replacedMessage.replace("<br>",""));
+        if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
 
-        } else {
+        }else{
             if (extentScenarioNode.get() != null) {
                 screenshotPass(extentScenarioNode.get(), message, screenshotMode);
             } else if (extentMethodNode.get() != null) {
@@ -1069,18 +1125,18 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public  void generateTestcaseJsonFile(){
+    public  void tearDownGenerateTCStatusJson(){
         Gson gson = new Gson();
-        //String val = gson.toJson(collectionResultMap,LinkedHashMap.class);
+        String val = gson.toJson(resultTCCollectionMap,LinkedHashMap.class);
         try {
             writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getTestResultsPath()+"/TestStatus.json")));
-           // writer.jsonValue(val);
+            writer.jsonValue(val);
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void uploadSingleTestcaseStatus(String testRunId, String path) {
+    public void uploadTestcaseStatus(String testRunId, String path) {
         TestRailManager t = new TestRailManager();
         Gson gson = new Gson();
         try {
@@ -1090,14 +1146,14 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         System.out.println(String.valueOf(passedCase.getAsNumber()).substring(1));
-                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS,"Executed Test got passed after test execution");
+                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
                 class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
                     try {
-                        t.addTestResultForTestCase(testRunId, failedCase.getKey().substring(1), TestRailManager.TEST_CASE_FAILED_STATUS,failedCase.getValue().toString());
+                        t.addTestResultForTestCase(testRunId, failedCase.getKey().substring(1), TestRailManager.TEST_CASE_FAILED_STATUS);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1105,7 +1161,7 @@ public class ReportManager extends CustomReport {
 
                 class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
                     try {
-                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS,"Test got skipped due to some error occured in previous tests");
+                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1136,63 +1192,4 @@ public class ReportManager extends CustomReport {
         }
         return runId[0];
     }
-
-    public void getJsonToResultUpload(String path) {
-        Gson gson = new Gson();
-        try {
-            JsonElement ele = JsonParser.parseReader(new FileReader(path));
-            JsonObject result = gson.fromJson(ele, JsonObject.class);
-            result.getAsJsonObject().entrySet().forEach(class_methodName -> {
-                class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
-                    try {
-                       String testCaseId = String.valueOf(passedCase.getAsNumber()).substring(1);
-                        markTestCase(testCaseId,"1","Executed Test got passed after test execution");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
-                    try {
-                        String testCaseId = failedCase.getKey().substring(1);
-                        markTestCase(testCaseId,"4",failedCase.getValue().toString());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-
-                class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
-                    try {
-                        String testCaseId =  String.valueOf(skippedCase.getAsNumber()).substring(1);
-                        markTestCase(testCaseId,"5","Test got skipped due to some error occured in previous tests");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void markTestCase(String testCaseId,String statusId,String comment){
-        resultMap = new HashMap<>();
-        resultMap.put("case_id",testCaseId);
-        resultMap.put("status_id", statusId);
-        resultMap.put("comment", comment);
-        resultList.add(resultMap);
-    }
-
-    public void uploadBulkTestResultToTestRail(String testRunId, String path){
-        TestRailManager trm = new TestRailManager();
-        getJsonToResultUpload(path);
-        try {
-            trm.addTestResultForTestCases(resultList, testRunId);
-        }catch ( Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-
 }
