@@ -55,13 +55,16 @@ public class ReportManager extends CustomReport {
 
     public void testTearDown(ArrayList<String> allTestCaseIDs) {
 
-        if (failAnalysisThread.get().size() == 0) {
+        if (failedTCs.get().size()>0 && !failedTCs.get().containsKey(testCaseIDThread.get().get(0).split(",")[0])) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
                 updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
-            testCaseIDThread.remove();
-        } else {
-            allTestCaseIDs.removeAll(passedTCs.get());
+        } else if(failAnalysisThread.get().size()==0) {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+            updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+        }}
+        else
+        {   allTestCaseIDs.removeAll(passedTCs.get());
             allTestCaseIDs.removeAll(failedTCs.get().keySet());
             for (String testCaseID : allTestCaseIDs) {
                 updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
@@ -71,7 +74,7 @@ public class ReportManager extends CustomReport {
         resultTCs.get().put("Failed", failedTCs.get());
         resultTCs.get().put("Skipped", skippedTCs.get());
         resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName(), new HashMap(resultTCs.get()));
-
+        testCaseIDThread.remove();
         Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
 
@@ -415,7 +418,7 @@ public class ReportManager extends CustomReport {
 
         if (testCaseIDThread.get().size() == 0) {
             testCaseIDThread.get().add(testCaseIDs);
-        } else if (failedTCs.get().size() > 0 && failedTCs.get().containsKey(testCaseIDThread.get().get(0).split(","))) {
+        } else if (failedTCs.get().size() > 0 && failedTCs.get().containsKey(testCaseIDThread.get().get(0).split(",")[0])) {
             testCaseIDThread.get().clear();
             testCaseIDThread.get().add(testCaseIDs);
         } else {
