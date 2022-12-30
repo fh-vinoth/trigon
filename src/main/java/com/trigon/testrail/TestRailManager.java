@@ -1,8 +1,5 @@
 package com.trigon.testrail;
 
-import com.codepine.api.testrail.TestRail;
-import com.trigon.reports.model.Result;
-
 import java.io.IOException;
 import java.util.*;
 
