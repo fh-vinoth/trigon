@@ -46,8 +46,10 @@ public class IOS extends ReportManager {
                 browserstackOptions.put("appiumVersion", "1.21.0");
                 browserstackOptions.put("realMobile", "true");
                 browserstackOptions.put("acceptInsecureCerts", "true");
-                browserstackOptions.put("networkLogs", "true");
-                browserstackOptions.put("networkProfile", "reset");
+                HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
+                networkLogsOptions.put("captureContent", true);
+                iosCaps.setCapability("browserstack.networkLogs", true);
+                iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);                browserstackOptions.put("networkProfile", "reset");
                 browserstackOptions.put("idleTimeout", "300");
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
