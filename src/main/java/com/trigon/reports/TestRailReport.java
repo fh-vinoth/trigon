@@ -2,6 +2,9 @@ package com.trigon.reports;
 
 import org.testng.ITestContext;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -15,6 +18,7 @@ public class TestRailReport extends Initializers {
 
     public void initTestRailReport() {
         try {
+            ReportManager m = new ReportManager();
             String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
             String reportTask = "NA";
             if (tEnv() != null) {
@@ -24,7 +28,7 @@ public class TestRailReport extends Initializers {
                 BufferedWriter htmlWriter = new BufferedWriter(new FileWriter(htmlFile));
                 int logoHeaderLength = 2;
                 System.out.println(logoHeaderLength);
-                htmlWriter.write("<!DOCTYPE html>\n" +
+                 htmlWriter.write("<!DOCTYPE html>\n" +
                         "<html lang=\"en\">\n" +
                         "<head>\n" +
                         "    <meta charset=\"UTF-8\">\n" +
@@ -34,7 +38,7 @@ public class TestRailReport extends Initializers {
                         "<table style=\"width: 90%;font-family: Roboto,sans-serif;font-size: 13px;color: #555555;text-align: center;border-radius: 20px;margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse;background-color: #f5f2f2\">\n" +
                         "    <tbody>\n" +
                         "    <th style=\"padding-left: 30px;text-align: left;background: #e0dbdb;height: 60px;\"><img alt=\"FoodHub\" height=\"20\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"114\"></th>\n" +
-                        "    <th colspan=\""+logoHeaderLength+"\" style=\"text-align: center;background: #e0dbdb;height: 60px;\"> Task Name : "+reportTask+"</th>\n" +
+                        "    <th colspan=\""+logoHeaderLength+"\" style=\"text-align: center;background: #e0dbdb;height: 60px;\"> Task Name : Tests Status</th>\n" +
                         "    <th style=\"text-align: left;background: #e0dbdb;height: 60px;\">\n" +
                         "        <div>Executed By : "+System.getProperty("user.name")+"</div>\n" +
                         "        <div>Executed OS : "+System.getProperty("os.name") +"</div>\n" +
@@ -46,8 +50,6 @@ public class TestRailReport extends Initializers {
                         "} \n"+
                         "</style>\n"+
                         "    <tr style=\"background: #797575;height: 40px; font-weight: bold;color: #faf8f8\">\n");
-
-
                     htmlWriter.write("<td> ClassName </td>\n");
                     htmlWriter.write("<td> Passed </td>\n");
                     htmlWriter.write("<td> Failed </td>\n");
@@ -80,7 +82,7 @@ public class TestRailReport extends Initializers {
         }
     }
 
-    protected void tearDownCustomReport(ITestContext iTestContext) {
+    protected void tearDownCustomReport() {
         String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
         if (new File(htmlFile).exists()) {
             try {
@@ -90,12 +92,6 @@ public class TestRailReport extends Initializers {
                         "</body>\n" +
                         "</html>");
                 htmlWriter.close();
-                /*JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFileHTMLPath() + "/" + "CustomReport.json")));
-                writer.beginObject().name("subject").value(iTestContext.getSuite().getName());
-                String customData = FileUtils.readFileToString(new File(htmlFile), StandardCharsets.UTF_8);
-                String replaceWidth = customData.replace("90%", "100%");
-                writer.name("customBody").value(replaceWidth);
-                writer.endObject().flush();*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
