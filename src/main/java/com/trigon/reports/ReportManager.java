@@ -1196,7 +1196,7 @@ public class ReportManager extends CustomReport {
         return runId[0];
     }
 
-    public void getJsonToResultUpload(String path) {
+    public void getJsonToUploadResult(String path) {
         Gson gson = new Gson();
         try {
             JsonElement ele = JsonParser.parseReader(new FileReader(path));
@@ -1244,7 +1244,7 @@ public class ReportManager extends CustomReport {
 
     public void uploadBulkTestResultToTestRail(String testRunId, String path){
         TestRailManager trm = new TestRailManager();
-        getJsonToResultUpload(path);
+        getJsonToUploadResult(path);
         try {
             trm.addTestResultForTestCases(resultList, testRunId);
         }catch ( Exception e){
