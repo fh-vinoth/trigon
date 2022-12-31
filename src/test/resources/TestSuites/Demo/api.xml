@@ -23,7 +23,8 @@
 
          <!--   <class name="com.fh.api.Category_SEARCH"></class>-->
            <!-- <class name="com.trigon.testrail.TestRailTestStatusMap"/>-->
-            <class name="com.fh.unittests.testrail.testraildemo"/>
+           <!-- <class name="com.fh.unittests.testrail.testraildemo"/>-->
+            <class name="com.fh.unittests.testrail.TestReport"/>
             <!--<class name="com.fh.unittests.database.Queries1"></class>
             <class name="com.fh.unittests.database.Queries2"></class>
             <class name="com.fh.unittests.database.Queries3"></class>-->

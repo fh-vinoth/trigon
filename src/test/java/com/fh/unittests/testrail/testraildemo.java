@@ -16,14 +16,14 @@ public class testraildemo extends TestLocalController {
         try {
             logStepAction("1st TC", "C222391");
             //hardFail("Error Message");
-            logReport("PASS", "1st test 1st step");
+            logReport("FAIL", "1st test 1st step");
             logReport("PASS", "1st test 2nd step");
 
             logStepAction("2nd TC", "C222393,C222394,C222392");
 
             logReport("FAIL", "2nd 3rd step");
             logReport("PASS", "2nd 4th step");
-            hardFail("Error Message");
+           // hardFail("Error Message");
 
             logStepAction("3rd TC", "C222763,C222936");
 
@@ -53,12 +53,12 @@ public class testraildemo extends TestLocalController {
             logStepAction("1st TC", "C223760,C223764");
             //hardFail("Error Message");
             logReport("PASS", "1st test 1st step");
-            logReport("FAIL", "1st test 2nd step");
+            logReport("PASS", "1st test 2nd step");
 
             logStepAction("2nd TC", "C223761");
 
             logReport("PASS", "2nd 3rd step");
-            logReport("FAIL", "2nd 4th step");
+            logReport("PASS", "2nd 4th step");
 
         }
         catch (Exception e)
