@@ -1208,11 +1208,17 @@ public class ReportManager extends CustomReport {
 
     public void getJsonToUploadResult(String path) {
         Gson gson = new Gson();
-        TestRailReport r = new TestRailReport();
-        r.initTestRailReport();
+        TestRailReport r1 = new TestRailReport();
+        TestRailReportNew r = new TestRailReportNew();
+        //r.initTestRailReport();
+        r1.initTestRailReport();
+        r.initTestRailReportNew();
         final String[] passedTest = {""};
         final String[] failedTest = {""};
         final String[] skippedTest = {""};
+        final String[] passedTest1 = {""};
+        final String[] failedTest1 = {""};
+        final String[] skippedTest1 = {""};
         try {
             JsonElement ele = JsonParser.parseReader(new FileReader(path));
             JsonObject result = gson.fromJson(ele, JsonObject.class);
@@ -1223,9 +1229,11 @@ public class ReportManager extends CustomReport {
                         String testCaseId = String.valueOf(passedCase.getAsNumber()).substring(1);
                         addTestCase(testCaseId,"1","Executed Test got passed after test execution");
                         if(passedTest[0].length()>0){
-                            passedTest[0] = passedTest[0]+", C"+ testCaseId;
+                            passedTest[0] = passedTest[0]+", C"+ testCaseId+"_Passed";
+                            passedTest1[0] = passedTest1[0]+", C"+ testCaseId;
                         }else{
-                            passedTest[0] = passedTest[0]+ "C"+testCaseId;
+                            passedTest[0] = passedTest[0]+ "C"+testCaseId+"_Passed";
+                            passedTest1[0] = passedTest1[0]+ "C"+testCaseId;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1237,9 +1245,11 @@ public class ReportManager extends CustomReport {
                         String testCaseId = failedCase.getKey().substring(1);
                         addTestCase(testCaseId,"4",failedCase.getValue().toString());
                         if(failedTest[0].length()>0){
-                            failedTest[0] =failedTest[0]+", C"+ testCaseId;
+                            failedTest[0] =failedTest[0]+", C"+ testCaseId+"_Failed";
+                            failedTest1[0] =failedTest1[0]+", C"+ testCaseId;
                         }else{
-                            failedTest[0] =failedTest[0]+ "C"+testCaseId;
+                            failedTest[0] =failedTest[0]+ "C"+testCaseId+"_Failed";
+                            failedTest1[0] =failedTest1[0]+ "C"+testCaseId;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1251,19 +1261,25 @@ public class ReportManager extends CustomReport {
                         String testCaseId =  String.valueOf(skippedCase.getAsNumber()).substring(1);
                         addTestCase(testCaseId,"5","Test got skipped due to some error occured in previous tests");
                         if(skippedTest[0].length()>0){
-                            skippedTest[0] =skippedTest[0]+", C"+ testCaseId;
+                            skippedTest[0] =skippedTest[0]+", C"+ testCaseId+"_Skipped";
+                            skippedTest1[0] =skippedTest1[0]+", C"+ testCaseId;
                         }else{
-                            skippedTest[0] =skippedTest[0]+ "C"+testCaseId;
+                            skippedTest[0] =skippedTest[0]+ "C"+testCaseId+"_Skipped";
+                            skippedTest1[0] =skippedTest1[0]+ "C"+testCaseId;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                System.out.println(passedTest[0]);
                 r.addRowToTestRailReport(methodName, String.valueOf(passedTest[0]),String.valueOf(failedTest[0]),String.valueOf(skippedTest[0]));
+                r1.addRowToTestRailReport(methodName, String.valueOf(passedTest1[0]),String.valueOf(failedTest1[0]),String.valueOf(skippedTest1[0]));
+
                 passedTest[0] = "";
                 failedTest[0] = "";
                 skippedTest[0] = "";
+                passedTest1[0] = "";
+                failedTest1[0] = "";
+                skippedTest1[0] = "";
             });
 
         } catch (Exception e) {
