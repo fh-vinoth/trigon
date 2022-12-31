@@ -16,7 +16,7 @@ public class testraildemo extends TestLocalController {
         try {
             logStepAction("1st TC", "C222391");
             //hardFail("Error Message");
-            logReport("FAIL", "1st test 1st step");
+            logReport("PASS", "1st test 1st step");
             logReport("PASS", "1st test 2nd step");
 
             logStepAction("2nd TC", "C222393,C222394,C222392");
@@ -45,7 +45,7 @@ public class testraildemo extends TestLocalController {
             testTearDown(tcIDs);
         }
     }
-    @Test
+   // @Test
     public void methodNameDemo1() {
        ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C223760","C223764","C223761"));
         author_ScenarioName("Vikram","Testing");

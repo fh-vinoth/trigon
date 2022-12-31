@@ -1132,9 +1132,11 @@ public class ReportManager extends CustomReport {
         Gson gson = new Gson();
         String val = gson.toJson(resultTCCollectionMap,LinkedHashMap.class);
         try {
-            writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getTestResultsPath()+"/TestStatus.json")));
+            String path = trigonPaths.getTestResultsPath()+"/TestStatus.json";
+            writer = new JsonWriter(new BufferedWriter(new FileWriter(path)));
             writer.jsonValue(val);
             writer.flush();
+            getJsonToUploadResult(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1198,22 +1200,39 @@ public class ReportManager extends CustomReport {
 
     public void getJsonToUploadResult(String path) {
         Gson gson = new Gson();
+        TestRailReport r = new TestRailReport();
+        r.initTestRailReport();
+        final String[] passedTest = {""};
+        final String[] failedTest = {""};
+        final String[] skippedTest = {""};
         try {
             JsonElement ele = JsonParser.parseReader(new FileReader(path));
             JsonObject result = gson.fromJson(ele, JsonObject.class);
             result.getAsJsonObject().entrySet().forEach(class_methodName -> {
+                String methodName = class_methodName.getKey();
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         String testCaseId = String.valueOf(passedCase.getAsNumber()).substring(1);
                         addTestCase(testCaseId,"1","Executed Test got passed after test execution");
+                        if(passedTest[0].length()>0){
+                            passedTest[0] =passedTest[0]+", C"+ testCaseId;
+                        }else{
+                            passedTest[0] =passedTest[0]+ "C"+testCaseId;
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
+
                 class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
                     try {
                         String testCaseId = failedCase.getKey().substring(1);
                         addTestCase(testCaseId,"4",failedCase.getValue().toString());
+                        if(failedTest[0].length()>0){
+                            failedTest[0] =failedTest[0]+", C"+ testCaseId;
+                        }else{
+                            failedTest[0] =failedTest[0]+ "C"+testCaseId;
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1223,12 +1242,19 @@ public class ReportManager extends CustomReport {
                     try {
                         String testCaseId =  String.valueOf(skippedCase.getAsNumber()).substring(1);
                         addTestCase(testCaseId,"5","Test got skipped due to some error occured in previous tests");
+                        if(skippedTest[0].length()>0){
+                            skippedTest[0] =skippedTest[0]+", C"+ testCaseId;
+                        }else{
+                            skippedTest[0] =skippedTest[0]+ "C"+testCaseId;
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-
+                System.out.println(passedTest);
+                r.addRowToTestRailReport(methodName, String.valueOf(passedTest[0]),String.valueOf(failedTest[0]),String.valueOf(skippedTest[0]));
             });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
