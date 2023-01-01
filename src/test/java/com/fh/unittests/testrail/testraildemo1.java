@@ -9,9 +9,10 @@ import java.util.Arrays;
 public class testraildemo1 extends TestLocalController {
 
     @Test
-    public void methodNameDemo1() {
+
+    public void methodNameDemo4() {
          ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C100012","C100022","C100032","C100042"));
-        author_ScenarioName("Vikram","Testing1");
+        author_ScenarioName("Vikram","Testing2");
         try {
             logStepAction("1st TC", "C100012");
 

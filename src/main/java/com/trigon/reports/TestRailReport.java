@@ -19,7 +19,7 @@ public class TestRailReport extends Initializers {
     public void initTestRailReport() {
         try {
             ReportManager m = new ReportManager();
-            String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
+            String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReportOld.html";
             String reportTask = "NA";
             if (tEnv() != null) {
                 reportTask = tEnv().getCurrentTestMethodName();
@@ -67,7 +67,7 @@ public class TestRailReport extends Initializers {
     public void addRowToTestRailReport(String... values) {
         try {
             if (values.length > 0) {
-                String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
+                String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReportOld.html";
 
                 BufferedWriter htmlWriter = new BufferedWriter(new FileWriter(htmlFile, true));
                 htmlWriter.write(" <tr style=\"height: 40px;\">\n");
@@ -83,7 +83,7 @@ public class TestRailReport extends Initializers {
     }
 
     protected void tearDownCustomReport() {
-        String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
+        String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReportOld.html";
         if (new File(htmlFile).exists()) {
             try {
                 BufferedWriter htmlWriter = new BufferedWriter(new FileWriter(htmlFile, true));
