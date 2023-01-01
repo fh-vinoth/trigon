@@ -50,7 +50,7 @@ public class TestRailReport extends Initializers {
                         "} \n"+
                         "</style>\n"+
                         "    <tr style=\"background: #797575;height: 40px; font-weight: bold;color: #faf8f8\">\n");
-                    htmlWriter.write("<td> ClassName </td>\n");
+                    htmlWriter.write("<td> Class_Method Name </td>\n");
                     htmlWriter.write("<td> Passed </td>\n");
                     htmlWriter.write("<td> Failed </td>\n");
                     htmlWriter.write("<td> Skipped </td>\n");
@@ -72,7 +72,12 @@ public class TestRailReport extends Initializers {
                 BufferedWriter htmlWriter = new BufferedWriter(new FileWriter(htmlFile, true));
                 htmlWriter.write(" <tr style=\"height: 40px;\">\n");
                 for (int i = 0; i < values.length; i++) {
-                    htmlWriter.write("<td> " + values[i] + "</td>\n");
+                    if(values[i].length()<1){
+                        htmlWriter.write("<td> NA </td>\n");
+                    }else{
+                        htmlWriter.write("<td> " + values[i] + "</td>\n");
+                    }
+
                 }
                 htmlWriter.write("                    </tr>\n");
                 htmlWriter.close();

@@ -181,8 +181,8 @@ public class TestRailReportNew extends Initializers {
                         "}\n" +
                         "</style>\n" +
                         "    <tr style=\"background: #797575;height: 40px; font-weight: bold;color: #faf8f8\">\n");
-                htmlWriter.write("<td> ClassName </td>\n");
-                htmlWriter.write("<td> TestId </td>\n");
+                htmlWriter.write("<td> Class_Method Name </td>\n");
+                htmlWriter.write("<td> Testcase Id </td>\n");
                 htmlWriter.write("<th><input \n" +
                         "                    type=\"text\" \n" +
                         "                    id=\"myInput\" \n" +
