@@ -1,18 +1,18 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="API_Endpoint_Automation_Category" parallel="classes">
-<!--    <test name="API-Endpoint_Automation_Category">-->
-<!--        <classes>-->
-<!--            <class name="com.fh.api.CatArray"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+<suite name="API_Check">
+    <!--    <test name="API-Endpoint_Automation_Category">-->
+    <!--        <classes>-->
+    <!--            <class name="com.fh.api.CatArray"/>-->
+    <!--        </classes>-->
+    <!--    </test>-->
 
-<!--    <parameter name="excelFilePath"-->
-<!--               value="src/test/resources/TestData/FrameworkTest.xlsx"></parameter>-->
-<!--    <test name="API-Endpoint_Automation_Category">-->
-<!--        <classes>-->
-<!--            <class name="com.fh.unittests.FileSize"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+    <!--    <parameter name="excelFilePath"-->
+    <!--               value="src/test/resources/TestData/FrameworkTest.xlsx"></parameter>-->
+    <!--    <test name="API-Endpoint_Automation_Category">-->
+    <!--        <classes>-->
+    <!--            <class name="com.fh.unittests.FileSize"/>-->
+    <!--        </classes>-->
+    <!--    </test>-->
 
     <test name="abc">
         <parameter name="TestRailStatusPath"
@@ -21,10 +21,12 @@
                    value="API_MYT"></parameter>
         <classes>
 
-         <!--   <class name="com.fh.api.Category_SEARCH"></class>-->
-           <!-- <class name="com.trigon.testrail.TestRailTestStatusMap"/>-->
-           <!-- <class name="com.fh.unittests.testrail.testraildemo"/>-->
-            <class name="com.fh.unittests.testrail.TestReport"/>
+            <!--   <class name="com.fh.api.Category_SEARCH"></class>-->
+            <!--<class name="com.trigon.testrail.TestRailTestStatusMap"/>-->
+            <class name="com.fh.unittests.testrail.testraildemo"/>
+            <class name="com.fh.unittests.testrail.testraildemo1"/>
+            <class name="com.fh.unittests.testrail.testraildemo2"/>
+            <!-- <class name="com.fh.unittests.testrail.TestReport"/>-->
             <!--<class name="com.fh.unittests.database.Queries1"></class>
             <class name="com.fh.unittests.database.Queries2"></class>
             <class name="com.fh.unittests.database.Queries3"></class>-->
