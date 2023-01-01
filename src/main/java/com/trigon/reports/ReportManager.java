@@ -1212,7 +1212,7 @@ public class ReportManager extends CustomReport {
         TestRailReportNew r = new TestRailReportNew();
         //r.initTestRailReport();
         r1.initTestRailReport();
-        r.initTestRailReportNew();
+        r.initTestRailReportNew(extent);
         final String[] passedTest = {""};
         final String[] failedTest = {""};
         final String[] skippedTest = {""};
@@ -1273,7 +1273,6 @@ public class ReportManager extends CustomReport {
                 });
                 r.addRowToTestRailReport(methodName, String.valueOf(passedTest[0]),String.valueOf(failedTest[0]),String.valueOf(skippedTest[0]));
                 r1.addRowToTestRailReport(methodName, String.valueOf(passedTest1[0]),String.valueOf(failedTest1[0]),String.valueOf(skippedTest1[0]));
-
                 passedTest[0] = "";
                 failedTest[0] = "";
                 skippedTest[0] = "";
