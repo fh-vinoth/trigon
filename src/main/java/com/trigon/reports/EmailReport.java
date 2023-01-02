@@ -18,6 +18,7 @@ public class EmailReport {
 
     public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
+            System.out.println("########### In the create EMAIL Report");
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
             StringBuffer bf = new StringBuffer();
             StringBuffer bfFailure = new StringBuffer();
@@ -233,6 +234,7 @@ public class EmailReport {
         }else {
             buildNumber=tEnv().getWebBuildNumber();
         }
+        System.out.println("#################### build Number ################ _>>>> "+ buildNumber);
         return  buildNumber;
     }
 
