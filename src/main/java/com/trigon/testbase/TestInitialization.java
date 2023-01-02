@@ -45,7 +45,6 @@ public class TestInitialization extends Browsers {
 
     public void reportsInitialization(String suiteName) {
         trigonPaths = new TrigonPaths();
-        System.out.println("################## in reports initialization ################################");
         String suiteNameReplaced = suiteName.replaceAll("-", "_").replaceAll(" ", "_").trim();
         String[] tType = suiteNameReplaced.split("_");
         mobileApps = Arrays.asList(propertiesPojo.getMobile_Apps().split(","));
