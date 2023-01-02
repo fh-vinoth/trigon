@@ -99,7 +99,7 @@ public class TestRailReportNew extends Initializers {
 
                                     String status = testIds.split("_")[1];
                                     htmlWriter.write("  <tr><td>" + testCaseId + "</td>" +
-                                            "<td>" + status + "</td>" +
+                                            "<td>" + status.toUpperCase() + "</td>" +
                                             "<td><a href=\"https://touch2success.testrail.com/index.php?/cases/view/" + testCaseIdRC + "\"> Click here - " + testCaseId + "</a></td>" +
                                             "</tr>\n");
                                 }
