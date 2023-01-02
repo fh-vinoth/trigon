@@ -49,6 +49,7 @@ public class EmailReport {
 
     private static void generateEmailBody(String reportPath, ExtentReports stats, String body, String failedData, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
+            System.out.println("########### in the email body ###############");
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(reportPath + "/SupportFiles/HTML/emailBody.json", false)));
             int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
             int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
