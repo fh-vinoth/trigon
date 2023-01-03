@@ -163,8 +163,7 @@ public class TestRailReportNew extends Initializers {
                         "    <th style=\"text-align: left;background: #e0dbdb;height: 60px;\" >\n" +
                         "        <div>Executed By : " + System.getProperty("user.name") + "</div>\n" +
                         "        <div>Executed OS : " + System.getProperty("os.name") + "</div>\n" +
-                        "        <div>TestRail Link : <a href =\"#fileLink\">TestRail Upload Link</a></div>\n" +
-                        "       <div class=\"myDiv\" id=\"fileLink\" style=\"display:none\">"+file+"</div>\n" +
+                        "        <div id=\"viewLink\">TestRail Link : <a>TestRail Upload Link</a></div>\n" +
                         "    </th>\n" +
                         "<style> td {\n" +
                         "  border: 3px solid black;\n" +
@@ -214,6 +213,11 @@ public class TestRailReportNew extends Initializers {
                         "                         }\n" +
                         "                         trs.forEach(setTrStyleDisplay)\n" +
                         "                     }\n" +
+                        "                   document.getElementById(\"viewLink\").addEventListener(\"click\", getLink);" +
+                        "                    function getLink(){\n" +
+                        "                      document.getElementById(\"viewLink\").innerHTML = \""+file+"\";                    "+
+                        "                     }\n" +
+
                         "                     </script>");
                 htmlWriter.write("<td> TestRail Link </td>\n");
                 htmlWriter.write("                    </tr>\n");
