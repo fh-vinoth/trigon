@@ -225,7 +225,7 @@ public class EmailReport {
 
 
     private static String getBuildNumber(){
-        String buildNumber=null;
+        String buildNumber="";
         if(name.contains("ANDROID")&&!name.contains("ANDROIDBROWSER")){
             buildNumber=tEnv().getAndroidBuildNumber();
         }
@@ -234,7 +234,6 @@ public class EmailReport {
         }else {
             buildNumber=tEnv().getWebBuildNumber();
         }
-        System.out.println("#################### build Number ################ _>>>> "+ buildNumber);
         return  buildNumber;
     }
 
