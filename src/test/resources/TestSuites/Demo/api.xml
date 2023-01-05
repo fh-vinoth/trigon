@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="API_Check">
+<suite name="API_Check" parallel="classes">
     <!--    <test name="API-Endpoint_Automation_Category">-->
     <!--        <classes>-->
     <!--            <class name="com.fh.api.CatArray"/>-->
@@ -14,7 +14,7 @@
     <!--        </classes>-->
     <!--    </test>-->
 
-    <test name="abc">
+    <test name="Test1">
         <parameter name="TestRailStatusPath"
                    value="src/test/resources/Configuration/TestStatus.json"></parameter>
         <parameter name="product"
@@ -30,6 +30,15 @@
             <!--<class name="com.fh.unittests.database.Queries1"></class>
             <class name="com.fh.unittests.database.Queries2"></class>
             <class name="com.fh.unittests.database.Queries3"></class>-->
+        </classes>
+    </test>
+    <test name="Test2">
+        <parameter name="TestRailStatusPath"
+                   value="src/test/resources/Configuration/TestStatus.json"></parameter>
+        <parameter name="product"
+                   value="API_MYT"></parameter>
+        <classes>
+            <class name="com.fh.unittests.testrail.testraildemo3"/>
         </classes>
     </test>
 

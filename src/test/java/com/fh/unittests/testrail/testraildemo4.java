@@ -1,43 +1,41 @@
 package com.fh.unittests.testrail;
 
 import com.fh.core.TestLocalController;
-import org.testng.ITestContext;
-import org.testng.annotations.ITestAnnotation;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class testraildemo extends TestLocalController {
+public class testraildemo4 extends TestLocalController {
 
     @Test
     public void methodNameDemo() {
 
-        ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222391","C222393","C222394","C222392","C222395","C222396","C222937","C222938","C222760"));
+        ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C188874","C188875","C188876","C188877","C191635","C191636","C191637","C191638","C208976"));
 
         author_ScenarioName("Vikram","Testing");
         try {
-            logStepAction("1st TC", "C222391");
+            logStepAction("1st TC", "C188874");
             //hardFail("Error Message");
             logReport("PASS", "1st test 1st step");
             logReport("PASS", "1st test 2nd step");
 
-            logStepAction("2nd TC", "C222393,C222394,C222392");
+            logStepAction("2nd TC", "C188875,C188876,C188877");
 
-            logReport("PASS", "2nd 3rd step");
+            logReport("FAIL", "2nd 3rd step");
             logReport("PASS", "2nd 4th step");
+           // hardFail("Error Message");
 
+            logStepAction("3rd TC", "C191635,C191636");
 
-            logStepAction("3rd TC", "C222395,C222396");
+           /* logReport("PASS", "3rd 5th step");
+            logReport("PASS", "3rd 6th step");
+*/
+            logStepAction("4th TC", "C191637,C191638,C208976");
 
-            logReport("PASS", "3rd 5th step");
-            logReport("FAIL", "3rd 6th step");
-
-            logStepAction("4th TC", "C222937,C222938,C222760");
-            hardFail("Error Message");
-            logReport("PASS", "3rd 7th step");
-            logReport("PASS", "3rd 8th step");
-
+            /*logReport("PASS", "3rd 5th step");
+            logReport("PASS", "3rd 6th step");
+*/
         }
         catch (Exception e)
         {
@@ -50,15 +48,15 @@ public class testraildemo extends TestLocalController {
     }
     @Test
     public void methodNameDemo1() {
-       ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222761","C222762","C222763"));
+       ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C205525","C205526","C205527"));
         author_ScenarioName("Vikram","Testing");
         try {
-            logStepAction("1st TC", "C222761,C222762");
-            hardFail("Error Message");
+            logStepAction("1st TC", "C205525,C205526");
+           // hardFail("Error Message");
             logReport("PASS", "1st test 1st step");
             logReport("PASS", "1st test 2nd step");
 
-            logStepAction("2nd TC", "C222763");
+            logStepAction("2nd TC", "C205527");
 
             logReport("PASS", "2nd 3rd step");
             logReport("PASS", "2nd 4th step");
@@ -75,15 +73,15 @@ public class testraildemo extends TestLocalController {
     }
     @Test
     public void methodNameDemo2() {
-        ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222764","C222936","C222937"));
+        ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C257178","C257180","C223561"));
         author_ScenarioName("Vikram","Testing");
         try {
-            logStepAction("1st TC", "C222764,C222936");
-            //hardFail("Error Message");
+            logStepAction("1st TC", "C257178,C257180");
+            hardFail("Error Message");
             logReport("PASS", "1st test 1st step");
-            logReport("FAIL", "1st test 2nd step");
+            logReport("PASS", "1st test 2nd step");
 
-            logStepAction("2nd TC", "C222937");
+            logStepAction("2nd TC", "C223561");
 
             logReport("PASS", "2nd 3rd step");
             logReport("PASS", "2nd 4th step");

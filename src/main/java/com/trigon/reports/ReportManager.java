@@ -1139,7 +1139,7 @@ public class ReportManager extends CustomReport {
             writer = new JsonWriter(new BufferedWriter(new FileWriter(path)));
             writer.jsonValue(val);
             writer.flush();
-            getJsonToUploadResult(path);
+            getJsonToUploadResult(path,true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1206,13 +1206,16 @@ public class ReportManager extends CustomReport {
         return runId[0];
     }
 
-    public void getJsonToUploadResult(String path) {
+    public void getJsonToUploadResult(String path,boolean ... testRailReport) {
         Gson gson = new Gson();
         TestRailReport r1 = new TestRailReport();
         TestRailReportNew r = new TestRailReportNew();
         //r.initTestRailReport();
-        r1.initTestRailReport();
-        r.initTestRailReportNew(extent);
+       //r1.initTestRailReport();
+        if(testRailReport.length>0 && testRailReport[0]==true){
+            r.initTestRailReportNew(extent);
+        }
+
         final String[] passedTest = {""};
         final String[] failedTest = {""};
         final String[] skippedTest = {""};
@@ -1271,8 +1274,10 @@ public class ReportManager extends CustomReport {
                         e.printStackTrace();
                     }
                 });
-                r.addRowToTestRailReport(methodName, String.valueOf(passedTest[0]),String.valueOf(failedTest[0]),String.valueOf(skippedTest[0]));
-                r1.addRowToTestRailReport(methodName, String.valueOf(passedTest1[0]),String.valueOf(failedTest1[0]),String.valueOf(skippedTest1[0]));
+                if(testRailReport.length>0 && testRailReport[0]==true) {
+                    r.addRowToTestRailReport(methodName, String.valueOf(passedTest[0]), String.valueOf(failedTest[0]), String.valueOf(skippedTest[0]));
+                }
+                // r1.addRowToTestRailReport(methodName, String.valueOf(passedTest1[0]),String.valueOf(failedTest1[0]),String.valueOf(skippedTest1[0]));
                 passedTest[0] = "";
                 failedTest[0] = "";
                 skippedTest[0] = "";

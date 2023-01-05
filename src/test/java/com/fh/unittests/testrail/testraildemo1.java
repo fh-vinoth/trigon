@@ -11,27 +11,27 @@ public class testraildemo1 extends TestLocalController {
     @Test
 
     public void methodNameDemo4() {
-         ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C100012","C100022","C100032","C100042"));
+         ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222938","C223754","C223755","C223756"));
         author_ScenarioName("Vikram","Testing2");
         try {
-            logStepAction("1st TC", "C100012");
+            logStepAction("1st TC", "C222938");
 
             logReport("PASS", "1st step");
             logReport("PASS", "2nd step");
 
-            logStepAction("2nd TC", "C100042");
+            logStepAction("2nd TC", "C223754");
 
             logReport("PASS", "3rd step");
-            logReport("PASS", "4th step");
+            logReport("FAIL", "4th step");
 
-            logStepAction("3rd TC", "C100022");
+            logStepAction("3rd TC", "C223755");
 
             logReport("PASS", "5th step");
             logReport("PASS", "6th step");
 
-            hardFail("Error Message");
+            //hardFail("Error Message");
 
-            logStepAction("4th TC", "C100032");
+            logStepAction("4th TC", "C223756");
 
         }
         catch (Exception e)

@@ -1,9 +1,10 @@
+
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="UploadStatusToTestRail">
     <test name="UploadResultsToTestRail">
         <!-- Add Single File Path for Testrail tests status updation -->
         <parameter name="TestRailStatusPath"
-                   value="src/test/resources/Configuration/TestCaseAnalysis.json"></parameter>
+                   value="src/test/resources/TestResults/5-Jan-2023/API_Check_2023-01-05-134326/TestStatus.json"></parameter>
         <parameter name="product"
                    value="API_DigitalBoard"></parameter>
         <classes>
@@ -11,3 +12,6 @@
         </classes>
     </test>
 </suite>
+
+
+
