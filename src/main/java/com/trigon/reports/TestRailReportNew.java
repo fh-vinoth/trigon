@@ -52,7 +52,6 @@ public class TestRailReportNew extends Initializers {
                 htmlWriter.write("<td> ClassName </td>\n");
                 htmlWriter.write("<td> TestId </td>\n");
                 htmlWriter.write("<td> Status </td>\n");
-                /* htmlWriter.write("<td> TestRail Link </td>\n");*/
                 htmlWriter.write("                    </tr>\n");
                 htmlWriter.close();
             }
@@ -98,7 +97,7 @@ public class TestRailReportNew extends Initializers {
                                     }
 
                                     String status = testIds.split("_")[1];
-                                    htmlWriter.write("  <tr><td><a href=\"https://touch2success.testrail.com/index.php?/cases/view/" + testCaseIdRC + "\">" + testCaseId + "</a></td>" +
+                                    htmlWriter.write("  <tr><td><a href=\"https://touch2success.testrail.com/index.php?/cases/view/" + testCaseIdRC + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + testCaseId + "</a></td>" +
                                             "<td>" + status.toUpperCase() + "</td>" +
                                             "</tr>\n");
                                 }
@@ -147,7 +146,6 @@ public class TestRailReportNew extends Initializers {
             if (!new File(htmlFile).exists()) {
                 BufferedWriter htmlWriter = new BufferedWriter(new FileWriter(htmlFile));
                 int logoHeaderLength = 1;
-                System.out.println(logoHeaderLength);
                 htmlWriter.write("<!DOCTYPE html>\n" +
                         "<html lang=\"en\">\n" +
                         "<head>\n" +
@@ -162,7 +160,7 @@ public class TestRailReportNew extends Initializers {
                         "    <th style=\"text-align: left;background: #e0dbdb;height: 60px;\" >\n" +
                         "        <div>Executed By : " + System.getProperty("user.name") + "</div>\n" +
                         "        <div>Executed OS : " + System.getProperty("os.name") + "</div>\n" +
-                        "        <div id=\"viewLink\">TestRail Link : <a>TestRail Upload Link</a></div>\n" +
+                        "        <div id=\"viewLink\"><a>TestRail Upload Link </a><img src = \"https://cdn-icons-png.flaticon.com/512/1620/1620767.png\" height=\"10\" width=\"10\"></div>\n" +
                         "    </th>\n" +
                         "<style> td {\n" +
                         "  border: 3px solid black;\n" +
@@ -212,10 +210,17 @@ public class TestRailReportNew extends Initializers {
                         "                         }\n" +
                         "                         trs.forEach(setTrStyleDisplay)\n" +
                         "                     }\n" +
-                        "                   document.getElementById(\"viewLink\").addEventListener(\"click\", getLink);" +
-                        "                    function getLink(){\n" +
-                        "                      document.getElementById(\"viewLink\").innerHTML = \""+file+"\";                    "+
+                        "               document.getElementById(\"viewLink\").addEventListener(\"click\", getLink);\n" +
+                        "                  function getLink(){\n" +
+                        "                     document.execCommand(\"copy\");\n" +
                         "                     }\n" +
+                        "                      document.getElementById(\"viewLink\").addEventListener(\"copy\", function(event) {\n" +
+                        "  event.preventDefault();\n" +
+                        "  if (event.clipboardData) {\n" +
+                        "    event.clipboardData.setData(\"text/plain\",\""+ file+"\");" +
+                        "  document.getElementById(\"viewLink\").innerHTML = \"Link Copied!!!\" \n" +
+                        "  }\n" +
+                        "});   " +
 
                         "                     </script>");
                 htmlWriter.write("                    </tr>\n");
