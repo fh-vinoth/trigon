@@ -1,11 +1,18 @@
 package com.trigon.reports;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.S3Object;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
+import com.trigon.security.AES;
 import com.trigon.testrail.TestRailManager;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -1309,5 +1316,37 @@ public class ReportManager extends CustomReport {
         }
 
     }
+
+    public String readS3BucketContent(String bucketName,String keyName){
+        AWSCredentials credentials = new BasicAWSCredentials(
+                AES.decrypt("W2ekXre8CE/HcVRqyloQgvx8gdNF7SukcZP/Gzx2aGY=", "t2sautomation"),
+                AES.decrypt("7vxMJLkwfL7VK8SksBb/ReNbhwbPtwjT9fHRCo1hutb6hXbOH/U/3c8Tad49ieBp", "t2sautomation")
+        );
+
+        AmazonS3 s3Client = AmazonS3ClientBuilder
+                .standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion("us-east-1")
+                .build();
+        S3Object object = s3Client.getObject(bucketName,keyName);
+
+        InputStream objectData = object.getObjectContent();
+        String testResultFile = "src/test/resources/TestResults/s3TestResults.json";
+        try {
+
+            BufferedReader reader = new BufferedReader((new InputStreamReader(object.getObjectContent())));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(testResultFile));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+            }
+            objectData.close();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return testResultFile;
+    }
+
 
 }
