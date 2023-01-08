@@ -98,9 +98,8 @@ public class TestRailReportNew extends Initializers {
                                     }
 
                                     String status = testIds.split("_")[1];
-                                    htmlWriter.write("  <tr><td>" + testCaseId + "</td>" +
+                                    htmlWriter.write("  <tr><td><a href=\"https://touch2success.testrail.com/index.php?/cases/view/" + testCaseIdRC + "\">" + testCaseId + "</a></td>" +
                                             "<td>" + status.toUpperCase() + "</td>" +
-                                            "<td><a href=\"https://touch2success.testrail.com/index.php?/cases/view/" + testCaseIdRC + "\"> Click here - " + testCaseId + "</a></td>" +
                                             "</tr>\n");
                                 }
                             }
@@ -147,7 +146,7 @@ public class TestRailReportNew extends Initializers {
             String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
             if (!new File(htmlFile).exists()) {
                 BufferedWriter htmlWriter = new BufferedWriter(new FileWriter(htmlFile));
-                int logoHeaderLength = 2;
+                int logoHeaderLength = 1;
                 System.out.println(logoHeaderLength);
                 htmlWriter.write("<!DOCTYPE html>\n" +
                         "<html lang=\"en\">\n" +
@@ -219,7 +218,6 @@ public class TestRailReportNew extends Initializers {
                         "                     }\n" +
 
                         "                     </script>");
-                htmlWriter.write("<td> TestRail Link </td>\n");
                 htmlWriter.write("                    </tr>\n");
                 htmlWriter.close();
             }
