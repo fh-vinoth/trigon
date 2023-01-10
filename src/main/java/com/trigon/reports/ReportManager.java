@@ -1,11 +1,18 @@
 package com.trigon.reports;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.S3Object;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
+import com.trigon.security.AES;
 import com.trigon.testrail.TestRailManager;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -1137,14 +1144,21 @@ public class ReportManager extends CustomReport {
         Gson gson = new Gson();
         String val = gson.toJson(resultTCCollectionMap,LinkedHashMap.class);
         try {
-            writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getTestResultsPath()+"/TestStatus.json")));
+            String path = getTestStatusPath();
+            writer = new JsonWriter(new BufferedWriter(new FileWriter(path)));
             writer.jsonValue(val);
             writer.flush();
+            getJsonToUploadResult(path,true);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void uploadSingleTestcaseStatus(String testRunId, String path) {
+
+    public String getTestStatusPath(){
+        String path =trigonPaths.getTestResultsPath()+"/TestStatus.json";
+        return path;
+    }
+    public void uploadSingleTestResultToTestRail(String testRunId, String path) {
         TestRailManager t = new TestRailManager();
         Gson gson = new Gson();
         try {
@@ -1201,24 +1215,44 @@ public class ReportManager extends CustomReport {
         return runId[0];
     }
 
-    public void getJsonToResultUpload(String path) {
+    public void getJsonToUploadResult(String path,boolean ... testRailReport) {
         Gson gson = new Gson();
+        TestRailReportNew r = new TestRailReportNew();
+        if(testRailReport.length>0 && testRailReport[0]==true){
+            r.initTestRailReportNew(extent);
+        }
+
+        final String[] passedTest = {""};
+        final String[] failedTest = {""};
+        final String[] skippedTest = {""};
         try {
             JsonElement ele = JsonParser.parseReader(new FileReader(path));
             JsonObject result = gson.fromJson(ele, JsonObject.class);
             result.getAsJsonObject().entrySet().forEach(class_methodName -> {
+                String methodName = class_methodName.getKey();
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         String testCaseId = String.valueOf(passedCase.getAsNumber()).substring(1);
                         addTestCase(testCaseId,"1","Executed Test got passed after test execution");
+                        if(passedTest[0].length()>0){
+                            passedTest[0] = passedTest[0]+", C"+ testCaseId+"_Passed";
+                        }else{
+                            passedTest[0] = passedTest[0]+ "C"+testCaseId+"_Passed";
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
+
                 class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
                     try {
                         String testCaseId = failedCase.getKey().substring(1);
                         addTestCase(testCaseId,"4",failedCase.getValue().toString());
+                        if(failedTest[0].length()>0){
+                            failedTest[0] =failedTest[0]+", C"+ testCaseId+"_Failed";
+                        }else{
+                            failedTest[0] =failedTest[0]+ "C"+testCaseId+"_Failed";
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1228,12 +1262,23 @@ public class ReportManager extends CustomReport {
                     try {
                         String testCaseId =  String.valueOf(skippedCase.getAsNumber()).substring(1);
                         addTestCase(testCaseId,"5","Test got skipped due to some error occured in previous tests");
+                        if(skippedTest[0].length()>0){
+                            skippedTest[0] =skippedTest[0]+", C"+ testCaseId+"_Skipped";
+                        }else{
+                            skippedTest[0] =skippedTest[0]+ "C"+testCaseId+"_Skipped";
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-
+                if(testRailReport.length>0 && testRailReport[0]==true) {
+                    r.addRowToTestRailReport(methodName, String.valueOf(passedTest[0]), String.valueOf(failedTest[0]), String.valueOf(skippedTest[0]));
+                }
+                passedTest[0] = "";
+                failedTest[0] = "";
+                skippedTest[0] = "";
             });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1249,7 +1294,7 @@ public class ReportManager extends CustomReport {
 
     public void uploadBulkTestResultToTestRail(String testRunId, String path){
         TestRailManager trm = new TestRailManager();
-        getJsonToResultUpload(path);
+        getJsonToUploadResult(path);
         try {
             trm.addTestResultForTestCases(resultList, testRunId);
         }catch ( Exception e){
@@ -1257,5 +1302,37 @@ public class ReportManager extends CustomReport {
         }
 
     }
+
+    public String readS3BucketContent(String bucketName,String keyName){
+        AWSCredentials credentials = new BasicAWSCredentials(
+                AES.decrypt("W2ekXre8CE/HcVRqyloQgvx8gdNF7SukcZP/Gzx2aGY=", "t2sautomation"),
+                AES.decrypt("7vxMJLkwfL7VK8SksBb/ReNbhwbPtwjT9fHRCo1hutb6hXbOH/U/3c8Tad49ieBp", "t2sautomation")
+        );
+
+        AmazonS3 s3Client = AmazonS3ClientBuilder
+                .standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion("us-east-1")
+                .build();
+        S3Object object = s3Client.getObject(bucketName,keyName);
+
+        InputStream objectData = object.getObjectContent();
+        String testResultFile = "src/test/resources/TestResults/s3TestResults.json";
+        try {
+
+            BufferedReader reader = new BufferedReader((new InputStreamReader(object.getObjectContent())));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(testResultFile));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+            }
+            objectData.close();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return testResultFile;
+    }
+
 
 }
