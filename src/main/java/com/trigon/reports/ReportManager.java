@@ -75,6 +75,8 @@ public class ReportManager extends CustomReport {
         resultTCs.get().put("Skipped", skippedTCs.get());
         resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName(), new HashMap(resultTCs.get()));
         testCaseIDThread.remove();
+
+        if(failAnalysisThread.get().size() > 0)
         Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
 
