@@ -87,6 +87,33 @@ public class ReportManager extends CustomReport {
         Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
 
+    public void testTearDown(ArrayList<String> allTestCaseIDs,String dataProviderKey) {
+
+        if (failedTCs.get().size()>0 && !failedTCs.get().containsKey(testCaseIDThread.get().get(0).split(",")[0])) {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
+        } else if(failAnalysisThread.get().size()==0) {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }}
+        else
+        {   allTestCaseIDs.removeAll(passedTCs.get());
+            allTestCaseIDs.removeAll(failedTCs.get().keySet());
+            for (String testCaseID : allTestCaseIDs) {
+                updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
+        }
+        resultTCs.get().put("Passed", passedTCs.get());
+        resultTCs.get().put("Failed", failedTCs.get());
+        resultTCs.get().put("Skipped", skippedTCs.get());
+        resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName() + "_" + dataProviderKey, new HashMap(resultTCs.get()));
+        testCaseIDThread.remove();
+
+        if(failAnalysisThread.get().size() > 0)
+            Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+    }
+
     public void logReport(String status, String message, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         if (!elementReportCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
             try {
