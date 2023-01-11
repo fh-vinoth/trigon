@@ -209,7 +209,16 @@ public class EmailReport {
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
-                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\">API Endpoints Covered : " + totalEndpoints + "</div> </td>\n" +
+                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>API Endpoints Covered : ( " + totalEndpoints + " )</b></div> </td>\n" +
+//                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
+//                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
+                "                    </tr>" +
+                "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
+                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>GET Request : </b>("+ getRequest +")</div> </td>\n" +
+                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>PUT Request : </b>("+ putRequest +")</div> </td>\n" +
+                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>POST Request : </b>("+ postRequest +")</div> </td>\n" +
+                "                        <td colspan=\"2\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>DELETE Request : </b>("+ deleteRequest +")</div> </td>\n" +
+
 //                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
 //                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
                 "                    </tr>" +

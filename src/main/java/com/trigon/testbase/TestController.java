@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import org.testng.annotations.Optional;
 import org.testng.xml.XmlTest;
 
 import java.io.BufferedReader;
@@ -24,10 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -69,14 +67,14 @@ public class TestController extends TestInitialization {
     protected void moduleInitilalization(ITestContext context, XmlTest xmlTest, @Optional String testEnvPath, @Optional String excelFilePath,
                                          @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String applicationType, @Optional String url, @Optional String browser,
                                          @Optional String browserVersion, @Optional String device, @Optional String os_version,
-                                         @Optional String URI, @Optional String envType, @Optional String appSycURI, @Optional String appSycAuth, @Optional String version, @Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix, @Optional String franchiseId,@Optional String dbType,@Optional String serviceType,
+                                         @Optional String URI, @Optional String envType, @Optional String appSycURI, @Optional String appSycAuth, @Optional String version, @Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix, @Optional String franchiseId, @Optional String dbType, @Optional String serviceType,
                                          @Optional String store, @Optional String host, @Optional String locale,
                                          @Optional String region, @Optional String country, @Optional String currency,
-                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName, @Optional String grid_Hub_IP, @Optional String gps_location, @Optional String browserstack_midSessionInstallApps) {
+                                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName, @Optional String grid_Hub_IP, @Optional String gps_location,@Optional String moduleNames,@Optional String email_recipients,@Optional String error_email_recipients,@Optional String failure_email_recipients,@Optional String browserstack_midSessionInstallApps) {
         try {
             if (platformType != null) {
                 logger.info("Test Execution Started for Module : " + xmlTest.getName());
-                setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI, envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT,franchiseId,dbType,serviceType, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName, grid_Hub_IP,gps_location, browserstack_midSessionInstallApps);
+                setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI, envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT,franchiseId,dbType,serviceType, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName, grid_Hub_IP,gps_location,moduleNames,email_recipients,error_email_recipients,failure_email_recipients,browserstack_midSessionInstallApps);
 //                addDataToHeader("URI: "+tEnv().getApiURI()+"","Host : "+tEnv().getApiHost()+"");
 //                addHeaderToCustomReport("HTTPMethod","Endpoint","responseEmptyKeys","responseNullKeys","responseHtmlTagKeys","responseHtmlTagKeysAndValues");
 
@@ -97,11 +95,11 @@ public class TestController extends TestInitialization {
                                        @Optional String URI, @Optional String envType, @Optional String appSycURI, @Optional String appSycAuth, @Optional String version, @Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,@Optional String franchiseId,@Optional String dbType,@Optional String serviceType,
                                        @Optional String store, @Optional String host, @Optional String locale,
                                        @Optional String region, @Optional String country, @Optional String currency,
-                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName, @Optional String grid_Hub_IP, @Optional String gps_location, @Optional String browserstack_midSessionInstallApps) {
+                                       @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName, @Optional String grid_Hub_IP, @Optional String gps_location,@Optional String moduleNames,@Optional String email_recipients,@Optional String error_email_recipients,@Optional String failure_email_recipients,@Optional String browserstack_midSessionInstallApps) {
         try {
             logger.info("Test Execution Started for Class  : " + getClass().getSimpleName());
             classFailAnalysisThread.set(new ArrayList<>());
-            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth, version,partnerURI, token, accessToken, isJWT,franchiseId,dbType,serviceType, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName, grid_Hub_IP, gps_location,  browserstack_midSessionInstallApps);
+            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth, version,partnerURI, token, accessToken, isJWT,franchiseId,dbType,serviceType, endpointPrefix, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName, grid_Hub_IP, gps_location,moduleNames,email_recipients,error_email_recipients,failure_email_recipients,browserstack_midSessionInstallApps);
             if(context.getSuite().getName().contains("adhoc")){
                 remoteBrowserInit(context, xmlTest);
             }
@@ -119,12 +117,12 @@ public class TestController extends TestInitialization {
                          @Optional String URI,@Optional String envType,@Optional String appSycURI,@Optional String appSycAuth, @Optional String version,@Optional String partnerURI, @Optional String token, @Optional String accessToken, @Optional String isJWT, @Optional String endpointPrefix,@Optional String franchiseId,@Optional String dbType,@Optional String serviceType,
                          @Optional String store, @Optional String host, @Optional String locale,
                          @Optional String region, @Optional String country, @Optional String currency,
-                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName,@Optional String grid_Hub_IP, @Optional String gps_location,  @Optional String browserstack_midSessionInstallApps) {
+                         @Optional String timezone, @Optional String phoneNumber, @Optional String emailId, @Optional String test_region, @Optional String browserstack_execution_local, @Optional String bs_app_path, @Optional String productName,@Optional String grid_Hub_IP, @Optional String gps_location,@Optional String moduleNames,@Optional String email_recipients,@Optional String error_email_recipients,@Optional String failure_email_recipients,@Optional String browserstack_midSessionInstallApps) {
         logger.info("Test Execution Started for Method : " + method.getName());
         try {
             dataTableCollectionApi.set(new ArrayList<>());
             dataTableMapApi.set(new LinkedHashMap<>());
-            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT, endpointPrefix,franchiseId,dbType,serviceType, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName,grid_Hub_IP,gps_location,  browserstack_midSessionInstallApps);
+            setTestEnvironment(testEnvPath, excelFilePath, jsonFilePath, jsonDirectory, applicationType, url, browser, browserVersion, device, os_version, URI,envType,appSycURI,appSycAuth,version,partnerURI, token, accessToken, isJWT, endpointPrefix,franchiseId,dbType,serviceType, store, host, locale, region, country, currency, timezone, phoneNumber, emailId, test_region, browserstack_execution_local, getClass().getSimpleName(), bs_app_path, productName,grid_Hub_IP,gps_location,moduleNames,email_recipients,error_email_recipients,failure_email_recipients,browserstack_midSessionInstallApps);
 
             if (context.getSuite().getName().contains("adhoc") || context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative")) {
 
@@ -195,8 +193,8 @@ public class TestController extends TestInitialization {
                 closeBrowserClassLevel();
             }
             closeMobileClassLevel();
-            if (executionType.equalsIgnoreCase("remote")  && tEnv().getApiEnvType().equalsIgnoreCase("SIT")) {
-                adb.insertData(method, xmlTest, context, result,status);
+            if (executionType.equalsIgnoreCase("remote") && tEnv().getApiEnvType().equalsIgnoreCase("SIT")) {
+                adb.insertData(method, xmlTest, context, result, status);
             }
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
@@ -277,6 +275,8 @@ public class TestController extends TestInitialization {
                 getGitBranch();
                 if (apiCoverage.size() > 0) {
                     if (extent != null) {
+                        getEndpointCount();
+                        getApiCallCount();
                         extent.setSystemInfo("API Endpoints Covered", String.valueOf(totalEndpoints));
                         extent.flush();
                     }
@@ -293,6 +293,79 @@ public class TestController extends TestInitialization {
 
         }
 
+    }
+
+    private void getApiCallCount() {
+        for (int i = 0; i < apiCallCoverage.size(); i++) {
+            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("POST")) {
+                postRequest++;
+            }
+            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("Get")) {
+                getRequest++;
+            }
+            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("put")) {
+                putRequest++;
+            }
+            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("delete")) {
+                deleteRequest++;
+            }
+            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("patch")) {
+                patchRequest++;
+            }
+        }
+
+    }
+
+    private void getEndpointCount() {
+        Set endpoint = new LinkedHashSet();
+        List actualEndpoints = apiCoverage;
+        List http = apiCallCoverage;
+        String addedendpoint = "";
+        Map<String, Integer> endpointCount = new HashMap<>();
+        actualEndpoints.stream().forEach(c -> {
+            String ep = c.toString();
+            ep = ep.replaceAll("[0-9]", "");
+            if (endpointCount.containsKey(ep)) {
+                endpointCount.put(ep, endpointCount.get(ep) + 1);
+            } else {
+                endpointCount.put(ep, 1);
+            }
+        });
+        for (int i = 0; i < actualEndpoints.size(); i++) {
+            String endPoint = actualEndpoints.get(i).toString();
+            String[] split = new String[0];
+            if (endPoint.contains("/")) {
+                if (endPoint.startsWith("/")) {
+                    char charOfSlash = endPoint.charAt(0);
+                    endPoint = endPoint.replaceFirst(String.valueOf(charOfSlash), "");
+                }
+                split = endPoint.split("/");
+                for (int j = 0; j < split.length; j++) {
+                    String splitt = split[j];
+                    char firstChar = splitt.charAt(0);
+                    int asciivalue = firstChar;
+                    if (asciivalue >= 97 && asciivalue <= 122) {
+                        String endendpoint = split[j];
+                        addedendpoint = addedendpoint + endendpoint + "/";
+                    } else {
+                        addedendpoint = addedendpoint + "12345/";
+                    }
+                    if (j == split.length - 1) {
+                        if (addedendpoint.contains("?")) {
+                            String[] splitQueryParam = addedendpoint.split("\\?");
+                            addedendpoint = splitQueryParam[0];
+                        }
+                        endpoint.add(addedendpoint + "[" + http.get(i) + "]");
+                        addedendpoint = "";
+                    }
+                }
+            } else {
+                endpoint.add(endPoint + "/" + "[" + http.get(i) + "]");
+            }
+        }
+        totalEndpoints = endpoint.size();
+
+        System.out.println("API Endpoints Covered :" + totalEndpoints);
     }
 
     private void emailTrigger() {
@@ -319,7 +392,7 @@ public class TestController extends TestInitialization {
     }
 
     private String failStatusCheck(Method method) {
-        String status= "NA";
+        String status = "NA";
         if (failAnalysisThread.get().size() > 0) {
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();

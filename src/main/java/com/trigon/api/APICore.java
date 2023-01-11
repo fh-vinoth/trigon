@@ -323,6 +323,7 @@ public class APICore extends ReportManager {
             dataToJSON("httpMethod", HttpMethod);
             dataToJSON("endPoint", Endpoint);
             apiCoverage.add(Endpoint);
+            apiCallCoverage.add(HttpMethod);
             double respTime;
             try {
                 switch (HttpMethod) {

@@ -1,5 +1,7 @@
 package com.trigon.bean.testenv;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import org.testng.ITestContext;
 
 import java.io.File;
@@ -65,6 +67,11 @@ public class TestEnv {
     private String pipeline_execution;
     private String test_region;
 
+    private String email_recipients;
+    private String error_email_recipients;
+    private String failure_email_recipients;
+
+
 
     private String dbHost;
     private String dbUserName;
@@ -98,6 +105,7 @@ public class TestEnv {
     private String franchiseId;
     private String dbType;
     private String serviceType;
+    private String moduleNames;
 
     public String getTestType() {
         return testType;
@@ -169,6 +177,7 @@ public class TestEnv {
 
     public void setApiRegion(String apiRegion) {
         this.apiRegion = apiRegion;
+        
     }
 
     public String getApiStore() {
@@ -680,4 +689,39 @@ public class TestEnv {
     public void setGps_location(String gps_location) {
         this.gps_location = gps_location;
     }
+
+    public String getModuleNames() {
+        return moduleNames;
+    }
+
+    public void setModuleNames(String moduleNames) {
+        this.moduleNames = moduleNames;
+    }
+
+    public String getEmail_recipients() {
+        return email_recipients;
+    }
+
+    public void setEmail_recipients(String email_recipients) {
+        this.email_recipients = email_recipients;
+    }
+
+    public String getError_email_recipients() {
+        return error_email_recipients;
+    }
+
+    public void setError_email_recipients(String error_email_recipients) {
+        this.error_email_recipients = error_email_recipients;
+    }
+
+    public String getFailure_email_recipients() {
+        return failure_email_recipients;
+    }
+
+    public void setFailure_email_recipients(String failure_email_recipients) {
+        this.failure_email_recipients = failure_email_recipients;
+    }
+
+
+
 }
