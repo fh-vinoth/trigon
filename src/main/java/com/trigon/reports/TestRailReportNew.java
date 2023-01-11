@@ -12,12 +12,11 @@ import java.nio.file.Paths;
 
 import static com.trigon.testbase.TestInitialization.trigonPaths;
 
-public class TestRailReportNew extends Initializers {
+public class TestRailReportNew extends ReportManager {
 
 
     public void initTestRailReport() {
         try {
-            ReportManager m = new ReportManager();
             String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
             String reportTask = "NA";
             if (tEnv() != null) {
@@ -132,14 +131,13 @@ public class TestRailReportNew extends Initializers {
     public void initTestRailReportNew(ExtentReports stats) {
         try {
             String  file  ="" ;
-            String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
-            String localFile = trigonPaths.getTestResultsPath() + "TestStatus.json";
-            Path path = Paths.get(localFile);
-            boolean f = Files.exists(path);
-            if(f){
-                file = localFile;
-            }else{
+            if(tEnv().getJenkins_execution().equalsIgnoreCase("true")){
+                String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
                 file = "\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestStatus.json\"";
+                System.out.println("Jenkins Execution");
+            }else{
+                file =  trigonPaths.getTestResultsPath() + "TestStatus.json";
+                System.out.println("Local Execution");
             }
 
             String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
