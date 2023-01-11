@@ -160,7 +160,8 @@ public class TestRailReportNew extends Initializers {
                         "    <th style=\"text-align: left;background: #e0dbdb;height: 60px;\" >\n" +
                         "        <div>Executed By : " + System.getProperty("user.name") + "</div>\n" +
                         "        <div>Executed OS : " + System.getProperty("os.name") + "</div>\n" +
-                        "        <div id=\"viewLink\"><a>TestRail Upload Link </a><img src = \"https://cdn-icons-png.flaticon.com/512/1620/1620767.png\" height=\"10\" width=\"10\"></div>\n" +
+                        "        <div id=\"viewLink\"><a>Copy TestRail Upload Link </a><img src = \"https://cdn-icons-png.flaticon.com/512/1620/1620767.png\" height=\"10\" width=\"10\"></div>\n" +
+                        " <div id=\"copyLinkDiv\">"+
                         "    </th>\n" +
                         "<style> td {\n" +
                         "  border: 3px solid black;\n" +
@@ -218,7 +219,7 @@ public class TestRailReportNew extends Initializers {
                         "  event.preventDefault();\n" +
                         "  if (event.clipboardData) {\n" +
                         "    event.clipboardData.setData(\"text/plain\",\""+ file+"\");" +
-                        "  document.getElementById(\"viewLink\").innerHTML = \"Link Copied!!!\" \n" +
+                        "  document.getElementById(\"copyLinkDiv\").innerHTML = \"Link Copied!!!\" \n" +
                         "  }\n" +
                         "});   " +
 
