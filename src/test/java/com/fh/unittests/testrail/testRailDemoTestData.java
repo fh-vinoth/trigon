@@ -15,31 +15,41 @@ public class testRailDemoTestData extends TestLocalController {
     @Test(dataProvider = "getDataFromJson", dataProviderClass = DataProviders.class, groups = {"Sanity", "Regression"})
     @ExcelSheet(name = "TestRailDemo")
     public void methodNameDemo(LinkedHashMap<String,Object> tData) {
-
-        //ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222391","C222393","C222394","C222392","C222395","C222396","C222937","C222938","C222760"));
-        ArrayList<String> tcIDs= (ArrayList<String>) tData.get("tcIDs");
+        ArrayList<String> tcIDs = getTestIdsInArray(tData.get("tcIDs").toString());
         author_ScenarioName("Nisha","Testing");
         try {
-            logStepAction("1st TC", "C222391");
+
+            logStepAction("Place order ", tcIDs.get(0));
             //hardFail("Error Message");
             logReport("PASS", "1st test 1st step");
             logReport("PASS", "1st test 2nd step");
+            System.out.println(tData.get("sending").toString());
+            if(tData.get("sending").toString().equalsIgnoreCase("delivery")){
+                logStepAction("Assign order", tcIDs.get(3));
 
-            logStepAction("2nd TC", "C222393,C222394,C222392");
+                logReport("PASS", "2nd 3rd step");
+                logReport("FAIL", "2nd 4th step");
 
-            logReport("PASS", "2nd 3rd step");
-            logReport("PASS", "2nd 4th step");
+            }
+
+            if(tData.get("sending").toString().equalsIgnoreCase("Collection")){
+                logStepAction("Collect", tcIDs.get(3) );
+                logReport("PASS", "3rd 5th step");
+                logReport("PASS", "3rd 6th step");
+
+            }
 
 
-            logStepAction("3rd TC", "C222395,C222396");
-
-            logReport("PASS", "3rd 5th step");
-            logReport("FAIL", "3rd 6th step");
-
-            logStepAction("4th TC", "C222937,C222938,C222760");
-            hardFail("Error Message");
+            logStepAction("Hide order", tcIDs.get(1));
+            //hardFail("Error Message");
             logReport("PASS", "3rd 7th step");
             logReport("PASS", "3rd 8th step");
+
+            logStepAction("Cancel Order", tcIDs.get(2));
+
+            logReport("PASS", "3rd 7th step");
+            logReport("FAIL", "3rd 8th step");
+            hardFail("Error Message");
 
         }
         catch (Exception e)
@@ -48,16 +58,16 @@ public class testRailDemoTestData extends TestLocalController {
 
         }
         finally {
-            testTearDown(tcIDs);
+            testTearDown(tcIDs,tData.get("dataProviderKey").toString());
         }
     }
     @Test
     public void methodNameDemo1() {
        ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222761","C222762","C222763"));
-        author_ScenarioName("Vikram","Testing");
+        author_ScenarioName("Nisha","Testing");
         try {
             logStepAction("1st TC", "C222761,C222762");
-            hardFail("Error Message");
+            //hardFail("Error Message");
             logReport("PASS", "1st test 1st step");
             logReport("PASS", "1st test 2nd step");
 
@@ -79,12 +89,12 @@ public class testRailDemoTestData extends TestLocalController {
     @Test
     public void methodNameDemo2() {
         ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222764","C222936","C222937"));
-        author_ScenarioName("Vikram","Testing");
+        author_ScenarioName("Nisha","Testing");
         try {
             logStepAction("1st TC", "C222764,C222936");
             //hardFail("Error Message");
             logReport("PASS", "1st test 1st step");
-            logReport("FAIL", "1st test 2nd step");
+            logReport("PASS", "1st test 2nd step");
 
             logStepAction("2nd TC", "C222937");
 

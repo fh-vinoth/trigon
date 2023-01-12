@@ -1361,5 +1361,14 @@ public class ReportManager extends CustomReport {
         return testResultFile;
     }
 
+    public ArrayList<String> getTestIdsInArray(String testIds){
+        ArrayList<String> tcIDs= new ArrayList<>();
+        String[] i = testIds.split(",");
+        for(String s : i){
+            tcIDs.add(s);
+        }
+        return tcIDs;
+
+    }
 
 }

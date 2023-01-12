@@ -29,7 +29,7 @@ public class TestRailDataProvider extends TestLocalController {
         catch (Exception e)
         {}
         finally {
-            testTearDown(tcIDs,tData.get("dataProviderKey"));
+            testTearDown(tcIDs,tData.get("dataProviderKey").toString());
         }
     }
 
