@@ -19,13 +19,15 @@
                    value="src/test/resources/Configuration/TestStatus.json"></parameter>
         <parameter name="product"
                    value="API_MYT"></parameter>
+        <parameter name="jsonFilePath"
+                   value="src/test/resources/TestData/FrameworkTest.json"></parameter>
         <classes>
 
             <!--   <class name="com.fh.api.Category_SEARCH"></class>-->
             <!--<class name="com.trigon.testrail.TestRailTestStatusMap"/>-->
-            <class name="com.fh.unittests.testrail.testraildemo"/>
-            <class name="com.fh.unittests.testrail.testraildemo1"/>
-            <class name="com.fh.unittests.testrail.testraildemo2"/>
+            <class name="com.fh.unittests.testrail.testRailDemoTestData"/>
+        <!-- <class name="com.fh.unittests.testrail.testraildemo"/>-->
+            <!--     <class name="com.fh.unittests.testrail.testraildemo2"/>-->
             <!-- <class name="com.fh.unittests.testrail.TestReport"/>-->
             <!--<class name="com.fh.unittests.database.Queries1"></class>
             <class name="com.fh.unittests.database.Queries2"></class>
