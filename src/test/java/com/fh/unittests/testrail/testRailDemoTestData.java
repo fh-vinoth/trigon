@@ -7,17 +7,18 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 public class testRailDemoTestData extends TestLocalController {
 
     //@Test
     @Test(dataProvider = "getDataFromJson", dataProviderClass = DataProviders.class, groups = {"Sanity", "Regression"})
-    @ExcelSheet(name = "TR")
-    public void methodNameDemo() {
+    @ExcelSheet(name = "TestRailDemo")
+    public void methodNameDemo(LinkedHashMap<String,Object> tData) {
 
-        ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222391","C222393","C222394","C222392","C222395","C222396","C222937","C222938","C222760"));
-
-        author_ScenarioName("Vikram","Testing");
+        //ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222391","C222393","C222394","C222392","C222395","C222396","C222937","C222938","C222760"));
+        ArrayList<String> tcIDs= (ArrayList<String>) tData.get("tcIDs");
+        author_ScenarioName("Nisha","Testing");
         try {
             logStepAction("1st TC", "C222391");
             //hardFail("Error Message");
