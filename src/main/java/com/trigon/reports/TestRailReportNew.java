@@ -12,12 +12,11 @@ import java.nio.file.Paths;
 
 import static com.trigon.testbase.TestInitialization.trigonPaths;
 
-public class TestRailReportNew extends Initializers {
+public class TestRailReportNew extends ReportManager {
 
 
     public void initTestRailReport() {
         try {
-            ReportManager m = new ReportManager();
             String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
             String reportTask = "NA";
             if (tEnv() != null) {
@@ -132,14 +131,14 @@ public class TestRailReportNew extends Initializers {
     public void initTestRailReportNew(ExtentReports stats) {
         try {
             String  file  ="" ;
-            String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
-            String localFile = trigonPaths.getTestResultsPath() + "TestStatus.json";
-            Path path = Paths.get(localFile);
-            boolean f = Files.exists(path);
-            if(f){
-                file = localFile;
-            }else{
+            if(tEnv().getJenkins_execution().equalsIgnoreCase("true")){
+                String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
                 file = "\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestStatus.json\"";
+                System.out.println("Jenkins Execution");
+                System.out.println("**** Jenkins Execution: "+file+" File");
+            }else{
+                file =  trigonPaths.getTestResultsPath() + "TestStatus.json";
+                System.out.println("Local Execution");
             }
 
             String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
@@ -160,7 +159,8 @@ public class TestRailReportNew extends Initializers {
                         "    <th style=\"text-align: left;background: #e0dbdb;height: 60px;\" >\n" +
                         "        <div>Executed By : " + System.getProperty("user.name") + "</div>\n" +
                         "        <div>Executed OS : " + System.getProperty("os.name") + "</div>\n" +
-                        "        <div id=\"viewLink\"><a>TestRail Upload Link </a><img src = \"https://cdn-icons-png.flaticon.com/512/1620/1620767.png\" height=\"10\" width=\"10\"></div>\n" +
+                        "        <div id=\"viewLink\"><a>Copy TestRail Upload Link </a><img src = \"https://cdn-icons-png.flaticon.com/512/1620/1620767.png\" height=\"10\" width=\"10\"></div>\n" +
+                        " <div id=\"copyLinkDiv\">"+
                         "    </th>\n" +
                         "<style> td {\n" +
                         "  border: 3px solid black;\n" +
@@ -218,7 +218,7 @@ public class TestRailReportNew extends Initializers {
                         "  event.preventDefault();\n" +
                         "  if (event.clipboardData) {\n" +
                         "    event.clipboardData.setData(\"text/plain\",\""+ file+"\");" +
-                        "  document.getElementById(\"viewLink\").innerHTML = \"Link Copied!!!\" \n" +
+                        "  document.getElementById(\"copyLinkDiv\").innerHTML = \"Link Copied!!!\" \n" +
                         "  }\n" +
                         "});   " +
 
