@@ -558,7 +558,7 @@ public class TestInitialization extends Browsers {
     protected void setTestEnvironment(String fileName, String excelFilePath,
                                       String jsonFilePath, String jsonDirectory, String applicationType, String url, String browser, String browserVersion, String device, String os_version,
                                       String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
-                                      String accessToken, String isJWT, String endpointPrefix, String franchiseId, String dbType, String serviceType, String store, String host, String locale,
+                                      String accessToken, String isJWT, String endpointPrefix,String authorization, String franchiseId, String dbType, String serviceType, String store, String host, String locale,
                                       String region, String country, String currency,
                                       String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames,String test_email_recipients,String test_error_email_recipients,String test_failure_email_recipients,String browserstack_midSessionInstallApps) {
         try {
@@ -812,6 +812,9 @@ public class TestInitialization extends Browsers {
             if (endpointPrefix != null) {
                 tEnv().setEndpointPrefix(endpointPrefix);
             }
+            if (authorization != null) {
+                tEnv().setAuthorization(authorization);
+            }
             if (franchiseId != null) {
                 tEnv().setFranchiseId(franchiseId);
             }
@@ -900,7 +903,7 @@ public class TestInitialization extends Browsers {
             } else if (tRemoteEnv.getFailure_email_recipients() != null) {
                 failure_email_recipients = tRemoteEnv.getFailure_email_recipients();
             }
-
+            
             if (tRemoteEnv.getBrowserstack_execution_local() != null) {
                 tEnv().setBrowserstack_execution_local(tRemoteEnv.getBrowserstack_execution_local());
             }
