@@ -100,6 +100,7 @@ public class TestEnv {
     private String endpointPrefix;
     private String productName;
     private String gps_location;
+    private String authorization;
 
 
     private String franchiseId;
@@ -177,7 +178,7 @@ public class TestEnv {
 
     public void setApiRegion(String apiRegion) {
         this.apiRegion = apiRegion;
-        
+
     }
 
     public String getApiStore() {
@@ -537,7 +538,7 @@ public class TestEnv {
     }
 
     public String getJsonDirectory() {
-        if(jsonDirectory==null){
+        if (jsonDirectory == null) {
             jsonDirectory = "src/test/resources/TestData";
         }
         return jsonDirectory;
@@ -603,7 +604,9 @@ public class TestEnv {
         this.browserstack_execution_local = browserstack_execution_local;
     }
 
-    public String getBrowserstack_midSessionInstallApps() { return browserstack_midSessionInstallApps; }
+    public String getBrowserstack_midSessionInstallApps() {
+        return browserstack_midSessionInstallApps;
+    }
 
     public void setBrowserstack_midSessionInstallApps(String browserstack_midSessionInstallApps) {
         this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
@@ -722,6 +725,13 @@ public class TestEnv {
         this.failure_email_recipients = failure_email_recipients;
     }
 
+    public String getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(String authorization) {
+        this.authorization = authorization;
+    }
 
 
 }
