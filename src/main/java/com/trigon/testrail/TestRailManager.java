@@ -66,6 +66,7 @@ public class TestRailManager {
         resultData.put("results",results);
         try{
             client.sendPost("add_results_for_cases/" + testRunId, resultData);
+            System.out.println("Run Report : https://touch2success.testrail.com/index.php?/runs/view/"+testRunId);
         }catch(Exception e){
             System.out.println("TestRunId : "+testRunId+" \nResults : "+resultData);
         }
