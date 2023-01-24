@@ -64,7 +64,12 @@ public class TestRailManager {
         client.setPassword(TEST_PASSWORD);
         Map<String,List<Map<String,Object>>> resultData = new LinkedHashMap<>();
         resultData.put("results",results);
-        client.sendPost("add_results_for_cases/" + testRunId, resultData);
+        try{
+            client.sendPost("add_results_for_cases/" + testRunId, resultData);
+        }catch(Exception e){
+            System.out.println("TestRunId : "+testRunId+" \nResults : "+resultData);
+        }
+
     }
 }
 

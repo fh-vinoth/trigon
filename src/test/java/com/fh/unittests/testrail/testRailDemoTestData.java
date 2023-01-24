@@ -15,8 +15,8 @@ public class testRailDemoTestData extends TestLocalController {
     @Test(dataProvider = "getDataFromJson", dataProviderClass = DataProviders.class, groups = {"Sanity", "Regression"})
     @ExcelSheet(name = "TestRailDemo")
     public void methodNameDemo(LinkedHashMap<String,Object> tData) {
-        ArrayList<String> tcIDs= (ArrayList<String>) tData.get("tcIDs");
-      //  ArrayList<String> tcIDs = getTestIdsInArray(tData.get("tcIDs").toString());
+       // ArrayList<String> tcIDs= (ArrayList<String>) tData.get("tcIDs");
+        ArrayList<String> tcIDs = getTestIdsInArray(tData.get("tcIDs").toString());
         author_ScenarioName("Nisha","Testing");
         try {
 
