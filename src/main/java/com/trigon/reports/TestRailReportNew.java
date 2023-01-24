@@ -138,7 +138,6 @@ public class TestRailReportNew extends ReportManager {
                 System.out.println("**** Jenkins Execution: "+file+" File");
             }else{
                 file =  trigonPaths.getTestResultsPath() + "TestStatus.json";
-                System.out.println("Local Execution");
             }
 
             String htmlFile = trigonPaths.getTestResultsPath() + "/TestRailReport.html";
