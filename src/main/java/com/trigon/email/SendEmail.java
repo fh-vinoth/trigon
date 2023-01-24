@@ -10,6 +10,9 @@ public class SendEmail {
     @Test
     @Parameters({"reportPath", "recipients", "uploadToAWS", "sendFailedReport"})
     public void SendOfflineEmail(String reportPath, @Optional String recipients, @Optional String uploadToAWS, @Optional String sendFailedReport) {
-        email.triggerEmail(reportPath, recipients, uploadToAWS, sendFailedReport);
+        String[] splitPath = reportPath.split(",");
+        for(String s:splitPath){
+            email.triggerEmail(s, recipients, uploadToAWS, sendFailedReport);
+        }
     }
 }
