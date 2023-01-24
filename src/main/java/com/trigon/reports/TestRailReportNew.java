@@ -217,7 +217,7 @@ public class TestRailReportNew extends ReportManager {
                         "  event.preventDefault();\n" +
                         "  if (event.clipboardData) {\n" +
                         "    event.clipboardData.setData(\"text/plain\",\""+ file+"\");" +
-                        "  document.getElementById(\"copyLinkDiv\").innerHTML = \"Link Copied!!!\" \n" +
+                        "  document.getElementById(\"viewLink\").innerHTML = \"Link Copied!!!\" \n" +
                         "  }\n" +
                         "});   " +
 
