@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
+import com.aventstack.extentreports.model.Log;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
@@ -26,6 +27,7 @@ import org.testng.Assert;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.trigon.testbase.TestInitialization.trigonPaths;
 import static org.apache.commons.io.FileUtils.copyFile;
@@ -62,22 +64,24 @@ public class ReportManager extends CustomReport {
 
     public void testTearDown(ArrayList<String> allTestCaseIDs) {
 
-        if (failedTCs.get().size()>0 && !failedTCs.get().containsKey(testCaseIDThread.get().get(0).split(",")[0])) {
+        if (failedTCs.get().size()>0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                if(!failedTCs.get().containsKey(tcID))
                 updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
         } else if(failAnalysisThread.get().size()==0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
             updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
         }}
-        else
-        {   allTestCaseIDs.removeAll(passedTCs.get());
+
+           allTestCaseIDs.removeAll(passedTCs.get());
             allTestCaseIDs.removeAll(failedTCs.get().keySet());
             for (String testCaseID : allTestCaseIDs) {
                 updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
-        }
-        resultTCs.get().put("Passed", passedTCs.get());
+
+        passedTCs.get().removeAll(failedTCs.get().keySet());
+        resultTCs.get().put("Passed", passedTCs.get().stream().distinct().collect(Collectors.toList()));
         resultTCs.get().put("Failed", failedTCs.get());
         resultTCs.get().put("Skipped", skippedTCs.get());
         resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName(), new HashMap(resultTCs.get()));
@@ -89,22 +93,24 @@ public class ReportManager extends CustomReport {
 
     public void testTearDown(ArrayList<String> allTestCaseIDs,String dataProviderKey) {
 
-        if (failedTCs.get().size()>0 && !failedTCs.get().containsKey(testCaseIDThread.get().get(0).split(",")[0])) {
+        if (failedTCs.get().size()>0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
-                updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+                if(!failedTCs.get().containsKey(tcID))
+                    updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
         } else if(failAnalysisThread.get().size()==0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
                 updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }}
-        else
-        {   allTestCaseIDs.removeAll(passedTCs.get());
-            allTestCaseIDs.removeAll(failedTCs.get().keySet());
-            for (String testCaseID : allTestCaseIDs) {
-                updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
-            }
+
+        allTestCaseIDs.removeAll(passedTCs.get());
+        allTestCaseIDs.removeAll(failedTCs.get().keySet());
+        for (String testCaseID : allTestCaseIDs) {
+            updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
         }
-        resultTCs.get().put("Passed", passedTCs.get());
+
+        passedTCs.get().removeAll(failedTCs.get().keySet());
+        resultTCs.get().put("Passed", passedTCs.get().stream().distinct().collect(Collectors.toList()));
         resultTCs.get().put("Failed", failedTCs.get());
         resultTCs.get().put("Skipped", skippedTCs.get());
         resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName() + "_" + dataProviderKey, new HashMap(resultTCs.get()));
@@ -454,15 +460,19 @@ public class ReportManager extends CustomReport {
 
         if (testCaseIDThread.get().size() == 0) {
             testCaseIDThread.get().add(testCaseIDs);
-        } else if (failedTCs.get().size() > 0 && failedTCs.get().containsKey(testCaseIDThread.get().get(0).split(",")[0])) {
+        } else if (failedTCs.get().size() > 0) {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                if(!failedTCs.get().containsKey(tcID))
+                    updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
             testCaseIDThread.get().clear();
             testCaseIDThread.get().add(testCaseIDs);
         } else {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
                 updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
-            testCaseIDThread.get().clear();            //removing previous TC
-            testCaseIDThread.get().add(testCaseIDs);     //Adding next TC
+            testCaseIDThread.get().clear();
+            testCaseIDThread.get().add(testCaseIDs);
         }
         if (extentScenarioNode.get() != null) {
             extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message + " - " + testCaseIDs);
@@ -473,13 +483,14 @@ public class ReportManager extends CustomReport {
 
     public void updateHashMapWithTCDetails(String tcId, String status, String className, String methodName) {
         if (status.equalsIgnoreCase("PASS")) {
-            passedTCs.get().add(tcId);
+            passedTCs.get().add(tcId.trim());
         } else if (status.equalsIgnoreCase("FAIL")) {
-            String failure = extent.getReport().getTestList().stream().filter(modules -> tEnv().getContext().getCurrentXmlTest().getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0, modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
-                    className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("Fail")).findAny().get().getDetails();
-            failedTCs.get().put(tcId, failure);
+            List<Log> failureLog = extent.getReport().getTestList().stream().filter(modules -> tEnv().getContext().getCurrentXmlTest().getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0, modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
+                    className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("FAIL")).collect(Collectors.toList());
+            String failureReason = failureLog.get(failureLog.size()-1).getDetails();
+            failedTCs.get().put(tcId.trim(), failureReason);
         } else {
-            skippedTCs.get().add(tcId);
+            skippedTCs.get().add(tcId.trim());
         }
     }
 
