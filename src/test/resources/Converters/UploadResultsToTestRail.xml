@@ -4,7 +4,7 @@
     <test name="UploadResultsToTestRail">
         <!-- Add Single File Path for Testrail tests status updation -->
         <!-- Add S3 Bucket file path or local TestStatus.json Path or local s3TestResults.json -->
-        <parameter name="TestRailStatusPath" value="src/test/resources/TestResults/8-Jan-2023/API_Check_2023-01-08-193648/TestStatus.json"></parameter>
+        <parameter name="TestRailStatusPath" value="src/test/resources/TestResults/25-Jan-2023/API_Check_2023-01-25-134121/TestStatus.json"></parameter>
       <!--  <parameter name="TestRailStatusPath" value="src/test/resources/TestResults/s3TestResults.json"></parameter>
         <parameter name="TestRailStatusPath" value="https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/5-Jan-2023/API_Check_2023-01-05-150852/TestStatus.json"></parameter>
       -->

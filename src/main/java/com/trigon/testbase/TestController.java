@@ -270,6 +270,11 @@ public class TestController extends TestInitialization {
     @AfterSuite(alwaysRun = true)
     protected void suiteClosure(ITestContext iTestContext, XmlTest xmlTest) {
         try {
+            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
+            tre = pGson.fromJson(element1, RemoteEnvPojo.class);
+            String jenkinsExecution = tre.getJenkins_execution();
+            System.out.println(jenkinsExecution);
             logger.info("Test Execution Finished for Suite : " + iTestContext.getSuite().getName());
             logger.info("Generating HTML Reports from the path :" + trigonPaths.getTestResultsPath());
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
@@ -280,7 +285,7 @@ public class TestController extends TestInitialization {
                     captureException(e);
                 }
             }
-            tearDownGenerateTCStatusJson();
+            tearDownGenerateTCStatusJson(jenkinsExecution);
             tearDownCustomReport(iTestContext);
 
         } catch (Exception e) {
