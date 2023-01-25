@@ -15,6 +15,7 @@ public class testRailDemoTestData extends TestLocalController {
     @Test(dataProvider = "getDataFromJson", dataProviderClass = DataProviders.class, groups = {"Sanity", "Regression"})
     @ExcelSheet(name = "TestRailDemo")
     public void methodNameDemo(LinkedHashMap<String,Object> tData) {
+       // ArrayList<String> tcIDs= (ArrayList<String>) tData.get("tcIDs");
         ArrayList<String> tcIDs = getTestIdsInArray(tData.get("tcIDs").toString());
         author_ScenarioName("Nisha","Testing");
         try {
@@ -61,7 +62,7 @@ public class testRailDemoTestData extends TestLocalController {
             testTearDown(tcIDs,tData.get("dataProviderKey").toString());
         }
     }
-    @Test
+   // @Test
     public void methodNameDemo1() {
        ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222761","C222762","C222763"));
         author_ScenarioName("Nisha","Testing");
@@ -86,7 +87,7 @@ public class testRailDemoTestData extends TestLocalController {
             testTearDown(tcIDs);
         }
     }
-    @Test
+   // @Test
     public void methodNameDemo2() {
         ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222764","C222936","C222937"));
         author_ScenarioName("Nisha","Testing");

@@ -65,6 +65,8 @@ public class TestRailManager {
         Map<String,List<Map<String,Object>>> resultData = new LinkedHashMap<>();
         resultData.put("results",results);
         client.sendPost("add_results_for_cases/" + testRunId, resultData);
+        System.out.println("Run Report : https://touch2success.testrail.com/index.php?/runs/view/"+testRunId);
+
     }
 }
 
