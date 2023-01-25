@@ -1332,7 +1332,7 @@ public class ReportManager extends CustomReport {
 
     public void uploadBulkTestResultToTestRail(String testRunId, String path){
         TestRailManager trm = new TestRailManager();
-        getJsonToUploadResult("false",path);
+        getJsonToUploadResult(path,"false");
         try {
             trm.addTestResultForTestCases(resultList, testRunId);
         }catch ( Exception e){
