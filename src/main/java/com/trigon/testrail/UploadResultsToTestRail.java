@@ -4,12 +4,6 @@ import com.trigon.reports.ReportManager;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-
-import static com.trigon.testrail.TestRailTestStatusMap.checkHeapSize;
-
 public class UploadResultsToTestRail {
     @Parameters({"TestRailStatusPath", "product", "autoUpload"})
     @Test
