@@ -84,7 +84,7 @@ public class TestRailReport extends ReportManager {
             String file = "";
             if (jenkinsExecution.equalsIgnoreCase("true")) {
                 String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
-                file = "\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestStatus.json\"";
+                file = "https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestStatus.json";
                 System.out.println("Jenkins Execution");
                 System.out.println("**** Jenkins Execution: " + file + " File");
             } else {
@@ -111,7 +111,7 @@ public class TestRailReport extends ReportManager {
                         "    <th style=\"text-align: center;background: #e0dbdb;height: 60px;\" >\n" +
                         "        <div>Executed By : " + System.getProperty("user.name") + "</div>\n" +
                         "        <div>Executed OS : " + System.getProperty("os.name") + "</div>\n" +
-                        "        <div id=\"viewLink\"><a style=\"cursor:pointer;\">Copy TestRail Upload Link </a><img src = \"https://cdn-icons-png.flaticon.com/512/1620/1620767.png\" height=\"10\" width=\"10\"></div>\n" +
+                        "        <div id=\"viewLink\"><a style=\"cursor:pointer;\">Copy TestRail Upload Link </a></div>\n" +
                         " <div id=\"copyLinkDiv\">" +
                         "    </th>\n" +
                         "  </tbody>\n" +
