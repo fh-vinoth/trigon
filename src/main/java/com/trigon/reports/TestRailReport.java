@@ -84,7 +84,7 @@ public class TestRailReport extends ReportManager {
             String file = "";
             if (jenkinsExecution.equalsIgnoreCase("true")) {
                 String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
-                file = "\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestStatus.json\"";
+                file = "https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestStatus.json";
                 System.out.println("Jenkins Execution");
                 System.out.println("**** Jenkins Execution: " + file + " File");
             } else {
