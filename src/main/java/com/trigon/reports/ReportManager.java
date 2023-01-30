@@ -1255,9 +1255,9 @@ public class ReportManager extends CustomReport {
 
     public void getJsonToUploadResult(String path,String jenkinsExecution,boolean ... testRailReport) {
         Gson gson = new Gson();
-        TestRailReportNew r = new TestRailReportNew();
+        TestRailReport r = new TestRailReport();
         if(testRailReport.length>0 && testRailReport[0]==true){
-            r.initTestRailReportNew(extent,jenkinsExecution);
+            r.initTestRailReport(extent,jenkinsExecution);
         }
 
         final String[] passedTest = {""};
