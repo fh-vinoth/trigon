@@ -111,7 +111,7 @@ public class TestRailReport extends ReportManager {
                         "    <th style=\"text-align: center;background: #e0dbdb;height: 60px;\" >\n" +
                         "        <div>Executed By : " + System.getProperty("user.name") + "</div>\n" +
                         "        <div>Executed OS : " + System.getProperty("os.name") + "</div>\n" +
-                        "        <div id=\"viewLink\"><a style=\"cursor:pointer;\">Copy TestRail Upload Link </a><img src = \"https://cdn-icons-png.flaticon.com/512/1620/1620767.png\" height=\"10\" width=\"10\"></div>\n" +
+                        "        <div id=\"viewLink\"><a style=\"cursor:pointer;\">Copy TestRail Upload Link </a></div>\n" +
                         " <div id=\"copyLinkDiv\">" +
                         "    </th>\n" +
                         "  </tbody>\n" +
