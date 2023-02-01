@@ -9,7 +9,7 @@ public class TestRailManager {
     public static String RAILS_ENGINE_URL = "https://touch2success.testrail.com/";
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 4;
-    public static final int TEST_CASE_SKIPPED_STATUS = 5;
+    public static final int TEST_CASE_SKIPPED_STATUS = 7;
     static APIClient client = new APIClient(RAILS_ENGINE_URL);
 
 
