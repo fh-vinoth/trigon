@@ -1178,7 +1178,7 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public  void tearDownGenerateTCStatusJson(String jenkinsExecution){
+    public  void tearDownGenerateTCStatusJson(){
         Gson gson = new Gson();
         String val = gson.toJson(resultTCCollectionMap,LinkedHashMap.class);
         try {
@@ -1186,7 +1186,7 @@ public class ReportManager extends CustomReport {
             writer = new JsonWriter(new BufferedWriter(new FileWriter(path)));
             writer.jsonValue(val);
             writer.flush();
-            getJsonToUploadResult(path,jenkinsExecution,true);
+            getJsonToUploadResult(path,true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1253,11 +1253,11 @@ public class ReportManager extends CustomReport {
         return runId[0];
     }
 
-    public void getJsonToUploadResult(String path,String jenkinsExecution,boolean ... testRailReport) {
+    public void getJsonToUploadResult(String path,boolean ... testRailReport) {
         Gson gson = new Gson();
         TestRailReport r = new TestRailReport();
         if(testRailReport.length>0 && testRailReport[0]==true){
-            r.initTestRailReport(extent,jenkinsExecution);
+            r.initTestRailReport(extent);
         }
 
         final String[] passedTest = {""};
@@ -1332,7 +1332,7 @@ public class ReportManager extends CustomReport {
 
     public void uploadBulkTestResultToTestRail(String testRunId, String path){
         TestRailManager trm = new TestRailManager();
-        getJsonToUploadResult(path,"false");
+        getJsonToUploadResult(path);
         try {
             trm.addTestResultForTestCases(resultList, testRunId);
         }catch ( Exception e){

@@ -87,7 +87,7 @@ public class testRailDemoTestData extends TestLocalController {
             testTearDown(tcIDs);
         }
     }
-   // @Test
+   @Test
     public void methodNameDemo2() {
         ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222764","C222936","C222937"));
         author_ScenarioName("Nisha","Testing");
