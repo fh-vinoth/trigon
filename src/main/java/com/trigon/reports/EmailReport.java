@@ -136,7 +136,7 @@ public class EmailReport {
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getSystemEnvInfo().get(4).getValue() + "</td>\n" +
                 "                                <tr>\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
+                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/build.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">"+getBuildNumber()+"</td>"+
                 "                                <tr>\n"+
                 "                                <tr>\n" +
@@ -230,16 +230,18 @@ public class EmailReport {
     }
 
 
-
-    private static String getBuildNumber(){
-        String buildNumber=null;
-        if(name.contains("ANDROID")&&!name.contains("ANDROIDBROWSER")){
-            buildNumber=tEnv().getAndroidBuildNumber();
-        }
-        else if(name.contains("IOS")&&!name.contains("IOSBROWSER")){
-            buildNumber=tEnv().getIosBuildNumber();
-        }else {
-            buildNumber=tEnv().getWebBuildNumber();
+    private static String getBuildNumber() {
+        String buildNumber = "";
+        try {
+            if (name.contains("ANDROID") && !name.contains("ANDROIDBROWSER")) {
+                buildNumber = tEnv().getAndroidBuildNumber();
+            } else if (name.contains("IOS") && !name.contains("IOSBROWSER")) {
+                buildNumber = tEnv().getIosBuildNumber();
+            } else {
+                buildNumber = tEnv().getWebBuildNumber();
+            }
+        } catch (Exception e) {
+           buildNumber = "null";
         }
         return  buildNumber;
     }
