@@ -59,7 +59,9 @@ public class ReportManager extends CustomReport {
     }
 
     public void testTearDown() {
-        Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+        if(failAnalysisThread.get().size()>0) {
+            Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+        }
     }
 
     public void testTearDown(ArrayList<String> allTestCaseIDs) {
