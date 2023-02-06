@@ -9,7 +9,6 @@
     "moduleNames": ""
   },
   "web": {
-    "network_logs" : true,
     "system_os": "Windows",
     "system_os_version": "10",
     "browser": "chrome",
@@ -71,7 +70,6 @@
       },
       "FH-US1": {
         "device": "Samsung Galaxy Tab S7",
-        "device": "Google Pixel 4 ",
         "os": "10.0"
       },
       "FH-MX1": {

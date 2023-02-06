@@ -14,10 +14,12 @@ package com.trigon.testrail;
 
 
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
+import net.minidev.json.JSONValue;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -183,9 +185,9 @@ public class APIClient {
                 } else    // Not an attachment
                 {
                     conn.addRequestProperty("Content-Type", "application/json");
-                   /* byte[] block = JSONValue.toJSONString(data).
-                            getBytes("UTF-8");*/
-                    byte[] block = JsonParser.parseString(data.toString()).getAsString().getBytes(StandardCharsets.UTF_8);
+                    byte[] block = JSONValue.toJSONString(data).
+                            getBytes("UTF-8");
+                   // byte[] block = JsonParser.parseString(data.toString()).getAsString().getBytes(StandardCharsets.UTF_8);
                     conn.setDoOutput(true);
                     OutputStream ostream = conn.getOutputStream();
                     ostream.write(block);
