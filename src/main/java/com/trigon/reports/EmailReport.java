@@ -14,12 +14,14 @@ import static com.trigon.reports.Initializers.*;
 
 
 public class EmailReport {
+    static String name="";
 
     public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
             StringBuffer bf = new StringBuffer();
             StringBuffer bfFailure = new StringBuffer();
+            name=suiteName.toUpperCase();
             String headers = header(report, suiteName);
             String reportLinks = reportLinks(report);
             String failureData = failureData(report);
@@ -133,8 +135,10 @@ public class EmailReport {
                 "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_ExecutedBy.png\" height=\"15\" width=\"15\" alt=\"Executed By\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getSystemEnvInfo().get(4).getValue() + "</td>\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_OS.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
-                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">"+stats.getReport().getSystemEnvInfo().get(5).getValue()+"</td>"+
+                "                                <tr>\n" +
+                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/build.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
+                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">"+getBuildNumber()+"</td>"+
+                "                                <tr>\n"+
                 "                                <tr>\n" +
                 "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + executedGitBranch + "</td>\n" +
@@ -205,7 +209,16 @@ public class EmailReport {
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
-                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\">API Endpoints Covered : " + totalEndpoints + "</div> </td>\n" +
+                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>API Endpoints Covered : ( " + totalEndpoints + " )</b></div> </td>\n" +
+//                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
+//                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
+                "                    </tr>" +
+                "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
+                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>GET Request : </b>("+ getRequest +")</div> </td>\n" +
+                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>PUT Request : </b>("+ putRequest +")</div> </td>\n" +
+                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>POST Request : </b>("+ postRequest +")</div> </td>\n" +
+                "                        <td colspan=\"2\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>DELETE Request : </b>("+ deleteRequest +")</div> </td>\n" +
+
 //                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
 //                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
                 "                    </tr>" +
@@ -217,16 +230,18 @@ public class EmailReport {
     }
 
 
-
-    private static String getBuildNumber(){
-        String buildNumber=null;
-        if(android()!=null){
-            buildNumber=tEnv().getAndroidBuildNumber();
-        }
-        else if(ios()!=null){
-            buildNumber=tEnv().getIosBuildNumber();
-        }else {
-            buildNumber=tEnv().getWebBuildNumber();
+    private static String getBuildNumber() {
+        String buildNumber = "";
+        try {
+            if (name.contains("ANDROID") && !name.contains("ANDROIDBROWSER")) {
+                buildNumber = tEnv().getAndroidBuildNumber();
+            } else if (name.contains("IOS") && !name.contains("IOSBROWSER")) {
+                buildNumber = tEnv().getIosBuildNumber();
+            } else {
+                buildNumber = tEnv().getWebBuildNumber();
+            }
+        } catch (Exception e) {
+           buildNumber = "null";
         }
         return  buildNumber;
     }

@@ -8,6 +8,7 @@ import com.trigon.bean.testenv.TestEnv;
 import com.trigon.database.ADatabase;
 import com.trigon.database.Database;
 import com.trigon.exceptions.TrigonAsserts;
+import com.trigon.tribot.GenerateSuiteForModules;
 import com.trigon.utils.CommonUtils;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -46,10 +47,17 @@ public class Initializers {
     public static ThreadLocal<ExtentTest> extentTestNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentClassNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
-    public static ThreadLocal<ExtentTest> extentTestCaseNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentScenarioNode = new ThreadLocal<>();
     public static List<String> apiCoverage = new ArrayList<>();
+    public static List<String> apiCallCoverage = new ArrayList<>();
+
     public static int totalEndpoints = 0;
+    public static int getRequest = 0;
+    public static int postRequest = 0;
+    public static int putRequest = 0;
+    public static int deleteRequest = 0;
+    public static int patchRequest = 0;
+
     public static String executedGitBranch = "NA";
     public static ExtentPojo extentPojo = null;
     public ExtentTest extentTest = null;
@@ -103,4 +111,6 @@ public class Initializers {
 
     public static Database db = new Database();
     public static ADatabase adb = new ADatabase();
+    public static GenerateSuiteForModules gs = new GenerateSuiteForModules();
+
 }

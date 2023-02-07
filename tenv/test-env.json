@@ -5,7 +5,8 @@
     "version": "v2022_05_05",
     "envType": "SIT",
     "appSycURI": "https://zmpjapgiejgj3hokmnmv3bcrl4.appsync-api.us-east-1.amazonaws.com",
-    "appSycAuth": "da2-gqy2zguabrgxlbiww5ezfi4r5u"
+    "appSycAuth": "da2-gqy2zguabrgxlbiww5ezfi4r5u",
+    "moduleNames": ""
   },
   "web": {
     "system_os": "Windows",
@@ -69,7 +70,6 @@
       },
       "FH-US1": {
         "device": "Samsung Galaxy Tab S7",
-        "device": "Google Pixel 4 ",
         "os": "10.0"
       },
       "FH-MX1": {
