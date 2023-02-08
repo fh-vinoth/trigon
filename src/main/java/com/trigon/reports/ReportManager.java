@@ -450,38 +450,12 @@ public class ReportManager extends CustomReport {
     }
 
     public void logStepAction(String message, String... testCaseID) {
-        String testCaseIDs = "";
-        if(testCaseID.length>0) {
-            if (testCaseID.length == 1) {
-                testCaseIDs = testCaseID[0];
-            } else {
-                for(String testIds : testCaseID){
-                    testCaseIDs = testCaseIDs+","+testIds;
-                }
-                testCaseIDs = testCaseIDs.substring(1);
-            }
-        }
-        if (testCaseIDThread.get().size() == 0) {
-            testCaseIDThread.get().add(testCaseIDs);
-        } else if (failedTCs.get().size() > 0) {
-            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
-                if(!failedTCs.get().containsKey(tcID))
-                    updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
-            }
-            testCaseIDThread.get().clear();
-            testCaseIDThread.get().add(testCaseIDs);
-        } else {
-            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
-                updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
-            }
-            testCaseIDThread.get().clear();
-            testCaseIDThread.get().add(testCaseIDs);
-        }
         if (extentScenarioNode.get() != null) {
-            extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message + " - " + testCaseIDs);
+            extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
         } else {
-            extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message + " - " + testCaseIDs);
+            extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
         }
+       analyseTCs(testCaseID);
     }
 
     public void updateHashMapWithTCDetails(String tcId, String status, String className, String methodName) {
@@ -1382,6 +1356,39 @@ public class ReportManager extends CustomReport {
             tcIDs.add(s);
         }
         return tcIDs;
+
+    }
+
+    public void analyseTCs(String ...testCaseID){
+        String testCaseIDs = "";
+        if(testCaseID.length>0) {
+            if (testCaseID.length == 1) {
+                testCaseIDs = testCaseID[0];
+            } else {
+                for (String tests : testCaseID) {
+                    testCaseIDs = testCaseIDs + "," + tests;
+                }
+                testCaseIDs = testCaseIDs.substring(1);
+            }
+            System.out.println(testCaseIDs);
+
+            if (testCaseIDThread.get().size() == 0) {
+                testCaseIDThread.get().add(testCaseIDs);
+            } else if (failedTCs.get().size() > 0) {
+                for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                    if (!failedTCs.get().containsKey(tcID))
+                        updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+                }
+                testCaseIDThread.get().clear();
+                testCaseIDThread.get().add(testCaseIDs);
+            } else {
+                for (String tcID : testCaseIDThread.get().get(0).split(",")) {
+                    updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+                }
+                testCaseIDThread.get().clear();
+                testCaseIDThread.get().add(testCaseIDs);
+            }
+        }
 
     }
 

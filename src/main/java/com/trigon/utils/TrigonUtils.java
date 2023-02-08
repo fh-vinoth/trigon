@@ -28,8 +28,8 @@ public class TrigonUtils extends ReportManager {
     }
 
     @Override
-    public void logStepAction(String message) {
-        super.logStepAction(message);
+    public void logStepAction(String message,String... testCaseID) {
+        super.logStepAction(message,testCaseID);
     }
 
     @Override
