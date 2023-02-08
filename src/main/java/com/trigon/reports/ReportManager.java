@@ -449,31 +449,18 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void logStepAction(String message) {
-
-        if (extentScenarioNode.get() != null) {
-            extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
-        } else {
-            extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
-        }
-    }
     public void logStepAction(String message, String... testCaseID) {
         String testCaseIDs = "";
         if(testCaseID.length>0) {
             if (testCaseID.length == 1) {
                 testCaseIDs = testCaseID[0];
             } else {
-                int size = testCaseID.length;
-                for (int i = 0; i < size; i++) {
-                    if (i == (size - 1)) {
-                        testCaseIDs = testCaseIDs + testCaseID[i];
-                    } else {
-                        testCaseIDs = testCaseIDs + testCaseID[i] + ",";
-                    }
+                for(String testIds : testCaseID){
+                    testCaseIDs = testCaseIDs+","+testIds;
                 }
+                testCaseIDs = testCaseIDs.substring(1);
             }
         }
-
         if (testCaseIDThread.get().size() == 0) {
             testCaseIDThread.get().add(testCaseIDs);
         } else if (failedTCs.get().size() > 0) {
