@@ -3,6 +3,7 @@ package com.fh.unittests.testrail;
 import com.fh.core.TestLocalController;
 import com.trigon.annotations.ExcelSheet;
 import com.trigon.dataprovider.DataProviders;
+import com.trigon.utils.TrigonUtils;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -20,8 +21,16 @@ public class testRailDemoTestData extends TestLocalController {
         author_ScenarioName("Nisha","Testing");
         try {
 
+            TrigonUtils tu = new TrigonUtils();
+            tu.logStepAction("Place order ");
+            tu.logStepAction("Place order ","C123","C128","C129","C127");
+            logStepAction("Place order ");
+            //logStepAction("Place order ", "C123,C2344");
+           // logStepAction("Place order ", "C126");
+            logStepAction("Place order ", "C123","C128","C129","C127");
             logStepAction("Place order ", tcIDs.get(0));
-            //hardFail("Error Message");
+            logStepAction("Place order ", tcIDs.get(0),tcIDs.get(1),tcIDs.get(0));
+            hardFail("Error Message");
             logReport("PASS", "1st test 1st step");
             logReport("PASS", "1st test 2nd step");
             System.out.println(tData.get("sending").toString());
@@ -87,7 +96,7 @@ public class testRailDemoTestData extends TestLocalController {
             testTearDown(tcIDs);
         }
     }
-   // @Test
+   @Test
     public void methodNameDemo2() {
         ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222764","C222936","C222937"));
         author_ScenarioName("Nisha","Testing");

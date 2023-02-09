@@ -1,11 +1,13 @@
 package com.trigon.reports;
 
 import com.aventstack.extentreports.ExtentReports;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.trigon.bean.remoteenv.RemoteEnvPojo;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 import static com.trigon.testbase.TestInitialization.trigonPaths;
 
@@ -79,9 +81,13 @@ public class TestRailReport extends ReportManager {
         }
     }
 
-    public void initTestRailReport(ExtentReports stats, String jenkinsExecution) {
+    public void initTestRailReport(ExtentReports stats) {
         try {
             String file = "";
+            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
+            String jenkinsExecution  = pGson.fromJson(element1, RemoteEnvPojo.class).getJenkins_execution();
+            System.out.println("is Jenkins Enabled :: "+jenkinsExecution);
             if (jenkinsExecution.equalsIgnoreCase("true")) {
                 String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
                 file = "https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestStatus.json";
