@@ -12,13 +12,20 @@
 
 package com.trigon.testrail;
 
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
+import net.minidev.json.JSONValue;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 
@@ -180,11 +187,13 @@ public class APIClient {
                     conn.addRequestProperty("Content-Type", "application/json");
                     byte[] block = JSONValue.toJSONString(data).
                             getBytes("UTF-8");
-
+                   // byte[] block = JsonParser.parseString(data.toString()).getAsString().getBytes(StandardCharsets.UTF_8);
                     conn.setDoOutput(true);
                     OutputStream ostream = conn.getOutputStream();
                     ostream.write(block);
                     ostream.close();
+
+
                 }
             }
         } else    // GET request
@@ -248,9 +257,9 @@ public class APIClient {
 
         Object result;
         if (!text.equals("")) {
-            result = JSONValue.parse(text);
+            result = JsonParser.parseString(text);
         } else {
-            result = new JSONObject();
+            result = new JsonObject();
         }
 
         // Check for any occurred errors and add additional details to
@@ -258,10 +267,11 @@ public class APIClient {
         // by TestRail).
         if (status != 200) {
             String error = "No additional error message received";
-            if (result != null && result instanceof JSONObject) {
-                JSONObject obj = (JSONObject) result;
-                if (obj.containsKey("error")) {
-                    error = '"' + (String) obj.get("error") + '"';
+            if (result != null && result instanceof JsonObject) {
+                JsonObject obj = (JsonObject) result;
+                //if(obj.keySet().contains("error")){}
+                if (obj.keySet().contains("error")) {
+                    error = '"' + obj.get("error").getAsString() + '"';
                 }
             }
 

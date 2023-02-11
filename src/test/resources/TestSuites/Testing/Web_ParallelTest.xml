@@ -15,7 +15,7 @@
         </classes>
     </test>
 
-    <test name="Web Parallel Test2" thread-count="2">
+    <!--<test name="Web Parallel Test2" thread-count="2">
         <parameter name="browser" value="firefox"/>
         <parameter name="webURL" value="https://abc.com/"/>
         <classes>
@@ -60,5 +60,5 @@
             <class name="com.fh.unittests.paralleltest.ParallelClass3"/>
             <class name="com.fh.unittests.paralleltest.ParallelClass4"/>
         </classes>
-    </test>
+    </test>-->
 </suite>

@@ -13,6 +13,12 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("browserstack_execution_local")
     @Expose
     private String browserstack_execution_local;
+    @SerializedName("grid_execution_local")
+    @Expose
+    private String grid_execution_local;
+    @SerializedName("gps_location")
+    @Expose
+    private String gps_location;
     @SerializedName("jenkins_execution")
     @Expose
     private String jenkins_execution;
@@ -46,6 +52,9 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("db_config")
     @Expose
     private JsonObject db_config;
+    @SerializedName("browserstack_midSessionInstallApps")
+    @Expose
+    private String browserstack_midSessionInstallApps;
 
     public String getExecution_type() {
         return execution_type;
@@ -57,6 +66,10 @@ public class RemoteEnvPojo implements Serializable {
 
     public String getBrowserstack_execution_local() {
         return browserstack_execution_local;
+    }
+
+    public String getGrid_execution_local() {
+        return grid_execution_local;
     }
 
     public void setBrowserstack_execution_local(String browserstack_execution_local) {
@@ -150,4 +163,19 @@ public class RemoteEnvPojo implements Serializable {
     public void setFailure_email_recipients(String failure_email_recipients) {
         this.failure_email_recipients = failure_email_recipients;
     }
+
+    public String getGps_location() {
+        return gps_location;
+    }
+
+    public void setGps_location(String gps_location) {
+        this.gps_location = gps_location;
+    }
+
+    public String getBrowserstack_midSessionInstallApps() { return browserstack_midSessionInstallApps; }
+
+    public void setBrowserstack_midSessionInstallApps(String browserstack_midSessionInstallApps){
+        this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
+        }
+
 }

@@ -8,10 +8,5 @@
     <parameter name="endpointPrefix" value=""></parameter>
     <parameter name="productName" value="MYT"></parameter>
 
-    <test name="MobileSampleRun">
-        <classes>
-            <class name="com.fh.mobile.MobileTest"/>
-        </classes>
-    </test>
 
 </suite>

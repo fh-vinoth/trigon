@@ -1,5 +1,7 @@
 package com.trigon.bean.testenv;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import org.testng.ITestContext;
 
 import java.io.File;
@@ -33,10 +35,13 @@ public class TestEnv {
     private String webSystemOS;
     private String webSystemOSVersion;
     private String webBrowser;
+
+    private String hubIP;
     private String webHeadless;
     private String webBrowserVersion;
     private String webUrl;
     private String webBuildNumber;
+    private Boolean webNetworkLogs;
 
     private String app_reset;
     private String random_device;
@@ -56,9 +61,16 @@ public class TestEnv {
 
     // Data belongs to remote-env.json
     private String execution_type;
+
+    private String grid_execution_local;
     private String jenkins_execution;
     private String pipeline_execution;
     private String test_region;
+
+    private String email_recipients;
+    private String error_email_recipients;
+    private String failure_email_recipients;
+
 
 
     private String dbHost;
@@ -83,9 +95,18 @@ public class TestEnv {
     private String currentTestClassName;
     private File screenshotPath;
     private String browserstack_execution_local;
+    private String browserstack_midSessionInstallApps;
     private String isJWT;
     private String endpointPrefix;
     private String productName;
+    private String gps_location;
+    private String authorization;
+
+
+    private String franchiseId;
+    private String dbType;
+    private String serviceType;
+    private String moduleNames;
 
     public String getTestType() {
         return testType;
@@ -157,6 +178,7 @@ public class TestEnv {
 
     public void setApiRegion(String apiRegion) {
         this.apiRegion = apiRegion;
+
     }
 
     public String getApiStore() {
@@ -251,8 +273,16 @@ public class TestEnv {
         return webBrowser;
     }
 
+    public String getHubIP() {
+        return hubIP;
+    }
+
     public void setWebBrowser(String webBrowser) {
         this.webBrowser = webBrowser;
+    }
+
+    public void setHubIP(String getHubIP) {
+        this.hubIP = getHubIP;
     }
 
     public String getWebHeadless() {
@@ -407,6 +437,10 @@ public class TestEnv {
         this.execution_type = execution_type;
     }
 
+    public void setGridExecution_type(String gridExecution_type) {
+        this.grid_execution_local = gridExecution_type;
+    }
+
     public String getJenkins_execution() {
         return jenkins_execution;
     }
@@ -504,7 +538,7 @@ public class TestEnv {
     }
 
     public String getJsonDirectory() {
-        if(jsonDirectory==null){
+        if (jsonDirectory == null) {
             jsonDirectory = "src/test/resources/TestData";
         }
         return jsonDirectory;
@@ -570,6 +604,14 @@ public class TestEnv {
         this.browserstack_execution_local = browserstack_execution_local;
     }
 
+    public String getBrowserstack_midSessionInstallApps() {
+        return browserstack_midSessionInstallApps;
+    }
+
+    public void setBrowserstack_midSessionInstallApps(String browserstack_midSessionInstallApps) {
+        this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
+    }
+
     public String getIsJWT() {
         return isJWT;
     }
@@ -609,4 +651,87 @@ public class TestEnv {
     public void setApiPartnerURI(String apiPartnerURI) {
         this.apiPartnerURI = apiPartnerURI;
     }
+
+    public String getFranchiseId() {
+        return franchiseId;
+    }
+
+    public void setFranchiseId(String franchiseId) {
+        this.franchiseId = franchiseId;
+    }
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+
+    public Boolean getWebNetworkLogs() {
+        return webNetworkLogs;
+    }
+
+    public void setWebNetworkLogs(Boolean webNetworkLogs) {
+        this.webNetworkLogs = webNetworkLogs;
+    }
+
+    public String getGps_location() {
+        return gps_location;
+    }
+
+    public void setGps_location(String gps_location) {
+        this.gps_location = gps_location;
+    }
+
+    public String getModuleNames() {
+        return moduleNames;
+    }
+
+    public void setModuleNames(String moduleNames) {
+        this.moduleNames = moduleNames;
+    }
+
+    public String getEmail_recipients() {
+        return email_recipients;
+    }
+
+    public void setEmail_recipients(String email_recipients) {
+        this.email_recipients = email_recipients;
+    }
+
+    public String getError_email_recipients() {
+        return error_email_recipients;
+    }
+
+    public void setError_email_recipients(String error_email_recipients) {
+        this.error_email_recipients = error_email_recipients;
+    }
+
+    public String getFailure_email_recipients() {
+        return failure_email_recipients;
+    }
+
+    public void setFailure_email_recipients(String failure_email_recipients) {
+        this.failure_email_recipients = failure_email_recipients;
+    }
+
+    public String getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(String authorization) {
+        this.authorization = authorization;
+    }
+
+
 }

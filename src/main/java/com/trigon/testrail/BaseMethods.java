@@ -1,10 +1,10 @@
 package com.trigon.testrail;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.io.IOException;
 
@@ -42,9 +42,9 @@ public class BaseMethods {
 
     private String getTestCaseIdByMethodName(String runId, String methodName) throws IOException, APIException {
         Cases cases = new Cases();
-        JSONArray testCases = cases.getTestCasesOfRun(runId);
+        JsonArray testCases = cases.getTestCasesOfRun(runId);
         for (Object testCase : testCases) {
-            JSONObject tCase = (JSONObject) testCase;
+            JsonObject tCase = (JsonObject) testCase;
             if (methodName.equals(tCase.get("title").toString())) {
                 return tCase.get("case_id").toString();
             }
