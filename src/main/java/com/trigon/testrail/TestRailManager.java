@@ -12,12 +12,7 @@ public class TestRailManager {
     public static final int TEST_CASE_SKIPPED_STATUS = 7;
     static APIClient client = new APIClient(RAILS_ENGINE_URL);
 
-
     public static void addTestResultForTestCase(String testRunId, String testcaseId, int status,String ...comment) throws IOException, APIException {
-        System.out.println("testRunId:" + testRunId);
-        System.out.println("testcaseId:" + testcaseId);
-        System.out.println("status:" + status);
-
         client.setUser(TEST_USERNAME);
         client.setPassword(TEST_PASSWORD);
         Map data = new HashMap();
@@ -33,6 +28,8 @@ public class TestRailManager {
     public static void getResultOfTestCase(String testRunId, String testcaseId) throws IOException, APIException {
         System.out.println("testcaseId:" + testcaseId);
         System.out.println("testRunId:" + testRunId);
+        client.setUser(TEST_USERNAME);
+        client.setPassword(TEST_PASSWORD);
         Object ob = client.sendGet("get_results_for_case/" + testRunId + "/" + testcaseId);
         System.out.println(ob.toString());
     }
@@ -55,6 +52,8 @@ public class TestRailManager {
     }
 
     public static void getTestCaseByUser(String projectId, String suiteId, String userId) throws IOException, APIException {
+        client.setUser(TEST_USERNAME);
+        client.setPassword(TEST_PASSWORD);
         Object ob = client.sendGet("get_cases/" + projectId + "&suite_id=" + suiteId + "&created_by=" + userId);
         System.out.println(ob.toString());
     }
