@@ -1,5 +1,5 @@
 {
-  "execution_type": "remote",
+  "execution_type": "local",
   "jenkins_execution": "false",
   "pipeline_execution": "false",
   "browserstack_execution_local": "false",
@@ -13,7 +13,7 @@
   "products": {
     "D2S": {
       "android": {
-        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
+        "bs_app_path": "bs://43bbf9493792e8fe83e9fe7d736fc07c986b3dc8",
         "build_number": "1234"
       },
       "ios": {

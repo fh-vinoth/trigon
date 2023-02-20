@@ -1,0 +1,23 @@
+{
+  "API": {
+    "Foodhub":123,
+    "D2S":1234,
+    "DigitalBoard":9035,
+    "MYT":8818,
+    "UberEats":1237,
+    "PAPI":1238
+  },
+  "MYT": {
+    "WEB":1239,
+    "Android":1240,
+    "IOS":1231,
+    "Fusion":1232
+  },
+  "D2S": {
+    "Android":1233,
+    "IOS":1241
+  },
+  "Web": {
+    "Chrome":1242
+  }
+}
