@@ -26,12 +26,9 @@ public class TestRailManager {
     }
 
     public static void getResultOfTestCase(String testRunId, String testcaseId) throws IOException, APIException {
-        System.out.println("testcaseId:" + testcaseId);
-        System.out.println("testRunId:" + testRunId);
         client.setUser(TEST_USERNAME);
         client.setPassword(TEST_PASSWORD);
         Object ob = client.sendGet("get_results_for_case/" + testRunId + "/" + testcaseId);
-        System.out.println(ob.toString());
     }
 
     public static void getTestCasesBySuite(String projectId, String suiteId) throws IOException, APIException {
