@@ -225,11 +225,13 @@ public class Browsers extends Android {
         caps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
         caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
 //        caps.setCapability("language", "en");
-
         browserstackOptions.put("os", tEnv().getWebSystemOS());
         browserstackOptions.put("osVersion", tEnv().getWebSystemOSVersion());
         browserstackOptions.put("debug", "true");
-        browserstackOptions.put("networkLogs", "true");
+        HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
+        networkLogsOptions.put("captureContent", true);
+        caps.setCapability("browserstack.networkLogs", true);
+        caps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
         //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
         browserstackOptions.put("idleTimeout", "300");
