@@ -1372,7 +1372,6 @@ public class ReportManager extends CustomReport {
                 }
                 testCaseIDs = testCaseIDs.substring(1);
             }
-            System.out.println(testCaseIDs);
 
             if (testCaseIDThread.get().size() == 0) {
                 testCaseIDThread.get().add(testCaseIDs);
