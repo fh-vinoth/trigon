@@ -73,11 +73,12 @@ public class Browsers extends Android {
                         options.addArguments("disable-geolocation");
                         // SET CHROME OPTIONS
                         // 0 - Default, 1 - Allow, 2 - Block
-                        String desired_path = System.getProperty("user.dir");
-                        profile.put("download.default_directory",desired_path);                        contentSettings.put("geolocation", 1);
+                      /*  String desired_path = System.getProperty("user.dir");
+                        profile.put("download.default_directory",desired_path);    */                    contentSettings.put("geolocation", 1);
                         profile.put("managed_default_content_settings", contentSettings);
                         prefs.put("profile", profile);
                         options.setExperimentalOption("prefs", prefs);
+                        options.addArguments("--remote-allow-origins=*");
 
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
                             options.setHeadless(true);
