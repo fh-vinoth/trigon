@@ -17,6 +17,7 @@ import com.trigon.bean.testenv.TestEnv;
 import com.trigon.bean.testenv.TestEnvPojo;
 import com.trigon.mobile.AppiumManager;
 import com.trigon.properties.ConfigReader;
+import com.trigon.security.AES;
 import com.trigon.testrail.APIException;
 import com.trigon.testrail.Runs;
 import com.trigon.web.Browsers;
@@ -771,7 +772,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiPartnerURI(partnerURI);
             }
             if (token != null) {
-                tEnv().setApiToken(token);
+                tEnv().setApiToken(AES.decrypt(token,"testautomation"));
             }
             if (accessToken != null) {
                 tEnv().setApiAccessToken(accessToken);

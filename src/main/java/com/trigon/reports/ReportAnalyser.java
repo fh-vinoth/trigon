@@ -32,8 +32,8 @@ public class ReportAnalyser {
         List<String> reportUrlList = new LinkedList<>();
         try {
             AWSCredentials credentials = new BasicAWSCredentials(
-                    AES.decrypt("W2ekXre8CE/HcVRqyloQgvx8gdNF7SukcZP/Gzx2aGY=", "t2sautomation"),
-                    AES.decrypt("7vxMJLkwfL7VK8SksBb/ReNbhwbPtwjT9fHRCo1hutb6hXbOH/U/3c8Tad49ieBp", "t2sautomation")
+                    AES.decrypt("RmE+MUyQTW86skUJLnPhqN1usUunmK2127f7Illl3q8=", "t2sautomation"),
+                    AES.decrypt("nGQWMFgryIV75J5STylI09ERvFDyNB5DaYt7mKvBSErJ6tjm+z095t9kvgbD3Ca3", "t2sautomation")
             );
             final AmazonS3 s3 = AmazonS3ClientBuilder
                     .standard()
