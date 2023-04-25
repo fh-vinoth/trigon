@@ -2,10 +2,12 @@ package com.trigon.testrail;
 
 import java.io.IOException;
 import java.util.*;
+import com.trigon.security.AES;
+
 
 public class TestRailManager {
-    public static String TEST_USERNAME = "testrail@foodhub.com";
-    public static String TEST_PASSWORD = "2Success";
+   public static String TEST_USERNAME = AES.decrypt("jZCJTwHG4/BsFQmLrGEji98wdIwFULH+scadTpWcwMU=", "t2sautomation");
+    public static String TEST_PASSWORD = AES.decrypt("F7tO6OyYUfeT9JLQ3+nMjQ==", "t2sautomation");
     public static String RAILS_ENGINE_URL = "https://touch2success.testrail.com/";
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 4;
