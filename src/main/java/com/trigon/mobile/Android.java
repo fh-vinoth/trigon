@@ -53,14 +53,13 @@ public class Android extends IOS {
                 networkLogsOptions.put("captureContent", true);
                 androidCaps.setCapability("browserstack.networkLogs", true);
                 androidCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
+                androidCaps.setCapability("browserstack.realMobileInteraction", "true");
                 browserstackOptions.put("networkProfile", "reset");
                 browserstackOptions.put("idleTimeout", "300");
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
                 browserstackOptions.put("appiumLogs", "true");
                 browserstackOptions.put("interactiveDebugging","true");
-                browserstackOptions.put("browserstack.realMobileInteraction", "true");
-
 
                 if(tEnv().getGps_location()!=null){
                     browserstackOptions.put("gpsLocation", tEnv().getGps_location());
