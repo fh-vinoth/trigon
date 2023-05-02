@@ -2,16 +2,20 @@ package com.trigon.security;
 
 public class AESTest {
     public static void main(String[] args) {
-//        final String secretKey = "t2sautomation";
-//
-//        String originalString = "jbfj5mW+cYzNz2hTq7QKUpCQf1bpn2bTtskqxvzh";
-//        //String encryptedString = "";
+
+        String originalString = "abcd";
+        //String encryptedString = "";
 //        String encryptedString = AES.encrypt(originalString, secretKey) ;
-//        String decryptedString = AES.decrypt(encryptedString, secretKey) ;
-//
-//        System.out.println(originalString);
-//        System.out.println(encryptedString);
-//        System.out.println(decryptedString);
+        getListOfEncryptedKey("abcde","dbjkhggkjhb");
     }
+
+    public static void getListOfEncryptedKey(String... list ){
+        for (int i = 0;i<list.length;i++){
+            //uncomment this during encryptoperation.
+//            String encryptedString = AES.encrypt(list[i], "t2sautomation") ;
+//            System.out.println(list[i]  +" : : : : "+encryptedString );
+        }
+    }
+
 
 }

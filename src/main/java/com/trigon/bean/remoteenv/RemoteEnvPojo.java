@@ -55,6 +55,9 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("browserstack_midSessionInstallApps")
     @Expose
     private String browserstack_midSessionInstallApps;
+    @Expose
+    private JsonObject productName;
+    @SerializedName("productName")
 
     public String getExecution_type() {
         return execution_type;
@@ -178,4 +181,11 @@ public class RemoteEnvPojo implements Serializable {
         this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
         }
 
+    public JsonObject getProductName() {
+        return productName;
+    }
+
+    public void setProductName(JsonObject productName) {
+        this.productName = productName;
+    }
 }
