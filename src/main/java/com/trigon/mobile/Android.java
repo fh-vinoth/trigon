@@ -59,6 +59,9 @@ public class Android extends IOS {
                 browserstackOptions.put("debug", "true");
                 browserstackOptions.put("appiumLogs", "true");
                 browserstackOptions.put("interactiveDebugging","true");
+                browserstackOptions.put("browserstack.realMobileInteraction", "true");
+
+
                 if(tEnv().getGps_location()!=null){
                     browserstackOptions.put("gpsLocation", tEnv().getGps_location());
                 }
