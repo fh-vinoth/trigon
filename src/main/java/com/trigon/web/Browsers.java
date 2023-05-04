@@ -77,6 +77,7 @@ public class Browsers extends Android {
                         profile.put("managed_default_content_settings", contentSettings);
                         prefs.put("profile", profile);
                         options.setExperimentalOption("prefs", prefs);
+                        options.addArguments("--remote-allow-origins=*");
 
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
                             options.setHeadless(true);
