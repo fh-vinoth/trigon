@@ -849,15 +849,15 @@ public class ReportManager extends CustomReport {
     }
 
     protected void hardFail(String message, Exception e) {
+        logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
         logReport("FAIL", message);
-        logReport("FAIL", "Error in Method " + e.getStackTrace()[0].getMethodName() + " and in Line :  " + e.getStackTrace()[0].getLineNumber());
         e.printStackTrace();
         Assert.fail(message + e.getMessage());
     }
 
     protected void hardFail(Exception e) {
+        logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
         logReport("FAIL", e.getMessage());
-        logReport("FAIL", "Error in Method " + e.getStackTrace()[0].getMethodName() + " and in Line :  " + e.getStackTrace()[0].getLineNumber());
         e.printStackTrace();
         Assert.fail(e.getMessage());
     }

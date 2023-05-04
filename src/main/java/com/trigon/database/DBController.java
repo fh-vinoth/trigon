@@ -3,6 +3,7 @@ package com.trigon.database;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.trigon.mobile.AvailablePorts;
+import com.trigon.security.AES;
 import com.trigon.utils.TrigonUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
@@ -74,8 +75,8 @@ public class DBController extends TrigonUtils {
             }
 
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            dataSource.setUsername(tEnv().getDbUserName());
-            dataSource.setPassword(tEnv().getDbPassword());
+            dataSource.setUsername(AES.decrypt(tEnv().getDbUserName(),"t2sautomation"));
+            dataSource.setPassword(AES.decrypt(tEnv().getDbPassword(),"t2sautomation"));
             dataSource.setMaxTotal(openConnections);
             dataSource.setMaxIdle(idleConnections);
             dataSource.setMaxWaitMillis(connectionWaitTime);
