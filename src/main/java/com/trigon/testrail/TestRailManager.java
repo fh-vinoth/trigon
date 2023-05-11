@@ -6,7 +6,7 @@ import com.trigon.security.AES;
 
 
 public class TestRailManager {
-   public static String TEST_USERNAME = AES.decrypt("jZCJTwHG4/BsFQmLrGEji98wdIwFULH+scadTpWcwMU=", "t2sautomation");
+    public static String TEST_USERNAME = AES.decrypt("jZCJTwHG4/BsFQmLrGEji98wdIwFULH+scadTpWcwMU=", "t2sautomation");
     public static String TEST_PASSWORD = AES.decrypt("F7tO6OyYUfeT9JLQ3+nMjQ==", "t2sautomation");
     public static String RAILS_ENGINE_URL = "https://touch2success.testrail.com/";
     public static final int TEST_CASE_PASSED_STATUS = 1;

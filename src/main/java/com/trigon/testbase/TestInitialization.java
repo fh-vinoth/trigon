@@ -354,7 +354,7 @@ public class TestInitialization extends Browsers {
             propertiesPojo.setJira_fhnative_proj(testConfig.getProperty("jira_FHNative_ProjectName"));
 
             propertiesPojo.setBrowserStack_UserName(testConfig.getProperty("browserStack_UserName"));
-            propertiesPojo.setBrowserStack_Password(testConfig.getProperty("browserStack_Password"));
+            propertiesPojo.setBrowserStack_Password(AES.decrypt(testConfig.getProperty("browserStack_Password"), "t2sautomation"));
             propertiesPojo.setBrowserStack_URI(testConfig.getProperty("browserStack_URI"));
             propertiesPojo.setAppCenter_URI(testConfig.getProperty("appCenter_URI"));
             propertiesPojo.setAppCenter_token(testConfig.getProperty("appCenter_token"));
@@ -934,7 +934,7 @@ public class TestInitialization extends Browsers {
             tEnv().setApiRegion(tLocalEnv.getRegion().getAsJsonObject(test_region).get("region").getAsString());
             tEnv().setApiStore(tLocalEnv.getRegion().getAsJsonObject(test_region).get("store").getAsString());
             tEnv().setApiHost(tLocalEnv.getRegion().getAsJsonObject(test_region).get("host").getAsString());
-            tEnv().setApiToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("token").getAsString());
+            tEnv().setApiToken(AES.decrypt(tLocalEnv.getRegion().getAsJsonObject(test_region).get("token").getAsString(),"t2sautomation"));
             tEnv().setApiAccessToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("accessToken").getAsString());
             tEnv().setApiCountry(tLocalEnv.getRegion().getAsJsonObject(test_region).get("country").getAsString());
             tEnv().setApiCurrency(tLocalEnv.getRegion().getAsJsonObject(test_region).get("currency").getAsString());
