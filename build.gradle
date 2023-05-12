@@ -25,8 +25,8 @@ dependencies {
     implementation group: 'io.appium', name: 'java-client', version: '8.1.1'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
-    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
-    implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.1.0'
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.1.0'
     implementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
     implementation group: 'com.github.wnameless.json', name: 'json-flattener', version: '0.12.0'
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.1029'
