@@ -145,7 +145,7 @@ public class ReportManager extends CustomReport {
     }
 
     public void getBSVideoSession(){
-        logReport("INFO", "<b>BS Video:</b> <a href=\""+bsVideo()+"\" target=\"_blank\"> View Recorded Video </a>");
+        logReport("INFO", "<b>BS Video:</b> <a href=\""+bsVideo().get("public_url").toString()+"\" target=\"_blank\"> View Recorded Video </a>");
     }
 
     public JSONObject bsVideo(){
