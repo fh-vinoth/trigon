@@ -73,10 +73,12 @@ public class Browsers extends Android {
                         options.addArguments("disable-geolocation");
                         // SET CHROME OPTIONS
                         // 0 - Default, 1 - Allow, 2 - Block
-                        contentSettings.put("geolocation", 1);
+                      /*  String desired_path = System.getProperty("user.dir");
+                        profile.put("download.default_directory",desired_path);    */                    contentSettings.put("geolocation", 1);
                         profile.put("managed_default_content_settings", contentSettings);
                         prefs.put("profile", profile);
                         options.setExperimentalOption("prefs", prefs);
+                        options.addArguments("--remote-allow-origins=*");
 
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
                             options.setHeadless(true);
@@ -225,11 +227,13 @@ public class Browsers extends Android {
         caps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
         caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
 //        caps.setCapability("language", "en");
-
         browserstackOptions.put("os", tEnv().getWebSystemOS());
         browserstackOptions.put("osVersion", tEnv().getWebSystemOSVersion());
         browserstackOptions.put("debug", "true");
-        browserstackOptions.put("networkLogs", "true");
+        HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
+        networkLogsOptions.put("captureContent", true);
+        caps.setCapability("browserstack.networkLogs", true);
+        caps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
         //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
         browserstackOptions.put("idleTimeout", "300");

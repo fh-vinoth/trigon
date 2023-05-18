@@ -849,12 +849,14 @@ public class ReportManager extends CustomReport {
     }
 
     protected void hardFail(String message, Exception e) {
+        logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
         logReport("FAIL", message);
         e.printStackTrace();
         Assert.fail(message + e.getMessage());
     }
 
     protected void hardFail(Exception e) {
+        logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
         logReport("FAIL", e.getMessage());
         e.printStackTrace();
         Assert.fail(e.getMessage());
@@ -1320,8 +1322,8 @@ public class ReportManager extends CustomReport {
 
     public String readS3BucketContent(String bucketName,String keyName){
         AWSCredentials credentials = new BasicAWSCredentials(
-                AES.decrypt("W2ekXre8CE/HcVRqyloQgvx8gdNF7SukcZP/Gzx2aGY=", "t2sautomation"),
-                AES.decrypt("7vxMJLkwfL7VK8SksBb/ReNbhwbPtwjT9fHRCo1hutb6hXbOH/U/3c8Tad49ieBp", "t2sautomation")
+                AES.decrypt("RmE+MUyQTW86skUJLnPhqN1usUunmK2127f7Illl3q8=", "t2sautomation"),
+                AES.decrypt("nGQWMFgryIV75J5STylI09ERvFDyNB5DaYt7mKvBSErJ6tjm+z095t9kvgbD3Ca3", "t2sautomation")
         );
 
         AmazonS3 s3Client = AmazonS3ClientBuilder
@@ -1370,7 +1372,6 @@ public class ReportManager extends CustomReport {
                 }
                 testCaseIDs = testCaseIDs.substring(1);
             }
-            System.out.println(testCaseIDs);
 
             if (testCaseIDThread.get().size() == 0) {
                 testCaseIDThread.get().add(testCaseIDs);

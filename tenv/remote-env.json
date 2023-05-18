@@ -1,10 +1,10 @@
 {
-  "execution_type": "local",
+  "execution_type": "remote",
   "jenkins_execution": "false",
   "pipeline_execution": "false",
   "browserstack_execution_local": "false",
   "grid_execution_local" : "false",
-  "test_region": "UK1",
+  "test_region": "MYT-UK8",
   "app_reset": "NA",
   "random_device": "",
   "email_recipients":"",
@@ -23,7 +23,7 @@
     },
     "MYT": {
       "android": {
-        "bs_app_path": "bs://9c3e51a7a92d8263c19d248c8f3f99ad101916f0",
+        "bs_app_path": "bs://0c8a985ebf9e960cfa38990bc98eae07fd66c587",
         "build_number": "MYT2.0_Android_10.4_940"
       },
       "ios": {
@@ -75,9 +75,9 @@
     }
   },
   "db_config": {
-    "dbHost": "nonprod-rds-writer.foodhub.local",
-    "dbUserName": "ssostag",
-    "dbPassword": "sskDwm8X",
+    "dbHost": "nonprod-rds-writer.foodhub.db",
+    "dbUserName": "3JLMvm/iMRKc6/mvXKxwwQ==",
+    "dbPassword": "i8Wz4rRov0SWFQdB/xXD9Rp0Ygh72JiIFWXwNpEvWKE=",
     "dbSSHHost": "us-east-1-bastion.stage.t2sonline.com",
     "dbSSHUser": "qa",
     "dbSSHFilePath": "",

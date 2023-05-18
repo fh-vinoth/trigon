@@ -14,6 +14,17 @@
             <class name="com.trigon.testrail.UploadResultsToTestRail"/>
         </classes>
     </test>
+
+
+<!--   Run this to check if the testcases generated are valid -->
+   <!-- <test name="ValidateTestRailCases">
+
+        <parameter name="runId" value="9587"></parameter>
+        <parameter name="jsonPath" value="src/main/java/com/trigon/testrail/test.json"></parameter>
+        <classes>
+            <class name="com.trigon.testrail.ValidateTestRailCases"/>
+        </classes>
+    </test>-->
 </suite>
 
 
