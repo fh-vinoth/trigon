@@ -43,11 +43,9 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
     @Override
     public void triggerEmail(String reportPath, String recipients, String uploadToAWS, String sendFailedReport) {
-        String decryptedString = AES.decrypt("dxoS+CjoM/WctAD5Svfq/g==", "t2sautomation");
-
         String from = "automation@foodhub.com";
         final String username = "automation@foodhub.com";
-        final String password = "LkdfL7!VK8ksBb";
+        final String password = AES.decrypt("OsVzGz0rJ4g171dCex/LmA==", "t2sautomation");
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtppro.zoho.com");
@@ -164,7 +162,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
     public void triggerCustomEmail(String reportPath, String recipients) throws IOException {
         String from = "automation@foodhub.com";
         final String username = "automation@foodhub.com";
-        final String password = "LkdfL7!VK8ksBb";
+        final String password = AES.decrypt("OsVzGz0rJ4g171dCex/LmA==", "t2sautomation");
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtppro.zoho.com");
