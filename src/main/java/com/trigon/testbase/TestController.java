@@ -206,7 +206,7 @@ public class TestController extends TestInitialization {
             }
 
             if (executionType.equalsIgnoreCase("remote")  && tEnv().getApiEnvType().equalsIgnoreCase("SIT")) {
-                adb.insertData(method, xmlTest, context, result,status);
+//                adb.insertData(method, xmlTest, context, result,status);
             }
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
