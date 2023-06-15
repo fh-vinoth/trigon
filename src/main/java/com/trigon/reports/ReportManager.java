@@ -13,6 +13,7 @@ import com.aventstack.extentreports.model.Log;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.security.AES;
 import com.trigon.testrail.TestRailManager;
 import io.restassured.RestAssured;
@@ -166,8 +167,9 @@ public class ReportManager extends CustomReport {
 
     public void logMultipleJSON(String status, LinkedHashMap message, Object responseJSON, String curl, LinkedHashMap responseValidation) {
         String apiName = "API : "+getAPIMethodName();
-        Gson pGson1 = new GsonBuilder().create();
-        Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+
+        Gson pGson1 = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).create();
+        Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
         String m = apiCard(status,apiName,pGson1.toJson(message),String.valueOf(responseJSON),curl,pGson1.toJson(responseValidation));
         try {
             if (status.equalsIgnoreCase("PASS")) {

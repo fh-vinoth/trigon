@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.trigon.bean.ElementRepoPojo;
 import com.trigon.exceptions.RetryOnException;
 
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.reports.ReportManager;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
@@ -42,7 +43,7 @@ public class TestModelCore extends ReportManager {
         try {
             //s.startsWith("name")||s.startsWith("xpath")||s.startsWith("classname")||s.startsWith("partiallinktext")||s.startsWith("linktext")||s.startsWith("tagname")||s.startsWith("css")||s.startsWith("id")
             if(!s.contains("=")){
-                Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+                Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
                 JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
                 ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
                 locator = eRepo.getElements().get(s).getAsJsonObject().get(tEnv().getElementLocator()).getAsString();

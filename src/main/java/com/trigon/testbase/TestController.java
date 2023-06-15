@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
 import com.trigon.email.SendEmail;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.reports.EmailReport;
 import com.trigon.testrail.BaseMethods;
 import com.trigon.testrail.Runs;
@@ -37,7 +38,7 @@ public class TestController extends TestInitialization {
     protected void suiteInitialization(ITestContext iTestContext, XmlTest xmlTest) {
         try {
             logger.info("Test Execution Started for Suite : " + iTestContext.getSuite().getName());
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
             tre = pGson.fromJson(element1, RemoteEnvPojo.class);
             executionType = tre.getExecution_type();

@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web Parallel Framework" parallel="tests" thread-count="4">
+<suite name="Web_Parallel_Framework" parallel="tests">
 
     <test name="Web Parallel-FrameworkTest1">
+        <parameter name="url" value="https://global.foodhub.com/"></parameter>
         <classes>
             <class name="com.fh.unittests.frameworktest.frameworkTest"/>
         </classes>
     </test>
-<!--    <test name="Web Parallel FrameworkTest2">-->
-<!--        <classes>-->
-<!--            <class name="com.fh.unittests.frameworktest.frameworkTest"/>-->
-<!--            <class name="com.fh.unittests.frameworktest.frameworkTest2"/>-->
-<!--        </classes>-->
-<!--    </test>-->
-<!--    <test name="Web Parallel FrameworkTest3">-->
-<!--        <classes>-->
-<!--            <class name="com.fh.unittests.frameworktest.frameworkTest"/>-->
-<!--            <class name="com.fh.unittests.frameworktest.frameworkTest2"/>-->
-<!--        </classes>-->
-<!--    </test>-->
 
 </suite>
