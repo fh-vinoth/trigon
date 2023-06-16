@@ -242,3 +242,5 @@ eval "set -- $(
     )" '"$@"'
 
 exec "$JAVACMD" "$@"
+
+java --add-opens java.base/java.lang=ALL-UNNAMED
