@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web_Parallel_Framework" parallel="tests">
+<suite name="Web_Parallel_Framework">
 
     <test name="Web Parallel-FrameworkTest1">
         <parameter name="url" value="https://global.foodhub.com/"></parameter>
@@ -8,5 +8,26 @@
             <class name="com.fh.unittests.frameworktest.frameworkTest"/>
         </classes>
     </test>
+
+<!--    <test name="Web Parallel-FrameworkTest2">-->
+<!--        <parameter name="url" value="https://global.foodhub.com/"></parameter>-->
+<!--        <classes>-->
+<!--            <class name="com.fh.unittests.frameworktest.frameworkTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+    <!--<test name="Web Parallel-FrameworkTest3">
+        <parameter name="url" value="https://global.foodhub.com/"></parameter>
+        <classes>
+            <class name="com.fh.unittests.frameworktest.frameworkTest"/>
+        </classes>
+    </test>
+
+    <test name="Web Parallel-FrameworkTest4">
+        <parameter name="url" value="https://global.foodhub.com/"></parameter>
+        <classes>
+            <class name="com.fh.unittests.frameworktest.frameworkTest"/>
+        </classes>
+    </test>-->
 
 </suite>

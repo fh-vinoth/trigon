@@ -47,7 +47,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
         String from = "automation@foodhub.com";
         final String username = "automation@foodhub.com";
-        final String password = "LkdfL7!VK8ksBb";
+        final String password = "ZywTVUUwg8ew";
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtppro.zoho.com");
