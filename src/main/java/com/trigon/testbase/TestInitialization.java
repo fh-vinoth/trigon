@@ -15,6 +15,7 @@ import com.trigon.bean.TrigonPaths;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
 import com.trigon.bean.testenv.TestEnv;
 import com.trigon.bean.testenv.TestEnvPojo;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.mobile.AppiumManager;
 import com.trigon.properties.ConfigReader;
 import com.trigon.security.AES;
@@ -563,7 +564,7 @@ public class TestInitialization extends Browsers {
                                       String region, String country, String currency,
                                       String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames,String test_email_recipients,String test_error_email_recipients,String test_failure_email_recipients,String browserstack_midSessionInstallApps) {
         try {
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement testEnvElement = null;
             try {
                 if (fileName != null) {

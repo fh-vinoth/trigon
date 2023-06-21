@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.reports.model.TestSummary;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
@@ -315,7 +316,7 @@ public class TriageFailureReport {
             RequestSpecification requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
             String resp = requestSpecification.get(URL).then().extract().response().getBody().prettyPrint();
 
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement jsonElement = JsonParser.parseString(resp);
             TestSummary summary = pGson.fromJson(jsonElement, TestSummary.class);
             summary.getResults().forEach(result -> {

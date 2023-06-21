@@ -3,8 +3,6 @@ package com.trigon.reports.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Generated;
-import java.util.List;
 
 public class Result {
 
