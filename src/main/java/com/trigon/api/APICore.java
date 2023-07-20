@@ -322,8 +322,6 @@ public class APICore extends ReportManager {
         try {
             dataToJSON("httpMethod", HttpMethod);
             dataToJSON("endPoint", Endpoint);
-            apiCoverage.add(Endpoint);
-            apiCallCoverage.add(HttpMethod);
             double respTime;
             try {
                 switch (HttpMethod) {
@@ -373,7 +371,6 @@ public class APICore extends ReportManager {
             dataMap.put("URI", tEnv().getApiURI());
             dataMap.put("HTTPMethod", HttpMethod);
             dataMap.put("Endpoint", Endpoint);
-            apiCoverage.add(Endpoint);
             dataMap.put("Expected Status Code", expectedStatusCode);
             String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, null);
             dataToJSON("curl", curl);
@@ -427,7 +424,6 @@ public class APICore extends ReportManager {
             dataMap.put("URI", URI);
             dataMap.put("HTTPMethod", HttpMethod);
             dataMap.put("Endpoint", Endpoint);
-            apiCoverage.add(Endpoint);
             dataMap.put("Expected Status Code", expectedStatusCode);
 
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);

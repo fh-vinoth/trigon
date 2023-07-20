@@ -1329,7 +1329,7 @@ public class ReportManager extends CustomReport {
         AmazonS3 s3Client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion("us-east-1")
+                .withRegion("eu-west-2")
                 .build();
         S3Object object = s3Client.getObject(bucketName,keyName);
 

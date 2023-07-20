@@ -290,8 +290,8 @@ public class TestController extends TestInitialization {
                 getGitBranch();
                 if (apiCoverage.size() > 0) {
                     if (extent != null) {
-                        getEndpointCount();
-                        getApiCallCount();
+//                        getEndpointCount();
+//                        getApiCallCount();
                         extent.setSystemInfo("API Endpoints Covered", String.valueOf(totalEndpoints));
                         extent.flush();
                     }
@@ -310,78 +310,78 @@ public class TestController extends TestInitialization {
 
     }
 
-    private void getApiCallCount() {
-        for (int i = 0; i < apiCallCoverage.size(); i++) {
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("POST")) {
-                postRequest++;
-            }
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("Get")) {
-                getRequest++;
-            }
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("put")) {
-                putRequest++;
-            }
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("delete")) {
-                deleteRequest++;
-            }
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("patch")) {
-                patchRequest++;
-            }
-        }
+//    private void getApiCallCount() {
+//        for (int i = 0; i < apiCallCoverage.size(); i++) {
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("POST")) {
+//                postRequest++;
+//            }
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("Get")) {
+//                getRequest++;
+//            }
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("put")) {
+//                putRequest++;
+//            }
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("delete")) {
+//                deleteRequest++;
+//            }
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("patch")) {
+//                patchRequest++;
+//            }
+//        }
 
-    }
+//    }
 
-    private void getEndpointCount() {
-        Set endpoint = new LinkedHashSet();
-        List actualEndpoints = apiCoverage;
-        List http = apiCallCoverage;
-        String addedendpoint = "";
-        Map<String, Integer> endpointCount = new HashMap<>();
-        actualEndpoints.stream().forEach(c -> {
-            String ep = c.toString();
-            ep = ep.replaceAll("[0-9]", "");
-            if (endpointCount.containsKey(ep)) {
-                endpointCount.put(ep, endpointCount.get(ep) + 1);
-            } else {
-                endpointCount.put(ep, 1);
-            }
-        });
-        for (int i = 0; i < actualEndpoints.size(); i++) {
-            String endPoint = actualEndpoints.get(i).toString();
-            String[] split = new String[0];
-            if (endPoint.contains("/")) {
-                if (endPoint.startsWith("/")) {
-                    char charOfSlash = endPoint.charAt(0);
-                    endPoint = endPoint.replaceFirst(String.valueOf(charOfSlash), "");
-                }
-                split = endPoint.split("/");
-                for (int j = 0; j < split.length; j++) {
-                    String splitt = split[j];
-                    char firstChar = splitt.charAt(0);
-                    int asciivalue = firstChar;
-                    if (asciivalue >= 97 && asciivalue <= 122) {
-                        String endendpoint = split[j];
-                        addedendpoint = addedendpoint + endendpoint + "/";
-                    } else {
-                        addedendpoint = addedendpoint + "12345/";
-                    }
-                    if (j == split.length - 1) {
-                        if (addedendpoint.contains("?")) {
-                            String[] splitQueryParam = addedendpoint.split("\\?");
-                            addedendpoint = splitQueryParam[0];
-                        }
-                        endpoint.add(addedendpoint + "[" + http.get(i) + "]");
-                        addedendpoint = "";
-                    }
-                }
-            } else {
-                endpoint.add(endPoint + "/" + "[" + http.get(i) + "]");
-            }
-        }
-        totalEndpoints = endpoint.size();
-
-        System.out.println("API Endpoints Covered :" + totalEndpoints);
-    }
+//    private void getEndpointCount() {
+//        Set endpoint = new LinkedHashSet();
+//        List actualEndpoints = apiCoverage;
+//        List http = apiCallCoverage;
+//        String addedendpoint = "";
+//        Map<String, Integer> endpointCount = new HashMap<>();
+//        actualEndpoints.stream().forEach(c -> {
+//            String ep = c.toString();
+//            ep = ep.replaceAll("[0-9]", "");
+//            if (endpointCount.containsKey(ep)) {
+//                endpointCount.put(ep, endpointCount.get(ep) + 1);
+//            } else {
+//                endpointCount.put(ep, 1);
+//            }
+//        });
+//        for (int i = 0; i < actualEndpoints.size(); i++) {
+//            String endPoint = actualEndpoints.get(i).toString();
+//            String[] split = new String[0];
+//            if (endPoint.contains("/")) {
+//                if (endPoint.startsWith("/")) {
+//                    char charOfSlash = endPoint.charAt(0);
+//                    endPoint = endPoint.replaceFirst(String.valueOf(charOfSlash), "");
+//                }
+//                split = endPoint.split("/");
+//                for (int j = 0; j < split.length; j++) {
+//                    String splitt = split[j];
+//                    char firstChar = splitt.charAt(0);
+//                    int asciivalue = firstChar;
+//                    if (asciivalue >= 97 && asciivalue <= 122) {
+//                        String endendpoint = split[j];
+//                        addedendpoint = addedendpoint + endendpoint + "/";
+//                    } else {
+//                        addedendpoint = addedendpoint + "12345/";
+//                    }
+//                    if (j == split.length - 1) {
+//                        if (addedendpoint.contains("?")) {
+//                            String[] splitQueryParam = addedendpoint.split("\\?");
+//                            addedendpoint = splitQueryParam[0];
+//                        }
+//                        endpoint.add(addedendpoint + "[" + http.get(i) + "]");
+//                        addedendpoint = "";
+//                    }
+//                }
+//            } else {
+//                endpoint.add(endPoint + "/" + "[" + http.get(i) + "]");
+//            }
+//        }
+//        totalEndpoints = endpoint.size();
+//
+//        System.out.println("API Endpoints Covered :" + totalEndpoints);
+//    }
 
     private void emailTrigger() {
         SendEmail sendEmail = new SendEmail();
