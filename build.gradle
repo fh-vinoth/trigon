@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.trigon'
-version '2.9.7_Java2'
+version '2.9.7_Java'
 
 repositories {
     mavenCentral()
