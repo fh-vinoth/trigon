@@ -35,6 +35,12 @@ public class Android extends IOS {
                     browserstackOptions.put("osVersion", tEnv().getAndroidOSVersion());
                     browserstackOptions.put("deviceName", tEnv().getAndroidDevice());
                     androidCaps.setCapability("browserName", tEnv().getWebBrowser());
+                    browserstackOptions.put("autoAcceptAlerts", true);
+                    androidCaps.setCapability("unicodeKeyboard", true);
+                    androidCaps.setCapability("resetKeyboard", true);
+                    androidCaps.setCapability("autoGrantPermissions",true);
+                    androidCaps.setCapability("locationContextEnabled", true);
+                    androidCaps.setCapability("locationServicesAuthorized", false);
                     androidCaps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
                     browserstackOptions.put("buildName", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
 
@@ -49,12 +55,19 @@ public class Android extends IOS {
                 browserstackOptions.put("appiumVersion", "1.22.0");
                 browserstackOptions.put("realMobile", "true");
                 browserstackOptions.put("acceptInsecureCerts", "true");
+
                 HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
                 networkLogsOptions.put("captureContent", true);
                 androidCaps.setCapability("browserstack.networkLogs", true);
                 androidCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
                 androidCaps.setCapability("browserstack.realMobileInteraction", "true");
                 browserstackOptions.put("networkProfile", "reset");
+                browserstackOptions.put("autoAcceptAlerts", true);
+                androidCaps.setCapability("unicodeKeyboard", true);
+                androidCaps.setCapability("resetKeyboard", true);
+                androidCaps.setCapability("autoGrantPermissions",true);
+                androidCaps.setCapability("locationContextEnabled", true);
+                androidCaps.setCapability("locationServicesAuthorized", false);
                 browserstackOptions.put("idleTimeout", "300");
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
