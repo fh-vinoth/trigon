@@ -173,7 +173,8 @@ public class ReportManager extends CustomReport {
             if (status.equalsIgnoreCase("PASS")) {
 
                 if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
-                     m = apiName + " is PASSED";
+                     //m = apiName + " is PASSED";
+                     m = "API Test status for the method '<b>"+apiName+ "' </b>is PASSED";
                 }
                 if (extentScenarioNode.get() != null) {
                     extentScenarioNode.get().pass(m);

@@ -1,5 +1,6 @@
 package com.fh.unittests.testrail;
 
+import com.fh.api.Category_SEARCH;
 import com.fh.core.TestLocalController;
 import com.trigon.annotations.ExcelSheet;
 import com.trigon.dataprovider.DataProviders;
@@ -12,16 +13,18 @@ import java.util.LinkedHashMap;
 
 public class testRailDemoTestData extends TestLocalController {
 
-    //@Test
+   // @Test
     @Test(dataProvider = "getDataFromJson", dataProviderClass = DataProviders.class, groups = {"Sanity", "Regression"})
     @ExcelSheet(name = "TestRailDemo")
     public void methodNameDemo(LinkedHashMap<String,Object> tData) {
        // ArrayList<String> tcIDs= (ArrayList<String>) tData.get("tcIDs");
-        ArrayList<String> tcIDs = getTestIdsInArray(tData.get("tcIDs").toString());
+        //ArrayList<String> tcIDs = getTestIdsInArray(tData.get("tcIDs").toString());
         author_ScenarioName("Nisha","Testing");
         try {
+            Category_SEARCH c = new Category_SEARCH();
+            c.createCategory();
 
-            TrigonUtils tu = new TrigonUtils();
+           /* TrigonUtils tu = new TrigonUtils();
             tu.logStepAction("Place order ");
             tu.logStepAction("Place order ","C123","C128","C129","C127");
             logStepAction("Place order ");
@@ -59,7 +62,7 @@ public class testRailDemoTestData extends TestLocalController {
 
             logReport("PASS", "3rd 7th step");
             logReport("FAIL", "3rd 8th step");
-            hardFail("Error Message");
+            hardFail("Error Message");*/
 
         }
         catch (Exception e)
@@ -68,7 +71,7 @@ public class testRailDemoTestData extends TestLocalController {
 
         }
         finally {
-            testTearDown(tcIDs,tData.get("dataProviderKey").toString());
+            testTearDown();
         }
     }
    // @Test

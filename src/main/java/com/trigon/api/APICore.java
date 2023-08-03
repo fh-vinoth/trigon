@@ -635,21 +635,26 @@ public class APICore extends ReportManager {
 
                 if (dataTableCollectionApi.get().get(0).containsKey("actualResponse")) {
                     respValidation.put("actualResponse",dataTableCollectionApi.get().get(0).get("actualResponse"));
+                    logStepAction("Actual Response :"+dataTableCollectionApi.get().get(0).get("actualResponse"));
                     dataTableCollectionApi.get().get(0).remove("actualResponse");
                 }
                 if (dataTableCollectionApi.get().get(0).containsKey("expectedResponse")) {
                     respValidation.put("expectedResponse",dataTableCollectionApi.get().get(0).get("expectedResponse"));
+                    logStepAction("Expected Response :"+dataTableCollectionApi.get().get(0).get("expectedResponse"));
                     dataTableCollectionApi.get().get(0).remove("expectedResponse");
                 }
 
                 respValidation.put("responseTime",responseTime);
                 respValidation.put("apiTestStatus",apiTestStatus);
 
+                logStepAction("Status Code Validation : "+statusCodeData);
+
                 dataTableCollectionApi.get().get(0).remove("responseJSON");
                 dataTableCollectionApi.get().get(0).remove("curl");
                 dataTableCollectionApi.get().get(0).remove("statusCode");
                 dataTableCollectionApi.get().get(0).remove("responseTime");
                 dataTableCollectionApi.get().get(0).remove("apiTestStatus");
+
 
                 if (apiTestStatus.equals("FAILED")) {
                     logMultipleJSON("FAIL", dataTableCollectionApi.get().get(0), responseJSON, curl, respValidation);
