@@ -109,11 +109,11 @@ public class Category_SEARCH extends TestLocalController {
         headers.put("Store", tEnv().getApiStore());
         queryparams.put("api_token", tEnv().getApiToken());
         String category_id = null;
-        String endpoint = "category/3647197";
+        String endpoint = "category/3647388";
         formparams.put("name", "TestCateg" + cUtils().generateRandomString(4));
-        expectedResponse.put("data[0].id", "3647197");
+        expectedResponse.put("data[0].id", "3647388");
         expectedResponse.put("data[0].host", "sit-mytautomation-uk8.t2scdn.com");
-        expectedResponse.put("data[0].name", "TestCategHEDW");
+        expectedResponse.put("data[0].name", "TestdIB");
         expectedResponse.put("data[0].is_image_approved", "3");
         try {
             Map<String, Object> postresponse = api().validateStaticResponse("GET", endpoint, null, null, queryparams, null, null, null, "200", expectedResponse);

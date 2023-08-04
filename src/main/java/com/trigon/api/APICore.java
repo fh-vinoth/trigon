@@ -272,6 +272,39 @@ public class APICore extends ReportManager {
             } else {
                 dataToJSON("apiTestStatus", "PASSED");
             }
+
+            Map<String,Object> expMap = new HashMap<>();
+            Map<String,Object> actMap = new HashMap<>();
+            for(Map.Entry<String,Object> e : dataTableMapApi.get().entrySet()){
+                String k = e.getKey();
+                String v = String.valueOf(e.getValue());
+                if(k.equalsIgnoreCase("actualResponse")){
+                    String key[] = v.split(",");
+                    for(String keys : key){
+                        String keyToMap[] = keys.split("=");
+                        String addKeyToMap = keyToMap[0];
+                        String addValueToMap = keyToMap[1];
+                        String addKeyToMapR = "";
+                        if(addKeyToMap.contains("}")){
+                            addKeyToMap=  addKeyToMap.replaceFirst("[{]","");
+                            System.out.println(addKeyToMap);
+                        }
+                        if(addKeyToMap.contains("{")){
+                            addKeyToMap = addKeyToMap.replace("{","");
+                            System.out.println(addKeyToMap);
+                        }
+                        System.out.println(addKeyToMap);
+                        System.out.println(addValueToMap);
+                        actMap.put(addKeyToMap,addValueToMap);
+                    }
+                }
+                System.out.println(actMap);
+
+            }
+
+            System.out.println(expectedResponse);
+
+
         } catch (Exception e) {
             dataToJSON("apiTestStatus", "FAILED");
             captureException(e);
