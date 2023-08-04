@@ -300,8 +300,19 @@ public class TestController extends TestInitialization {
                 EmailReport.createEmailReport(trigonPaths.getTestResultsPath(), extent, iTestContext.getSuite().getName(), platformType, executionType, pipelineExecution);
 
                 if (executionType.equalsIgnoreCase("remote")) {
-                    if (System.getProperty("user.name").equalsIgnoreCase("root") || System.getProperty("user.name").equalsIgnoreCase("ec2-user")) {
-                        emailTrigger();
+                    execute = true;
+
+                    if (getSuiteNameWithTime.toLowerCase().contains("module") && reportModuleRun < 1) {
+                        reportModuleRun = reportModuleRun + 1;
+                        execute = true;
+                    } else if (getSuiteNameWithTime.toLowerCase().contains("module") && reportModuleRun >= 1) {
+                        execute = false;
+                    }
+
+                    if (execute) {
+                        if (System.getProperty("user.name").equalsIgnoreCase("root") || System.getProperty("user.name").equalsIgnoreCase("ec2-user")) {
+                            emailTrigger();
+                        }
                     }
                 }
             }

@@ -5,14 +5,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.trigon.reports.ReportManager;
 import io.restassured.RestAssured;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.TimeoutException;
 import org.testng.collections.CollectionUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 
@@ -106,6 +112,10 @@ public class APICore extends ReportManager {
         RequestSpecification requestSpecification = null;
         try {
             RestAssured.useRelaxedHTTPSValidation();
+            RestAssuredConfig restAssuredConfig = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig()
+                    .setParam("http.connection.timeout", 60000) // Connection timeout in milliseconds (30 seconds)
+                    .setParam("http.socket.timeout", 60000));// Socket timeout in milliseconds (30 seconds)
+            requestSpecification.config(restAssuredConfig);
             requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
             String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, multiPartMap);
             dataToJSON("curl", curl);
@@ -348,6 +358,9 @@ public class APICore extends ReportManager {
 
             } catch (Exception e) {
                 dataToJSON("apiTestStatus", "FAILED");
+                System.out.println("error in API call:: "+e.getMessage());
+                logStepAction("error in API call:: "+e.getMessage());
+                logger.info("error in API call:: "+e.getMessage());
                 failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
                 apiTearDown(null, null, null, null, null, null, null);
             }
@@ -356,6 +369,9 @@ public class APICore extends ReportManager {
                 dataToJSON("responseTime", String.valueOf(respTime));
             }
         } catch (Exception e) {
+            System.out.println("error in API call:: "+e.getMessage());
+            logStepAction("error in API call:: "+e.getMessage());
+            logger.info("error in API call:: "+e.getMessage());
             captureException(e);
         }
         return response;
@@ -803,6 +819,35 @@ public class APICore extends ReportManager {
         logger.info(curl);
         return curl;
     }
+    public Response executeApiCall(String HttpMethod, String Endpoint, RequestSpecification requestSpecification) {
+        dataToJSON("httpMethod", HttpMethod);
+        dataToJSON("endPoint", Endpoint);
+        int timeoutMillis = 60000; // 60 seconds in milliseconds
+        Response response = null;
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<Response> future = executor.submit(() -> executeAPIMethod(HttpMethod, Endpoint, requestSpecification));
+        response = null;
+        double respTime;
+        try {
+            response = future.get(timeoutMillis, TimeUnit.MILLISECONDS);
+            if (future.isDone()) {
+                logStepAction("API call successful!" + response.getStatusCode());
+            }
+            if (response != null) {
+                respTime = response.getTimeIn(TimeUnit.MILLISECONDS) / 1000.0;
+                dataToJSON("responseTime", String.valueOf(respTime));
+            }
+        } catch (TimeoutException e) {
+            future.cancel(true);
+            logStepAction("API call timed out after 60 seconds!", e.getMessage());
+        } catch (Exception e) {
+            dataToJSON("apiTestStatus", "FAILED");
+            failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
+            apiTearDown(null, null, null, null, null, null, null);
+            logStepAction("API call failed with an exception: ", e.getMessage());
+        } finally {
+            executor.shutdownNow();
+        }
 
-
-}
+        return response;
+    }}

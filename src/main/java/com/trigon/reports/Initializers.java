@@ -75,7 +75,9 @@ public class Initializers {
     protected static String failure_email_recipients = null;
     protected static boolean failStatus = false;
     protected static boolean exceptionStatus = false;
-
+    protected static int reportModuleRun =0;
+    protected static boolean execute = false;
+    
     protected static ThreadLocal<List<String>> testCaseIDThread = new ThreadLocal<>();
     public static ThreadLocal<ArrayList> passedTCs = new ThreadLocal<>();
     public static ThreadLocal<HashMap<String,String>> failedTCs = new ThreadLocal<>();

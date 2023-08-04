@@ -14,6 +14,8 @@ public class APITest {
 
         Response response;
 
+
+
         RestAssured.baseURI = "https://sit-api.t2scdn.com/";
         RestAssured.useRelaxedHTTPSValidation();
         RequestSpecification requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);

@@ -14,8 +14,8 @@ public class TrigonUtils extends ReportManager {
         return helper.mapKeyFinder(map, KeyName);
     }
 
-    public void compareText(String actualText, String expectedText, String textAction) {
-        helper.compareText(actualText, expectedText, textAction);
+    public void compareText(String actualText, String expectedText, String textAction,String... description) {
+        helper.compareText(actualText, expectedText, textAction,description);
     }
 
     public void compareText(Collection<?> actualText, Collection<?> expectedText, String textAction) {
