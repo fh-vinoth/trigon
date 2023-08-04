@@ -9,6 +9,7 @@ import org.apache.groovy.json.internal.Chr;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -217,23 +218,23 @@ public class Browsers extends Android {
 
 
     private void remoteExecution(ITestContext context, XmlTest xmlTest) {
-        DesiredCapabilities caps = new DesiredCapabilities();
+        MutableCapabilities androidCaps = new MutableCapabilities();
         HashMap<String, Object> browserstackOptions = new HashMap<>();
 //        caps.setCapability("project", context.getSuite().getName());
-        caps.setCapability("platformName", tEnv().getWebSystemOS());
-        caps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
-        caps.setCapability("os_version", tEnv().getWebSystemOSVersion());
-        caps.setCapability("browserName", tEnv().getWebBrowser());
-        caps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
-        caps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
+        androidCaps.setCapability("platformName", tEnv().getWebSystemOS());
+        androidCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
+        androidCaps.setCapability("os_version", tEnv().getWebSystemOSVersion());
+        androidCaps.setCapability("browserName", tEnv().getWebBrowser());
+        androidCaps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
+        androidCaps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
 //        caps.setCapability("language", "en");
         browserstackOptions.put("os", tEnv().getWebSystemOS());
         browserstackOptions.put("osVersion", tEnv().getWebSystemOSVersion());
         browserstackOptions.put("debug", "true");
         HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
         networkLogsOptions.put("captureContent", true);
-        caps.setCapability("browserstack.networkLogs", true);
-        caps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
+        androidCaps.setCapability("browserstack.networkLogs", true);
+        androidCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
         //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
         browserstackOptions.put("idleTimeout", "300");
@@ -254,8 +255,8 @@ public class Browsers extends Android {
             location = "GB";
         }
         logger.info("Setting location to :: "+location);
-       // caps.setCapability("browserstack.geoLocation",location);
-        //browserstackOptions.put("geoLocation",location);
+        androidCaps.setCapability("browserstack.geoLocation",location);
+        browserstackOptions.put("geoLocation",location);
         ChromeOptions options = new ChromeOptions();
         Map < String, Object > prefs = new HashMap < String, Object > ();
         Map < String, Object > profile = new HashMap < String, Object > ();
@@ -267,13 +268,13 @@ public class Browsers extends Android {
         options.setExperimentalOption("prefs", prefs);
         options.setExperimentalOption("excludeSwitches",Arrays.asList("disable-popup-blocking"));
 
-        caps.setCapability("browserstack.ie.enablePopups", "true");
-        caps.setCapability(ChromeOptions.CAPABILITY, options);
-        caps.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, UnhandledPromptBehavior.ACCEPT);
+        androidCaps.setCapability("browserstack.ie.enablePopups", "true");
+        androidCaps.setCapability(ChromeOptions.CAPABILITY, options);
+        androidCaps.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, UnhandledPromptBehavior.ACCEPT);
         if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
             browserstackOptions.put("local", "true");
-            caps.setCapability("forcelocal", "true");
-            caps.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, "true");
+            androidCaps.setCapability("forcelocal", "true");
+            androidCaps.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, "true");
             bsLocal = new Local();
             HashMap<String, String> bsLocalArgs = new HashMap<String, String>();
             bsLocalArgs.put("key", propertiesPojo.getBrowserStack_Password());
@@ -289,15 +290,15 @@ public class Browsers extends Android {
                 }
             }
             try {
-                caps.setCapability("bstack:options", browserstackOptions);
-                webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub.browserstack.com/wd/hub"), caps));
+                androidCaps.setCapability("bstack:options", browserstackOptions);
+                webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub.browserstack.com/wd/hub"), androidCaps));
             } catch (Exception e) {
                 captureException(e);
             }
         } else {
             try {
-                caps.setCapability("bstack:options", browserstackOptions);
-                webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), caps));
+                androidCaps.setCapability("bstack:options", browserstackOptions);
+                webDriverThreadLocal.set(new RemoteWebDriver(new URL("http://" + propertiesPojo.getBrowserStack_UserName() + ":" + propertiesPojo.getBrowserStack_Password() + "@hub-cloud.browserstack.com/wd/hub"), androidCaps));
             } catch (Exception e) {
                 captureException(e);
             }
