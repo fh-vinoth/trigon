@@ -223,7 +223,7 @@ public class Browsers extends Android {
 //        caps.setCapability("project", context.getSuite().getName());
         androidCaps.setCapability("platformName", tEnv().getWebSystemOS());
         androidCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
-        androidCaps.setCapability("os_version", tEnv().getWebSystemOSVersion());
+        androidCaps.setCapability("platformName", tEnv().getWebSystemOSVersion());
         androidCaps.setCapability("browserName", tEnv().getWebBrowser());
         androidCaps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
         androidCaps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
@@ -233,8 +233,8 @@ public class Browsers extends Android {
         browserstackOptions.put("debug", "true");
         HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
         networkLogsOptions.put("captureContent", true);
-        androidCaps.setCapability("browserstack.networkLogs", true);
-        androidCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
+        androidCaps.setCapability("browserstack:networkLogs", true);
+        androidCaps.setCapability("browserstack:networkLogsOptions", networkLogsOptions);
         //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
         browserstackOptions.put("idleTimeout", "300");
@@ -268,7 +268,7 @@ public class Browsers extends Android {
         options.setExperimentalOption("prefs", prefs);
         options.setExperimentalOption("excludeSwitches",Arrays.asList("disable-popup-blocking"));
 
-        androidCaps.setCapability("browserstack.ie.enablePopups", "true");
+        androidCaps.setCapability("browserstack:ie:enablePopups", "true");
         androidCaps.setCapability(ChromeOptions.CAPABILITY, options);
         androidCaps.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, UnhandledPromptBehavior.ACCEPT);
         if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
