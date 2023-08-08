@@ -43,11 +43,9 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
     @Override
     public void triggerEmail(String reportPath, String recipients, String uploadToAWS, String sendFailedReport) {
-        String decryptedString = AES.decrypt("dxoS+CjoM/WctAD5Svfq/g==", "t2sautomation");
-
         String from = "automation@foodhub.com";
         final String username = "automation@foodhub.com";
-        final String password = "ZywTVUUwg8ew";
+        final String password = AES.decrypt("tZD5Ep1YTtME9sinDOMcnQ==", "t2sautomation");
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtppro.zoho.com");
@@ -65,7 +63,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
         AmazonS3 s3Client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion("us-east-1")
+                .withRegion("eu-west-2")
                 .build();
         // Get the Session object.
         Session session = Session.getInstance(props,
@@ -136,7 +134,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
                 String[] folderName = reportPath.split("/");
                 int folderlength = folderName.length;
                 System.out.println("Uploading to S3 Bucket !! It takes a while depending on your network and depending on size of report !! Please, Wait.... ");
-                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("t2s-staging-automation/TestResults_2.8",
+                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("fh-qa-automation/TestResults_2.8",
                         folderName[folderlength - 2]+"/"+folderName[folderlength - 1], new File(reportPath), true);
                 XferMgrProgress.showTransferProgress(xfer);
                 XferMgrProgress.waitForCompletion(xfer);
@@ -164,7 +162,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
     public void triggerCustomEmail(String reportPath, String recipients) throws IOException {
         String from = "automation@foodhub.com";
         final String username = "automation@foodhub.com";
-        final String password = "LkdfL7!VK8ksBb";
+        final String password = AES.decrypt("tZD5Ep1YTtME9sinDOMcnQ==", "t2sautomation");
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtppro.zoho.com");
