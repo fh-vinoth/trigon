@@ -1,4 +1,4 @@
-![T2SLogo](https://t2s-staging-automation.s3.amazonaws.com/Docs/FoodHubLogo.svg)
+![T2SLogo](https://fh-qa-automation.s3.amazonaws.com/Docs/FoodHubLogo.svg)
 
 
 
@@ -38,7 +38,7 @@
 
 
 ### FrameworkStructure
-![T2SFramework](https://t2s-staging-automation.s3.amazonaws.com/Docs/AutomationArchitecture1.jpg)
+![T2SFramework](https://fh-qa-automation.s3.amazonaws.com/Docs/AutomationArchitecture1.jpg)
 
 ### AutomationTestSetupRules
 

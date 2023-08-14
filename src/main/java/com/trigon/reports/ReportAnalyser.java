@@ -26,7 +26,7 @@ public class ReportAnalyser {
 
     private String listBucketObjects(String date_DMMMYYYY, String partialSuiteName) {
         String amazonaws_url = "https://s3.amazonaws.com/";
-        String bucketName = "t2s-staging-automation";
+        String bucketName = "fh-qa-automation";
         String prefix = "TestResults_2.8/" + date_DMMMYYYY;
         String reportUrl = amazonaws_url + bucketName + "/";
         List<String> reportUrlList = new LinkedList<>();
@@ -38,7 +38,7 @@ public class ReportAnalyser {
             final AmazonS3 s3 = AmazonS3ClientBuilder
                     .standard()
                     .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                    .withRegion("us-east-1")
+                    .withRegion("eu-west-2")
                     .build();
             ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName)
                     .withPrefix(prefix + "/").withDelimiter("/");
