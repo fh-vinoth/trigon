@@ -100,14 +100,14 @@ public class EmailReport {
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
                 "    <title>Automation Report</title>\n" +
-                "    <link href=\"https://t2s-staging-automation.s3.amazonaws.com/report-libs/css/style.css\" rel=\"stylesheet\">\n" +
-                "    <link href=\"https://s3.amazonaws.com/t2s-staging-automation/report-libs/css/icon-style.css\" rel=\"stylesheet\">\n" +
+                "    <link href=\"https://fh-qa-automation.s3.amazonaws.com/report-libs/css/style.css\" rel=\"stylesheet\">\n" +
+                "    <link href=\"https://fh-qa-automation.s3.amazonaws.com/report-libs/css/icon-style.css\" rel=\"stylesheet\">\n" +
                 "</head>\n" +
                 "<body>\n" +
                 "<table style=\"width: 80%;font-family: Roboto,sans-serif;font-size: 13px;color: #555555;text-align: center;border-radius: 20px;margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse;background-color: #f5f2f2\">\n" +
                 "    <tbody>\n" +
                 "    <tr style=\"background: #e0dbdb;height: 60px;\">\n" +
-                "        <th style=\"padding-left: 30px;text-align: left\"><img alt=\"FoodHub\" height=\"20\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"114\"></th>\n" +
+                "        <th style=\"padding-left: 30px;text-align: left\"><img alt=\"FoodHub\" height=\"20\" src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/foodhub_email_logo.png\" width=\"114\"></th>\n" +
                 "    </tr>\n" +
                 "    <tr style=\"background: #ececec;height: 40px\">\n" +
                 "        <td>\n" +
@@ -118,7 +118,7 @@ public class EmailReport {
                 "                        <td colspan=\"2\">\n" +
                 "                            <table style=\"margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse\">\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_Testsuite.png\" height=\"15\" width=\"15\" alt=\"Test Suite\"></td>\n" +
+                "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/Icon_Testsuite.png\" height=\"15\" width=\"15\" alt=\"Test Suite\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px\">" + suiteName + "</td>\n" +
                 "                                </tr>\n" +
                 "                            </table>\n" +
@@ -128,19 +128,19 @@ public class EmailReport {
                 "                        <td>\n" +
                 "                            <table style=\"margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse\">\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"FrameWorkVersion\"></td>\n" +
+                "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"FrameWorkVersion\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getSystemEnvInfo().get(0).getValue() + "</td>\n" +
                 "                                </tr>\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_ExecutedBy.png\" height=\"15\" width=\"15\" alt=\"Executed By\"></td>\n" +
+                "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/Icon_ExecutedBy.png\" height=\"15\" width=\"15\" alt=\"Executed By\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getSystemEnvInfo().get(4).getValue() + "</td>\n" +
                 "                                <tr>\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/build.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
+                "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/build.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">"+getBuildNumber()+"</td>"+
                 "                                <tr>\n"+
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
+                "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + executedGitBranch + "</td>\n" +
                 "                                </tr>\n" +
                 "                            </table>\n" +
@@ -148,15 +148,15 @@ public class EmailReport {
                 "                        <td>\n" +
                 "                            <table style=\"margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse\">\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_TotalTime.png\" height=\"15\" width=\"15\" alt=\"Icon_TotalTime\"></td>\n" +
+                "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/Icon_TotalTime.png\" height=\"15\" width=\"15\" alt=\"Icon_TotalTime\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + timeTaken + "</td>\n" +
                 "                                </tr>\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_TestStartTime.png\" height=\"15\" width=\"15\" alt=\"TestStartTime\"></td>\n" +
+                "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/Icon_TestStartTime.png\" height=\"15\" width=\"15\" alt=\"TestStartTime\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getStartTime() + "</td>\n" +
                 "                                </tr>\n" +
                 "                                <tr>\n" +
-                "                                    <td><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/Icon_TestEndTime.png\" height=\"15\" width=\"15\" alt=\"TestEndTime\"></td>\n" +
+                "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/Icon_TestEndTime.png\" height=\"15\" width=\"15\" alt=\"TestEndTime\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + stats.getReport().getEndTime() + "</td>\n" +
                 "                                </tr>\n" +
                 "                            </table>\n" +
@@ -176,19 +176,19 @@ public class EmailReport {
                 "                        <td>TOTAL SCENARIOS</td>\n" +
                 "                        <td>\n" +
                 "                            <div style=\"padding: 4px;  display: flex;align-items: center;justify-content: center\">\n" +
-                "                                <div><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/pass.png\" height=\"15\" width=\"15\" alt=\"pass\"></div>\n" +
+                "                                <div><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/pass.png\" height=\"15\" width=\"15\" alt=\"pass\"></div>\n" +
                 "                                <div style=\"padding-bottom: 5px;padding-left: 5px\">PASSED(" + passCount + ")</div>\n" +
                 "                            </div>\n" +
                 "                        </td>\n" +
                 "                        <td>\n" +
                 "                            <div style=\"padding: 4px;  display: flex;align-items: center;justify-content: center\">\n" +
-                "                                <div><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png\" height=\"15\" width=\"15\" alt=\"fail\"></div>\n" +
+                "                                <div><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/fail.png\" height=\"15\" width=\"15\" alt=\"fail\"></div>\n" +
                 "                                <div style=\"padding-bottom: 5px;padding-left: 5px\">FAILED/EXCEPTIONS(" + failCount + ")</div>\n" +
                 "                            </div>\n" +
                 "                        </td>\n" +
                 "                        <td>\n" +
                 "                            <div style=\"padding: 4px;  display: flex;align-items: center;justify-content: center\">\n" +
-                "                                <div><img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/skip.png\" height=\"15\" width=\"15\" alt=\"skip\"></div>\n" +
+                "                                <div><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/skip.png\" height=\"15\" width=\"15\" alt=\"skip\"></div>\n" +
                 "                                <div style=\"padding-bottom: 5px;padding-left: 5px\">SKIPPED(" + skipCount + ")</div>\n" +
                 "                            </div>\n" +
                 "                        </td>\n" +
@@ -199,18 +199,18 @@ public class EmailReport {
                 "                            <div style=\"font-size: 25px;padding: 2.45rem .20rem;\">" + totalCount + "</div>\n" +
                 "                        </td>\n" +
                 "                        <td>\n" +
-                "                            <img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/Percentages_Black/P_" + passPercentage + ".png\" alt=\"" + passPercentage + "%\"></td>\n" +
+                "                            <img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/Percentages_Black/P_" + passPercentage + ".png\" alt=\"" + passPercentage + "%\"></td>\n" +
                 "                        <td>\n" +
-                "                            <img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/Percentages_Black/R_" + failPercentage + ".png\" alt=\"" + failPercentage + "%\"></td>\n" +
+                "                            <img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/Percentages_Black/R_" + failPercentage + ".png\" alt=\"" + failPercentage + "%\"></td>\n" +
                 "                        <td>\n" +
-                "                            <img src=\"https://t2s-staging-automation.s3.amazonaws.com/Docs/Percentages_Black/B_" + skipPercentage + ".png\" alt=\"" + skipPercentage + "%\"></td>\n" +
+                "                            <img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/Percentages_Black/B_" + skipPercentage + ".png\" alt=\"" + skipPercentage + "%\"></td>\n" +
                 "                        <td>\n" +
                 "                            <div style=\"font-size: 25px;padding: 2.45rem .20rem;\"></div>\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
 //                "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
 //                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>API Endpoints Covered : ( " + totalEndpoints + " )</b></div> </td>\n" +
-////                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
+////                "                       <td colspan=\"3\"><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
 ////                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
 //                "                    </tr>" +
 //                "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
@@ -219,7 +219,7 @@ public class EmailReport {
 //                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>POST Request : </b>("+ postRequest +")</div> </td>\n" +
 //                "                        <td colspan=\"2\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>DELETE Request : </b>("+ deleteRequest +")</div> </td>\n" +
 //
-////                "                       <td colspan=\"3\"><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
+////                "                       <td colspan=\"3\"><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
 ////                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
 //                "                    </tr>" +
                 "                    </tbody>\n" +
@@ -260,16 +260,16 @@ public class EmailReport {
                 "                        <td colspan=\"2\">Detailed Analysis Reports</td>\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
+                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
                 "                                style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Report</a></td>\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/EmailReport.html\"\n" +
+                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/EmailReport.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Summary Report</a></td>\n" +
                 "\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
+                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Logs</a></td>\n" +
-                "                        <td><a href=\"https://s3.amazonaws.com/t2s-staging-automation/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestRailReport.html\"\n" +
+                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestRailReport.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">TestRail Report</a></td>\n" +
                 "\n" +
                 "                    </tr>\n" +
@@ -318,14 +318,14 @@ public class EmailReport {
                         String description = method.getDescription();
                         String author = method.getAuthorSet().stream().iterator().next().getName();
 
-                        String StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/pass.png";
+                        String StatusImageURL = "https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/pass.png";
 
                         if (method.getStatus().getName().equals("Pass")) {
-                            StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/pass.png";
+                            StatusImageURL = "https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/pass.png";
                         } else if (method.getStatus().getName().equals("Fail")) {
-                            StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png";
+                            StatusImageURL = "https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/fail.png";
                         } else if (method.getStatus().getName().equals("Skip")) {
-                            StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/skip.png";
+                            StatusImageURL = "https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/skip.png";
                         }
 
 
@@ -414,7 +414,7 @@ public class EmailReport {
 
     private static String footers() {
         return "    <tr style=\"background: #e0dbdb;height: 40px;\">\n" +
-                "        <td colspan=\"2\">© 2022 - Foodhub Automation Team</td>\n" +
+                "        <td colspan=\"2\">© 2023 - Foodhub Automation Team</td>\n" +
                 "    </tr>\n" +
                 "    </tbody>\n" +
                 "</table>\n" +
@@ -457,7 +457,7 @@ public class EmailReport {
                             failData.set(true);
                         }
 
-                        String StatusImageURL = "https://t2s-staging-automation.s3.amazonaws.com/Docs/report_result/fail.png";
+                        String StatusImageURL = "https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/fail.png";
 
                         bf.append("<tr style=\"text-align: left;border-top: 0.2px solid #ce8c8c;\">\n" +
                                 "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
