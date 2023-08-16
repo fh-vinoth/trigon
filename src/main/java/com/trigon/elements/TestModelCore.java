@@ -179,16 +179,16 @@ public class TestModelCore extends ReportManager {
         }
     }
 
-    protected void textVerification(String actual, String expected, String textAction) {
+    protected void textVerification(String actual, String expected, String textAction,String... description) {
         try {
             if ((actual != null) && (expected != null)) {
                 switch (textAction.toLowerCase()) {
                     case "partial":
                         if (!actual.isEmpty()) {
-                            customAssertPartialEquals(actual, expected);
+                            customAssertPartialEquals(actual, expected,description);
                         } else {
                             if (expected.equals(actual)) {
-                                customAssertPartialEquals(actual, expected);
+                                customAssertPartialEquals(actual, expected,description);
                             } else {
                                 logger.error("Actual or Expected value is empty");
                                 logReport("FAIL", "Actual or Expected value is empty");
@@ -196,11 +196,11 @@ public class TestModelCore extends ReportManager {
                         }
                         break;
                     case "notequal":
-                        customAssertNotEquals(actual, expected);
+                        customAssertNotEquals(actual, expected,description);
                         break;
 
                     default:
-                        customAssertEquals(actual, expected);
+                        customAssertEquals(actual, expected,description);
                         break;
                 }
 

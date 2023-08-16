@@ -483,24 +483,31 @@ public class ReportManager extends CustomReport {
 //        }
 //    }
 
-    protected void customAssertEquals(String actual, String expected) {
+    protected void customAssertEquals(String actual, String expected,String... description) {
         try {
+            if (description.length>0){
+                logReport("PASS", "Comparison for " + description[0]);
+            }
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
+
             if (expected.equals(actual)) {
                 logReport("PASS", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
                 logReport("FAIL", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
-
             }
         } catch (Exception e) {
             captureException(e);
         }
     }
 
-    protected void customAssertNotEquals(String actual, String expected) {
+    protected void customAssertNotEquals(String actual, String expected,String... description) {
         try {
+            if (description.length>0){
+                logReport("PASS","Comparison for " + description[0]);
+            }
             logger.info("Verifying NOT Equals Actual : " + actual + " with Expected : " + expected + "");
+
             if (!(expected.equals(actual))) {
                 logReport("PASS", "Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
             } else {
@@ -511,9 +518,13 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    protected void customAssertPartialEquals(String actual, String expected) {
+    protected void customAssertPartialEquals(String actual, String expected,String... description) {
+        if (description.length>0){
+            logReport("PASS","Comparison for " + description[0]);
+        }
         logger.info("Verifying Partial Equals Actual : " + actual + " with Expected : " + expected + "");
         try {
+
             if (actual.contains(expected)) {
                 logReport("PASS", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
             } else {
@@ -1324,14 +1335,14 @@ public class ReportManager extends CustomReport {
 
     public String readS3BucketContent(String bucketName,String keyName){
         AWSCredentials credentials = new BasicAWSCredentials(
-                AES.decrypt("RmE+MUyQTW86skUJLnPhqN1usUunmK2127f7Illl3q8=", "t2sautomation"),
-                AES.decrypt("nGQWMFgryIV75J5STylI09ERvFDyNB5DaYt7mKvBSErJ6tjm+z095t9kvgbD3Ca3", "t2sautomation")
+                AES.decrypt("OriNxlLJ6ngVCYi/qCBSy1kBwPag3XyxfDiGrXfUUUg=", "t2sautomation"),
+                AES.decrypt("hij44vD5DKQY+nlkxoB+BT/wXXofuDwJTNtl7eCMaaE8ZJVrkJ2exWcFBnVn9p/G", "t2sautomation")
         );
 
         AmazonS3 s3Client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion("us-east-1")
+                .withRegion("eu-west-2")
                 .build();
         S3Object object = s3Client.getObject(bucketName,keyName);
 

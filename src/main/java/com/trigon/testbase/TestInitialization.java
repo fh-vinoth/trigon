@@ -113,7 +113,7 @@ public class TestInitialization extends Browsers {
         try {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/TestResultJSON/apiCoverage.json", false)));
             TreeSet<String> listOfEndpoints = new TreeSet<>(apiCoverage);
-            totalEndpoints = listOfEndpoints.size();
+          //  totalEndpoints = listOfEndpoints.size();
             Map<String, Long> getEndpointCount = apiCoverage.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
             writer.beginArray();
             getEndpointCount.forEach((k, v) -> {
@@ -597,8 +597,10 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiVersion(tLocalEnv.getApi().getVersion());
                 tEnv().setApiEnvType(tLocalEnv.getApi().getEnvType());
                 tEnv().setApiAppSycURI(tLocalEnv.getApi().getAppSycURI());
-                tEnv().setApiAppSycAuth(tLocalEnv.getApi().getAppSycAuth());
+                tEnv().setApiAppSycAuth(AES.decrypt(tLocalEnv.getApi().getAppSycAuth(),"t2sautomation"));
                 tEnv().setApiPartnerURI(tLocalEnv.getApi().getApiPartnerURI());
+                tEnv().setProductName(tLocalEnv.getApi().getproductName());
+                tEnv().setAppType(tLocalEnv.getApi().getappType());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -611,6 +613,8 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
                 tEnv().setWebBuildNumber(tLocalEnv.getWeb().getWebBuildNumber());
                 tEnv().setWebNetworkLogs(tLocalEnv.getWeb().getWebNetworkLogs());
+                tEnv().setProductName(tLocalEnv.getApi().getproductName());
+                tEnv().setAppType(tLocalEnv.getApi().getappType());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -649,6 +653,8 @@ public class TestInitialization extends Browsers {
                         }
                     }
                 }
+                tEnv().setProductName(tLocalEnv.getApi().getproductName());
+                tEnv().setAppType(tLocalEnv.getApi().getappType());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -687,7 +693,9 @@ public class TestInitialization extends Browsers {
                         }
                     }
                 }
+                tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
+                tEnv().setAppType(tLocalEnv.getApi().getappType());
             }
 
 
@@ -763,7 +771,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiAppSycURI(appSycURI);
             }
             if (appSycAuth != null) {
-                tEnv().setApiAppSycAuth(URI);
+                tEnv().setApiAppSycAuth(AES.decrypt(appSycAuth,"t2sautomation"));
             }
 
             if (version != null) {
@@ -773,7 +781,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiPartnerURI(partnerURI);
             }
             if (token != null) {
-                tEnv().setApiToken(AES.decrypt(token,"testautomation"));
+                tEnv().setApiToken(AES.decrypt(token,"t2sautomation"));
             }
             if (accessToken != null) {
                 tEnv().setApiAccessToken(accessToken);

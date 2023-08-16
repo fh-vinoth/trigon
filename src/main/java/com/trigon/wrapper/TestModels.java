@@ -137,8 +137,8 @@ public class TestModels extends PerformElementAction {
     }
 
 
-    public void compareText(String actualText, String expectedText, String textAction) {
-        textVerification(actualText, expectedText, textAction);
+    public void compareText(String actualText, String expectedText, String textAction,String... description) {
+        textVerification(actualText, expectedText, textAction,description);
     }
 
 
