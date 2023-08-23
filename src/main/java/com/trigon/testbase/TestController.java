@@ -1,5 +1,6 @@
 package com.trigon.testbase;
 
+import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.model.Log;
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +41,7 @@ public class TestController extends TestInitialization {
     protected void suiteInitialization(ITestContext iTestContext, XmlTest xmlTest) {
         try {
             logger.info("Test Execution Started for Suite : " + iTestContext.getSuite().getName());
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
             tre = pGson.fromJson(element1, RemoteEnvPojo.class);
             executionType = tre.getExecution_type();

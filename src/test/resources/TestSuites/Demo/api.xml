@@ -25,8 +25,8 @@
 
                <class name="com.fh.api.Category_SEARCH"></class>
             <!--<class name="com.trigon.testrail.TestRailTestStatusMap"/>-->
-            <class name="com.fh.unittests.testrail.testRailDemoTestData"/>
-         <class name="com.fh.unittests.testrail.testraildemo"/>
+<!--            <class name="com.fh.unittests.testrail.testRailDemoTestData"/>-->
+<!--         <class name="com.fh.unittests.testrail.testraildemo"/>-->
             <!--     <class name="com.fh.unittests.testrail.testraildemo2"/>-->
             <!-- <class name="com.fh.unittests.testrail.TestReport"/>-->
             <!--<class name="com.fh.unittests.database.Queries1"></class>
@@ -34,15 +34,15 @@
             <class name="com.fh.unittests.database.Queries3"></class>-->
         </classes>
     </test>
-    <test name="Test2">
-        <parameter name="TestRailStatusPath"
-                   value="src/test/resources/Configuration/TestStatus.json"></parameter>
-        <parameter name="product"
-                   value="API_MYT"></parameter>
-        <classes>
-            <class name="com.fh.unittests.testrail.testraildemo3"/>
-        </classes>
-    </test>
+<!--    <test name="Test2">-->
+<!--        <parameter name="TestRailStatusPath"-->
+<!--                   value="src/test/resources/Configuration/TestStatus.json"></parameter>-->
+<!--        <parameter name="product"-->
+<!--                   value="API_MYT"></parameter>-->
+<!--        <classes>-->
+<!--            <class name="com.fh.unittests.testrail.testraildemo3"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 
 </suite>

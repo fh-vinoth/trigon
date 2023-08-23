@@ -112,10 +112,6 @@ public class APICore extends ReportManager {
         RequestSpecification requestSpecification = null;
         try {
             RestAssured.useRelaxedHTTPSValidation();
-            RestAssuredConfig restAssuredConfig = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig()
-                    .setParam("http.connection.timeout", 60000) // Connection timeout in milliseconds (30 seconds)
-                    .setParam("http.socket.timeout", 60000));// Socket timeout in milliseconds (30 seconds)
-            requestSpecification.config(restAssuredConfig);
             requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
             String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, multiPartMap);
             dataToJSON("curl", curl);
