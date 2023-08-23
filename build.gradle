@@ -36,7 +36,7 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver', version: '4.2.2'
     implementation group: 'com.konghq', name: 'unirest-java', version: '3.11.11'
     implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
     implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
     implementation group: 'com.twilio.sdk', name: 'twilio', version: '8.13.0'
     implementation group: 'com.aventstack', name: 'extentreports', version: '5.0.9'
