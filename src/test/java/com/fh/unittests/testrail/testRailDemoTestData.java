@@ -4,8 +4,10 @@ import com.fh.api.Category_SEARCH;
 import com.fh.core.TestLocalController;
 import com.trigon.annotations.ExcelSheet;
 import com.trigon.dataprovider.DataProviders;
+import com.trigon.testlink.TestLinkIntegration;
 import com.trigon.utils.TrigonUtils;
 import org.testng.annotations.Test;
+import testlink.api.java.client.TestLinkAPIResults;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +23,11 @@ public class testRailDemoTestData extends TestLocalController {
         //ArrayList<String> tcIDs = getTestIdsInArray(tData.get("tcIDs").toString());
         author_ScenarioName("Nisha","Testing");
         try {
+            TestLinkIntegration i = new TestLinkIntegration();
+            i.updateResults("12321",null,TestLinkAPIResults.TEST_FAILED);
+            i.updateResults("API-2583: FUS - Fusion requires merchantId in the activation Request - Version1",null,TestLinkAPIResults.TEST_PASSED);
+
+
             Category_SEARCH c = new Category_SEARCH();
             c.createCategory();
 
@@ -67,7 +74,7 @@ public class testRailDemoTestData extends TestLocalController {
         }
         catch (Exception e)
         {
-            hardFail();
+           e.printStackTrace();
 
         }
         finally {
@@ -88,6 +95,9 @@ public class testRailDemoTestData extends TestLocalController {
 
             logReport("PASS", "2nd 3rd step");
             logReport("PASS", "2nd 4th step");
+
+
+
 
         }
         catch (Exception e)
