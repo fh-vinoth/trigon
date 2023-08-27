@@ -844,7 +844,6 @@ public class ReportManager extends CustomReport {
             if (!elementIsPresentCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
                 logger.error(message + locatorString);
                 logReportWithScreenShot("FAIL", message + locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
-                Thread.dumpStack();
                 Assert.fail(message + locatorString);
             } else {
                 isPresentStatus = true;
@@ -905,7 +904,7 @@ public class ReportManager extends CustomReport {
     public void hardWait(long delay) {
         try {
             if (delay > 0) {
-                logger.info("\u001b[34m"+ "Proceeding with Hard wait: " + delay + " milli Seconds given by user" + "\u001b[34m");
+                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + delay + " milli Seconds" + "\u001b[34m");
             }
             Thread.sleep(delay);
         } catch (InterruptedException e) {

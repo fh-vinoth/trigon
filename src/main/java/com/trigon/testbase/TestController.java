@@ -284,7 +284,7 @@ public class TestController extends TestInitialization {
                     captureException(e);
                 }
             }
-            tearDownGenerateTCStatusJson();
+//            tearDownGenerateTCStatusJson();
             tearDownCustomReport(iTestContext);
 
         } catch (Exception e) {
