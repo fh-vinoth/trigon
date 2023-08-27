@@ -857,27 +857,23 @@ public class ReportManager extends CustomReport {
 
     protected void hardFail(String message) {
         logReport("FAIL", message);
-        Thread.dumpStack();
         Assert.fail(message);
     }
 
     protected void hardFail(String message, Exception e) {
         logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
         logReport("FAIL", message);
-        e.printStackTrace();
         Assert.fail(message + e.getMessage());
     }
 
     protected void hardFail(Exception e) {
         logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
         logReport("FAIL", e.getMessage());
-        e.printStackTrace();
         Assert.fail(e.getMessage());
     }
 
     protected void hardFail() {
         logReport("FAIL", "Test Exception Occurred");
-        Thread.dumpStack();
         Assert.fail("Test Exception Occured");
     }
 
@@ -908,12 +904,12 @@ public class ReportManager extends CustomReport {
 
     public void hardWait(long delay) {
         try {
+            if (delay > 0) {
+                logger.info("\u001b[34m"+ "Proceeding with Hard wait: " + delay + " milli Seconds given by user" + "\u001b[34m");
+            }
             Thread.sleep(delay);
         } catch (InterruptedException e) {
             captureException(e);
-        }
-        if (delay > 0) {
-            logger.info("Proceeding After waiting for Hardwait: " + delay + " milli Seconds");
         }
     }
 
