@@ -43,6 +43,10 @@ public class APICore extends ReportManager {
             logger.info("Executing API: " + Thread.currentThread().getStackTrace()[3].getMethodName() + "  and  " + Thread.currentThread().getStackTrace()[4].getMethodName());
             RestAssured.useRelaxedHTTPSValidation();
             RequestSpecification requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
+            RestAssuredConfig restAssuredConfig = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig()
+                    .setParam("http.connection.timeout", 60000)
+                    .setParam("http.socket.timeout", 60000));
+            requestSpecification.config(restAssuredConfig);
             Map<String, Object> headers = new HashMap<>();
             Map<String, Object> cookies = new HashMap<>();
             Map<String, Object> queryParams = new HashMap<>();
@@ -351,23 +355,27 @@ public class APICore extends ReportManager {
                         logApiReport("FAIL", "Method " + HttpMethod + " is not yet implemented");
                         break;
                 }
-
+                executionCount++;
             } catch (Exception e) {
                 dataToJSON("apiTestStatus", "FAILED");
-                System.out.println("error in API call:: "+e.getMessage());
-                logStepAction("error in API call:: "+e.getMessage());
-                logger.info("error in API call:: "+e.getMessage());
                 failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
                 apiTearDown(null, null, null, null, null, null, null);
+
+            }
+            if (response == null && executionCount < 2) {
+                logStepAction("Trying for second time !!");
+                System.out.println("Trying for second time !!");
+                logStepAction("recursive call");
+                executeAPIMethod(HttpMethod, Endpoint, requestSpecification);
+            }
+            else if (response == null && executionCount == 2){
+                logApiReport("FAIL", "Failed even after re-connecting for 2 times");
             }
             if (response != null) {
                 respTime = response.getTimeIn(TimeUnit.MILLISECONDS) / 1000.0;
                 dataToJSON("responseTime", String.valueOf(respTime));
             }
         } catch (Exception e) {
-            System.out.println("error in API call:: "+e.getMessage());
-            logStepAction("error in API call:: "+e.getMessage());
-            logger.info("error in API call:: "+e.getMessage());
             captureException(e);
         }
         return response;
@@ -818,7 +826,7 @@ public class APICore extends ReportManager {
     public Response executeApiCall(String HttpMethod, String Endpoint, RequestSpecification requestSpecification) {
         dataToJSON("httpMethod", HttpMethod);
         dataToJSON("endPoint", Endpoint);
-        int timeoutMillis = 60000; // 60 seconds in milliseconds
+        int timeoutMillis = 20000; // 60 seconds in milliseconds
         Response response = null;
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Response> future = executor.submit(() -> executeAPIMethod(HttpMethod, Endpoint, requestSpecification));
@@ -834,8 +842,9 @@ public class APICore extends ReportManager {
                 dataToJSON("responseTime", String.valueOf(respTime));
             }
         } catch (TimeoutException e) {
+            System.out.println("API call timed out after 20000 seconds!::" + e.getMessage());
             future.cancel(true);
-            logStepAction("API call timed out after 60 seconds!", e.getMessage());
+            logStepAction("API call timed out after 20000 seconds!", e.getMessage());
         } catch (Exception e) {
             dataToJSON("apiTestStatus", "FAILED");
             failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
@@ -846,4 +855,5 @@ public class APICore extends ReportManager {
         }
 
         return response;
-    }}
+    }
+}

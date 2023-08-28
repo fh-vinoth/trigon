@@ -22,19 +22,19 @@
 
 ### SoftwareComponents
 
-|	Component	| Version	 |	Usage	|	URL	|	
-|	---	|----------| ---	|	---	|	
-|	Gradle	| 	7.2	    |	Build Tool	|	https://gradle.org/install/	|
-|	Java	| 	17	     |	Java JDK	|	https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html	|
-|	Selenium	| 	4.2.2	  |	Core Web Automation libray	|	It will auto download through build.gradle 	|
-|	testNg		| 	7.5	    |	Core Libray to invoke Tests	  |	It will auto download through build.gradle	|
-|	Extent Reports/aventstack	| 	5.0.9	  |	To Generate Reports	|	It will auto download through build.gradle	|
-|	Eclipse/Intellij		| 	latest	 |	IDE	|	https://www.jetbrains.com/idea/download/	|
-|	Appium	| 	1.15.1	 |	Mobile Automation	|	http://appium.io/	|
-|	Android Studio	| 	1.15.1	 |	For Android SDK and To use emulator for Android Automation	|	https://developer.android.com/studio/install	|
-|	Xcode	| 	11.3.1	 |	For IOS Automation		|	App Store	|
-|	GitBash	| 	Latest	 |	For Git Shell		|	https://git-scm.com/downloads	|
-|	GitHub Desktop	| 	Latest	 |	Git UI: For easy use of git navigations	|	https://desktop.github.com/	|
+|	Component	| Version	   |	Usage	|	URL	|	
+|	---	|------------| ---	|	---	|	
+|	Gradle	| 	7.2	      |	Build Tool	|	https://gradle.org/install/	|
+|	Java	| 	17	       |	Java JDK	|	https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html	|
+|	Selenium	| 	4.2.2	    |	Core Web Automation libray	|	It will auto download through build.gradle 	|
+|	testNg		| 	7.5	      |	Core Libray to invoke Tests	  |	It will auto download through build.gradle	|
+|	Extent Reports/aventstack	| 	5.0.9	    |	To Generate Reports	|	It will auto download through build.gradle	|
+|	Eclipse/Intellij		| 	latest	   |	IDE	|	https://www.jetbrains.com/idea/download/	|
+|	Appium	| 	2.0	      |	Mobile Automation	|	https://appium.io/docs/en/2.0/intro/	|
+|	Android Studio	| 	2022.3.1	 |	For Android SDK and To use emulator for Android Automation	|	https://developer.android.com/studio	|
+|	Xcode	| 	15	       |	For IOS Automation		|	https://developer.apple.com/xcode/	|
+|	GitBash	| 	Latest	   |	For Git Shell		|	https://git-scm.com/downloads	|
+|	GitHub Desktop	| 	Latest	   |	Git UI: For easy use of git navigations	|	https://desktop.github.com/	|
 
 
 ### FrameworkStructure

@@ -110,4 +110,6 @@ public class Initializers {
     public static ADatabase adb = new ADatabase();
     public static GenerateSuiteForModules gs = new GenerateSuiteForModules();
 
+    protected static int executionCount = 0;
+
 }
