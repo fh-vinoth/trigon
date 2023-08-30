@@ -66,6 +66,7 @@ public class Initializers {
     protected static CommonUtils commonUtils = new CommonUtils();
     protected static String getSuiteNameWithTime;
     protected static String getSuiteExecutionDate;
+    protected static String reportPath;
     protected static String platformType;
     protected static String appType;
     protected static String suiteParallel;

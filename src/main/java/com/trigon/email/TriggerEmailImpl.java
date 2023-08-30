@@ -131,10 +131,9 @@ public class TriggerEmailImpl implements ITriggerEmail {
             if ((uploadToAWS != null) && (uploadToAWS.equalsIgnoreCase("true"))) {
                 TransferManager xfer_mgr = TransferManagerBuilder.standard().withS3Client(s3Client).build();
                 String[] folderName = reportPath.split("/");
-                int folderlength = folderName.length;
+                String folderPath = folderName[4] +"/" + folderName[5]+"/" + folderName[6]+"/" + folderName[7];
                 System.out.println("Uploading to S3 Bucket !! It takes a while depending on your network and depending on size of report !! Please, Wait.... ");
-                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("fh-qa-automation/TestResults_2.8",
-                        folderName[folderlength - 2]+"/"+folderName[folderlength - 1], new File(reportPath), true);
+                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("fh-qa-automation/TestResults_2.8",folderPath, new File(reportPath), true);
                 XferMgrProgress.showTransferProgress(xfer);
                 XferMgrProgress.waitForCompletion(xfer);
                 System.out.println("Reports are Picked from " + reportPath);

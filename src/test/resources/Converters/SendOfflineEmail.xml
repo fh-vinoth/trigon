@@ -2,14 +2,12 @@
 <suite name="SendOfflineReports">
     <test name="SendOfflineReportsToEmail">
         <!-- Add recipients as comma separated -->
-        <parameter name="recipients"
-                          value="
-                          gayathri.adhikrishnan@foodhub.com"></parameter>
+        <parameter name="recipients" value="kanna.v@foodhub.com"></parameter>
                 <!-- Dont Include Sub folder path in reportsPath-->
-        <parameter name="reportPath"
-                   value="/Users/bhaskarreddy/Desktop/Data/Automation/Development/trigon/src/test/resources/TestResults/API_Endpoint_Automation_Category_2021-07-22-005944"/>
+        <parameter name="reportPath" value="src/test/resources/TestResults/2023/Aug/30/API_Check_2023-08-30-155151"/>
 <!--        <parameter name="uploadToAWS" value="false"/>-->
         <parameter name="sendFailedReport" value="true"/>
+        <parameter name="uploadToAWS" value="true"/>
         <classes>
             <class name="com.trigon.email.SendEmail"/>
         </classes>

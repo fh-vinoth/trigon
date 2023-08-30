@@ -260,17 +260,17 @@ public class EmailReport {
                 "                        <td colspan=\"2\">Detailed Analysis Reports</td>\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
+                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + reportPath + "/" + suiteWithTime + "/" + suiteWithTime + ".html\"\n" +
                 "                                style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Report</a></td>\n" +
-                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/EmailReport.html\"\n" +
+                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + reportPath + "/" + suiteWithTime + "/EmailReport.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Summary Report</a></td>\n" +
                 "\n" +
                 "                    </tr>\n" +
                 "                    <tr style=\"height: 40px\">\n" +
-                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
+                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + reportPath + "/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Logs</a></td>\n" +
-                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + getSuiteExecutionDate + "/" + suiteWithTime + "/TestRailReport.html\"\n" +
-                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">TestRail Report</a></td>\n" +
+                "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + reportPath + "/" + suiteWithTime + "/TestRailReport.html\"\n" +
+                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Miscellaneous Report</a></td>\n" +
                 "\n" +
                 "                    </tr>\n" +
                 "                    </tbody>\n" +

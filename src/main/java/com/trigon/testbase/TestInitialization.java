@@ -82,6 +82,8 @@ public class TestInitialization extends Browsers {
         String datePath = cUtils().createFolder("src/test/resources", "TestResults", year);
         String finalPath = cUtils().createFolder(datePath, month, day);
         String testResultsPath = cUtils().createFolder(finalPath,getSuiteNameWithTime,"");
+        String[] folderName = testResultsPath.split("/");
+        reportPath = folderName[4] +"/" + folderName[5]+"/" + folderName[6];
         trigonPaths.setTestResultsPath(testResultsPath);
         String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
         trigonPaths.setSupportFilePath(supportFilePath);
