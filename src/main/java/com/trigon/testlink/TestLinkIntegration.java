@@ -6,7 +6,7 @@ import testlink.api.java.client.TestLinkAPIResults;
 public class TestLinkIntegration {
     public static final String TESTLINK_KEY = "";
     //public static final String TESTLINK_KEY = "";
-    //public static final String TESTLINK_URL = "https://testlink.stage.t2sonline.com/testlink/lib/api/xmlrpc.php";
+    //public static final String TESTLINK_URL = "";
     public static final String TESTLINK_URL = "";
     public static final String TEST_PROJECT_NAME = "APIQA:API QA";//APIQA:API QA
     public static final String TEST_PLAN_NAME = "TestAutomationIntegrationPlan";
