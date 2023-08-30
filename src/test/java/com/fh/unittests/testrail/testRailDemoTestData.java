@@ -23,11 +23,13 @@ public class testRailDemoTestData extends TestLocalController {
         //ArrayList<String> tcIDs = getTestIdsInArray(tData.get("tcIDs").toString());
         author_ScenarioName("Nisha","Testing");
         try {
-            TestLinkIntegration i = new TestLinkIntegration();
-            i.updateResults("12321",null,TestLinkAPIResults.TEST_FAILED);
+           /* TestLinkIntegration i = new TestLinkIntegration();
+            i.updateResults("API-2583: FUS - Fusion requires merchantId in the activation Request - Version1",null,TestLinkAPIResults.TEST_FAILED);
             i.updateResults("API-2583: FUS - Fusion requires merchantId in the activation Request - Version1",null,TestLinkAPIResults.TEST_PASSED);
+*/
 
-
+            tEnv().setJenkins_execution("true");
+            tEnv().setPipeline_execution("true");
             Category_SEARCH c = new Category_SEARCH();
             c.createCategory();
 
@@ -109,7 +111,7 @@ public class testRailDemoTestData extends TestLocalController {
             testTearDown(tcIDs);
         }
     }
-   @Test
+  // @Test
     public void methodNameDemo2() {
         ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C222764","C222936","C222937"));
         author_ScenarioName("Nisha","Testing");

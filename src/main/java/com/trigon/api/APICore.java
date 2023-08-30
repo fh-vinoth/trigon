@@ -273,38 +273,6 @@ public class APICore extends ReportManager {
                 dataToJSON("apiTestStatus", "PASSED");
             }
 
-            Map<String,Object> expMap = new HashMap<>();
-            Map<String,Object> actMap = new HashMap<>();
-            for(Map.Entry<String,Object> e : dataTableMapApi.get().entrySet()){
-                String k = e.getKey();
-                String v = String.valueOf(e.getValue());
-                if(k.equalsIgnoreCase("actualResponse")){
-                    String key[] = v.split(",");
-                    for(String keys : key){
-                        String keyToMap[] = keys.split("=");
-                        String addKeyToMap = keyToMap[0];
-                        String addValueToMap = keyToMap[1];
-                        String addKeyToMapR = "";
-                        if(addKeyToMap.contains("}")){
-                            addKeyToMap=  addKeyToMap.replaceFirst("[{]","");
-                            System.out.println(addKeyToMap);
-                        }
-                        if(addKeyToMap.contains("{")){
-                            addKeyToMap = addKeyToMap.replace("{","");
-                            System.out.println(addKeyToMap);
-                        }
-                        System.out.println(addKeyToMap);
-                        System.out.println(addValueToMap);
-                        actMap.put(addKeyToMap,addValueToMap);
-                    }
-                }
-                System.out.println(actMap);
-
-            }
-
-            System.out.println(expectedResponse);
-
-
         } catch (Exception e) {
             dataToJSON("apiTestStatus", "FAILED");
             captureException(e);
@@ -391,6 +359,7 @@ public class APICore extends ReportManager {
         } catch (Exception e) {
             captureException(e);
         }
+        System.out.println(response.getBody().asString());
         return response;
     }
 
@@ -668,19 +637,15 @@ public class APICore extends ReportManager {
 
                 if (dataTableCollectionApi.get().get(0).containsKey("actualResponse")) {
                     respValidation.put("actualResponse",dataTableCollectionApi.get().get(0).get("actualResponse"));
-                    logStepAction("Actual Response :"+dataTableCollectionApi.get().get(0).get("actualResponse"));
                     dataTableCollectionApi.get().get(0).remove("actualResponse");
                 }
                 if (dataTableCollectionApi.get().get(0).containsKey("expectedResponse")) {
                     respValidation.put("expectedResponse",dataTableCollectionApi.get().get(0).get("expectedResponse"));
-                    logStepAction("Expected Response :"+dataTableCollectionApi.get().get(0).get("expectedResponse"));
                     dataTableCollectionApi.get().get(0).remove("expectedResponse");
                 }
 
                 respValidation.put("responseTime",responseTime);
                 respValidation.put("apiTestStatus",apiTestStatus);
-
-                logStepAction("Status Code Validation : "+statusCodeData);
 
                 dataTableCollectionApi.get().get(0).remove("responseJSON");
                 dataTableCollectionApi.get().get(0).remove("curl");
@@ -841,6 +806,5 @@ public class APICore extends ReportManager {
         logger.info(curl);
         return curl;
     }
-
 
 }
