@@ -4,6 +4,7 @@ import com.fh.api.Category_SEARCH;
 import com.fh.core.TestLocalController;
 import com.trigon.annotations.ExcelSheet;
 import com.trigon.dataprovider.DataProviders;
+import com.trigon.security.AES;
 import com.trigon.testlink.TestLinkIntegration;
 import com.trigon.utils.TrigonUtils;
 import org.testng.annotations.Test;
@@ -23,10 +24,9 @@ public class testRailDemoTestData extends TestLocalController {
         //ArrayList<String> tcIDs = getTestIdsInArray(tData.get("tcIDs").toString());
         author_ScenarioName("Nisha","Testing");
         try {
-           /* TestLinkIntegration i = new TestLinkIntegration();
+            TestLinkIntegration i = new TestLinkIntegration();
             i.updateResults("API-2583: FUS - Fusion requires merchantId in the activation Request - Version1",null,TestLinkAPIResults.TEST_FAILED);
             i.updateResults("API-2583: FUS - Fusion requires merchantId in the activation Request - Version1",null,TestLinkAPIResults.TEST_PASSED);
-*/
 
             tEnv().setJenkins_execution("true");
             tEnv().setPipeline_execution("true");
