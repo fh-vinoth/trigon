@@ -861,13 +861,11 @@ public class ReportManager extends CustomReport {
 
     protected void hardFail(String message, Exception e) {
         logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
-        logReport("FAIL", message);
         Assert.fail(message + e.getMessage());
     }
 
     protected void hardFail(Exception e) {
         logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
-        logReport("FAIL", e.getMessage());
         Assert.fail(e.getMessage());
     }
 
@@ -904,7 +902,7 @@ public class ReportManager extends CustomReport {
     public void hardWait(long delay) {
         try {
             if (delay > 0) {
-                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + delay + " milli Seconds" + "\u001b[34m");
+                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + delay + " Milli Seconds" + "\u001b[34m");
             }
             Thread.sleep(delay);
         } catch (InterruptedException e) {
