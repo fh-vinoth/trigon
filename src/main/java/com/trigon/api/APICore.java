@@ -363,9 +363,7 @@ public class APICore extends ReportManager {
 
             }
             if (response == null && executionCount < 2) {
-                logStepAction("Trying for second time !!");
-                System.out.println("Trying for second time !!");
-                logStepAction("recursive call");
+                logStepAction("Trying for second time !! recursive call");
                 executeAPIMethod(HttpMethod, Endpoint, requestSpecification);
             }
             else if (response == null && executionCount == 2){
