@@ -57,7 +57,7 @@ public class CustomReport extends Initializers {
                         "<body>\n" +
                         "<table style=\"width: 90%;font-family: Roboto,sans-serif;font-size: 13px;color: #555555;text-align: center;border-radius: 20px;margin-left:auto;margin-right:auto;overflow: hidden;border-collapse: collapse;background-color: #f5f2f2\">\n" +
                         "    <tbody>\n" +
-                        "    <th style=\"padding-left: 30px;text-align: left;background: #e0dbdb;height: 60px;\"><img alt=\"FoodHub\" height=\"20\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"114\"></th>\n" +
+                        "    <th style=\"padding-left: 30px;text-align: left;background: #e0dbdb;height: 60px;\"><img alt=\"FoodHub\" height=\"20\" src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/foodhub_email_logo.png\" width=\"114\"></th>\n" +
                         "    <th colspan=\""+logoHeaderLength+"\" style=\"text-align: center;background: #e0dbdb;height: 60px;\"> Task Name : "+reportTask+"</th>\n" +
                         "    <th style=\"text-align: left;background: #e0dbdb;height: 60px;\">\n" +
                         "        <div>Executed By : "+System.getProperty("user.name")+"</div>\n" +

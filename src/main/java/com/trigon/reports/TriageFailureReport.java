@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.reports.model.TestSummary;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
@@ -85,7 +86,7 @@ public class TriageFailureReport {
                     "<div>\n" +
                     "<div style=\"display: flex; justify-content: center; align-items: center;\">\n" +
                     "<div style=\"flex: 1;\"><img alt=\"FoodHub\"\n" +
-                    "src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\"\n" +
+                    "src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/foodhub_email_logo.png\"\n" +
                     "width=\"150px\">\n" +
                     "</div>\n" +
                     "<div style=\"text-align: center; background: #e0dbdb; height: 60px; flex: 1;\">Failure Triage\n" +
@@ -158,7 +159,7 @@ public class TriageFailureReport {
                     "<table class=\"table\">\n" +
                     "<thead >\n" +
                     "<tr>\n" +
-                    "<th><img alt=\"FoodHub\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
+                    "<th><img alt=\"FoodHub\" src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
                     "<th width=\"75%\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th></tr>\n" +
                     "</thead>\n" +
                     "<table class=\"table table-bordered\" style=\"margin-top: auto;\">\n" +
@@ -217,7 +218,7 @@ public class TriageFailureReport {
                     "<table class=\"table\">\n" +
                     "<thead >\n" +
                     "<tr>\n" +
-                    "<th><img alt=\"FoodHub\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
+                    "<th><img alt=\"FoodHub\" src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
                     "<th width=\"75%\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th></tr>\n" +
                     "</thead>\n" +
                     "<table class=\"table table-bordered\" style=\"margin-top: auto;\">\n" +
@@ -315,7 +316,7 @@ public class TriageFailureReport {
             RequestSpecification requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
             String resp = requestSpecification.get(URL).then().extract().response().getBody().prettyPrint();
 
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement jsonElement = JsonParser.parseString(resp);
             TestSummary summary = pGson.fromJson(jsonElement, TestSummary.class);
             summary.getResults().forEach(result -> {

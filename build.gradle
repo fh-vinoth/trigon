@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.trigon'
-version '2.9.7_V2'
+version '2.9.7_Java_V3'
 
 repositories {
     mavenCentral()
@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
 
-    implementation group: 'com.yworks', name: 'yguard', version: '3.0.0'
+    implementation group: 'com.yworks', name: 'yguard', version: '4.0.0'
     implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.31'
     implementation group: 'org.testng', name: 'testng', version: '7.5'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'
@@ -25,8 +25,8 @@ dependencies {
     implementation group: 'io.appium', name: 'java-client', version: '8.1.1'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
-    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
-    implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.1.0'
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.1.0'
     implementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
     implementation group: 'com.github.wnameless.json', name: 'json-flattener', version: '0.12.0'
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.1029'
@@ -36,7 +36,7 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver', version: '4.2.2'
     implementation group: 'com.konghq', name: 'unirest-java', version: '3.11.11'
     implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
     implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
     implementation group: 'com.twilio.sdk', name: 'twilio', version: '8.13.0'
     implementation group: 'com.aventstack', name: 'extentreports', version: '5.0.9'

@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import com.trigon.api.bean.APIInputData;
 import com.trigon.api.bean.APIInputs;
 import com.trigon.api.bean.TestMethods;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import io.restassured.response.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -111,7 +112,7 @@ public class APICoreController extends APICore {
                 for (File file : allFiles) {
                     if (!file.isDirectory()) {
                         if (file.getName().contains(".json")) {
-                            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+                            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
                             JsonElement apiElements = JsonParser.parseReader(new FileReader(file));
                             APIInputs apiInputs = pGson.fromJson(apiElements, APIInputs.class);
                             if (apiInputs.getTestMethodData().size() > 0) {

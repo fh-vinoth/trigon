@@ -30,7 +30,7 @@ public class DBController extends TrigonUtils {
         dataSource = new BasicDataSource();
         try {
 
-//removed ssh tunnelling since devops removed the same
+            //removed ssh tunnelling since devops removed the same
             String connectionUrl="jdbc:mysql://" + tEnv().getDbHost() + ":" + connectionPort + "/" + tEnv().getDbName();
             dataSource.setUrl(connectionUrl);
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");

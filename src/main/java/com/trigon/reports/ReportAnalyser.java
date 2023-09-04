@@ -26,19 +26,19 @@ public class ReportAnalyser {
 
     private String listBucketObjects(String date_DMMMYYYY, String partialSuiteName) {
         String amazonaws_url = "https://s3.amazonaws.com/";
-        String bucketName = "t2s-staging-automation";
+        String bucketName = "fh-qa-automation";
         String prefix = "TestResults_2.8/" + date_DMMMYYYY;
         String reportUrl = amazonaws_url + bucketName + "/";
         List<String> reportUrlList = new LinkedList<>();
         try {
             AWSCredentials credentials = new BasicAWSCredentials(
-                    AES.decrypt("RmE+MUyQTW86skUJLnPhqN1usUunmK2127f7Illl3q8=", "t2sautomation"),
-                    AES.decrypt("nGQWMFgryIV75J5STylI09ERvFDyNB5DaYt7mKvBSErJ6tjm+z095t9kvgbD3Ca3", "t2sautomation")
+                    AES.decrypt("OriNxlLJ6ngVCYi/qCBSy1kBwPag3XyxfDiGrXfUUUg=", "t2sautomation"),
+                    AES.decrypt("hij44vD5DKQY+nlkxoB+BT/wXXofuDwJTNtl7eCMaaE8ZJVrkJ2exWcFBnVn9p/G", "t2sautomation")
             );
             final AmazonS3 s3 = AmazonS3ClientBuilder
                     .standard()
                     .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                    .withRegion("us-east-1")
+                    .withRegion("eu-west-2")
                     .build();
             ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName)
                     .withPrefix(prefix + "/").withDelimiter("/");

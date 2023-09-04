@@ -1,4 +1,4 @@
-![T2SLogo](https://t2s-staging-automation.s3.amazonaws.com/Docs/FoodHubLogo.svg)
+![FH - Logo](https://fh-qa-automation.s3.amazonaws.com/Docs/FoodHubLogo.svg)
 
 
 
@@ -22,27 +22,27 @@
 
 ### SoftwareComponents
 
-|	Component	| Version	|	Usage	|	URL	|	
-|	---	|	---	| ---	|	---	|	
-|	Gradle	|	5.2.1	|	Build Tool	|	https://gradle.org/install/	|
-|	Java	|	1.8	|	Java JDK	|	https://www.oracle.com/java/technologies/javase-jdk8-downloads.html	|
-|	Selenium	|	3.141.59	|	Core Web Automation libray	|	It will auto download through build.gradle 	|
-|	testNg		|	6.14.2	|	Core Libray to invoke Tests	  |	It will auto download through build.gradle	|
-|	Extent Reports/aventstack	|	4.0.9	|	To Generate Reports	|	It will auto download through build.gradle	|
-|	Eclipse/Intellij		|	latest	|	IDE	|	https://www.jetbrains.com/idea/download/	|
-|	Appium	|	1.15.1	|	Mobile Automation	|	http://appium.io/	|
-|	Android Studio	|	1.15.1	|	For Android SDK and To use emulator for Android Automation	|	https://developer.android.com/studio/install	|
-|	Xcode	|	11.3.1	|	For IOS Automation		|	App Store	|
-|	GitBash	|	Latest	|	For Git Shell		|	https://git-scm.com/downloads	|
-|	GitHub Desktop	|	Latest	|	Git UI: For easy use of git navigations	|	https://desktop.github.com/	|
+|	Component	| Version	   |	Usage	|	URL	|	
+|	---	|------------| ---	|	---	|	
+|	Gradle	| 	7.2	      |	Build Tool	|	https://gradle.org/install/	|
+|	Java	| 	17	       |	Java JDK	|	https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html	|
+|	Selenium	| 	4.2.2	    |	Core Web Automation libray	|	It will auto download through build.gradle 	|
+|	testNg		| 	7.5	      |	Core Libray to invoke Tests	  |	It will auto download through build.gradle	|
+|	Extent Reports/aventstack	| 	5.0.9	    |	To Generate Reports	|	It will auto download through build.gradle	|
+|	Eclipse/Intellij		| 	latest	   |	IDE	|	https://www.jetbrains.com/idea/download/	|
+|	Appium	| 	2.0	      |	Mobile Automation	|	https://appium.io/docs/en/2.0/intro/	|
+|	Android Studio	| 	2022.3.1	 |	For Android SDK and To use emulator for Android Automation	|	https://developer.android.com/studio	|
+|	Xcode	| 	15	       |	For IOS Automation		|	https://developer.apple.com/xcode/	|
+|	GitBash	| 	Latest	   |	For Git Shell		|	https://git-scm.com/downloads	|
+|	GitHub Desktop	| 	Latest	   |	Git UI: For easy use of git navigations	|	https://desktop.github.com/	|
 
 
 ### FrameworkStructure
-![T2SFramework](https://t2s-staging-automation.s3.amazonaws.com/Docs/AutomationArchitecture1.jpg)
+![FH-Framework](https://fh-qa-automation.s3.amazonaws.com/Docs/AutomationArchitecture1.jpg)
 
 ### AutomationTestSetupRules
 
-1. Clone Project from https://github.com/uktech/t2s-Automationscript.git
+1. Clone Project from https://github.com/uktech/testautomation_UI.git / https://github.com/uktech/testautomation_API.git
 2. Launch Intellij and Import project as Gradle Project
 3. Download Chrome Driver from below path and add it to src/test/resources/Utilities
 https://chromedriver.chromium.org/downloads
@@ -127,7 +127,7 @@ Rules:
 
 After creating a pull request, codepipeline will check that t2s-Automationscript and the automationframework library compile together.
 
-- If a new version number of the automationlibrary is published, modify this within the buildspec.yml.
+- If a new version number of the automation library is published, modify this within the buildspec.yml.
 - If a change is required to be published in this library, first publish the change, then run git commit --amend, git push -f to retrigger the pipeline check (ensure git branch mode is 'simple' - git config --global push.default simple) to only push the current branch.
 - The PR Build can be viewed here:
 https://eu-west-2.console.aws.amazon.com/codesuite/codebuild/192389957878/projects/TestSuite-PR
@@ -138,5 +138,5 @@ NA
 
 ## Contact
 
-Incase of any issues, Please reach out at bhaskar.marrikunta@touch2success.com
+Incase of any issues, Please reach out at automation@foodhub.com
 

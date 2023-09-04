@@ -43,11 +43,9 @@ public class TriggerEmailImpl implements ITriggerEmail {
 
     @Override
     public void triggerEmail(String reportPath, String recipients, String uploadToAWS, String sendFailedReport) {
-        String decryptedString = AES.decrypt("dxoS+CjoM/WctAD5Svfq/g==", "t2sautomation");
-
         String from = "automation@foodhub.com";
         final String username = "automation@foodhub.com";
-        final String password = "LkdfL7!VK8ksBb";
+        final String password = AES.decrypt("tZD5Ep1YTtME9sinDOMcnQ==", "t2sautomation");
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtppro.zoho.com");
@@ -58,14 +56,14 @@ public class TriggerEmailImpl implements ITriggerEmail {
         props.put("mail.smtp.port", "465");
 
         AWSCredentials credentials = new BasicAWSCredentials(
-                AES.decrypt("RmE+MUyQTW86skUJLnPhqN1usUunmK2127f7Illl3q8=", "t2sautomation"),
-                AES.decrypt("nGQWMFgryIV75J5STylI09ERvFDyNB5DaYt7mKvBSErJ6tjm+z095t9kvgbD3Ca3", "t2sautomation")
+                AES.decrypt("OriNxlLJ6ngVCYi/qCBSy1kBwPag3XyxfDiGrXfUUUg=", "t2sautomation"),
+                AES.decrypt("hij44vD5DKQY+nlkxoB+BT/wXXofuDwJTNtl7eCMaaE8ZJVrkJ2exWcFBnVn9p/G", "t2sautomation")
         );
 
         AmazonS3 s3Client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion("us-east-1")
+                .withRegion("eu-west-2")
                 .build();
         // Get the Session object.
         Session session = Session.getInstance(props,
@@ -95,7 +93,6 @@ public class TriggerEmailImpl implements ITriggerEmail {
             }
 
             StringBuffer sb = new StringBuffer(recipients);
-            sb.append(",bhaskar.marrikunta@foodhub.com");
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(sb.toString()));
         } catch (Exception e) {
@@ -134,10 +131,9 @@ public class TriggerEmailImpl implements ITriggerEmail {
             if ((uploadToAWS != null) && (uploadToAWS.equalsIgnoreCase("true"))) {
                 TransferManager xfer_mgr = TransferManagerBuilder.standard().withS3Client(s3Client).build();
                 String[] folderName = reportPath.split("/");
-                int folderlength = folderName.length;
+                String folderPath = folderName[4] +"/" + folderName[5]+"/" + folderName[6]+"/" + folderName[7];
                 System.out.println("Uploading to S3 Bucket !! It takes a while depending on your network and depending on size of report !! Please, Wait.... ");
-                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("t2s-staging-automation/TestResults_2.8",
-                        folderName[folderlength - 2]+"/"+folderName[folderlength - 1], new File(reportPath), true);
+                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("fh-qa-automation/TestResults_2.8",folderPath, new File(reportPath), true);
                 XferMgrProgress.showTransferProgress(xfer);
                 XferMgrProgress.waitForCompletion(xfer);
                 System.out.println("Reports are Picked from " + reportPath);
@@ -164,7 +160,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
     public void triggerCustomEmail(String reportPath, String recipients) throws IOException {
         String from = "automation@foodhub.com";
         final String username = "automation@foodhub.com";
-        final String password = "LkdfL7!VK8ksBb";
+        final String password = AES.decrypt("tZD5Ep1YTtME9sinDOMcnQ==", "t2sautomation");
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtppro.zoho.com");

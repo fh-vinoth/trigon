@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.trigon.bean.ElementRepoPojo;
 import com.trigon.exceptions.RetryOnException;
 
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.reports.ReportManager;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
@@ -42,7 +43,7 @@ public class TestModelCore extends ReportManager {
         try {
             //s.startsWith("name")||s.startsWith("xpath")||s.startsWith("classname")||s.startsWith("partiallinktext")||s.startsWith("linktext")||s.startsWith("tagname")||s.startsWith("css")||s.startsWith("id")
             if(!s.contains("=")){
-                Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+                Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
                 JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
                 ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
                 locator = eRepo.getElements().get(s).getAsJsonObject().get(tEnv().getElementLocator()).getAsString();
@@ -178,16 +179,16 @@ public class TestModelCore extends ReportManager {
         }
     }
 
-    protected void textVerification(String actual, String expected, String textAction) {
+    protected void textVerification(String actual, String expected, String textAction,String... description) {
         try {
             if ((actual != null) && (expected != null)) {
                 switch (textAction.toLowerCase()) {
                     case "partial":
                         if (!actual.isEmpty()) {
-                            customAssertPartialEquals(actual, expected);
+                            customAssertPartialEquals(actual, expected,description);
                         } else {
                             if (expected.equals(actual)) {
-                                customAssertPartialEquals(actual, expected);
+                                customAssertPartialEquals(actual, expected,description);
                             } else {
                                 logger.error("Actual or Expected value is empty");
                                 logReport("FAIL", "Actual or Expected value is empty");
@@ -195,11 +196,11 @@ public class TestModelCore extends ReportManager {
                         }
                         break;
                     case "notequal":
-                        customAssertNotEquals(actual, expected);
+                        customAssertNotEquals(actual, expected,description);
                         break;
 
                     default:
-                        customAssertEquals(actual, expected);
+                        customAssertEquals(actual, expected,description);
                         break;
                 }
 

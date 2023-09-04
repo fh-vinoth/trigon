@@ -20,7 +20,9 @@ public class Category_SEARCH extends TestLocalController {
 
 //            System.out.println("Test");
             logStepAction("Creating category and getting the category id");
+            hardWait(5000);
             String category_id = createCategory();
+            hardWait(5000);
             logger.info("Created category_id: " + category_id);
 
             logStepAction("Searching the created category");
@@ -112,6 +114,9 @@ public class Category_SEARCH extends TestLocalController {
         formparams.put("name", "TestCateg" + cUtils().generateRandomString(4));
         try {
             Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
+            System.out.println(postresponse);
+//            String s = db.sendQuery("select * from config where host = 'automation-uk1.t2scdn.com'", 1);
+//            System.out.println(s);
             category_id = postresponse.get("resource_id").toString();
 
         } catch (Exception e) {

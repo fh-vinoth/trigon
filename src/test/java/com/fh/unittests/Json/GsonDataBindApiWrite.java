@@ -2,6 +2,7 @@ package com.fh.unittests.Json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -54,7 +55,7 @@ public class GsonDataBindApiWrite {
 
         try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             gson.toJson(cars, writer);
         }
 

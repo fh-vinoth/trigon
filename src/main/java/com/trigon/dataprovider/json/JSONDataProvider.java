@@ -2,6 +2,7 @@ package com.trigon.dataprovider.json;
 
 import com.google.gson.*;
 import com.trigon.dataprovider.json.bean.TestModules;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.reports.ReportManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +55,7 @@ public class JSONDataProvider extends ReportManager {
 
         Object[][] dataProvider = null;
         int counter = 0;
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
         try {
             JsonElement jsonElement = JsonParser.parseReader(new FileReader(path));
             TestModules bean = gson.fromJson(jsonElement, TestModules.class);

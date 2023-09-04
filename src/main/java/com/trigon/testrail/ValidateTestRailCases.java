@@ -1,6 +1,7 @@
 package com.trigon.testrail;
 
 import com.google.gson.*;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -16,7 +17,7 @@ public class ValidateTestRailCases {
     @Test()
     public static void validateCases(String runId, String jsonPath){
         List<String> invalidTcs = new ArrayList<>();
-        GsonBuilder gsonBuilder = new GsonBuilder();
+        GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter());
         Gson gson = gsonBuilder.setLenient().create();
         try {
             JsonElement ele = JsonParser.parseReader(new FileReader(jsonPath));

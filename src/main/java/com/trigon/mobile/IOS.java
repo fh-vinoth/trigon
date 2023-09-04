@@ -46,6 +46,10 @@ public class IOS extends ReportManager {
                 browserstackOptions.put("appiumVersion", "1.21.0");
                 browserstackOptions.put("realMobile", "true");
                 browserstackOptions.put("acceptInsecureCerts", "true");
+                iosCaps.setCapability("autoAcceptAlerts", true);
+                iosCaps.setCapability("unicodeKeyboard", true);
+                iosCaps.setCapability("resetKeyboard", true);
+                iosCaps.setCapability("autoGrantPermissions",true);
                 HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
                 networkLogsOptions.put("captureContent", true);
                 iosCaps.setCapability("browserstack.networkLogs", true);

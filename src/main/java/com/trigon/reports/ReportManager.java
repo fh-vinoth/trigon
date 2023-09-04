@@ -13,6 +13,7 @@ import com.aventstack.extentreports.model.Log;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.security.AES;
 import com.trigon.testrail.TestRailManager;
 import io.restassured.RestAssured;
@@ -166,8 +167,9 @@ public class ReportManager extends CustomReport {
 
     public void logMultipleJSON(String status, LinkedHashMap message, Object responseJSON, String curl, LinkedHashMap responseValidation) {
         String apiName = "API : "+getAPIMethodName();
-        Gson pGson1 = new GsonBuilder().create();
-        Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+
+        Gson pGson1 = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).create();
+        Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
         String m = apiCard(status,apiName,pGson1.toJson(message),String.valueOf(responseJSON),curl,pGson1.toJson(responseValidation));
         try {
             if (status.equalsIgnoreCase("PASS")) {
@@ -481,24 +483,31 @@ public class ReportManager extends CustomReport {
 //        }
 //    }
 
-    protected void customAssertEquals(String actual, String expected) {
+    protected void customAssertEquals(String actual, String expected,String... description) {
         try {
+            if (description.length>0){
+                logReport("PASS", "Comparison for " + description[0]);
+            }
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
+
             if (expected.equals(actual)) {
                 logReport("PASS", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
                 logReport("FAIL", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
-
             }
         } catch (Exception e) {
             captureException(e);
         }
     }
 
-    protected void customAssertNotEquals(String actual, String expected) {
+    protected void customAssertNotEquals(String actual, String expected,String... description) {
         try {
+            if (description.length>0){
+                logReport("PASS","Comparison for " + description[0]);
+            }
             logger.info("Verifying NOT Equals Actual : " + actual + " with Expected : " + expected + "");
+
             if (!(expected.equals(actual))) {
                 logReport("PASS", "Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
             } else {
@@ -509,9 +518,13 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    protected void customAssertPartialEquals(String actual, String expected) {
+    protected void customAssertPartialEquals(String actual, String expected,String... description) {
+        if (description.length>0){
+            logReport("PASS","Comparison for " + description[0]);
+        }
         logger.info("Verifying Partial Equals Actual : " + actual + " with Expected : " + expected + "");
         try {
+
             if (actual.contains(expected)) {
                 logReport("PASS", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
             } else {
@@ -831,7 +844,6 @@ public class ReportManager extends CustomReport {
             if (!elementIsPresentCheck(wait_logReport_isPresent_Up_Down_XpathValues)) {
                 logger.error(message + locatorString);
                 logReportWithScreenShot("FAIL", message + locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
-                Thread.dumpStack();
                 Assert.fail(message + locatorString);
             } else {
                 isPresentStatus = true;
@@ -844,27 +856,21 @@ public class ReportManager extends CustomReport {
 
     protected void hardFail(String message) {
         logReport("FAIL", message);
-        Thread.dumpStack();
         Assert.fail(message);
     }
 
     protected void hardFail(String message, Exception e) {
         logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
-        logReport("FAIL", message);
-        e.printStackTrace();
         Assert.fail(message + e.getMessage());
     }
 
     protected void hardFail(Exception e) {
         logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
-        logReport("FAIL", e.getMessage());
-        e.printStackTrace();
         Assert.fail(e.getMessage());
     }
 
     protected void hardFail() {
         logReport("FAIL", "Test Exception Occurred");
-        Thread.dumpStack();
         Assert.fail("Test Exception Occured");
     }
 
@@ -895,12 +901,12 @@ public class ReportManager extends CustomReport {
 
     public void hardWait(long delay) {
         try {
+            if (delay > 0) {
+                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + delay + " Milli Seconds" + "\u001b[34m");
+            }
             Thread.sleep(delay);
         } catch (InterruptedException e) {
             captureException(e);
-        }
-        if (delay > 0) {
-            logger.info("Proceeding After waiting for Hardwait: " + delay + " milli Seconds");
         }
     }
 
@@ -1322,14 +1328,14 @@ public class ReportManager extends CustomReport {
 
     public String readS3BucketContent(String bucketName,String keyName){
         AWSCredentials credentials = new BasicAWSCredentials(
-                AES.decrypt("RmE+MUyQTW86skUJLnPhqN1usUunmK2127f7Illl3q8=", "t2sautomation"),
-                AES.decrypt("nGQWMFgryIV75J5STylI09ERvFDyNB5DaYt7mKvBSErJ6tjm+z095t9kvgbD3Ca3", "t2sautomation")
+                AES.decrypt("OriNxlLJ6ngVCYi/qCBSy1kBwPag3XyxfDiGrXfUUUg=", "t2sautomation"),
+                AES.decrypt("hij44vD5DKQY+nlkxoB+BT/wXXofuDwJTNtl7eCMaaE8ZJVrkJ2exWcFBnVn9p/G", "t2sautomation")
         );
 
         AmazonS3 s3Client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion("us-east-1")
+                .withRegion("eu-west-2")
                 .build();
         S3Object object = s3Client.getObject(bucketName,keyName);
 
