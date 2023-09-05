@@ -1,4 +1,4 @@
-![FH](https://fh-qa-automation.s3.amazonaws.com/Docs/FoodHubLogo.svg)
+![FH](src/test/resources/Foodhub.svg)
 
 
 
