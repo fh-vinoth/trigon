@@ -1,4 +1,4 @@
-![FH](src/test/resources/Foodhub.svg)
+<img src="src/test/resources/Foodhub.svg"  width="60%" height="30%">
 
 
 
