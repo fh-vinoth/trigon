@@ -1,4 +1,4 @@
-<img src="src/test/resources/Foodhub.svg"  width="60%" height="30%">
+<img src="src/test/resources/Foodhub.svg"  width="40%" height="20%">
 
 
 
