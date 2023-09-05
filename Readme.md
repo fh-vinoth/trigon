@@ -38,7 +38,7 @@
 
 
 ### FrameworkStructure
-![FH-Framework](https://fh-qa-automation.s3.amazonaws.com/Docs/AutomationArchitecture1.jpg)
+![FH-Framework](src/test/resources/AutomationArchitecture1.jpg)
 
 ### AutomationTestSetupRules
 
