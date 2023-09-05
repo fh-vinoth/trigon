@@ -89,12 +89,10 @@ public class CommonUtils {
     }
 
     public String getCurrentDate() {
-
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d-MMM-yyyy");
         LocalDate localDate = LocalDate.now();
         String currentDate = dtf.format(localDate);
         return currentDate;
-
     }
 
     public String getCurrentTimeinMilliSeconds() {

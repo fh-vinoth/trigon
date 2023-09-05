@@ -5,14 +5,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.trigon.reports.ReportManager;
 import io.restassured.RestAssured;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.TimeoutException;
 import org.testng.collections.CollectionUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 
@@ -37,6 +43,10 @@ public class APICore extends ReportManager {
             logger.info("Executing API: " + Thread.currentThread().getStackTrace()[3].getMethodName() + "  and  " + Thread.currentThread().getStackTrace()[4].getMethodName());
             RestAssured.useRelaxedHTTPSValidation();
             RequestSpecification requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
+            RestAssuredConfig restAssuredConfig = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig()
+                    .setParam("http.connection.timeout", 60000)
+                    .setParam("http.socket.timeout", 60000));
+            requestSpecification.config(restAssuredConfig);
             Map<String, Object> headers = new HashMap<>();
             Map<String, Object> cookies = new HashMap<>();
             Map<String, Object> queryParams = new HashMap<>();
@@ -107,6 +117,10 @@ public class APICore extends ReportManager {
         try {
             RestAssured.useRelaxedHTTPSValidation();
             requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
+            RestAssuredConfig restAssuredConfig = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig()
+                    .setParam("http.connection.timeout", 60000)
+                    .setParam("http.socket.timeout", 60000));
+            requestSpecification.config(restAssuredConfig);
             String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, multiPartMap);
             dataToJSON("curl", curl);
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
@@ -346,11 +360,19 @@ public class APICore extends ReportManager {
                         logApiReport("FAIL", "Method " + HttpMethod + " is not yet implemented");
                         break;
                 }
-
+                executionCount++;
             } catch (Exception e) {
                 dataToJSON("apiTestStatus", "FAILED");
                 failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
                 apiTearDown(null, null, null, null, null, null, null);
+
+            }
+            if (response == null && executionCount < 2) {
+                logStepAction("Trying for second time !! recursive call");
+                executeAPIMethod(HttpMethod, Endpoint, requestSpecification);
+            }
+            else if (response == null && executionCount == 2){
+                logApiReport("FAIL", "Failed even after re-connecting for 2 times");
             }
             if (response != null) {
                 respTime = response.getTimeIn(TimeUnit.MILLISECONDS) / 1000.0;
@@ -359,7 +381,6 @@ public class APICore extends ReportManager {
         } catch (Exception e) {
             captureException(e);
         }
-        System.out.println(response.getBody().asString());
         return response;
     }
 
@@ -653,7 +674,6 @@ public class APICore extends ReportManager {
                 dataTableCollectionApi.get().get(0).remove("responseTime");
                 dataTableCollectionApi.get().get(0).remove("apiTestStatus");
 
-
                 if (apiTestStatus.equals("FAILED")) {
                     logMultipleJSON("FAIL", dataTableCollectionApi.get().get(0), responseJSON, curl, respValidation);
                     logApiReport("FAIL", dataTableCollectionApi.get().get(0).get("failReason").toString());
@@ -806,5 +826,37 @@ public class APICore extends ReportManager {
         logger.info(curl);
         return curl;
     }
+    public Response executeApiCall(String HttpMethod, String Endpoint, RequestSpecification requestSpecification) {
+        dataToJSON("httpMethod", HttpMethod);
+        dataToJSON("endPoint", Endpoint);
+        int timeoutMillis = 20000; // 60 seconds in milliseconds
+        Response response = null;
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<Response> future = executor.submit(() -> executeAPIMethod(HttpMethod, Endpoint, requestSpecification));
+        response = null;
+        double respTime;
+        try {
+            response = future.get(timeoutMillis, TimeUnit.MILLISECONDS);
+            if (future.isDone()) {
+                logStepAction("API call successful!" + response.getStatusCode());
+            }
+            if (response != null) {
+                respTime = response.getTimeIn(TimeUnit.MILLISECONDS) / 1000.0;
+                dataToJSON("responseTime", String.valueOf(respTime));
+            }
+        } catch (TimeoutException e) {
+            System.out.println("API call timed out after 20000 seconds!::" + e.getMessage());
+            future.cancel(true);
+            logStepAction("API call timed out after 20000 seconds!", e.getMessage());
+        } catch (Exception e) {
+            dataToJSON("apiTestStatus", "FAILED");
+            failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
+            apiTearDown(null, null, null, null, null, null, null);
+            logStepAction("API call failed with an exception: ", e.getMessage());
+        } finally {
+            executor.shutdownNow();
+        }
 
+        return response;
+    }
 }

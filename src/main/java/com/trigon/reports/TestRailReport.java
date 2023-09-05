@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 
 import java.io.*;
 
@@ -84,7 +85,7 @@ public class TestRailReport extends ReportManager {
     public void initTestRailReport(ExtentReports stats) {
         try {
             String file = "";
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
             String jenkinsExecution  = pGson.fromJson(element1, RemoteEnvPojo.class).getJenkins_execution();
             System.out.println("is Jenkins Enabled :: "+jenkinsExecution);

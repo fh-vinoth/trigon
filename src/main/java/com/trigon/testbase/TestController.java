@@ -1,5 +1,6 @@
 package com.trigon.testbase;
 
+import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.model.Log;
 import com.google.gson.Gson;
@@ -8,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
 import com.trigon.email.SendEmail;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.reports.EmailReport;
 import com.trigon.testrail.BaseMethods;
 import com.trigon.testrail.Runs;
@@ -24,6 +26,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,7 +41,7 @@ public class TestController extends TestInitialization {
     protected void suiteInitialization(ITestContext iTestContext, XmlTest xmlTest) {
         try {
             logger.info("Test Execution Started for Suite : " + iTestContext.getSuite().getName());
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
             tre = pGson.fromJson(element1, RemoteEnvPojo.class);
             executionType = tre.getExecution_type();
@@ -280,7 +284,7 @@ public class TestController extends TestInitialization {
                     captureException(e);
                 }
             }
-            tearDownGenerateTCStatusJson();
+//            tearDownGenerateTCStatusJson();
             tearDownCustomReport(iTestContext);
 
         } catch (Exception e) {
@@ -300,8 +304,19 @@ public class TestController extends TestInitialization {
                 EmailReport.createEmailReport(trigonPaths.getTestResultsPath(), extent, iTestContext.getSuite().getName(), platformType, executionType, pipelineExecution);
 
                 if (executionType.equalsIgnoreCase("remote")) {
-                    if (System.getProperty("user.name").equalsIgnoreCase("root") || System.getProperty("user.name").equalsIgnoreCase("ec2-user")) {
-                        emailTrigger();
+                    execute = true;
+
+                    if (getSuiteNameWithTime.toLowerCase().contains("module") && reportModuleRun < 1) {
+                        reportModuleRun = reportModuleRun + 1;
+                        execute = true;
+                    } else if (getSuiteNameWithTime.toLowerCase().contains("module") && reportModuleRun >= 1) {
+                        execute = false;
+                    }
+
+                    if (execute) {
+                        if (System.getProperty("user.name").equalsIgnoreCase("root") || System.getProperty("user.name").equalsIgnoreCase("ec2-user")) {
+                            emailTrigger();
+                        }
                     }
                 }
             }

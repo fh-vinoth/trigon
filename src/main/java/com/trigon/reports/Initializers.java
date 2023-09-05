@@ -66,6 +66,7 @@ public class Initializers {
     protected static CommonUtils commonUtils = new CommonUtils();
     protected static String getSuiteNameWithTime;
     protected static String getSuiteExecutionDate;
+    protected static String reportPath;
     protected static String platformType;
     protected static String appType;
     protected static String suiteParallel;
@@ -75,6 +76,8 @@ public class Initializers {
     protected static String failure_email_recipients = null;
     protected static boolean failStatus = false;
     protected static boolean exceptionStatus = false;
+    protected static int reportModuleRun =0;
+    protected static boolean execute = false;
 
     protected static ThreadLocal<List<String>> testCaseIDThread = new ThreadLocal<>();
     public static ThreadLocal<ArrayList> passedTCs = new ThreadLocal<>();
@@ -107,5 +110,7 @@ public class Initializers {
     public static Database db = new Database();
     public static ADatabase adb = new ADatabase();
     public static GenerateSuiteForModules gs = new GenerateSuiteForModules();
+
+    protected static int executionCount = 0;
 
 }

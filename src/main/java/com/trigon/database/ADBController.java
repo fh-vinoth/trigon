@@ -28,7 +28,7 @@ public class ADBController extends TrigonUtils {
         String dbName = "trigon";
         try {
 
-//removed ssh tunnelling since devops removed the same
+            //removed ssh tunnelling since devops removed the same
             String connectionUrl="jdbc:mysql://" + tEnv().getDbHost() + ":" + connectionPort + "/" + dbName;
             System.out.println("db connection "+connectionUrl);
             dataSource.setUrl(connectionUrl);
@@ -38,6 +38,7 @@ public class ADBController extends TrigonUtils {
             dataSource.setMaxTotal(openConnections);
             dataSource.setMaxIdle(idleConnections);
             dataSource.setMaxWaitMillis(connectionWaitTime);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
