@@ -590,7 +590,9 @@ public class TestInitialization extends Browsers {
             tEnv().setTestType(platformType.toLowerCase());
             if (appType != null) {
                 tEnv().setAppType(appType.toLowerCase());
+                System.out.println(appType.toLowerCase());
             }
+
             tEnv().setExecution_type(tRemoteEnv.getExecution_type());
             tEnv().setGridExecution_type(tRemoteEnv.getGrid_execution_local());
             tEnv().setGps_location(tRemoteEnv.getGps_location());
@@ -607,7 +609,6 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiAppSycAuth(AES.decrypt(tLocalEnv.getApi().getAppSycAuth(),"t2sautomation"));
                 tEnv().setApiPartnerURI(tLocalEnv.getApi().getApiPartnerURI());
                 tEnv().setProductName(tLocalEnv.getApi().getproductName());
-                tEnv().setAppType(tLocalEnv.getApi().getappType());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -621,7 +622,6 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebBuildNumber(tLocalEnv.getWeb().getWebBuildNumber());
                 tEnv().setWebNetworkLogs(tLocalEnv.getWeb().getWebNetworkLogs());
                 tEnv().setProductName(tLocalEnv.getApi().getproductName());
-                tEnv().setAppType(tLocalEnv.getApi().getappType());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -661,7 +661,6 @@ public class TestInitialization extends Browsers {
                     }
                 }
                 tEnv().setProductName(tLocalEnv.getApi().getproductName());
-                tEnv().setAppType(tLocalEnv.getApi().getappType());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -702,7 +701,6 @@ public class TestInitialization extends Browsers {
                 }
                 tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
-                tEnv().setAppType(tLocalEnv.getApi().getappType());
             }
 
 

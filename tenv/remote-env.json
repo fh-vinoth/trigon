@@ -65,8 +65,8 @@
     },
     "FUSIONApp": {
       "android": {
-        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
-        "build_number": "1234"
+        "bs_app_path": "bs://fd0874bb094235823a0cc693b9094d6c97160479",
+        "build_number": "EPOS_TAB_12.2.0_1549"
       },
       "ios": {
         "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
