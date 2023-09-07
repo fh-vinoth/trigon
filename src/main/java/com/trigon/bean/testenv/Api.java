@@ -89,16 +89,8 @@ public class Api {
         return productName;
     }
 
-    public String getappType() {
-        return appType;
-    }
-
     public void setModuleNames(String moduleNames) {
         this.moduleNames = moduleNames;
-    }
-
-    public void setappType(String appType) {
-        this.appType = appType;
     }
 
 }

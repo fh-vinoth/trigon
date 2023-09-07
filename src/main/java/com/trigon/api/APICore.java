@@ -121,6 +121,7 @@ public class APICore extends ReportManager {
                     .setParam("http.connection.timeout", 60000)
                     .setParam("http.socket.timeout", 60000));
             requestSpecification.config(restAssuredConfig);
+            executionCount = 0;
             String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, multiPartMap);
             dataToJSON("curl", curl);
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
@@ -367,8 +368,9 @@ public class APICore extends ReportManager {
 
             }
             if (response == null && executionCount < 2) {
-                logStepAction("Trying for second time !! recursive call");
-                executeAPIMethod(HttpMethod, Endpoint, requestSpecification);
+                logStepAction("Trying for 2nd time !! recursive call");
+                response = executeAPIMethod(HttpMethod, Endpoint, requestSpecification);
+                logStepAction("Crossed the 2nd time response stage !! recursive call");
             }
             else if (response == null && executionCount == 2){
                 logApiReport("FAIL", "Failed even after re-connecting for 2 times");
