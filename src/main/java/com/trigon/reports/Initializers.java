@@ -49,14 +49,9 @@ public class Initializers {
     public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentScenarioNode = new ThreadLocal<>();
     public static List<String> apiCoverage = new ArrayList<>();
-    public static List<String> apiCallCoverage = new ArrayList<>();
 
     public static int totalEndpoints = 0;
-    public static int getRequest = 0;
-    public static int postRequest = 0;
-    public static int putRequest = 0;
-    public static int deleteRequest = 0;
-    public static int patchRequest = 0;
+
 
     public static String executedGitBranch = "NA";
     public static ExtentPojo extentPojo = null;
@@ -71,6 +66,7 @@ public class Initializers {
     protected static CommonUtils commonUtils = new CommonUtils();
     protected static String getSuiteNameWithTime;
     protected static String getSuiteExecutionDate;
+    protected static String reportPath;
     protected static String platformType;
     protected static String appType;
     protected static String suiteParallel;
@@ -80,6 +76,8 @@ public class Initializers {
     protected static String failure_email_recipients = null;
     protected static boolean failStatus = false;
     protected static boolean exceptionStatus = false;
+    protected static int reportModuleRun =0;
+    protected static boolean execute = false;
 
     protected static ThreadLocal<List<String>> testCaseIDThread = new ThreadLocal<>();
     public static ThreadLocal<ArrayList> passedTCs = new ThreadLocal<>();
@@ -112,5 +110,7 @@ public class Initializers {
     public static Database db = new Database();
     public static ADatabase adb = new ADatabase();
     public static GenerateSuiteForModules gs = new GenerateSuiteForModules();
+
+    protected static int executionCount = 0;
 
 }

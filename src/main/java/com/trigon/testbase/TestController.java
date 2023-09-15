@@ -1,5 +1,6 @@
 package com.trigon.testbase;
 
+import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.model.Log;
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +41,7 @@ public class TestController extends TestInitialization {
     protected void suiteInitialization(ITestContext iTestContext, XmlTest xmlTest) {
         try {
             logger.info("Test Execution Started for Suite : " + iTestContext.getSuite().getName());
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
             tre = pGson.fromJson(element1, RemoteEnvPojo.class);
             executionType = tre.getExecution_type();
@@ -208,7 +210,7 @@ public class TestController extends TestInitialization {
             }
 
             if (executionType.equalsIgnoreCase("remote")  && tEnv().getApiEnvType().equalsIgnoreCase("SIT")) {
-                adb.insertData(method, xmlTest, context, result,status);
+//                adb.insertData(method, xmlTest, context, result,status);
             }
             if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
                 BaseMethods b = new BaseMethods();
@@ -282,7 +284,7 @@ public class TestController extends TestInitialization {
                     captureException(e);
                 }
             }
-            tearDownGenerateTCStatusJson();
+//            tearDownGenerateTCStatusJson();
             tearDownCustomReport(iTestContext);
 
         } catch (Exception e) {
@@ -292,8 +294,8 @@ public class TestController extends TestInitialization {
                 getGitBranch();
                 if (apiCoverage.size() > 0) {
                     if (extent != null) {
-                        getEndpointCount();
-                        getApiCallCount();
+//                        getEndpointCount();
+//                        getApiCallCount();
                         extent.setSystemInfo("API Endpoints Covered", String.valueOf(totalEndpoints));
                         extent.flush();
                     }
@@ -302,88 +304,99 @@ public class TestController extends TestInitialization {
                 EmailReport.createEmailReport(trigonPaths.getTestResultsPath(), extent, iTestContext.getSuite().getName(), platformType, executionType, pipelineExecution);
 
                 if (executionType.equalsIgnoreCase("remote")) {
-                    if (System.getProperty("user.name").equalsIgnoreCase("root") || System.getProperty("user.name").equalsIgnoreCase("ec2-user")) {
-                        emailTrigger();
+                    execute = true;
+
+                    if (getSuiteNameWithTime.toLowerCase().contains("module") && reportModuleRun < 1) {
+                        reportModuleRun = reportModuleRun + 1;
+                        execute = true;
+                    } else if (getSuiteNameWithTime.toLowerCase().contains("module") && reportModuleRun >= 1) {
+                        execute = false;
                     }
-                }
-            }
 
-        }
-
-    }
-
-    private void getApiCallCount() {
-        for (int i = 0; i < apiCallCoverage.size(); i++) {
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("POST")) {
-                postRequest++;
-            }
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("Get")) {
-                getRequest++;
-            }
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("put")) {
-                putRequest++;
-            }
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("delete")) {
-                deleteRequest++;
-            }
-            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("patch")) {
-                patchRequest++;
-            }
-        }
-
-    }
-
-    private void getEndpointCount() {
-        Set endpoint = new LinkedHashSet();
-        List actualEndpoints = apiCoverage;
-        List http = apiCallCoverage;
-        String addedendpoint = "";
-        Map<String, Integer> endpointCount = new HashMap<>();
-        actualEndpoints.stream().forEach(c -> {
-            String ep = c.toString();
-            ep = ep.replaceAll("[0-9]", "");
-            if (endpointCount.containsKey(ep)) {
-                endpointCount.put(ep, endpointCount.get(ep) + 1);
-            } else {
-                endpointCount.put(ep, 1);
-            }
-        });
-        for (int i = 0; i < actualEndpoints.size(); i++) {
-            String endPoint = actualEndpoints.get(i).toString();
-            String[] split = new String[0];
-            if (endPoint.contains("/")) {
-                if (endPoint.startsWith("/")) {
-                    char charOfSlash = endPoint.charAt(0);
-                    endPoint = endPoint.replaceFirst(String.valueOf(charOfSlash), "");
-                }
-                split = endPoint.split("/");
-                for (int j = 0; j < split.length; j++) {
-                    String splitt = split[j];
-                    char firstChar = splitt.charAt(0);
-                    int asciivalue = firstChar;
-                    if (asciivalue >= 97 && asciivalue <= 122) {
-                        String endendpoint = split[j];
-                        addedendpoint = addedendpoint + endendpoint + "/";
-                    } else {
-                        addedendpoint = addedendpoint + "12345/";
-                    }
-                    if (j == split.length - 1) {
-                        if (addedendpoint.contains("?")) {
-                            String[] splitQueryParam = addedendpoint.split("\\?");
-                            addedendpoint = splitQueryParam[0];
+                    if (execute) {
+                        if (System.getProperty("user.name").equalsIgnoreCase("root") || System.getProperty("user.name").equalsIgnoreCase("ec2-user")) {
+                            emailTrigger();
                         }
-                        endpoint.add(addedendpoint + "[" + http.get(i) + "]");
-                        addedendpoint = "";
                     }
                 }
-            } else {
-                endpoint.add(endPoint + "/" + "[" + http.get(i) + "]");
             }
-        }
-        totalEndpoints = endpoint.size();
 
-        System.out.println("API Endpoints Covered :" + totalEndpoints);
+        }
+
     }
+
+//    private void getApiCallCount() {
+//        for (int i = 0; i < apiCallCoverage.size(); i++) {
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("POST")) {
+//                postRequest++;
+//            }
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("Get")) {
+//                getRequest++;
+//            }
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("put")) {
+//                putRequest++;
+//            }
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("delete")) {
+//                deleteRequest++;
+//            }
+//            if (apiCallCoverage.get(i).toString().equalsIgnoreCase("patch")) {
+//                patchRequest++;
+//            }
+//        }
+
+//    }
+
+//    private void getEndpointCount() {
+//        Set endpoint = new LinkedHashSet();
+//        List actualEndpoints = apiCoverage;
+//        List http = apiCallCoverage;
+//        String addedendpoint = "";
+//        Map<String, Integer> endpointCount = new HashMap<>();
+//        actualEndpoints.stream().forEach(c -> {
+//            String ep = c.toString();
+//            ep = ep.replaceAll("[0-9]", "");
+//            if (endpointCount.containsKey(ep)) {
+//                endpointCount.put(ep, endpointCount.get(ep) + 1);
+//            } else {
+//                endpointCount.put(ep, 1);
+//            }
+//        });
+//        for (int i = 0; i < actualEndpoints.size(); i++) {
+//            String endPoint = actualEndpoints.get(i).toString();
+//            String[] split = new String[0];
+//            if (endPoint.contains("/")) {
+//                if (endPoint.startsWith("/")) {
+//                    char charOfSlash = endPoint.charAt(0);
+//                    endPoint = endPoint.replaceFirst(String.valueOf(charOfSlash), "");
+//                }
+//                split = endPoint.split("/");
+//                for (int j = 0; j < split.length; j++) {
+//                    String splitt = split[j];
+//                    char firstChar = splitt.charAt(0);
+//                    int asciivalue = firstChar;
+//                    if (asciivalue >= 97 && asciivalue <= 122) {
+//                        String endendpoint = split[j];
+//                        addedendpoint = addedendpoint + endendpoint + "/";
+//                    } else {
+//                        addedendpoint = addedendpoint + "12345/";
+//                    }
+//                    if (j == split.length - 1) {
+//                        if (addedendpoint.contains("?")) {
+//                            String[] splitQueryParam = addedendpoint.split("\\?");
+//                            addedendpoint = splitQueryParam[0];
+//                        }
+//                        endpoint.add(addedendpoint + "[" + http.get(i) + "]");
+//                        addedendpoint = "";
+//                    }
+//                }
+//            } else {
+//                endpoint.add(endPoint + "/" + "[" + http.get(i) + "]");
+//            }
+//        }
+//        totalEndpoints = endpoint.size();
+//
+//        System.out.println("API Endpoints Covered :" + totalEndpoints);
+//    }
 
     private void emailTrigger() {
         SendEmail sendEmail = new SendEmail();

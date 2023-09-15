@@ -86,7 +86,7 @@ public class TriageFailureReport {
                     "<div>\n" +
                     "<div style=\"display: flex; justify-content: center; align-items: center;\">\n" +
                     "<div style=\"flex: 1;\"><img alt=\"FoodHub\"\n" +
-                    "src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\"\n" +
+                    "src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/foodhub_email_logo.png\"\n" +
                     "width=\"150px\">\n" +
                     "</div>\n" +
                     "<div style=\"text-align: center; background: #e0dbdb; height: 60px; flex: 1;\">Failure Triage\n" +
@@ -159,7 +159,7 @@ public class TriageFailureReport {
                     "<table class=\"table\">\n" +
                     "<thead >\n" +
                     "<tr>\n" +
-                    "<th><img alt=\"FoodHub\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
+                    "<th><img alt=\"FoodHub\" src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
                     "<th width=\"75%\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th></tr>\n" +
                     "</thead>\n" +
                     "<table class=\"table table-bordered\" style=\"margin-top: auto;\">\n" +
@@ -218,7 +218,7 @@ public class TriageFailureReport {
                     "<table class=\"table\">\n" +
                     "<thead >\n" +
                     "<tr>\n" +
-                    "<th><img alt=\"FoodHub\" src=\"https://s3.amazonaws.com/t2s-staging-automation/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
+                    "<th><img alt=\"FoodHub\" src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/foodhub_email_logo.png\" width=\"150px\"></th>\n" +
                     "<th width=\"75%\" style=\"text-align: center;background: #e0dbdb;height: 60px;\">Failure Triage Report</th></tr>\n" +
                     "</thead>\n" +
                     "<table class=\"table table-bordered\" style=\"margin-top: auto;\">\n" +

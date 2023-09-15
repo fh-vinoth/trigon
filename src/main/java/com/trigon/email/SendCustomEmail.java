@@ -28,7 +28,7 @@ public class SendCustomEmail {
             if(recipients!=null){
                 email.triggerCustomEmail(reportPath, recipients);
             }else{
-                email.triggerCustomEmail(reportPath, "bhaskar.marrikunta@foodhub.com");
+                email.triggerCustomEmail(reportPath, "qeautomation@foodhub.com");
             }
         }
 

@@ -103,16 +103,23 @@ public class Category_SEARCH extends TestLocalController {
         Map<String, Object> headers = new HashMap<>();
         Map<String, Object> formparams = new HashMap<>();
         Map<String, Object> queryparams = new HashMap<>();
+        Map<String, Object> expectedResponse = new HashMap<>();
 
         headers.put("Content-Type", "application/x-www-form-urlencoded");
         headers.put("Store", tEnv().getApiStore());
         queryparams.put("api_token", tEnv().getApiToken());
         String category_id = null;
-        String endpoint = "category";
+        String endpoint = "category/3676543";
         formparams.put("name", "TestCateg" + cUtils().generateRandomString(4));
+        expectedResponse.put("data[0].id", "3676543");
+       // expectedResponse.put("data[0].host", "sit-mytautomation-uk8.t2scdn.com");
+        expectedResponse.put("data[0].host", "apiautomation-uk7.t2scdn.com");
+        expectedResponse.put("data[0].name", "ApiAutomationCategoryzFsubr");
+        expectedResponse.put("data[0].is_image_approved", "3");
         try {
-            Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
-            category_id = postresponse.get("resource_id").toString();
+            Map<String, Object> postresponse = api().validateStaticResponse("GET", endpoint, null, null, queryparams, null, null, null, "200", expectedResponse);
+            category_id = postresponse.get("data[0].id").toString();
+            logger.info("Category Id: " + category_id);
 
         } catch (Exception e) {
             hardFail("Category is not created."+e);

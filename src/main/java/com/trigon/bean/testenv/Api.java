@@ -26,6 +26,12 @@ public class Api {
     @SerializedName("moduleNames")
     @Expose
     private String moduleNames;
+    @SerializedName("appType")
+    @Expose
+    private String appType;
+    @SerializedName("productName")
+    @Expose
+    private String productName;
 
     public String getURI() {
         return uRI;
@@ -77,6 +83,10 @@ public class Api {
 
     public String getModuleNames() {
         return moduleNames;
+    }
+
+    public String getproductName() {
+        return productName;
     }
 
     public void setModuleNames(String moduleNames) {
