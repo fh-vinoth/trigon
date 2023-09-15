@@ -20,7 +20,9 @@ public class Category_SEARCH extends TestLocalController {
 
 //            System.out.println("Test");
             logStepAction("Creating category and getting the category id");
+            hardWait(5000);
             String category_id = createCategory();
+            hardWait(5000);
             logger.info("Created category_id: " + category_id);
 
             logStepAction("Searching the created category");
@@ -103,23 +105,19 @@ public class Category_SEARCH extends TestLocalController {
         Map<String, Object> headers = new HashMap<>();
         Map<String, Object> formparams = new HashMap<>();
         Map<String, Object> queryparams = new HashMap<>();
-        Map<String, Object> expectedResponse = new HashMap<>();
 
         headers.put("Content-Type", "application/x-www-form-urlencoded");
         headers.put("Store", tEnv().getApiStore());
         queryparams.put("api_token", tEnv().getApiToken());
         String category_id = null;
-        String endpoint = "category/3676543";
+        String endpoint = "category";
         formparams.put("name", "TestCateg" + cUtils().generateRandomString(4));
-        expectedResponse.put("data[0].id", "3676543");
-       // expectedResponse.put("data[0].host", "sit-mytautomation-uk8.t2scdn.com");
-        expectedResponse.put("data[0].host", "apiautomation-uk7.t2scdn.com");
-        expectedResponse.put("data[0].name", "ApiAutomationCategoryzFsubr");
-        expectedResponse.put("data[0].is_image_approved", "3");
         try {
-            Map<String, Object> postresponse = api().validateStaticResponse("GET", endpoint, null, null, queryparams, null, null, null, "200", expectedResponse);
-            category_id = postresponse.get("data[0].id").toString();
-            logger.info("Category Id: " + category_id);
+            Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
+            System.out.println(postresponse);
+//            String s = db.sendQuery("select * from config where host = 'automation-uk1.t2scdn.com'", 1);
+//            System.out.println(s);
+            category_id = postresponse.get("resource_id").toString();
 
         } catch (Exception e) {
             hardFail("Category is not created."+e);

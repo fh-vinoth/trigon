@@ -25,8 +25,8 @@ dependencies {
     implementation group: 'io.appium', name: 'java-client', version: '8.1.1'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
-    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.1.0'
-    implementation group: 'org.apache.poi', name: 'poi', version: '5.1.0'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.3'
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.2.3'
     implementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
     implementation group: 'com.github.wnameless.json', name: 'json-flattener', version: '0.12.0'
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.1029'
@@ -36,21 +36,13 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver', version: '4.2.2'
     implementation group: 'com.konghq', name: 'unirest-java', version: '3.11.11'
     implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.1.0'
     implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
     implementation group: 'com.twilio.sdk', name: 'twilio', version: '8.13.0'
     implementation group: 'com.aventstack', name: 'extentreports', version: '5.0.9'
-    implementation group: 'com.browserstack', name: 'browserstack-local-java', version: '1.0.6'
+    implementation group: 'com.browserstack', name: 'browserstack-local-java', version: '1.1.0'
     implementation group: 'org.apache.commons',name:'commons-dbcp2', version:'2.9.0'
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
-    implementation group: 'com.github.kalokanand', name: 'testlink-api-client', version: '2.0'
-    implementation group: 'org.apache.xmlrpc', name: 'xmlrpc-common', version: '3.1.3'
-    implementation group: 'org.apache.xmlrpc', name: 'xmlrpc-client', version: '3.1.3'
-
-    implementation group: 'org.apache.ws.commons.util', name: 'ws-commons-util', version: '1.0.2'
-    implementation group: 'org.apache.xmlrpc', name: 'xmlrpc-common', version: '3.1.3'
-    implementation group: 'org.seleniumhq.selenium.client-drivers', name: 'selenium-java-client-driver', version: '1.0-beta-2'
-    implementation group: 'org.seleniumhq.selenium', name: 'selenium-server', version: '3.141.59'
 
 
 }
