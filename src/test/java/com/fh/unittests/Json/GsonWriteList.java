@@ -2,6 +2,7 @@ package com.fh.unittests.Json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class GsonWriteList {
              OutputStreamWriter isr = new OutputStreamWriter(fos,
                      StandardCharsets.UTF_8)) {
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
 
             Item item1 = new Item("chair", 4);
             Item item2 = new Item("book", 5);

@@ -15,6 +15,7 @@ import com.trigon.bean.TrigonPaths;
 import com.trigon.bean.remoteenv.RemoteEnvPojo;
 import com.trigon.bean.testenv.TestEnv;
 import com.trigon.bean.testenv.TestEnvPojo;
+import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.mobile.AppiumManager;
 import com.trigon.properties.ConfigReader;
 import com.trigon.security.AES;
@@ -74,8 +75,15 @@ public class TestInitialization extends Browsers {
         String suiteNameWithTime = suiteNameReplaced + "_" + cUtils().getCurrentTimeStamp();
         getSuiteNameWithTime = suiteNameWithTime;
         getSuiteExecutionDate = cUtils().getCurrentDate();
-        String datePath = cUtils().createFolder("src/test/resources", "TestResults", getSuiteExecutionDate);
-        String testResultsPath = cUtils().createFolder(datePath, suiteNameWithTime, "");
+        String[] dateSplit = getSuiteExecutionDate.split("-");
+        String day = dateSplit[0];
+        String month = dateSplit[1];
+        String year = dateSplit[2];
+        String datePath = cUtils().createFolder("src/test/resources", "TestResults", year);
+        String finalPath = cUtils().createFolder(datePath, month, day);
+        String testResultsPath = cUtils().createFolder(finalPath,getSuiteNameWithTime,"");
+        String[] folderName = testResultsPath.split("/");
+        reportPath = folderName[4] +"/" + folderName[5]+"/" + folderName[6];
         trigonPaths.setTestResultsPath(testResultsPath);
         String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
         trigonPaths.setSupportFilePath(supportFilePath);
@@ -112,7 +120,7 @@ public class TestInitialization extends Browsers {
         try {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/TestResultJSON/apiCoverage.json", false)));
             TreeSet<String> listOfEndpoints = new TreeSet<>(apiCoverage);
-            totalEndpoints = listOfEndpoints.size();
+          //  totalEndpoints = listOfEndpoints.size();
             Map<String, Long> getEndpointCount = apiCoverage.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
             writer.beginArray();
             getEndpointCount.forEach((k, v) -> {
@@ -563,7 +571,7 @@ public class TestInitialization extends Browsers {
                                       String region, String country, String currency,
                                       String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames,String test_email_recipients,String test_error_email_recipients,String test_failure_email_recipients,String browserstack_midSessionInstallApps) {
         try {
-            Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+            Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement testEnvElement = null;
             try {
                 if (fileName != null) {
@@ -582,7 +590,9 @@ public class TestInitialization extends Browsers {
             tEnv().setTestType(platformType.toLowerCase());
             if (appType != null) {
                 tEnv().setAppType(appType.toLowerCase());
+                System.out.println(appType.toLowerCase());
             }
+
             tEnv().setExecution_type(tRemoteEnv.getExecution_type());
             tEnv().setGridExecution_type(tRemoteEnv.getGrid_execution_local());
             tEnv().setGps_location(tRemoteEnv.getGps_location());
@@ -596,8 +606,9 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiVersion(tLocalEnv.getApi().getVersion());
                 tEnv().setApiEnvType(tLocalEnv.getApi().getEnvType());
                 tEnv().setApiAppSycURI(tLocalEnv.getApi().getAppSycURI());
-                tEnv().setApiAppSycAuth(tLocalEnv.getApi().getAppSycAuth());
+                tEnv().setApiAppSycAuth(AES.decrypt(tLocalEnv.getApi().getAppSycAuth(),"t2sautomation"));
                 tEnv().setApiPartnerURI(tLocalEnv.getApi().getApiPartnerURI());
+                tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -610,6 +621,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
                 tEnv().setWebBuildNumber(tLocalEnv.getWeb().getWebBuildNumber());
                 tEnv().setWebNetworkLogs(tLocalEnv.getWeb().getWebNetworkLogs());
+                tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -648,6 +660,7 @@ public class TestInitialization extends Browsers {
                         }
                     }
                 }
+                tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -686,6 +699,7 @@ public class TestInitialization extends Browsers {
                         }
                     }
                 }
+                tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
             }
 
@@ -762,7 +776,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiAppSycURI(appSycURI);
             }
             if (appSycAuth != null) {
-                tEnv().setApiAppSycAuth(URI);
+                tEnv().setApiAppSycAuth(AES.decrypt(appSycAuth,"t2sautomation"));
             }
 
             if (version != null) {
@@ -772,7 +786,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiPartnerURI(partnerURI);
             }
             if (token != null) {
-                tEnv().setApiToken(AES.decrypt(token,"testautomation"));
+                tEnv().setApiToken(AES.decrypt(token,"t2sautomation"));
             }
             if (accessToken != null) {
                 tEnv().setApiAccessToken(accessToken);
