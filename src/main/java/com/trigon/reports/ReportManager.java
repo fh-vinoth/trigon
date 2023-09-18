@@ -173,9 +173,12 @@ public class ReportManager extends CustomReport {
         String m = apiCard(status,apiName,pGson1.toJson(message),String.valueOf(responseJSON),curl,pGson1.toJson(responseValidation));
         try {
             if (status.equalsIgnoreCase("PASS")) {
-
                 if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
-                     m = apiName + " is PASSED";
+                     //m = apiName + " is PASSED";
+                     m = "API Test status for the method '<b>"+apiName+ "' </b>is PASSED";
+                     if(responseValidation.containsKey("expectedResponse")){
+                         responseValidation(responseValidation);
+                     }
                 }
                 if (extentScenarioNode.get() != null) {
                     extentScenarioNode.get().pass(m);
@@ -1397,6 +1400,63 @@ public class ReportManager extends CustomReport {
             }
         }
 
+    }
+    public void responseValidation(LinkedHashMap<String,Object> responseValidation){
+        responseValidation.remove("statusCode");
+        responseValidation.remove("responseTime");
+        responseValidation.remove("apiTestStatus");
+        String actVal = responseValidation.get("actualResponse").toString();
+        String expecVal = responseValidation.get("expectedResponse").toString();
+        if(expecVal.length()>2){
+            if(actVal.length()>2){
+                Map<String,Object> actMap =  getExpMap(actVal);
+                Map<String,Object> expMap = getExpMap(expecVal);
+                for(Map.Entry<String,Object> s : expMap.entrySet()){
+                    String k = s.getKey();
+                    String expVal = (String)s.getValue();
+                    String actualVal = (String)actMap.get(k);
+                    if (expVal != null) {
+                        if(expVal.equalsIgnoreCase(actualVal)){
+                            logStepAction("Validation Passed for the key : "+k+"<br>  Actual Value : "+actualVal+" equals to the Expected value : "+expVal);
+                        }else{
+                            logStepAction("Validation Failed for the key : "+k+"<br>  Actual Value : "+actualVal+" not equals to the Expected value : "+expVal);
+                        }
+                    }else{
+                        if(expVal==actualVal){
+                            if(expVal.equalsIgnoreCase(actualVal)){
+                                logStepAction("Validation Passed for the key : "+k+"<br>   Actual Value : "+actualVal+" equals to the Expected value : "+expVal);
+                            }else{
+                                logStepAction("Validation Failed for the key : "+k+"<br>  Actual Value : "+actualVal+" not equals to the Expected value : "+expVal);
+                            }
+                        }
+                    }
+
+                }
+            }else{
+                logStepAction("Actual Response contains no data");
+            }
+        }
+    }
+
+    public Map<String,Object> getExpMap(String value){
+        Map<String,Object> map = new LinkedHashMap<>();
+        String key[] = value.split(",");
+        for(String keys : key){
+            String keyToMap[] = keys.split("=");
+            String addKeyToMap = keyToMap[0];
+            String addValueToMap = keyToMap[1];
+            if(addValueToMap.contains("}")){
+                addValueToMap=  addValueToMap.replace("}","");
+            }
+            if(addKeyToMap.contains("{")){
+                addKeyToMap = addKeyToMap.replace("{","");
+            }
+            if(addKeyToMap.contains(" ")){
+                addKeyToMap = addKeyToMap.replace(" ","");
+            }
+            map.put(addKeyToMap,addValueToMap);
+        }
+        return map;
     }
 
 }

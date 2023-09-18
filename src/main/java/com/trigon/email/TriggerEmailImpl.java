@@ -89,6 +89,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
             }
 
             StringBuffer sb = new StringBuffer(recipients);
+            sb.append(",vinothkumar.e@foodhub.com");
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(sb.toString()));
         } catch (Exception e) {

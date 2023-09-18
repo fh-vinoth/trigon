@@ -291,6 +291,7 @@ public class APICore extends ReportManager {
                 dataToJSON("responseJSON", response.getBody().asString());
                 dataToJSON("apiTestStatus", "PASSED");
             }
+
         } catch (Exception e) {
             dataToJSON("apiTestStatus", "FAILED");
             captureException(e);

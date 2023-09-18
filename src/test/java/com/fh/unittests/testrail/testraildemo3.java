@@ -1,5 +1,6 @@
 package com.fh.unittests.testrail;
 
+import com.fh.api.Category_SEARCH;
 import com.fh.core.TestLocalController;
 import org.testng.annotations.Test;
 
@@ -12,7 +13,9 @@ public class testraildemo3 extends TestLocalController {
     public void methodNameDemo3() {
         ArrayList<String> tcIDs = new ArrayList<>(Arrays.asList("C223765", "C223769", "C223770", "C223771"));
         try {
-            logStepAction("1st TC", "C223765");
+            Category_SEARCH c = new Category_SEARCH();
+            c.createCategory();
+           /* logStepAction("1st TC", "C223765");
 
             logReport("PASS", "1st step");
             logReport("PASS", "2nd step");
@@ -29,7 +32,7 @@ public class testraildemo3 extends TestLocalController {
 
             hardFail("Error Message");
 
-            logStepAction("4th TC", "C223771");
+            logStepAction("4th TC", "C223771");*/
 
         } catch (Exception e) {
 
@@ -37,7 +40,7 @@ public class testraildemo3 extends TestLocalController {
             testTearDown(tcIDs);
         }
     }
-        @Test
+      /*  @Test
         public void methodNameDemo8() {
             ArrayList<String> tcIDs=new ArrayList<>(Arrays.asList("C223772","C223773","C188865","C188867"));
             try {
@@ -68,6 +71,6 @@ public class testraildemo3 extends TestLocalController {
             finally {
                 testTearDown(tcIDs);
             }
-    }
+    }*/
 
 }
