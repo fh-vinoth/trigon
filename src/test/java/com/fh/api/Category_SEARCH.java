@@ -15,7 +15,7 @@ public class Category_SEARCH extends TestLocalController {
     @Test (enabled = true)
     public void searchCategory_test() {
         try{
-            author_ScenarioName("Bhaskar", "Searching the particular category from category/search endpoint");
+            author_ScenarioName("Gayathri", "Searching the particular category from category/search endpoint");
 
 
 //            System.out.println("Test");
