@@ -16,6 +16,10 @@ public interface IElementStrategy {
 
     WebElement getAndroidElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues);
 
+    WebElement getAndroidElement(String locatorString, String action, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues);
+
+    WebElement getWebElement(String locatorString, String action, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues);
+
     WebElement getWebElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues);
 
     WebElement getIOSElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues);

@@ -20,13 +20,17 @@
     "network_logs": false
   },
   "android": {
-    "app_package": "com.t2s.mytakeaway",
-    "app_activity": "com.t2s.mytakeaway.MainActivity",
+    "app_package": "com.t2s.foodhub",
+    "app_activity": "com.t2s.MainActivity",
     "device": "Google Pixel 4",
     "os": "10.0",
     "region_android_devices": {
       "MYT-UK1": {
         "device": "Google Pixel 4 XL",
+        "os": "10.0"
+      },
+      "MYT-UK8": {
+        "device": "OnePlus 8",
         "os": "10.0"
       },
       "MYPOS-UK1": {
@@ -226,6 +230,10 @@
         "os": "13"
       },
       "MYT-UK2": {
+        "device": "iPhone XS",
+        "os": "13"
+      },
+      "MYT-UK8": {
         "device": "iPhone XS",
         "os": "13"
       },

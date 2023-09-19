@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="FHApp_android_adhoc_AppTest">
+    <parameter name="bs_app_path" value="bs://d7e8d4374b8a2e78684e56a2222719c388ec080e"></parameter>
+    <test name="AppTest">
+        <classes>
+            <class name="com.fh.adhoc.AppTest"/>
+        </classes>
+    </test>
+</suite>
