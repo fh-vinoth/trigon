@@ -1,0 +1,12 @@
+{
+    "AuthorName": "Vaisshnavi",
+    "pageTitle": "*************",
+    "elements": {
+        "btnPostcodeManual": {
+            "Web": "",
+            "Android": "accessibilityid=AK_enter_manually_text_click",
+            "IOS": "",
+            "actionevent": "click"
+        }
+    }
+}

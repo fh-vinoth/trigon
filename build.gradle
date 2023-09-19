@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.trigon'
-version '3.0'
+version '3.1_AutohealingJar'
 
 repositories {
     mavenCentral()

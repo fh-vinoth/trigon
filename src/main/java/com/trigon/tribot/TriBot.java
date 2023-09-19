@@ -149,7 +149,7 @@ public class TriBot {
             AtomicBoolean actionflag = new AtomicBoolean(false);
             map1.forEach((key, value) -> {
 
-                        if (key.toString().trim().contains("actionevent")) {
+                        if (key.toString().trim().contains("actionevent") && String.valueOf(value)!=null && !String.valueOf(value).isEmpty()) {
                             actionflag.set(true);
                             String actionValue = String.valueOf(value);
                             String[] jsonKeyValue = actionValue.split(",");
@@ -180,13 +180,13 @@ public class TriBot {
                             }
 
                         } else {
-
                             if (key.toString().trim().equals("Web")) {
                                 locatorValidation(value, methodName, "Web", jsonFilename);
                             } else if (key.toString().trim().equals("Android")) {
                                 locatorValidation(value, methodName, "Android", jsonFilename);
                             } else if (key.toString().trim().equals("IOS")) {
                                 locatorValidation(value, methodName, "IOS", jsonFilename);
+                            } else if(key.toString().trim().equals("actionevent") || key.toString().trim().equals("Web_beforeElement") || key.toString().trim().equals("Web_afterElement") || key.toString().trim().equals("App_beforeElement") || key.toString().trim().equals("App_afterElement")){
                             } else {
                                 System.err.println("Error in TestType!!Add testType Like Web/Android/IOS !! check any additional Spaces!!: " + methodName + " : JSON FILE NAME :" + jsonFilename);
                                 errorCollection.add("Error in TestType!!Add testType Like Web/Android/IOS !! check any additional Spaces!!: " + methodName + " : JSON FILE NAME :" + jsonFilename);
@@ -196,10 +196,10 @@ public class TriBot {
 
                     }
             );
-            if (!actionflag.get()) {
-                System.err.println("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
-                errorCollection.add("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
-            }
+//            if (!actionflag.get()) {
+//                System.err.println("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
+//                errorCollection.add("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
+//            }
         });
         long t2 = System.currentTimeMillis();
         //System.out.println("Filter Time Taken?= " + (t2 - t1) + "\n");
