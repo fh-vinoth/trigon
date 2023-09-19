@@ -7,7 +7,6 @@ public class AESTest {
 //        String encryptedString = AES.encrypt(originalString, secretKey) ;
 //        getListOfEncryptedKey("erefe");
 
-        System.out.printf(AES.decrypt("ZywTVUUwg8ew","t2sautomation"));
     }
 
 
