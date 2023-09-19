@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -414,7 +415,7 @@ public class EmailReport {
 
     private static String footers() {
         return "    <tr style=\"background: #e0dbdb;height: 40px;\">\n" +
-                "        <td colspan=\"2\">© 2023 - Foodhub Automation Team</td>\n" +
+                "        <td colspan=\"2\">© "+ Year.now()+" - Foodhub Automation Team</td>\n" +
                 "    </tr>\n" +
                 "    </tbody>\n" +
                 "</table>\n" +
