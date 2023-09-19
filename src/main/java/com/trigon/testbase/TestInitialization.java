@@ -569,7 +569,7 @@ public class TestInitialization extends Browsers {
                                       String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
                                       String accessToken, String isJWT, String endpointPrefix,String authorization, String franchiseId, String dbType, String serviceType, String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames,String test_email_recipients,String test_error_email_recipients,String test_failure_email_recipients,String browserstack_midSessionInstallApps) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames,String test_email_recipients,String test_error_email_recipients,String test_failure_email_recipients,String browserstack_midSessionInstallApps,String unblockToken) {
         try {
             Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -610,6 +610,8 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiPartnerURI(tLocalEnv.getApi().getApiPartnerURI());
                 tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
+                tEnv().setApiEnvType(tLocalEnv.getApi().getEnvType());
+                tEnv().setUnblockToken(tLocalEnv.getApi().getUnblockToken());
             }
 
             if (tLocalEnv.getWeb() != null) {
@@ -623,6 +625,8 @@ public class TestInitialization extends Browsers {
                 tEnv().setWebNetworkLogs(tLocalEnv.getWeb().getWebNetworkLogs());
                 tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
+                tEnv().setApiEnvType(tLocalEnv.getApi().getEnvType());
+                tEnv().setUnblockToken(tLocalEnv.getApi().getUnblockToken());
             }
 
             if (tLocalEnv.getAndroid() != null) {
@@ -662,6 +666,9 @@ public class TestInitialization extends Browsers {
                 }
                 tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
+                tEnv().setApiEnvType(tLocalEnv.getApi().getEnvType());
+                tEnv().setUnblockToken(tLocalEnv.getApi().getUnblockToken());
+
             }
 
             if (tLocalEnv.getIos() != null) {
@@ -701,6 +708,8 @@ public class TestInitialization extends Browsers {
                 }
                 tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
+                tEnv().setApiEnvType(tLocalEnv.getApi().getEnvType());
+                tEnv().setUnblockToken(tLocalEnv.getApi().getUnblockToken());
             }
 
 
@@ -772,6 +781,7 @@ public class TestInitialization extends Browsers {
             if (envType != null) {
                 tEnv().setApiEnvType(envType);
             }
+
             if (appSycURI != null) {
                 tEnv().setApiAppSycURI(appSycURI);
             }
@@ -843,6 +853,10 @@ public class TestInitialization extends Browsers {
 
             if (moduleNames != null) {
                 tEnv().setModuleNames(moduleNames);
+            }
+
+            if (unblockToken !=null){
+                tEnv().setUnblockToken(unblockToken);
             }
 
             if (jsonFilePath != null) {
