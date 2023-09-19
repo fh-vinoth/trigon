@@ -507,7 +507,7 @@ public class CommonUtils {
 
     public String emailidGenerator(int size) {
         String userName = generateRandomString(size);
-        String emailId = userName.concat("@gmail.com");
+        String emailId = userName.concat("@foodhub.com");
         return emailId;
     }
 

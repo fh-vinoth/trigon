@@ -284,7 +284,7 @@ public class APICore extends ReportManager {
                         }
                     }
                 }
-            } else {
+            }else {
                 flattenMap = JsonFlattener.flattenAsMap(response.asString());
                 flattenMap.put("actualStatusCode", response.getStatusCode());
                 flattenMap.put("actualResponseTime", response.time());
@@ -365,11 +365,20 @@ public class APICore extends ReportManager {
                         logApiReport("FAIL", "Method " + HttpMethod + " is not yet implemented");
                         break;
                 }
+                executionCount++;
             } catch (Exception e) {
                 dataToJSON("apiTestStatus", "FAILED");
                 failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
                 apiTearDown(null, null, null, null, null, null, null);
 
+            }
+            if (response == null && executionCount < 2) {
+                logStepAction("Trying for 2nd time !! recursive call");
+                response = executeAPIMethod(HttpMethod, Endpoint, requestSpecification);
+                logStepAction("Crossed the 2nd time response stage !! recursive call");
+            }
+            else if (response == null && executionCount == 2){
+                logApiReport("FAIL", "Failed even after re-connecting for 2 times");
             }
             if (response != null) {
                 respTime = response.getTimeIn(TimeUnit.MILLISECONDS) / 1000.0;
