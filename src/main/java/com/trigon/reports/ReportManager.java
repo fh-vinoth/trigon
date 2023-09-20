@@ -174,8 +174,7 @@ public class ReportManager extends CustomReport {
         try {
             if (status.equalsIgnoreCase("PASS")) {
                 if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
-                     //m = apiName + " is PASSED";
-                     m = "API Test status for the method '<b>"+apiName+ "' </b>is PASSED";
+                     m = "<b>"+ apiName + " is PASSED</b>";
                      if(responseValidation.containsKey("expectedResponse")){
                          responseValidation(responseValidation);
                      }

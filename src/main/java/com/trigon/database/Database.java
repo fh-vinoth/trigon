@@ -20,7 +20,6 @@ public class Database extends TrigonUtils {
     public static Connection connect() throws SQLException {
         if (connection == null || connection.isClosed()) try {
             connection = DBController.getDataSource().getConnection();
-            System.out.println("Db connection after data source - "+ connection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
