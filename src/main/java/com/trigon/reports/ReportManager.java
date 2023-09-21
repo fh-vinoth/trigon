@@ -903,8 +903,10 @@ public class ReportManager extends CustomReport {
 
     public void hardWait(long delay) {
         try {
+            String convertedDelay = String.valueOf(delay);
+            String delayInString = convertedDelay.replaceAll("0","");
             if (delay > 0) {
-                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + delay + " Milli Seconds" + "\u001b[34m");
+                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for " + delayInString + " Seconds" + "\u001b[34m");
             }
             Thread.sleep(delay);
         } catch (InterruptedException e) {
