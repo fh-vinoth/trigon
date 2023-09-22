@@ -20,9 +20,8 @@ public class Category_SEARCH extends TestLocalController {
 
 //            System.out.println("Test");
             logStepAction("Creating category and getting the category id");
-            hardWait(30000);
             String category_id = createCategory();
-            hardWait(5000);
+            hardWait(1500);
             logger.info("Created category_id: " + category_id);
 
             logStepAction("Searching the created category");
