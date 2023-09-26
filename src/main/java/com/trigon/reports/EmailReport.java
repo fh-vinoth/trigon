@@ -349,7 +349,7 @@ public class EmailReport {
                                 "                                <b>Scenario :</b> " + description + "\n" +
                                 "                            </div>\n");
                         // Adds Log Steps if the suite is Sanity or Smoke
-                        if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke") || suiteName.toLowerCase().contains("api")) {
+                        if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke") || suiteName.toLowerCase().contains("bft")) {
                             AtomicInteger count = new AtomicInteger(1);
                             bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
 
