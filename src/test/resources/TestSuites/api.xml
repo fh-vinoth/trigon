@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="API_Check" parallel="classes">
+    <parameter name="TestRailStatusPath" value="src/test/resources/Configuration/TestStatus.json"/>
+    <parameter name="product" value="API_MYT"/>
+    <parameter name="jsonFilePath" value="src/test/resources/TestData/FrameworkTest.json"/>
+
+    <test name="Test1">
+        <classes>
+            <class name="com.fh.api.Category_SEARCH"/>
+        </classes>
+    </test>
+
+</suite>
+
