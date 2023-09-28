@@ -386,7 +386,7 @@ public class GenerateWebXpathsJSON extends ReportManager {
         return xpaths;
     }
 
-    protected Map<String, Set<String>> readConfigFileForActionTags() {
+    protected static Map<String, Set<String>> readConfigFileForActionTags() {
         Properties prop = new Properties();
         List<String> tagsList = new ArrayList<>();
         Map<String, Set<String>> tagActions = new HashMap<>();

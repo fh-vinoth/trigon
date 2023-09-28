@@ -1,8 +1,5 @@
 package com.trigon.elements;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.trigon.reports.ReportManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -29,10 +26,10 @@ public class GenerateAppXpathsJSON extends ReportManager {
             jsonObject.put("pageTitle", "New Autogen Android Page");
             JSONObject elements = new JSONObject();
 
-                Set<String> xpathSet = scrapeXpathsForAndroid();
-                List<String> xpaths = xpathSet.stream().collect(Collectors.toList());
-                Map<String, List<String>> neighbouringXpaths = new LinkedHashMap<>();
-                String beforeXpath = null, afterXpath = null;
+            Set<String> xpathSet = scrapeXpathsForAndroid();
+            List<String> xpaths = xpathSet.stream().collect(Collectors.toList());
+            Map<String, List<String>> neighbouringXpaths = new LinkedHashMap<>();
+            String beforeXpath = null, afterXpath = null;
 
             //generate before and after xpaths for each xpath
             if(xpaths.size()>1) {
@@ -62,29 +59,29 @@ public class GenerateAppXpathsJSON extends ReportManager {
                 neighbouringXpaths.put(xpaths.get(0), beforeAfter);
             }
 
-                for (String xpath : xpaths) {
-                    JSONObject element = new JSONObject();
-                    element.put("Web", "");
-                    element.put("Android", "xpath="+xpath);
-                    element.put("IOS", "");
-                    element.put("action", "click,clearText,enterText,getText,getAttribute,isEnabled,verifyDisplayed,isSelected,isPresent,isNotPresent,isNotDisplayed");
-                    element.put("App_beforeElement", neighbouringXpaths.get(xpath).get(0));
-                    element.put("App_afterElement", neighbouringXpaths.get(xpath).get(1));
-                    String finalName = "";
-                    List<String> nameSplit = Arrays.stream(StringUtils.substringBetween(xpath, "='", "'").replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).collect(Collectors.toList());
-                    for (String name : nameSplit) {
-                        if (name.equals("")) {
-                            continue;
-                        } else {
-                            name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                            finalName = finalName.concat(name);
-                        }
+            for (String xpath : xpaths) {
+                JSONObject element = new JSONObject();
+                element.put("Web", "");
+                element.put("Android", "xpath="+xpath);
+                element.put("IOS", "");
+                element.put("action", "click,clearText,enterText,getText,getAttribute,isEnabled,verifyDisplayed,isSelected,isPresent,isNotPresent,isNotDisplayed");
+                element.put("App_beforeElement", neighbouringXpaths.get(xpath).get(0));
+                element.put("App_afterElement", neighbouringXpaths.get(xpath).get(1));
+                String finalName = "";
+                List<String> nameSplit = Arrays.stream(StringUtils.substringBetween(xpath, "='", "'").replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).collect(Collectors.toList());
+                for (String name : nameSplit) {
+                    if (name.equals("")) {
+                        continue;
+                    } else {
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                        finalName = finalName.concat(name);
                     }
-                    if(!finalName.equals(""))
-                        {
-                            elements.put(finalName, element);
-                        }
                 }
+                if(!finalName.equals(""))
+                {
+                    elements.put(finalName, element);
+                }
+            }
 
             jsonObject.put("elements", elements);
             System.out.println(jsonObject.toString(4));
