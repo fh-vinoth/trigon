@@ -280,22 +280,27 @@ public class TestModelCore extends ReportManager {
         for (String xpath : xpaths) {
             double maxLength = Double.max(xpath.length(), targetString.length());
             if (maxLength > 0) {
-                double newScore = (maxLength - StringUtils.getLevenshteinDistance((StringUtils.substringBetween(xpath,"[","]")).replaceAll("\\s","").replaceAll("[^a-zA-Z0-9]", "").toLowerCase(), targetString.toLowerCase())) / maxLength;
-                if (newScore > score1) {
-                    score2 = score1;
-                    score1 = newScore;
-                    closest2 = closest1;
-                    closest1 = xpath;
+                double newScore = (maxLength - StringUtils.getLevenshteinDistance((StringUtils.substringBetween(xpath,"'","'")).replaceAll("\\s","").replaceAll("[^a-zA-Z0-9]", "").toLowerCase(), targetString.toLowerCase())) / maxLength;
+                if (newScore > score2) {
+                    if(newScore > score1){
+                        score2 = score1;
+                        score1 = newScore;
+                        closest2 = closest1;
+                        closest1 = xpath;
+                    }else{
+                        score2 = newScore;
+                        closest2 = xpath;
+                    }
                 }
             }
         }
         List<String> locatorStringMatchArray = Arrays.stream(targetString.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")).collect(Collectors.toList());
         int closest1Count = 0, closest2Count = 0;
         for (String matchStr : locatorStringMatchArray) {
-            if (score1 > 0.15 && closest1.replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
+            if (score1 > 0.15 && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
                 closest1Count++;
             }
-            if (score2 > 0.15 && closest2.replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
+            if (score2 > 0.15 && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
                 closest2Count++;
             }
         }
