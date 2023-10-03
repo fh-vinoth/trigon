@@ -6,8 +6,7 @@
     "envType": "SIT",
     "appSycURI": "https://zmpjapgiejgj3hokmnmv3bcrl4.appsync-api.us-east-1.amazonaws.com",
     "appSycAuth": "ibLmjx3x860M+8FfwG6lAN/SWElFoVolUlfNJVL7ieY=",
-    "moduleNames": "",
-    "unblockToken": ""
+    "moduleNames": ""
   },
   "web": {
     "system_os": "Windows",
