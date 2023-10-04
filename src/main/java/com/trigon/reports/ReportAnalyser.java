@@ -25,11 +25,10 @@ public class ReportAnalyser {
 
 
     private String listBucketObjects(String date_DMMMYYYY, String partialSuiteName) {
-        //https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/2023/Sep/15/API_BFT_2023-09-15-094415/API_BFT_2023-09-15-094415.html
-        String amazonaws_url = "https://fh-qa-automation.s3.amazonaws.com/";
+        String amazonaws_url = "https://s3.amazonaws.com/";
         String bucketName = "fh-qa-automation";
         String prefix = "TestResults_2.8/" + date_DMMMYYYY;
-        String reportUrl = amazonaws_url + "/";
+        String reportUrl = amazonaws_url + bucketName + "/";
         List<String> reportUrlList = new LinkedList<>();
         try {
             AWSCredentials credentials = new BasicAWSCredentials(
@@ -54,7 +53,7 @@ public class ReportAnalyser {
                 reportUrl = "no-report";
             }else {
                 Collections.sort(reportUrlList);
-                reportUrl = reportUrl + reportUrlList.get(reportUrlList.size() - 1);
+                reportUrl = reportUrl + reportUrlList.get(reportUrlList.size() - 1) + "testSummary.json";
             }
         } catch (Exception e) {
             e.printStackTrace();

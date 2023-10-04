@@ -118,12 +118,12 @@ public class APICore extends ReportManager {
             RestAssured.useRelaxedHTTPSValidation();
             requestSpecification = RestAssured.given().request().urlEncodingEnabled(false);
             RestAssuredConfig restAssuredConfig = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig()
-                    .setParam("http.connection.timeout", 30000)
-                    .setParam("http.socket.timeout", 30000));
+                    .setParam("http.connection.timeout", 60000)
+                    .setParam("http.socket.timeout", 60000));
             requestSpecification.config(restAssuredConfig);
+            executionCount = 0;
             String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, multiPartMap);
             dataToJSON("curl", curl);
-            executionCount = 0;
             requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
             if (CollectionUtils.hasElements(multiPartMap)) {
                 dataToJSON("multiPart", multiPartMap);
@@ -133,7 +133,12 @@ public class APICore extends ReportManager {
                     requestSpecification.multiPart(k, new File(v.toString()));
                 }
             }
-
+            if (requestBody != null) {
+                if (CollectionUtils.hasElements(Collections.singleton(requestBody))) {
+                    dataToJSON("requestBody", requestBody);
+                    requestSpecification.body(requestBody);
+                }
+            }
         } catch (Exception e) {
             captureException(e);
         }
@@ -179,35 +184,6 @@ public class APICore extends ReportManager {
             if ((cookies != null && cookies.size() > 0)) {
                 dataToJSON("cookies", new LinkedHashMap<>(cookies));
                 requestSpecification.cookies(new LinkedHashMap<>(cookies));
-            }
-            if (requestBody != null) {
-                if (CollectionUtils.hasElements(Collections.singleton(requestBody))) {
-                    dataToJSON("requestBody", requestBody);
-                    requestSpecification.body(requestBody);
-                }
-            }
-            /*these data are collecting for retry purposes*/
-            if ( headersNew.size() == 0) {
-                if (headers != null && headers.size() > 0) {
-                    headersNew = new LinkedHashMap<>(headers);
-                }
-                if ((pathParams != null && pathParams.size() > 0)) {
-                    pathParamsNew = new LinkedHashMap<>(pathParams);
-                }
-                if ((queryParams != null && queryParams.size() > 0)) {
-                    queryParamsNew = new LinkedHashMap<>(queryParams);
-                }
-                if ((formParams != null && formParams.size() > 0)) {
-                    formParamsNew = new LinkedHashMap<>(formParams);
-                }
-                if ((cookies != null && cookies.size() > 0)) {
-                    cookiesNew = new LinkedHashMap<>(cookies);
-                }
-                if (requestBody != null) {
-                    if (CollectionUtils.hasElements(Collections.singleton(requestBody))) {
-                        requestBodyNew = requestBody;
-                    }
-                }
             }
         } catch (Exception e) {
             captureException(e);
@@ -308,11 +284,7 @@ public class APICore extends ReportManager {
                         }
                     }
                 }
-            }else {
-                flattenMap = JsonFlattener.flattenAsMap(response.asString());
-                flattenMap.put("actualStatusCode", response.getStatusCode());
-                flattenMap.put("actualResponseTime", response.time());
-                dataToJSON("responseJSON", response.getBody().asString());
+            } else {
                 dataToJSON("apiTestStatus", "PASSED");
             }
 
@@ -368,7 +340,6 @@ public class APICore extends ReportManager {
             dataToJSON("endPoint", Endpoint);
             double respTime;
             try {
-                executionCount++;
                 switch (HttpMethod) {
                     case "GET":
                         response = requestSpecification.get(Endpoint).then().extract().response();
@@ -390,20 +361,20 @@ public class APICore extends ReportManager {
                         logApiReport("FAIL", "Method " + HttpMethod + " is not yet implemented");
                         break;
                 }
+                executionCount++;
             } catch (Exception e) {
                 dataToJSON("apiTestStatus", "FAILED");
                 failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
+                apiTearDown(null, null, null, null, null, null, null);
+
             }
             if (response == null && executionCount < 2) {
-                logApiReport("WARN","Trying for second time !! with recursive call for this endpoint :"+ Endpoint+"_"+HttpMethod);
-                RequestSpecification requestSpecification1 = null;
-                requestSpecification1 = RestAssured.given().request().urlEncodingEnabled(false);
-                RestAssuredConfig restAssuredConfig1 = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig()
-                        .setParam("http.connection.timeout", 60000)
-                        .setParam("http.socket.timeout", 60000));
-                requestSpecification1.config(restAssuredConfig1);
-                requestPreparation(headersNew, cookiesNew, queryParamsNew, formParamsNew, pathParamsNew, requestBodyNew, requestSpecification1);
-                response = executeAPIMethod(HttpMethod, Endpoint, requestSpecification1);
+                logStepAction("Trying for 2nd time !! recursive call");
+                response = executeAPIMethod(HttpMethod, Endpoint, requestSpecification);
+                logStepAction("Crossed the 2nd time response stage !! recursive call");
+            }
+            else if (response == null && executionCount == 2){
+                logApiReport("FAIL", "Failed even after re-connecting for 2 times");
             }
             if (response != null) {
                 respTime = response.getTimeIn(TimeUnit.MILLISECONDS) / 1000.0;
@@ -525,7 +496,7 @@ public class APICore extends ReportManager {
             actualResponseMap.entrySet().stream().filter(entry -> entry.getKey().contains(contains))
                     .forEach(entry -> {
                         String key = entry.getKey();
-//                        logger.info(key + "  " + entry.getValue());
+                        logger.info(key + "  " + entry.getValue());
                         returnResponse.put(key, entry.getValue());
                     });
         } catch (Exception e) {
@@ -658,27 +629,21 @@ public class APICore extends ReportManager {
             dataTableMapApi.get().clear();
             if (headers != null) {
                 headers.clear();
-                headersNew.clear();
             }
             if (cookies != null) {
                 cookies.clear();
-                cookiesNew.clear();
             }
             if (queryParams != null) {
                 queryParams.clear();
-                queryParamsNew.clear();
             }
             if (formParams != null) {
                 formParams.clear();
-                formParamsNew.clear();
             }
             if (pathParams != null) {
                 pathParams.clear();
-                pathParamsNew.clear();
             }
             if (requestBody != null) {
                 requestBody = null;
-                requestBodyNew = null;
             }
             if (expectedResponse != null) {
                 expectedResponse.clear();

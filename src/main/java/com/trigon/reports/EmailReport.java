@@ -7,7 +7,6 @@ import com.google.gson.stream.JsonWriter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,6 +18,7 @@ public class EmailReport {
 
     public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
+            System.out.println("########### In the create EMAIL Report");
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
             StringBuffer bf = new StringBuffer();
             StringBuffer bfFailure = new StringBuffer();
@@ -50,6 +50,7 @@ public class EmailReport {
 
     private static void generateEmailBody(String reportPath, ExtentReports stats, String body, String failedData, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
+            System.out.println("########### in the email body ###############");
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(reportPath + "/SupportFiles/HTML/emailBody.json", false)));
             int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
             int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
@@ -244,6 +245,7 @@ public class EmailReport {
         } catch (Exception e) {
            buildNumber = "null";
         }
+        System.out.println("#################### build Number ################ _>>>> "+ buildNumber);
         return  buildNumber;
     }
 
@@ -349,7 +351,7 @@ public class EmailReport {
                                 "                                <b>Scenario :</b> " + description + "\n" +
                                 "                            </div>\n");
                         // Adds Log Steps if the suite is Sanity or Smoke
-                        if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke") || suiteName.toLowerCase().contains("bft")) {
+                        if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke")) {
                             AtomicInteger count = new AtomicInteger(1);
                             bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
 
@@ -415,7 +417,7 @@ public class EmailReport {
 
     private static String footers() {
         return "    <tr style=\"background: #e0dbdb;height: 40px;\">\n" +
-                "        <td colspan=\"2\">© "+ Year.now()+" - Foodhub Automation Team</td>\n" +
+                "        <td colspan=\"2\">© 2023 - Foodhub Automation Team</td>\n" +
                 "    </tr>\n" +
                 "    </tbody>\n" +
                 "</table>\n" +

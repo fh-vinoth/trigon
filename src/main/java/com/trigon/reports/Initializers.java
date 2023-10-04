@@ -113,12 +113,4 @@ public class Initializers {
 
     protected static int executionCount = 0;
 
-    protected LinkedHashMap<String, Object> headersNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> pathParamsNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> queryParamsNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> formParamsNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> cookiesNew = new LinkedHashMap<>();
-    protected String requestBodyNew = null;
-
-
 }

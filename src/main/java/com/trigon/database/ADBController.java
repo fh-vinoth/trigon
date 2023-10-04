@@ -30,6 +30,7 @@ public class ADBController extends TrigonUtils {
 
             //removed ssh tunnelling since devops removed the same
             String connectionUrl="jdbc:mysql://" + tEnv().getDbHost() + ":" + connectionPort + "/" + dbName;
+            System.out.println("db connection "+connectionUrl);
             dataSource.setUrl(connectionUrl);
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
             dataSource.setUsername(AES.decrypt(tEnv().getDbUserName(),"t2sautomation"));
