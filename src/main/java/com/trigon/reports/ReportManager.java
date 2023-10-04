@@ -174,8 +174,7 @@ public class ReportManager extends CustomReport {
         try {
             if (status.equalsIgnoreCase("PASS")) {
                 if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
-                     //m = apiName + " is PASSED";
-                     m = "API Test status for the method '<b>"+apiName+ "' </b>is PASSED";
+                     m = "<b>"+ apiName + " is PASSED</b>";
                      if(responseValidation.containsKey("expectedResponse")){
                          responseValidation(responseValidation);
                      }
@@ -904,8 +903,10 @@ public class ReportManager extends CustomReport {
 
     public void hardWait(long delay) {
         try {
+            double seconds = ((double) delay / 1000) % 60;
+            System.out.println(seconds);
             if (delay > 0) {
-                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + delay + " Milli Seconds" + "\u001b[34m");
+                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for " + seconds + " Seconds" + "\u001b[34m");
             }
             Thread.sleep(delay);
         } catch (InterruptedException e) {

@@ -15,12 +15,12 @@ public class Category_SEARCH extends TestLocalController {
     @Test (enabled = true)
     public void searchCategory_test() {
         try{
-            author_ScenarioName("Bhaskar", "Searching the particular category from category/search endpoint");
+            author_ScenarioName("Gayathri", "Searching the particular category from category/search endpoint");
 
 
 //            System.out.println("Test");
             logStepAction("Creating category and getting the category id");
-            hardWait(5000);
+
             String category_id = createCategory();
             hardWait(5000);
             logger.info("Created category_id: " + category_id);

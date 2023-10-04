@@ -8,11 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.transfer.MultipleFileUpload;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
-import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
 import com.trigon.security.AES;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
@@ -93,7 +89,6 @@ public class TriggerEmailImpl implements ITriggerEmail {
             }
 
             StringBuffer sb = new StringBuffer(recipients);
-            sb.append(",vinothkumar.e@foodhub.com");
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(sb.toString()));
         } catch (Exception e) {
