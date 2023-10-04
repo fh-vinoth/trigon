@@ -1,12 +1,14 @@
 {
-    "AuthorName": "Vaisshnavi",
-    "pageTitle": "*************",
-    "elements": {
-        "btnPostcodeManual": {
-            "Web": "",
-            "Android": "accessibilityid=AK_enter_manually_text_click",
-            "IOS": "",
-            "actionevent": "click"
-        }
+  "authorName": "Vaisshnavi",
+  "pageTitle": "*************",
+  "elements": {
+    "btnPostcodeManual": {
+      "Web": "",
+      "App_afterElement": "",
+      "IOS": "",
+      "Android": "xpath={//*[@text='Enter your Postcode' ]}",
+      "actionevent": "click",
+      "App_beforeElement": ""
     }
+  }
 }

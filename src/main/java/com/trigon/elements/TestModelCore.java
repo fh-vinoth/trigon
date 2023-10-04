@@ -37,7 +37,7 @@ public class TestModelCore extends ReportManager {
     protected long endTime;
     protected WebDriverWait webDriverWait;
 
-    private String locatorString(String s) {
+    protected String locatorString(String s) {
         String locator = s;
         try {
             //s.startsWith("name")||s.startsWith("xpath")||s.startsWith("classname")||s.startsWith("partiallinktext")||s.startsWith("linktext")||s.startsWith("tagname")||s.startsWith("css")||s.startsWith("id")
@@ -55,39 +55,24 @@ public class TestModelCore extends ReportManager {
 
     protected void locatorStringReplaceInJSON(String locatorObject, String newLocatorsMatched,String beforeXpath,String afterXpath) {
         try {
-            String newNodeName = "";
             if (!locatorObject.contains("=")) {
                 Gson pGson = new GsonBuilder().setPrettyPrinting().create();
                 JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
                 ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
-
-                    List<String> nameSplit = Arrays.stream(StringUtils.substringBetween(newLocatorsMatched, "='", "'").replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).collect(Collectors.toList());
-                    for (String name : nameSplit) {
-                        if (name.equals("")) {
-                            continue;
-                        } else {
-                            name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                            newNodeName = newNodeName.concat(name);
-                        }
-                    }
-                newNodeName = StringUtils.uncapitalize(newNodeName);
                 if(tEnv().getElementLocator().equalsIgnoreCase("Web")){
                     eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty("Web_beforeElement",beforeXpath);
                     eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty("Web_afterElement",afterXpath);
                     eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty(tEnv().getElementLocator(),"xpath="+newLocatorsMatched);
-                    eRepo.getElements().add(newNodeName,eRepo.getElements().get(locatorObject).getAsJsonObject());
-                    eRepo.getElements().remove(locatorObject);
                 } else if(tEnv().getElementLocator().equalsIgnoreCase("Android")) {
                     eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty("App_beforeElement",beforeXpath);
                     eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty("App_afterElement",afterXpath);
                     eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty(tEnv().getElementLocator(),"xpath="+newLocatorsMatched);
-                    eRepo.getElements().add(newNodeName,eRepo.getElements().get(locatorObject).getAsJsonObject());
-                    eRepo.getElements().remove(locatorObject);
                 }
                 JsonElement newJsonElement = JsonParser.parseString(eRepo.getElements().toString());
                 element1.getAsJsonObject().add("elements",newJsonElement);
                 try (PrintWriter out = new PrintWriter(new FileWriter(tEnv().getPagesJsonFile()))) {
                     out.write(new JSONObject(pGson.toJson(element1)).toString(4));
+                    System.out.println("Modified object -> "+locatorObject);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -214,7 +199,7 @@ public class TestModelCore extends ReportManager {
         return xpath;
     }
 
-    public String selfHeal(String locatorString, String action) {
+    public String selfHeal(String locatorString, String compareString ,String action) {
         List<String> tags = readConfigFileForTags(action);
         List<String> selfHealXpaths = new ArrayList<>();
         String newLocatorFallbacks = "" , beforeXpath = "",afterXpath = "" ;
@@ -222,7 +207,7 @@ public class TestModelCore extends ReportManager {
             for (String tag : tags) {
                 Set<String> xpaths = new LinkedHashSet<>();
                 xpaths = scrapeXpaths(tag);
-                String match = getClosestMatch(xpaths, locatorString);
+                String match = getClosestMatch(xpaths, compareString);
                 if (match != null) {
                     selfHealXpaths.add(match);
                     System.out.println("New healing xpath for "+locatorString+"= with <" + tag + "> = " + match);
@@ -231,7 +216,7 @@ public class TestModelCore extends ReportManager {
         }else if(tEnv().getElementLocator().equalsIgnoreCase("Android")){
             Set<String> xpaths = new LinkedHashSet<>();
             xpaths = scrapeXpathsForAndroid();
-            String match = getClosestMatch(xpaths, locatorString);
+            String match = getClosestMatch(xpaths, compareString);
             if (match != null) {
                 selfHealXpaths.add(match);
                 System.out.println("New healing xpath for "+locatorString+" = " + match);
@@ -275,6 +260,73 @@ public class TestModelCore extends ReportManager {
         return newLocatorFallbacks;
     }
 
+    public void selfHealInConstructor(Set<String> xpaths,String locatorString) {
+        String newLocatorFallbacks = "" , beforeXpath = "",afterXpath = "" ;
+        List<String> selfHealXpaths = new ArrayList<>();
+        String locator = locatorString(locatorString);
+        String compareString = "";
+        if(locator.contains("accessibilityid=")){
+            compareString = StringUtils.substringAfter(locator,"=");
+        } else {
+             compareString = !(StringUtils.substringBetween(locator, "'", "'").isEmpty())
+                    ? StringUtils.substringBetween(locator, "'", "'")
+                    : StringUtils.substringBetween(locator, "\"", "\"") ;
+        }
+
+        if(compareString!=null && !compareString.isEmpty()) {
+            List<String> nameSplit = Arrays.stream(compareString.replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).toList();
+            compareString ="";
+            for (String name : nameSplit) {
+                if (name.isEmpty()) {
+                    continue;
+                } else {
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                    compareString = compareString.concat(name);
+                }
+            }
+            compareString = StringUtils.uncapitalize(compareString);
+            String match = getClosestMatch(xpaths, compareString);
+            if (match != null) {
+                selfHealXpaths.add(match);
+
+                if (selfHealXpaths.size() > 0) {
+                    String primaryLocator = selfHealXpaths.get(0);
+                    try {
+                        List<WebElement> beforeElements = browser().findElements(By.xpath(primaryLocator + "//preceding::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
+                        if (beforeElements.size() > 1) {
+                            beforeXpath = writeXpath(beforeElements.get(beforeElements.size() - 1), beforeElements.get(beforeElements.size() - 1).getTagName());
+                        }
+                        if (beforeElements.size() == 1) {
+                            beforeXpath = writeXpath(beforeElements.get(0), beforeElements.get(0).getTagName());
+                        }
+                    } catch (Exception ex) {
+                        beforeXpath = "";
+                    }
+
+                    try {
+                        WebElement afterElement = browser().findElement(By.xpath(primaryLocator + "//following::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
+                        afterXpath = writeXpath(afterElement, afterElement.getTagName());
+                    } catch (Exception ex) {
+                        afterXpath = "";
+                    }
+
+                    if (selfHealXpaths.size() == 1) {
+                        newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(0)).concat("}");
+                    } else if (selfHealXpaths.size() > 1) {
+                        for (int i = 0; i < selfHealXpaths.size(); i++) {
+                            if (i == selfHealXpaths.size() - 1) {
+                                newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}");
+                            } else {
+                                newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}, ");
+                            }
+                        }
+                    }
+                }
+                locatorStringReplaceInJSON(locatorString, newLocatorFallbacks, beforeXpath, afterXpath);
+            }
+        }
+    }
+
     protected List<String> readConfigFileForTags(String action) {
         Properties prop = new Properties();
         List<String> tagsList = new ArrayList<>();
@@ -311,10 +363,10 @@ public class TestModelCore extends ReportManager {
         List<String> locatorStringMatchArray = Arrays.stream(targetString.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")).collect(Collectors.toList());
         int closest1Count = 0, closest2Count = 0;
         for (String matchStr : locatorStringMatchArray) {
-            if (score1 > 0.15 && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
+            if (score1 > 0.15 && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase()) && matchStr.length()>3) {
                 closest1Count++;
             }
-            if (score2 > 0.15 && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
+            if (score2 > 0.15 && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase()) && matchStr.length()>3 ) {
                 closest2Count++;
             }
         }

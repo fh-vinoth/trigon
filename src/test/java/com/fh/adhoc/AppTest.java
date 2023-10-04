@@ -16,7 +16,6 @@ public class AppTest extends AppFrameworkTestController {
         TimeUnit.SECONDS.sleep(5);
 
         tFHApp().btnPostcodeManual_click();
-
     }
 
 }
