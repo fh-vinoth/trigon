@@ -7,9 +7,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class ElementRepoPojo implements Serializable {
-    @SerializedName("authorName")
+    @SerializedName("authorname")
     @Expose
-    private String authorName;
+    private String AuthorName;
     @SerializedName("pageTitle")
     @Expose
     private String pageTitle;
@@ -18,11 +18,11 @@ public class ElementRepoPojo implements Serializable {
     private JsonObject elements;
 
     public String getAuthorName() {
-        return authorName;
+        return AuthorName;
     }
 
     public void setAuthorName(String authorName) {
-        authorName = authorName;
+        AuthorName = authorName;
     }
 
     public String getPageTitle() {
