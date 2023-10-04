@@ -108,6 +108,10 @@ public class TestEnv {
     private String serviceType;
     private String moduleNames;
 
+
+
+    private String unblockToken;
+
     public String getTestType() {
         return testType;
     }
@@ -734,4 +738,11 @@ public class TestEnv {
     }
 
 
+    public String getUnblockToken() {
+        return unblockToken;
+    }
+
+    public void setUnblockToken(String unblockToken) {
+        this.unblockToken = unblockToken;
+    }
 }

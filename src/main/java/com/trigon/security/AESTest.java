@@ -9,6 +9,8 @@ public class AESTest {
 
     }
 
+
+
   /*  public static void getListOfEncryptedKey(String... list ){
         for (int i = 0;i<list.length;i++){
 //            uncomment this during encryptoperation.
@@ -16,6 +18,7 @@ public class AESTest {
             System.out.println(list[i]  +" : : : : "+"AES.decrypt(\""+encryptedString+"\", \"\")" );
         }
     }*/
+
 
 
 }

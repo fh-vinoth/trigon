@@ -33,6 +33,12 @@ public class Api {
     @Expose
     private String productName;
 
+
+
+    @SerializedName("unblockToken")
+    @Expose
+    private String unblockToken;
+
     public String getURI() {
         return uRI;
     }
@@ -93,4 +99,11 @@ public class Api {
         this.moduleNames = moduleNames;
     }
 
+    public String getUnblockToken() {
+        return unblockToken;
+    }
+
+    public void setUnblockToken(String unblockToken) {
+        this.unblockToken = unblockToken;
+    }
 }
