@@ -198,6 +198,9 @@ public class TestController extends TestInitialization {
                         logReport("INFO", "<b>RETRY FAILURE</b> " + logDetail);   //Initial Execution Failure Reporting
                 }
             }
+            if(result.getStatus()==-1){
+                extentMethodNode.get().getModel().setStatus(Status.SKIP);
+            }
             if (context.getSuite().getName().contains("adhoc") || context.getSuite().getName().contains("msweb") || context.getSuite().getName().toLowerCase().startsWith("fhnative") || context.getSuite().getName().contains("msapp")) {
 
             } else {
