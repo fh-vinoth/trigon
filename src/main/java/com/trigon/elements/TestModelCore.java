@@ -265,67 +265,69 @@ public class TestModelCore extends ReportManager {
         List<String> selfHealXpaths = new ArrayList<>();
         String locator = locatorString(locatorString);
         String compareString = "";
-        if(locator!=null && !locator.isEmpty()) {
-            if(locator.contains("accessibilityid=")){
-                compareString = StringUtils.substringAfter(locator,"=");
+        try {
+            if (locator.contains("accessibilityid=")) {
+                compareString = StringUtils.substringAfter(locator, "=");
             } else {
-                compareString = !(StringUtils.substringBetween(locator, "'", "'").isEmpty())
-                        ? StringUtils.substringBetween(locator, "'", "'")
-                        : StringUtils.substringBetween(locator, "\"", "\"") ;
+                compareString = !(StringUtils.substringBetween(locator, "='", "'").isEmpty())
+                        ? StringUtils.substringBetween(locator, "='", "'")
+                        : StringUtils.substringBetween(locator, "=\"", "\"");
             }
-        }
 
-        if(compareString!=null && !compareString.isEmpty()) {
-            List<String> nameSplit = Arrays.stream(compareString.replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).toList();
-            compareString ="";
-            for (String name : nameSplit) {
-                if (name.isEmpty()) {
-                    continue;
-                } else {
-                    name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                    compareString = compareString.concat(name);
+            if (compareString != null && !compareString.isEmpty()) {
+                List<String> nameSplit = Arrays.stream(compareString.replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).toList();
+                compareString = "";
+                for (String name : nameSplit) {
+                    if (name.isEmpty()) {
+                        continue;
+                    } else {
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                        compareString = compareString.concat(name);
+                    }
                 }
-            }
-            compareString = StringUtils.uncapitalize(compareString);
-            String match = getClosestMatch(xpaths, compareString);
-            if (match != null) {
-                selfHealXpaths.add(match);
+                compareString = StringUtils.uncapitalize(compareString);
+                String match = getClosestMatch(xpaths, compareString);
+                if (match != null) {
+                    selfHealXpaths.add(match);
 
-                if (selfHealXpaths.size() > 0) {
-                    String primaryLocator = selfHealXpaths.get(0);
-                    try {
-                        List<WebElement> beforeElements = browser().findElements(By.xpath(primaryLocator + "//preceding::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
-                        if (beforeElements.size() > 1) {
-                            beforeXpath = writeXpath(beforeElements.get(beforeElements.size() - 1), beforeElements.get(beforeElements.size() - 1).getTagName());
+                    if (selfHealXpaths.size() > 0) {
+                        String primaryLocator = selfHealXpaths.get(0);
+                        try {
+                            List<WebElement> beforeElements = browser().findElements(By.xpath(primaryLocator + "//preceding::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
+                            if (beforeElements.size() > 1) {
+                                beforeXpath = writeXpath(beforeElements.get(beforeElements.size() - 1), beforeElements.get(beforeElements.size() - 1).getTagName());
+                            }
+                            if (beforeElements.size() == 1) {
+                                beforeXpath = writeXpath(beforeElements.get(0), beforeElements.get(0).getTagName());
+                            }
+                        } catch (Exception ex) {
+                            beforeXpath = "";
                         }
-                        if (beforeElements.size() == 1) {
-                            beforeXpath = writeXpath(beforeElements.get(0), beforeElements.get(0).getTagName());
+
+                        try {
+                            WebElement afterElement = browser().findElement(By.xpath(primaryLocator + "//following::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
+                            afterXpath = writeXpath(afterElement, afterElement.getTagName());
+                        } catch (Exception ex) {
+                            afterXpath = "";
                         }
-                    } catch (Exception ex) {
-                        beforeXpath = "";
-                    }
 
-                    try {
-                        WebElement afterElement = browser().findElement(By.xpath(primaryLocator + "//following::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
-                        afterXpath = writeXpath(afterElement, afterElement.getTagName());
-                    } catch (Exception ex) {
-                        afterXpath = "";
-                    }
-
-                    if (selfHealXpaths.size() == 1) {
-                        newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(0)).concat("}");
-                    } else if (selfHealXpaths.size() > 1) {
-                        for (int i = 0; i < selfHealXpaths.size(); i++) {
-                            if (i == selfHealXpaths.size() - 1) {
-                                newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}");
-                            } else {
-                                newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}, ");
+                        if (selfHealXpaths.size() == 1) {
+                            newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(0)).concat("}");
+                        } else if (selfHealXpaths.size() > 1) {
+                            for (int i = 0; i < selfHealXpaths.size(); i++) {
+                                if (i == selfHealXpaths.size() - 1) {
+                                    newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}");
+                                } else {
+                                    newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}, ");
+                                }
                             }
                         }
                     }
+                    locatorStringReplaceInJSON(locatorString, newLocatorFallbacks, beforeXpath, afterXpath);
                 }
-                locatorStringReplaceInJSON(locatorString, newLocatorFallbacks, beforeXpath, afterXpath);
             }
+        }catch (Exception ex){
+            hardFail("Issue healing for compareString" + compareString);
         }
     }
 

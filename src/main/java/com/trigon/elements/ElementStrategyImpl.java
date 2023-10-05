@@ -531,9 +531,9 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
         if(locator.contains("accessibilityid=")){
             compareString = StringUtils.substringAfter(locator,"=");
         } else {
-            compareString = !(StringUtils.substringBetween(locator, "'", "'").isEmpty())
-                    ? StringUtils.substringBetween(locator, "'", "'")
-                    : StringUtils.substringBetween(locator, "\"", "\"") ;
+            compareString = !(StringUtils.substringBetween(locator, "='", "'").isEmpty())
+                    ? StringUtils.substringBetween(locator, "='", "'")
+                    : StringUtils.substringBetween(locator, "=\"", "\"") ;
         }
         if(compareString!=null && !compareString.isEmpty()) {
             List<String> nameSplit = Arrays.stream(compareString.replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).toList();
