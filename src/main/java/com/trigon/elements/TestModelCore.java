@@ -260,17 +260,19 @@ public class TestModelCore extends ReportManager {
         return newLocatorFallbacks;
     }
 
-    public void selfHealInConstructor(Set<String> xpaths,String locatorString) {
+    public void selfHealInConstructor(Set<String> xpaths, String locatorString) {
         String newLocatorFallbacks = "" , beforeXpath = "",afterXpath = "" ;
         List<String> selfHealXpaths = new ArrayList<>();
         String locator = locatorString(locatorString);
         String compareString = "";
-        if(locator.contains("accessibilityid=")){
-            compareString = StringUtils.substringAfter(locator,"=");
-        } else {
-             compareString = !(StringUtils.substringBetween(locator, "'", "'").isEmpty())
-                    ? StringUtils.substringBetween(locator, "'", "'")
-                    : StringUtils.substringBetween(locator, "\"", "\"") ;
+        if(locator!=null && !locator.isEmpty()) {
+            if(locator.contains("accessibilityid=")){
+                compareString = StringUtils.substringAfter(locator,"=");
+            } else {
+                compareString = !(StringUtils.substringBetween(locator, "'", "'").isEmpty())
+                        ? StringUtils.substringBetween(locator, "'", "'")
+                        : StringUtils.substringBetween(locator, "\"", "\"") ;
+            }
         }
 
         if(compareString!=null && !compareString.isEmpty()) {
