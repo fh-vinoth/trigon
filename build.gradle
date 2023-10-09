@@ -53,7 +53,7 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-server', version: '3.141.59'
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 
-
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 }
 
 
