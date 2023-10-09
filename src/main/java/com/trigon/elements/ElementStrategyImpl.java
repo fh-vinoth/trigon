@@ -25,7 +25,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     @Override
     public WebElement getAndroidElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         WebElement result = null;
-        try{
+        try {
             if (android() != null) {
                 RetryOnException retryHandler = new RetryOnException();
                 RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
@@ -109,10 +109,10 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
-                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             captureException(e);
         }
         return result;
@@ -121,7 +121,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     @Override
     public WebElement getWebElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         WebElement result = null;
-        try{
+        try {
             if (browser() != null) {
                 RetryOnException retryHandler = new RetryOnException();
                 RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
@@ -171,7 +171,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                                 elementStatus = false;
                                 break;
                         }
-                    } catch (WebDriverException |NoClassDefFoundError e) {
+                    } catch (WebDriverException | NoClassDefFoundError e) {
                         if (elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues) == 0) {
                             logger.warn(Message.ELEMENT_WAIT_0);
                             break;
@@ -202,10 +202,10 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
-                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             captureException(e);
         }
         return result;
@@ -214,7 +214,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     @Override
     public WebElement getIOSElement(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         WebElement result = null;
-        try{
+        try {
             if (ios() != null) {
                 RetryOnException retryHandler = new RetryOnException();
                 RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
@@ -292,10 +292,10 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
-                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             captureException(e);
         }
         return result;
@@ -304,7 +304,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     @Override
     public List<WebElement> getAndroidElements(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         List<WebElement> result = new ArrayList<>();
-        try{
+        try {
             if (android() != null) {
                 RetryOnException retryHandler = new RetryOnException();
                 RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
@@ -387,10 +387,10 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
-                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             captureException(e);
         }
         return result;
@@ -399,7 +399,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     @Override
     public List<WebElement> getWebElements(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         List<WebElement> result = new ArrayList<>();
-        try{
+        try {
             if (browser() != null) {
                 RetryOnException retryHandler = new RetryOnException();
                 RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
@@ -481,10 +481,10 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
-                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             captureException(e);
         }
         return result;
@@ -493,7 +493,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
     @Override
     public List<WebElement> getIOSElements(String locatorString, boolean isPresentStatus, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         List<WebElement> result = new ArrayList<>();
-        try{
+        try {
             if (ios() != null) {
                 RetryOnException retryHandler = new RetryOnException();
                 RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
@@ -572,10 +572,10 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                 if ((result == null) && (!isPresentStatus)) {
                     logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
-                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             captureException(e);
         }
         return result;

@@ -360,10 +360,9 @@ public class EmailReport {
                                 "                                <b>Scenario :</b> " + description + "\n" +
                                 "                            </div>\n");
                         // Adds Log Steps if the suite is Sanity or Smoke
-                        if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke")) {
+                        if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke") || suiteName.toLowerCase().contains("bft")) {
                             AtomicInteger count = new AtomicInteger(1);
                             bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
-
                             method.getLogs().forEach(log -> {
                                 // System.out.println(log.getDetails());
                                 if (log.getDetails().contains("STEP ")) {
@@ -387,7 +386,7 @@ public class EmailReport {
                             method.getLogs().forEach(log -> {
                                 if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
                                     if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
-                                        bf.append("<div>" + log.getDetails() + "</div>");
+                                        bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                     }
                                 }
                             });
@@ -396,7 +395,7 @@ public class EmailReport {
                                     child.getLogs().forEach(log -> {
                                         if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
                                             if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
-                                                bf.append("<div>" + log.getDetails() + "</div>");
+                                                bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                             }
                                         }
                                     });
@@ -493,8 +492,7 @@ public class EmailReport {
                         method.getLogs().forEach(log -> {
                             if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
                                 if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
-                                    bf.append("<div>" + log.getDetails() + "</div>");
-                                }
+                                    bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");                                }
                             }
                         });
                         if (method.hasChildren()) {
@@ -502,8 +500,7 @@ public class EmailReport {
                                 child.getLogs().forEach(log -> {
                                     if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
                                         if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
-                                            bf.append("<div>" + log.getDetails() + "</div>");
-                                        }
+                                            bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");                                        }
                                     }
                                 });
                             });
