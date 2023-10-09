@@ -367,10 +367,10 @@ public class TestModelCore extends ReportManager {
         List<String> locatorStringMatchArray = Arrays.stream(targetString.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")).collect(Collectors.toList());
         int closest1Count = 0, closest2Count = 0;
         for (String matchStr : locatorStringMatchArray) {
-            if (score1 > 0.15 && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase()) && matchStr.length()>3) {
+            if (score1 > 0.60 && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase()) && matchStr.length()>3) {
                 closest1Count++;
             }
-            if (score2 > 0.15 && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase()) && matchStr.length()>3 ) {
+            if (score2 > 0.60 && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase()) && matchStr.length()>3 ) {
                 closest2Count++;
             }
         }
