@@ -55,6 +55,17 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("browserstack_midSessionInstallApps")
     @Expose
     private String browserstack_midSessionInstallApps;
+    @SerializedName("network_speed")
+    @Expose
+    private String network_speed;
+    @SerializedName("customNetwork")
+    @Expose
+    private String customNetwork;
+
+    @SerializedName("networkProfile")
+    @Expose
+    private String networkProfile;
+
     @Expose
     private JsonObject productName;
     @SerializedName("productName")
@@ -181,11 +192,22 @@ public class RemoteEnvPojo implements Serializable {
         this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
         }
 
+    public String getCustomNetwork() { return customNetwork; }
+
+    public void setCustomNetwork(String customNetwork){
+        this.customNetwork = customNetwork;
+    }
+
     public JsonObject getProductName() {
         return productName;
     }
 
     public void setProductName(JsonObject productName) {
         this.productName = productName;
+    }
+    public String getNetworkProfile() { return networkProfile; }
+
+    public void setNetworkProfile(String networkProfile){
+        this.networkProfile = networkProfile;
     }
 }

@@ -212,25 +212,24 @@ public class Browsers extends Android {
     private void remoteExecution(ITestContext context, XmlTest xmlTest) {
         MutableCapabilities androidCaps = new MutableCapabilities();
         HashMap<String, Object> browserstackOptions = new HashMap<>();
-//        caps.setCapability("project", context.getSuite().getName());
-        androidCaps.setCapability("platformName", tEnv().getWebSystemOS());
-        androidCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
-        androidCaps.setCapability("platformName", tEnv().getWebSystemOSVersion());
+        //androidCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
         androidCaps.setCapability("browserName", tEnv().getWebBrowser());
-        androidCaps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
-        androidCaps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
-//        caps.setCapability("language", "en");
+        browserstackOptions.put("browserVersion", tEnv().getWebBrowserVersion());
+        browserstackOptions.put("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
         browserstackOptions.put("os", tEnv().getWebSystemOS());
         browserstackOptions.put("osVersion", tEnv().getWebSystemOSVersion());
         browserstackOptions.put("debug", "true");
         HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
         networkLogsOptions.put("captureContent", true);
-        androidCaps.setCapability("browserstack:networkLogs", true);
-        androidCaps.setCapability("browserstack:networkLogsOptions", networkLogsOptions);
+        browserstackOptions.put("networkLogsOptions", networkLogsOptions);
+        browserstackOptions.put("networkProfile", tEnv().getNetworkProfile());
+        browserstackOptions.put("customNetwork", tEnv().getCustomNetwork());
+        browserstackOptions.put("networkLogs", "true");
         //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
         browserstackOptions.put("idleTimeout", "300");
         browserstackOptions.put("autoWait", "30");
+        androidCaps.setCapability("bstack:options", browserstackOptions);
         if(tEnv().getGps_location()!=null){
             browserstackOptions.put("gpsLocation", tEnv().getGps_location());
         }
@@ -247,7 +246,6 @@ public class Browsers extends Android {
             location = "GB";
         }
         logger.info("Setting location to :: "+location);
-        androidCaps.setCapability("browserstack.geoLocation",location);
         browserstackOptions.put("geoLocation",location);
         ChromeOptions options = new ChromeOptions();
         Map < String, Object > prefs = new HashMap < String, Object > ();

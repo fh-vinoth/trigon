@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="MYT_Android_Sample" parallel="none" thread-count="0">
+<suite name="FHApp_iOS_Sample" parallel="none" thread-count="0">
 
-    <parameter name="url" value="https://myt-web.fhcdn.dev/"></parameter>
+    <parameter name="URI" value="https://api.touch2success.com"></parameter>
     <parameter name="browserstack_execution_local" value="false"></parameter>
     <parameter name="isJWT" value="false"></parameter>
-    <parameter name="endpointPrefix" value=""></parameter>
-    <parameter name="productName" value="MYT"></parameter>
+    <parameter name="gps_location" value="53.06320204994315,-2.203701238172545"></parameter>
+    <parameter name="browserstack_midSessionInstallApps" value="bs://401795264a22256a7445074a62e29f526c0e63f6,bs://9f7f545fecf7b008438e1acee4faf580bffe4da1"></parameter>
+    <parameter name="jsonFilePath" value="foodhubukautomation@gmail.com"/>
+    <parameter name="networkProfile" value="4g-lte-advanced-good"></parameter>
+    <parameter name="customNetwork" value="10000"></parameter>
+    <parameter name="device" value="iPhone 13"></parameter>
+    <parameter name="os" value="15.0"></parameter>
 
     <test name="Test type">
         <classes>
-
+            <class name="com.fh.mobile.MobileTest"></class>
         </classes>
     </test>
 

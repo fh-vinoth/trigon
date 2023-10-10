@@ -20,15 +20,14 @@ public class MobileTest extends TestLocalController {
             //sample();
             System.out.println("Testing");
 
-          /*  HashMap<String,Object> map = new HashMap<>();
+            /*HashMap<String,Object> map = new HashMap<>();
             map.put("offline", false);
             map.put("latency", 5);
             map.put("download_throughput", 75000);
             map.put("upload_throughput", 20000);
             CommandExecutor executor = browser().getCommandExecutor();
             Response response = executor.execute(new Command(browser().getSessionId(),"setNetworkConnection", ImmutableMap.of("network_connection",ImmutableMap.copyOf(map))));
-            System.out.println(response);
-            browser().get("www.google.com");*/
+            System.out.println(response);*/
 
         } catch (Exception e) {
             hardFail("sanity failed");
@@ -38,7 +37,7 @@ public class MobileTest extends TestLocalController {
     }
 
 
-    public void sample(){
+    /*public void sample(){
         try{
             String num = "1000";
             String Exp = "11.34";
@@ -47,5 +46,5 @@ public class MobileTest extends TestLocalController {
         }catch(Exception e){
             hardFail("Failed Sample");
         }
-    }
+    }*/
 }
