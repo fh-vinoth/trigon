@@ -5,21 +5,17 @@ import com.trigon.mobile.Android;
 import com.trigon.mobile.AppiumManager;
 import io.appium.java_client.remote.options.UnhandledPromptBehavior;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.groovy.json.internal.Chr;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.MutableCapabilities;
-import org.openqa.selenium.UnexpectedAlertBehaviour;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.chromium.ChromiumDriver;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.v102.network.Network;
-import org.openqa.selenium.devtools.v102.network.model.Request;
-import org.openqa.selenium.devtools.v102.network.model.Response;
+import org.openqa.selenium.devtools.v117.network.Network;
+import org.openqa.selenium.devtools.v117.network.model.Request;
+import org.openqa.selenium.devtools.v117.network.model.Response;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -28,9 +24,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
-import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
@@ -39,10 +33,8 @@ import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 
 public class Browsers extends Android {
@@ -82,7 +74,7 @@ public class Browsers extends Android {
                         options.addArguments("--remote-allow-origins=*");
 
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
-                            options.setHeadless(true);
+                            options.addArguments("--headless=new");
                         }
                         // options.setLogLevel(OFF);
                         if(grid_execution_local.equalsIgnoreCase("true")){
@@ -117,7 +109,7 @@ public class Browsers extends Android {
                         options.setCapability("prefs", prefs);
 
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
-                            options.setHeadless(true);
+                            options.addArguments("--headless=new");
                         }
                         if(grid_execution_local.equalsIgnoreCase("true")){
                             webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP),options));

@@ -6,19 +6,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.trigon.bean.ElementRepoPojo;
 import com.trigon.exceptions.RetryOnException;
-
 import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.reports.ReportManager;
-import io.appium.java_client.TouchAction;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.FileReader;
@@ -26,10 +23,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static io.appium.java_client.touch.WaitOptions.waitOptions;
-import static io.appium.java_client.touch.offset.PointOption.point;
-import static java.time.Duration.ofMillis;
+import java.util.Objects;
 
 public class TestModelCore extends ReportManager {
 
@@ -42,7 +36,7 @@ public class TestModelCore extends ReportManager {
         String locator = s;
         try {
             //s.startsWith("name")||s.startsWith("xpath")||s.startsWith("classname")||s.startsWith("partiallinktext")||s.startsWith("linktext")||s.startsWith("tagname")||s.startsWith("css")||s.startsWith("id")
-            if(!s.contains("=")){
+            if (!s.contains("=")) {
                 Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
                 JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
                 ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
@@ -179,16 +173,16 @@ public class TestModelCore extends ReportManager {
         }
     }
 
-    protected void textVerification(String actual, String expected, String textAction,String... description) {
+    protected void textVerification(String actual, String expected, String textAction, String... description) {
         try {
             if ((actual != null) && (expected != null)) {
                 switch (textAction.toLowerCase()) {
                     case "partial":
                         if (!actual.isEmpty()) {
-                            customAssertPartialEquals(actual, expected,description);
+                            customAssertPartialEquals(actual, expected, description);
                         } else {
                             if (expected.equals(actual)) {
-                                customAssertPartialEquals(actual, expected,description);
+                                customAssertPartialEquals(actual, expected, description);
                             } else {
                                 logger.error("Actual or Expected value is empty");
                                 logReport("FAIL", "Actual or Expected value is empty");
@@ -196,11 +190,11 @@ public class TestModelCore extends ReportManager {
                         }
                         break;
                     case "notequal":
-                        customAssertNotEquals(actual, expected,description);
+                        customAssertNotEquals(actual, expected, description);
                         break;
 
                     default:
-                        customAssertEquals(actual, expected,description);
+                        customAssertEquals(actual, expected, description);
                         break;
                 }
 
@@ -243,12 +237,12 @@ public class TestModelCore extends ReportManager {
             } else {
                 if (expected.equals(actual)) {
                     customAssertEquals(actual, expected);
-                } else if(expected==null && actual ==null) {
+                } else if (expected == null && actual == null) {
                     logReport("PASS", "Actual and Expected value is null");
-                }else if(expected==null && actual !=null) {
-                    logger.error("Actual is ["+actual+"] but the Expected value is null");
-                }else if (expected!=null && actual ==null){
-                    logger.error("Actual is null but the Expected value is ["+expected+"]");
+                } else if (expected == null && actual != null) {
+                    logger.error("Actual is [" + actual + "] but the Expected value is null");
+                } else if (expected != null && actual == null) {
+                    logger.error("Actual is null but the Expected value is [" + expected + "]");
                     //logReport("FAIL", "Actual or Expected value is null");
                 }
             }
@@ -447,38 +441,28 @@ public class TestModelCore extends ReportManager {
     }
 
 
-    
     protected void verticalSwipe(double startPercentage, double endPercentage, double anchorPercentage) {
         try {
-            if (android() != null) {
-                Dimension size = android().manage().window().getSize();
+            if (browser() == null) {
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence scroll = new Sequence(finger, 0);
+                Dimension size= Objects.requireNonNullElse(android(), ios()).manage().window().getSize();
+
                 int anchor = (int) (size.width * anchorPercentage);
                 int startPoint = (int) (size.height * startPercentage);
                 int endPoint = (int) (size.height * endPercentage);
 
-                new TouchAction(android())
-                        .press(point(anchor, startPoint))
-                        .waitAction(waitOptions(ofMillis(1000)))
-                        .moveTo(point(anchor, endPoint))
-                        .release().perform();
-            }
-            if (ios() != null) {
-                Dimension size = ios().manage().window().getSize();
-                int anchor = (int) (size.width * anchorPercentage);
-                int startPoint = (int) (size.height * startPercentage);
-                int endPoint = (int) (size.height * endPercentage);
+                scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), anchor, startPoint));
+                scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                scroll.addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), anchor, endPoint));
+                scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 
-                new TouchAction(ios())
-                        .press(point(anchor, startPoint))
-                        .waitAction(waitOptions(ofMillis(1000)))
-                        .moveTo(point(anchor, endPoint))
-                        .release().perform();
+                Objects.requireNonNullElse(android(), ios()).perform(List.of(scroll));
+
             }
         } catch (InvalidArgumentException iae) {
             captureException(iae);
             logger.error("Provide Co-Ordinates with in range. The given Co-Ordinates crossed beyond screen range : " + startPercentage + " : " + endPercentage + " : " + anchorPercentage);
-        } catch (Exception e) {
-            captureException(e);
         }
     }
 
@@ -496,48 +480,48 @@ public class TestModelCore extends ReportManager {
 
     private void manageNotifications(Boolean show) {
         try {
-            if (android() != null) {
-                Dimension screenSize = android().manage().window().getSize();
-                int yMargin = 5;
-                int xMid = screenSize.width / 2;
-                PointOption top = PointOption.point(xMid, yMargin);
-                PointOption bottom = PointOption.point(xMid, screenSize.height - yMargin);
-
-                TouchAction action = new TouchAction(android());
-                if (show) {
-                    action.press(top);
-                } else {
-                    action.press(bottom);
-                }
-                action.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1)));
-                if (show) {
-                    action.moveTo(bottom);
-                } else {
-                    action.moveTo(top);
-                }
-                action.perform();
-            }
-            if (ios() != null) {
-                Dimension screenSize = ios().manage().window().getSize();
-                int yMargin = 5;
-                int xMid = screenSize.width / 2;
-                PointOption top = PointOption.point(xMid, yMargin);
-                PointOption bottom = PointOption.point(xMid, screenSize.height - yMargin);
-
-                TouchAction action = new TouchAction(ios());
-                if (show) {
-                    action.press(top);
-                } else {
-                    action.press(bottom);
-                }
-                action.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1)));
-                if (show) {
-                    action.moveTo(bottom);
-                } else {
-                    action.moveTo(top);
-                }
-                action.perform();
-            }
+//            if (android() != null) {
+//                Dimension screenSize = android().manage().window().getSize();
+//                int yMargin = 5;
+//                int xMid = screenSize.width / 2;
+//                PointOption top = point(xMid, yMargin);
+//                PointOption bottom = PointOption.point(xMid, screenSize.height - yMargin);
+//
+//                TouchAction action = new TouchAction(android());
+//                if (show) {
+//                    action.press(top);
+//                } else {
+//                    action.press(bottom);
+//                }
+//                action.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1)));
+//                if (show) {
+//                    action.moveTo(bottom);
+//                } else {
+//                    action.moveTo(top);
+//                }
+//                action.perform();
+//            }
+//            if (ios() != null) {
+//                Dimension screenSize = ios().manage().window().getSize();
+//                int yMargin = 5;
+//                int xMid = screenSize.width / 2;
+//                PointOption top = PointOption.point(xMid, yMargin);
+//                PointOption bottom = PointOption.point(xMid, screenSize.height - yMargin);
+//
+//                TouchAction action = new TouchAction(ios());
+//                if (show) {
+//                    action.press(top);
+//                } else {
+//                    action.press(bottom);
+//                }
+//                action.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1)));
+//                if (show) {
+//                    action.moveTo(bottom);
+//                } else {
+//                    action.moveTo(top);
+//                }
+//                action.perform();
+//            }
         } catch (Exception e) {
             captureException(e);
         }
