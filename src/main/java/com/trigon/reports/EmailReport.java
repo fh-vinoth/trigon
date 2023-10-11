@@ -54,6 +54,11 @@ public class EmailReport {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(reportPath + "/SupportFiles/HTML/emailBody.json", false)));
             int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
             int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
+            int skipPercentage = stats.getStats().getGrandchildPercentage().get(Status.SKIP).intValue();
+
+            if(passPercentage+failPercentage+skipPercentage<100){
+                failPercentage+=1;
+            }
             String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
 
             String subject;
@@ -93,6 +98,10 @@ public class EmailReport {
         int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
         int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
         int skipPercentage = stats.getStats().getGrandchildPercentage().get(Status.SKIP).intValue();
+
+        if(passPercentage+failPercentage+skipPercentage<100){
+            failPercentage+=1;
+        }
 
         String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
         String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
@@ -526,6 +535,10 @@ public class EmailReport {
         int skipPercentage = stats.getStats().getGrandchildPercentage().get(Status.SKIP).intValue();
         String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
         String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
+
+        if(passPercentage+failPercentage+skipPercentage<100){
+            failPercentage+=1;
+        }
         try {
             jsonWriter = new JsonWriter(new FileWriter(reportPath + "testSummary.json", false));
             jsonWriter.setIndent(" ");
