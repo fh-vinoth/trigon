@@ -53,17 +53,21 @@ public class Android extends IOS {
                 browserstackOptions.put("appiumVersion", "1.22.0");
                 browserstackOptions.put("realMobile", "true");
                 browserstackOptions.put("acceptInsecureCerts", "true");
-
                 HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
                 networkLogsOptions.put("captureContent", true);
                 androidCaps.setCapability("browserstack.networkLogs", true);
                 androidCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
                 androidCaps.setCapability("browserstack.realMobileInteraction", "true");
+                androidCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
+                androidCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
                 browserstackOptions.put("networkProfile", "reset");
                 androidCaps.setCapability("autoAcceptAlerts", true);
                 androidCaps.setCapability("unicodeKeyboard", true);
                 androidCaps.setCapability("resetKeyboard", true);
                 androidCaps.setCapability("autoGrantPermissions",true);
+                androidCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
+                androidCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
+//                browserstackOptions.put("networkProfile", "reset");
                 browserstackOptions.put("idleTimeout", "300");
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
@@ -72,6 +76,9 @@ public class Android extends IOS {
 
                 if(tEnv().getGps_location()!=null){
                     browserstackOptions.put("gpsLocation", tEnv().getGps_location());
+                }
+                if(tEnv().getCustomNetwork()!=null){
+                    browserstackOptions.put("customNetwork", tEnv().getCustomNetwork());
                 }
 
                 if(tEnv().getBrowserstack_midSessionInstallApps()!=null)

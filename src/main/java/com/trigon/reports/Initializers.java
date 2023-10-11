@@ -30,6 +30,8 @@ public class Initializers {
 
     protected static String grid_execution_local = "false";
     protected static String gps_location = "false";
+    protected static String networkProfile = "Reset";
+    protected static String customNetwork = "false";
     protected static String pipelineExecution = "false";
 
     public static boolean customAPIReportStartFlag = false;
