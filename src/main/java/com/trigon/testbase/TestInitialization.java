@@ -978,7 +978,7 @@ public class TestInitialization extends Browsers {
             tEnv().setApiPhoneNumber(tLocalEnv.getRegion().getAsJsonObject(test_region).get("phoneNumber").getAsString());
             tEnv().setApiEmailID(tLocalEnv.getRegion().getAsJsonObject(test_region).get("emailId").getAsString());
         } catch (Exception e) {
-            System.out.println();
+            logApiReport("WARN",test_region+"Test Region Not present in Test-env.json");
         }
     }
 
