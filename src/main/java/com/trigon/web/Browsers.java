@@ -5,17 +5,21 @@ import com.trigon.mobile.Android;
 import com.trigon.mobile.AppiumManager;
 import io.appium.java_client.remote.options.UnhandledPromptBehavior;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.groovy.json.internal.Chr;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.MutableCapabilities;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chromium.ChromiumDriver;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.v117.network.Network;
-import org.openqa.selenium.devtools.v117.network.model.Request;
-import org.openqa.selenium.devtools.v117.network.model.Response;
+import org.openqa.selenium.devtools.v102.network.Network;
+import org.openqa.selenium.devtools.v102.network.model.Request;
+import org.openqa.selenium.devtools.v102.network.model.Response;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -24,7 +28,9 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
@@ -33,8 +39,10 @@ import org.testng.ITestContext;
 import org.testng.xml.XmlTest;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 public class Browsers extends Android {
@@ -74,7 +82,7 @@ public class Browsers extends Android {
                         options.addArguments("--remote-allow-origins=*");
 
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
-                            options.addArguments("--headless=new");
+                            options.setHeadless(true);
                         }
                         // options.setLogLevel(OFF);
                         if(grid_execution_local.equalsIgnoreCase("true")){
@@ -109,7 +117,7 @@ public class Browsers extends Android {
                         options.setCapability("prefs", prefs);
 
                         if (tEnv().getWebHeadless().equalsIgnoreCase("true")) {
-                            options.addArguments("--headless=new");
+                            options.setHeadless(true);
                         }
                         if(grid_execution_local.equalsIgnoreCase("true")){
                             webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP),options));
@@ -212,24 +220,25 @@ public class Browsers extends Android {
     private void remoteExecution(ITestContext context, XmlTest xmlTest) {
         MutableCapabilities androidCaps = new MutableCapabilities();
         HashMap<String, Object> browserstackOptions = new HashMap<>();
-        //androidCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
+//        caps.setCapability("project", context.getSuite().getName());
+        androidCaps.setCapability("platformName", tEnv().getWebSystemOS());
+        androidCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
+        androidCaps.setCapability("platformName", tEnv().getWebSystemOSVersion());
         androidCaps.setCapability("browserName", tEnv().getWebBrowser());
-        browserstackOptions.put("browserVersion", tEnv().getWebBrowserVersion());
-        browserstackOptions.put("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
+        androidCaps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
+        androidCaps.setCapability("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
+//        caps.setCapability("language", "en");
         browserstackOptions.put("os", tEnv().getWebSystemOS());
         browserstackOptions.put("osVersion", tEnv().getWebSystemOSVersion());
         browserstackOptions.put("debug", "true");
         HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
         networkLogsOptions.put("captureContent", true);
-        browserstackOptions.put("networkLogsOptions", networkLogsOptions);
-        browserstackOptions.put("networkProfile", tEnv().getNetworkProfile());
-        browserstackOptions.put("customNetwork", tEnv().getCustomNetwork());
-        browserstackOptions.put("networkLogs", "true");
+        androidCaps.setCapability("browserstack:networkLogs", true);
+        androidCaps.setCapability("browserstack:networkLogsOptions", networkLogsOptions);
         //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
         browserstackOptions.put("idleTimeout", "300");
         browserstackOptions.put("autoWait", "30");
-        androidCaps.setCapability("bstack:options", browserstackOptions);
         if(tEnv().getGps_location()!=null){
             browserstackOptions.put("gpsLocation", tEnv().getGps_location());
         }
@@ -246,6 +255,7 @@ public class Browsers extends Android {
             location = "GB";
         }
         logger.info("Setting location to :: "+location);
+        androidCaps.setCapability("browserstack.geoLocation",location);
         browserstackOptions.put("geoLocation",location);
         ChromeOptions options = new ChromeOptions();
         Map < String, Object > prefs = new HashMap < String, Object > ();
