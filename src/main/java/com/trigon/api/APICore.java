@@ -340,6 +340,7 @@ public class APICore extends ReportManager {
             dataToJSON("endPoint", Endpoint);
             double respTime;
             try {
+                executionCount++;
                 switch (HttpMethod) {
                     case "GET":
                         response = requestSpecification.get(Endpoint).then().extract().response();
@@ -361,20 +362,20 @@ public class APICore extends ReportManager {
                         logApiReport("FAIL", "Method " + HttpMethod + " is not yet implemented");
                         break;
                 }
-                executionCount++;
             } catch (Exception e) {
                 dataToJSON("apiTestStatus", "FAILED");
                 failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
-                apiTearDown(null, null, null, null, null, null, null);
-
             }
             if (response == null && executionCount < 2) {
-                logStepAction("Trying for 2nd time !! recursive call");
-                response = executeAPIMethod(HttpMethod, Endpoint, requestSpecification);
-                logStepAction("Crossed the 2nd time response stage !! recursive call");
-            }
-            else if (response == null && executionCount == 2){
-                logApiReport("FAIL", "Failed even after re-connecting for 2 times");
+                logApiReport("WARN","Trying for second time !! with recursive call for this endpoint :"+ Endpoint+"_"+HttpMethod);
+                RequestSpecification requestSpecification1 = null;
+                requestSpecification1 = RestAssured.given().request().urlEncodingEnabled(false);
+                RestAssuredConfig restAssuredConfig1 = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig()
+                        .setParam("http.connection.timeout", 60000)
+                        .setParam("http.socket.timeout", 60000));
+                requestSpecification1.config(restAssuredConfig1);
+                requestPreparation(headersNew, cookiesNew, queryParamsNew, formParamsNew, pathParamsNew, requestBodyNew, requestSpecification1);
+                response = executeAPIMethod(HttpMethod, Endpoint, requestSpecification1);
             }
             if (response != null) {
                 respTime = response.getTimeIn(TimeUnit.MILLISECONDS) / 1000.0;
@@ -629,21 +630,27 @@ public class APICore extends ReportManager {
             dataTableMapApi.get().clear();
             if (headers != null) {
                 headers.clear();
+                headersNew.clear();
             }
             if (cookies != null) {
                 cookies.clear();
+                cookiesNew.clear();
             }
             if (queryParams != null) {
                 queryParams.clear();
+                queryParamsNew.clear();
             }
             if (formParams != null) {
                 formParams.clear();
+                formParamsNew.clear();
             }
             if (pathParams != null) {
                 pathParams.clear();
+                pathParamsNew.clear();
             }
             if (requestBody != null) {
                 requestBody = null;
+                requestBodyNew = null;
             }
             if (expectedResponse != null) {
                 expectedResponse.clear();
