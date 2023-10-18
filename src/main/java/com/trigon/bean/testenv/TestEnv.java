@@ -107,6 +107,8 @@ public class TestEnv {
     private String dbType;
     private String serviceType;
     private String moduleNames;
+    private String networkProfile;
+    private String customNetwork;
 
 
 
@@ -736,8 +738,6 @@ public class TestEnv {
     public void setAuthorization(String authorization) {
         this.authorization = authorization;
     }
-
-
     public String getUnblockToken() {
         return unblockToken;
     }
@@ -745,4 +745,13 @@ public class TestEnv {
     public void setUnblockToken(String unblockToken) {
         this.unblockToken = unblockToken;
     }
+
+
+    public String getNetworkProfile() { return networkProfile; }
+
+    public void setNetworkProfile(String networkProfile) { this.networkProfile = networkProfile; }
+
+    public String getCustomNetwork() { return customNetwork; }
+
+    public void setCustomNetwork(String customNetwork) { this.customNetwork = customNetwork; }
 }

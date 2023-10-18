@@ -1,20 +1,19 @@
 package com.trigon.elements;
 
 import com.trigon.constants.Message;
-import io.appium.java_client.TouchAction;
-import io.appium.java_client.touch.WaitOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import static io.appium.java_client.touch.offset.PointOption.point;
 
 public class PerformElementAction extends ElementStrategyImpl {
     private static final Logger logger = LogManager.getLogger(PerformElementAction.class);
@@ -35,13 +34,13 @@ public class PerformElementAction extends ElementStrategyImpl {
                         try {
                             if (webElement.isEnabled()) {
                                 browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
-                                WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                WebDriverWait wait = new WebDriverWait(browser(), Duration.ofSeconds(5));
                                 wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                 webElement.click();
                             }
                         } catch (WebDriverException e) {
                             try {
-                                WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                WebDriverWait wait = new WebDriverWait(browser(), Duration.ofSeconds(5));
                                 wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                 browser().executeScript("arguments[0].click();", webElement);
                                 browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
@@ -53,7 +52,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                                     hardWait(1000);
                                     if (webElement.isEnabled()) {
                                         browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
-                                        WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                        WebDriverWait wait = new WebDriverWait(browser(), Duration.ofSeconds(5));
                                         wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                         webElement.click();
                                     }
@@ -64,7 +63,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                                             js.executeScript("window.scrollBy(0,-450)", "");
                                             if (webElement.isEnabled()) {
                                                 browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
-                                                WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                                WebDriverWait wait = new WebDriverWait(browser(), Duration.ofSeconds(5));
                                                 wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                                 webElement.click();
                                             }
@@ -83,14 +82,14 @@ public class PerformElementAction extends ElementStrategyImpl {
                                 navigation + Message.CLICKED + locatorString);
                     }
                     if (androidElement != null) {
-                        WebDriverWait wait = new WebDriverWait(android(),Duration.ofSeconds(5));
+                        WebDriverWait wait = new WebDriverWait(android(), Duration.ofSeconds(5));
                         wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(androidElement)));
                         androidElement.click();
                         logReportWithScreenShot("PASS",
                                 navigation + Message.CLICKED + locatorString);
                     }
                     if (iOSElement != null) {
-                        WebDriverWait wait = new WebDriverWait(ios(),Duration.ofSeconds(5));
+                        WebDriverWait wait = new WebDriverWait(ios(), Duration.ofSeconds(5));
                         wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(iOSElement)));
                         iOSElement.click();
                         logReportWithScreenShot("PASS",
@@ -125,7 +124,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                 try {
                     if (webElement != null) {
                         returnvalue = String.valueOf(webElement.isDisplayed());
-                        
+
                         browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                     }
                     if (androidElement != null) {
@@ -153,6 +152,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                     if (iOSElement != null) {
                         iOSElement.clear();
                     }
+                    hardWait(3000);
                     logReportWithScreenShot("PASS",
                             navigation + Message.CLEAR_TEXT + locatorString);
                 } catch (WebDriverException e) {
@@ -166,7 +166,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                     if (webElement != null) {
                         try {
                             if (webElement.isEnabled()) {
-                                WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                WebDriverWait wait = new WebDriverWait(browser(), Duration.ofSeconds(5));
                                 wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                 webElement.clear();
                                 webElement.sendKeys(getElementValue);
@@ -178,7 +178,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                                 scrollToElement(webElement);
                                 hardWait(1000);
                                 if (webElement.isEnabled()) {
-                                    WebDriverWait wait = new WebDriverWait(browser(),Duration.ofSeconds(5));
+                                    WebDriverWait wait = new WebDriverWait(browser(), Duration.ofSeconds(5));
                                     wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(webElement)));
                                     webElement.clear();
                                     webElement.sendKeys(getElementValue);
@@ -200,13 +200,13 @@ public class PerformElementAction extends ElementStrategyImpl {
 
                     }
                     if (androidElement != null) {
-                        WebDriverWait wait = new WebDriverWait(android(),Duration.ofSeconds(5));
+                        WebDriverWait wait = new WebDriverWait(android(), Duration.ofSeconds(5));
                         wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(androidElement)));
                         androidElement.clear();
                         androidElement.sendKeys(getElementValue);
                     }
                     if (iOSElement != null) {
-                        WebDriverWait wait = new WebDriverWait(ios(),Duration.ofSeconds(5));
+                        WebDriverWait wait = new WebDriverWait(ios(), Duration.ofSeconds(5));
                         wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(iOSElement)));
                         iOSElement.clear();
                         iOSElement.sendKeys(getElementValue);
@@ -230,7 +230,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                         } catch (WebDriverException e) {
                             scrollToElement(webElement);
                             returnvalue = webElement.getText();
-                            
+
                             browser().executeScript("arguments[0].style.border='4px solid red'", webElement);
                         }
                     }
@@ -422,24 +422,26 @@ public class PerformElementAction extends ElementStrategyImpl {
     }
 
     public void horizontalSwipeToElement1(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        WebElement androidElement = getAndroidElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
-        WebElement iOSElement = getIOSElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
         try {
-            if (android() != null) {
-                int screenWidth = android().manage().window().getSize().width;
-                TouchAction touchAction = new TouchAction(android());
+            if (browser() == null) {
+                WebElement element = android()!=null?getAndroidElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues):getIOSElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence scroll = new Sequence(finger, 0);
+                int screenWidth =  Objects.requireNonNullElse(android(), ios()).manage().window().getSize().width;
                 while (true) {
                     try {
-                        int chosenElementY = androidElement.getLocation().getY();
-                        int chosenElementX = androidElement.getLocation().getX();
+                        int chosenElementY = element.getLocation().getY();
+                        int chosenElementX = element.getLocation().getX();
 
                         int MoveX = screenWidth - chosenElementX;
                         int MoveY = chosenElementX + chosenElementY;
 
-                        touchAction.press(point(chosenElementX, chosenElementY))
-                                .moveTo(point(MoveX, MoveY)).waitAction(WaitOptions.waitOptions(Duration.ofMillis(2000)))
-                                .release()
-                                .perform();
+                        scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), chosenElementX, chosenElementY));
+                        scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                        scroll.addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), MoveX, MoveY));
+                        scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+
+                        Objects.requireNonNullElse(android(), ios()).perform(List.of(scroll));
 
                         logReportWithScreenShot("PASS",
                                 "Horizontal Swiped to Element  :  " + "Pressed X Location : " + chosenElementX + "Pressed Y Location : " + chosenElementY + " Moved X Location : " + MoveX + " Moved Y Location : " + MoveY);
@@ -448,33 +450,6 @@ public class PerformElementAction extends ElementStrategyImpl {
                         e.printStackTrace();
                     }
                 }
-            }
-            if (ios() != null) {
-                int screenWidth = ios().manage().window().getSize().width;
-                TouchAction touchAction = new TouchAction(ios());
-                while (true) {
-                    try {
-                        int chosenElementY = iOSElement.getLocation().getY();
-                        int chosenElementX = iOSElement.getLocation().getX();
-
-                        int MoveX = screenWidth - chosenElementX;
-                        int MoveY = chosenElementX + chosenElementY;
-
-                        logger.info("Performing Horizontal Swiping in IOS ");
-
-                        touchAction.press(point(chosenElementX, chosenElementY))
-                                .moveTo(point(MoveX, MoveY)).waitAction(WaitOptions.waitOptions(Duration.ofMillis(3000)))
-                                .release()
-                                .perform();
-
-                        logReportWithScreenShot("PASS",
-                                "Horizontal Swiped to Element  :  " + "Pressed X Location : " + chosenElementX + " Pressed Y Location : " + chosenElementY + " Moved X Location : " + MoveX + " Moved Y Location : " + MoveY);
-                        break;
-                    } catch (WebDriverException e) {
-                        e.printStackTrace();
-                    }
-                }
-
             }
         } catch (InvalidArgumentException iae) {
             logger.error("The given element visibility is beyond screen range : Make sure you have taken correct element : " + locatorString);
@@ -487,25 +462,25 @@ public class PerformElementAction extends ElementStrategyImpl {
             if (android() != null) {
                 android().hideKeyboard();
 
-                if (android().getKeyboard() != null) {
+                if (android().isKeyboardShown()) {
                     android().hideKeyboard();
                 }
             }
             if (ios() != null) {
-                if (ios().getKeyboard() != null) {
+                if (ios().isKeyboardShown()) {
                     ios().hideKeyboard();
                 }
             }
         } catch (WebDriverException we) {
-            try{
+            try {
                 if (ios() != null) {
                     if (ios().isKeyboardShown()) {
                         ios().hideKeyboard("Return");
-                    }else{
+                    } else {
                         logger.error("Keyboard is not visible or Application must be closed.");
                     }
                 }
-            }catch (WebDriverException wde) {
+            } catch (WebDriverException wde) {
                 hardFail("Failed to Hide Keyboard!! Application Crashed", "");
             }
         }

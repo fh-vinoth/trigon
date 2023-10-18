@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="API_Check" parallel="classes">
+<suite name="API_bft_Check" parallel="classes">
     <!--    <test name="API-Endpoint_Automation_Category">-->
     <!--        <classes>-->
     <!--            <class name="com.fh.api.CatArray"/>-->

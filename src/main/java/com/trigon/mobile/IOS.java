@@ -43,7 +43,7 @@ public class IOS extends ReportManager {
                 }
                 browserstackOptions.put("projectName", context.getSuite().getName());
                 browserstackOptions.put("sessionName", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
-                browserstackOptions.put("appiumVersion", "1.21.0");
+                //browserstackOptions.put("appiumVersion", "1.21.0");
                 browserstackOptions.put("realMobile", "true");
                 browserstackOptions.put("acceptInsecureCerts", "true");
                 iosCaps.setCapability("autoAcceptAlerts", true);
@@ -53,7 +53,13 @@ public class IOS extends ReportManager {
                 HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
                 networkLogsOptions.put("captureContent", true);
                 iosCaps.setCapability("browserstack.networkLogs", true);
-                iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);                browserstackOptions.put("networkProfile", "reset");
+                iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
+                iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
+                browserstackOptions.put("networkProfile", "reset");
+                iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
+                iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
+                iosCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
+
                 browserstackOptions.put("idleTimeout", "300");
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");

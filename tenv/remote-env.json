@@ -1,11 +1,13 @@
 {
-  "execution_type": "local",
+  "execution_type": "remote",
   "jenkins_execution": "false",
   "pipeline_execution": "false",
   "browserstack_execution_local": "false",
   "grid_execution_local" : "false",
   "test_region": "MYT-UK8",
   "app_reset": "NA",
+  "customNetwork": "true",
+  "networkProfile": "true",
   "random_device": "",
   "email_recipients":"",
   "error_email_recipients":"",
@@ -45,12 +47,12 @@
     },
     "FHApp": {
       "android": {
-        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
-        "build_number": "1234"
+        "bs_app_path": "bs://0c95fff21904eee811dda3f2ab8e4ccd7854295e",
+        "build_number": "Dev_Core_Testing"
       },
       "ios": {
-        "bs_app_path": "bs://d52982e734e123ffa4229bd9f0dd2820cbfa8075",
-        "build_number": "1234"
+        "bs_app_path": "bs://7dbb616bdc7ed7048156267bbf56c6bcf70ca284",
+        "build_number": "Dev_Core_Testing"
       }
     },
     "CAApp": {
