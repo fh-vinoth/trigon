@@ -58,8 +58,12 @@ public class Android extends IOS {
                 androidCaps.setCapability("browserstack.networkLogs", true);
                 androidCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
                 androidCaps.setCapability("browserstack.realMobileInteraction", "true");
-                androidCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
-                androidCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
+                if(tEnv().getNetworkProfile()!=null) {
+                    androidCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
+                }
+                if(tEnv().getCustomNetwork()!=null) {
+                    androidCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
+                }
                 browserstackOptions.put("networkProfile", "reset");
                 androidCaps.setCapability("autoAcceptAlerts", true);
                 androidCaps.setCapability("unicodeKeyboard", true);

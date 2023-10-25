@@ -212,18 +212,22 @@ public class Browsers extends Android {
     private void remoteExecution(ITestContext context, XmlTest xmlTest) {
         MutableCapabilities androidCaps = new MutableCapabilities();
         HashMap<String, Object> browserstackOptions = new HashMap<>();
-        //androidCaps.setCapability("build", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
         androidCaps.setCapability("browserName", tEnv().getWebBrowser());
+        browserstackOptions.put("buildName", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
         browserstackOptions.put("browserVersion", tEnv().getWebBrowserVersion());
-        browserstackOptions.put("name", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
+        browserstackOptions.put("sessionName", xmlTest.getName() + "_" + tEnv().getCurrentTestClassName());
         browserstackOptions.put("os", tEnv().getWebSystemOS());
         browserstackOptions.put("osVersion", tEnv().getWebSystemOSVersion());
         browserstackOptions.put("debug", "true");
         HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
         networkLogsOptions.put("captureContent", true);
         browserstackOptions.put("networkLogsOptions", networkLogsOptions);
-        browserstackOptions.put("networkProfile", tEnv().getNetworkProfile());
-        browserstackOptions.put("customNetwork", tEnv().getCustomNetwork());
+        if(tEnv().getCustomNetwork()!=null){
+            browserstackOptions.put("customNetwork", tEnv().getCustomNetwork());
+        }
+        if(tEnv().getNetworkProfile()!=null) {
+            browserstackOptions.put("networkProfile", tEnv().getNetworkProfile());
+        }
         browserstackOptions.put("networkLogs", "true");
         //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
