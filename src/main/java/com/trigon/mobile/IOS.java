@@ -57,8 +57,12 @@ public class IOS extends ReportManager {
                 iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
                 browserstackOptions.put("networkProfile", "reset");
                 iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
-                iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
-                iosCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
+                if(tEnv().getNetworkProfile()!=null) {
+                    iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
+                }
+                if(tEnv().getCustomNetwork()!=null) {
+                    iosCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
+                }
 
                 browserstackOptions.put("idleTimeout", "300");
                 browserstackOptions.put("autoWait", "50");
