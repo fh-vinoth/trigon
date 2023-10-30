@@ -175,7 +175,7 @@ public class ReportManager extends CustomReport {
             if (status.equalsIgnoreCase("PASS")) {
                 if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
                      //m = apiName + " is PASSED";
-                     m = "API Test status for the method '<b>"+apiName+ "' </b>is PASSED";
+                     m = "<b>"+apiName+ "'</b>is PASSED";
                      if(responseValidation.containsKey("expectedResponse")){
                          responseValidation(responseValidation);
                      }
@@ -500,10 +500,20 @@ public class ReportManager extends CustomReport {
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
 
             if (expected.equals(actual)) {
-                logReport("PASS", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br> Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
+                if(description.length > 0){
+                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
+                }
+                else {
+                    logReport("PASS", "Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
+                }
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReport("FAIL", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br> Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
+                if(description.length > 0){
+                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
+                }
+                else {
+                    logReport("FAIL", "Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
+                }
             }
         } catch (Exception e) {
             captureException(e);
@@ -516,9 +526,19 @@ public class ReportManager extends CustomReport {
             logger.info("Verifying NOT Equals Actual : " + actual + " with Expected : " + expected + "");
 
             if (!(expected.equals(actual))) {
-                logReport("PASS", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br> Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
+                if(description.length > 0){
+                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
+                }
+                else {
+                    logReport("PASS", "Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
+                }
             } else {
-                logReport("FAIL", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br> Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
+                if(description.length > 0){
+                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
+                }
+                else {
+                    logReport("FAIL", "Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
+                }
             }
         } catch (Exception e) {
             captureException(e);
@@ -529,13 +549,24 @@ public class ReportManager extends CustomReport {
 
         logger.info("Verifying Partial Equals Actual : " + actual + " with Expected : " + expected + "");
         try {
-
             if (actual.contains(expected)) {
-                logReport("PASS", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br>  Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                if(description.length > 0){
+                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                }
+                else {
+                    logReport("PASS", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                }
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReport("FAIL", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br>  Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                if(description.length > 0){
+                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                }
+                else {
+                    logReport("FAIL", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                }
             }
+
+
         } catch (Exception e) {
             captureException(e);
         }
@@ -906,8 +937,9 @@ public class ReportManager extends CustomReport {
 
     public void hardWait(long delay) {
         try {
+            double seconds = ((double) delay / 1000);
             if (delay > 0) {
-                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + delay + " Milli Seconds" + "\u001b[34m");
+                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + seconds + " Milli Seconds" + "\u001b[34m");
             }
             Thread.sleep(delay);
         } catch (InterruptedException e) {
@@ -1419,16 +1451,16 @@ public class ReportManager extends CustomReport {
                     String actualVal = (String)actMap.get(k);
                     if (expVal != null) {
                         if(expVal.equalsIgnoreCase(actualVal)){
-                            logStepAction("Validation Passed for the key : "+k+"<br>  Actual Value : "+actualVal+" equals to the Expected value : "+expVal);
+                            logStepAction("Validation Passed for the key : "+k+"<br>  Actual Value : "+actualVal+" equals Expected value : "+expVal);
                         }else{
-                            logStepAction("Validation Failed for the key : "+k+"<br>  Actual Value : "+actualVal+" not equals to the Expected value : "+expVal);
+                            logStepAction("Validation Failed for the key : "+k+"<br>  Actual Value : "+actualVal+" not equals  Expected value : "+expVal);
                         }
                     }else{
                         if(expVal==actualVal){
                             if(expVal.equalsIgnoreCase(actualVal)){
-                                logStepAction("Validation Passed for the key : "+k+"<br>   Actual Value : "+actualVal+" equals to the Expected value : "+expVal);
+                                logStepAction("Validation Passed for the key : "+k+"<br>   Actual Value : "+actualVal+" equals Expected value : "+expVal);
                             }else{
-                                logStepAction("Validation Failed for the key : "+k+"<br>  Actual Value : "+actualVal+" not equals to the Expected value : "+expVal);
+                                logStepAction("Validation Failed for the key : "+k+"<br>  Actual Value : "+actualVal+" not equals Expected value : "+expVal);
                             }
                         }
                     }
