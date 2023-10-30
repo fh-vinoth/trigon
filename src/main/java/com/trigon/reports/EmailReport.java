@@ -282,7 +282,7 @@ public class EmailReport {
                 "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + reportPath + "/" + suiteWithTime + "/RunTimeLogs/RunTimeExecutionLog.html\"\n" +
                 "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Detailed Logs</a></td>\n" +
                 "                        <td><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + reportPath + "/" + suiteWithTime + "/TestRailReport.html\"\n" +
-                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Miscellaneous Report</a></td>\n" +
+                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #63c155;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">Zoho Report</a></td>\n" +
                 "\n" +
                 "                    </tr>\n" +
                 "                    </tbody>\n" +

@@ -501,10 +501,10 @@ public class ReportManager extends CustomReport {
 
             if (expected.equals(actual)) {
                 if(description.length > 0){
-                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
+                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
                 }
                 else {
-                    logReport("PASS", "Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
+                    logReport("PASS", "Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
                 }
             } else {
                 sAssert.assertEquals(actual, expected);
@@ -512,7 +512,7 @@ public class ReportManager extends CustomReport {
                     logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
                 }
                 else {
-                    logReport("FAIL", "Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
+                    logReport("FAIL", "Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
                 }
             }
         } catch (Exception e) {
@@ -527,14 +527,14 @@ public class ReportManager extends CustomReport {
 
             if (!(expected.equals(actual))) {
                 if(description.length > 0){
-                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
+                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text: " + actual + "<br> Expected NOT EQUALS Text: " + expected);
                 }
                 else {
-                    logReport("PASS", "Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
+                    logReport("PASS", "Actual Text: " + actual + "<br> Expected NOT EQUALS Text: " + expected);
                 }
             } else {
                 if(description.length > 0){
-                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
+                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text:" + actual + "<br> Expected NOT EQUALS Text:" + expected);
                 }
                 else {
                     logReport("FAIL", "Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
@@ -551,18 +551,18 @@ public class ReportManager extends CustomReport {
         try {
             if (actual.contains(expected)) {
                 if(description.length > 0){
-                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
                 }
                 else {
-                    logReport("PASS", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                    logReport("PASS", "Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
                 }
             } else {
                 sAssert.assertEquals(actual, expected);
                 if(description.length > 0){
-                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
                 }
                 else {
-                    logReport("FAIL", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                    logReport("FAIL", "Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
                 }
             }
 
@@ -588,16 +588,16 @@ public class ReportManager extends CustomReport {
             }
             if (expectedValueSize == actualValueSize) {
                 if ((expectedlist.equals(actuallist))) {
-                    logReport("PASS", "Actual Text :" + actual + "ActualSize :" + actualValueSize + "<br> Expected Exact Text :" + expected + "ExpectedSize :" + expectedValueSize);
+                    logReport("PASS", "Actual Text :" + actual + "ActualSize : " + actualValueSize + "<br> Expected Exact Text : " + expected + "ExpectedSize : " + expectedValueSize);
                 } else {
                     actuallist.removeAll(expectedlist);
                     expectedlist.removeAll(actuallist);
-                    logReport("FAIL", "Actual Text :" + actual + "ActualSize :" + actualValueSize + "<br> Expected Exact Text :" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
+                    logReport("FAIL", "Actual Text :" + actual + "ActualSize : " + actualValueSize + "<br> Expected Exact Text : " + expected + "ExpectedSize : " + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
                 }
             } else {
                 actuallist.removeAll(expectedlist);
                 expectedlist.removeAll(actuallist);
-                logReport("FAIL", "List Size mismatched " + "Actual Text :" + actual + "ActualSize :" + actualValueSize + "<br> Expected Exact Text :" + expected + "ExpectedSize :" + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
+                logReport("FAIL", "List Size mismatched " + "Actual Text : " + actual + "ActualSize :" + actualValueSize + "<br> Expected Exact Text : " + expected + "ExpectedSize : " + expectedValueSize + "Additional values in Actual List" + actuallist + "Additional values in Expected List" + expectedlist);
             }
         } catch (Exception e) {
             captureException(e);
