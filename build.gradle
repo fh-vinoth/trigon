@@ -101,3 +101,15 @@ task obfuscate {
         }
     }
 }
+
+
+task obfuscateWithoutEncryption {
+    dependsOn jar
+    group 'yGuard'
+    description 'Prepares the Java archive for distribution.'
+
+    doLast {
+        // No obfuscation or encryption is involved.
+        def archivePath = jar.archiveFile.get().asFile.path
+    }
+}

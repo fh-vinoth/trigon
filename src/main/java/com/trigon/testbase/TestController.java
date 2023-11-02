@@ -279,14 +279,6 @@ public class TestController extends TestInitialization {
         try {
             logger.info("Test Execution Finished for Suite : " + iTestContext.getSuite().getName());
             logger.info("Generating HTML Reports from the path :" + trigonPaths.getTestResultsPath());
-            if (propertiesPojo.getEnable_testrail().equalsIgnoreCase("true")) {
-                Runs r = new Runs();
-                try {
-                    r.closeRunById(runId);
-                } catch (Exception e) {
-                    captureException(e);
-                }
-            }
 //            tearDownGenerateTCStatusJson();
             tearDownCustomReport(iTestContext);
 
@@ -304,9 +296,12 @@ public class TestController extends TestInitialization {
                     }
                     getAPICoverage(apiCoverage);
                 }
+                System.out.println("Entering email report stage");
                 EmailReport.createEmailReport(trigonPaths.getTestResultsPath(), extent, iTestContext.getSuite().getName(), platformType, executionType, pipelineExecution);
+                System.out.println("Finished email report stage");
 
                 if (executionType.equalsIgnoreCase("remote")) {
+                    System.out.println("Entered remote stage of suite closure");
                     execute = true;
 
                     if (getSuiteNameWithTime.toLowerCase().contains("module") && reportModuleRun < 1) {
@@ -318,6 +313,7 @@ public class TestController extends TestInitialization {
 
                     if (execute) {
                         if (System.getProperty("user.name").equalsIgnoreCase("root") || System.getProperty("user.name").equalsIgnoreCase("ec2-user")) {
+                            System.out.println("Entered email trigger stage");
                             emailTrigger();
                         }
                     }

@@ -44,8 +44,8 @@ public class TriggerEmailImpl implements ITriggerEmail {
     @Override
     public void triggerEmail(String reportPath, String recipients, String uploadToAWS, String sendFailedReport) {
 
-        ZohoDriveUpload driveUpload = new ZohoDriveUpload();
-        driveUpload.zohoTest(reportPath);
+//        ZohoDriveUpload driveUpload = new ZohoDriveUpload();
+//        driveUpload.zohoTest(reportPath);
 
         String from = "automation@foodhub.com";
         final String username = "automation@foodhub.com";
@@ -83,7 +83,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
         Map<String, Object> obj = null;
         try {
             Gson gson = new Gson();
-            obj = gson.fromJson(new FileReader(reportPath + "/SupportFiles/HTML/ZohoEmailBody.json"), Map.class);
+            obj = gson.fromJson(new FileReader(reportPath + "/SupportFiles/HTML/emailBody.json"), Map.class);
         }
         catch (IOException e) {
             e.printStackTrace();
