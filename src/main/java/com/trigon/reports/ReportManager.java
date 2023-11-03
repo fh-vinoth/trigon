@@ -174,7 +174,8 @@ public class ReportManager extends CustomReport {
         try {
             if (status.equalsIgnoreCase("PASS")) {
                 if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
-                     m = "<b>"+ apiName + " is PASSED</b>";
+                     //m = apiName + " is PASSED";
+                     m = "API Test status for the method '<b>"+apiName+ "' </b>is PASSED";
                      if(responseValidation.containsKey("expectedResponse")){
                          responseValidation(responseValidation);
                      }
@@ -462,6 +463,14 @@ public class ReportManager extends CustomReport {
        analyseTCs(testCaseID);
     }
 
+    public void logReportAction(String message) {
+        if (extentScenarioNode.get() != null) {
+            extentScenarioNode.get().info("<span class=\"stepSpan\"> REPORT STEP : </span>" + message);
+        } else {
+            extentMethodNode.get().info("<span class=\"stepSpan\"> REPORT STEP : </span>" + message);
+        }
+    }
+
     public void updateHashMapWithTCDetails(String tcId, String status, String className, String methodName) {
         if (status.equalsIgnoreCase("PASS")) {
             passedTCs.get().add(tcId.trim());
@@ -487,16 +496,14 @@ public class ReportManager extends CustomReport {
 
     protected void customAssertEquals(String actual, String expected,String... description) {
         try {
-            if (description.length>0){
-                logReport("PASS", "Comparison for " + description[0]);
-            }
+
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
 
             if (expected.equals(actual)) {
-                logReport("PASS", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
+                logReport("PASS", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br> Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReport("FAIL", "Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
+                logReport("FAIL", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br> Actual Text :" + actual + "<br> Expected Exact Text :" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -505,15 +512,13 @@ public class ReportManager extends CustomReport {
 
     protected void customAssertNotEquals(String actual, String expected,String... description) {
         try {
-            if (description.length>0){
-                logReport("PASS","Comparison for " + description[0]);
-            }
+
             logger.info("Verifying NOT Equals Actual : " + actual + " with Expected : " + expected + "");
 
             if (!(expected.equals(actual))) {
-                logReport("PASS", "Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
+                logReport("PASS", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br> Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
             } else {
-                logReport("FAIL", "Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
+                logReport("FAIL", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br> Actual Text :" + actual + " <br> Expected NOT EQUALS Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -521,17 +526,15 @@ public class ReportManager extends CustomReport {
     }
 
     protected void customAssertPartialEquals(String actual, String expected,String... description) {
-        if (description.length>0){
-            logReport("PASS","Comparison for " + description[0]);
-        }
+
         logger.info("Verifying Partial Equals Actual : " + actual + " with Expected : " + expected + "");
         try {
 
             if (actual.contains(expected)) {
-                logReport("PASS", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                logReport("PASS", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br>  Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
             } else {
                 sAssert.assertEquals(actual, expected);
-                logReport("FAIL", "Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
+                logReport("FAIL", "Comparison for : " + ((description.length > 0) ? description[0] : null)+"<br>  Actual Text :" + actual + "<br> Expected Partial Text:" + expected);
             }
         } catch (Exception e) {
             captureException(e);
@@ -903,10 +906,8 @@ public class ReportManager extends CustomReport {
 
     public void hardWait(long delay) {
         try {
-            double seconds = ((double) delay / 1000) % 60;
-            System.out.println(seconds);
             if (delay > 0) {
-                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for " + seconds + " Seconds" + "\u001b[34m");
+                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + delay + " Milli Seconds" + "\u001b[34m");
             }
             Thread.sleep(delay);
         } catch (InterruptedException e) {

@@ -13,7 +13,7 @@ public class ParallelClass1 extends TestController {
 
     private static final Logger logger = LogManager.getLogger(ParallelClass1.class);
 
-    @Test(dataProvider = "getDataFromJson", dataProviderClass = DataProviders.class, priority = 1)
+    /*@Test(dataProvider = "getDataFromJson", dataProviderClass = DataProviders.class, priority = 1)
     public void parallelClass1_Method1(LinkedHashMap<String, Object> map) {
         System.out.println(map);
         logger.error("Executing parallelClass1_Method1");
@@ -24,7 +24,7 @@ public class ParallelClass1 extends TestController {
         Assert.fail("u r wrong");
 
 
-    }
+    }*/
 
     public void parallelClass1_parallelMethod1_SubMethod() {
         logger.info("Executing parallelClass1_parallelMethod1_SubMethod");

@@ -30,6 +30,8 @@ public class Initializers {
 
     protected static String grid_execution_local = "false";
     protected static String gps_location = "false";
+    protected static String networkProfile = "Reset";
+    protected static String customNetwork = "false";
     protected static String pipelineExecution = "false";
 
     public static boolean customAPIReportStartFlag = false;
@@ -112,13 +114,5 @@ public class Initializers {
     public static GenerateSuiteForModules gs = new GenerateSuiteForModules();
 
     protected static int executionCount = 0;
-
-    protected LinkedHashMap<String, Object> headersNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> pathParamsNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> queryParamsNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> formParamsNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> cookiesNew = new LinkedHashMap<>();
-    protected String requestBodyNew = null;
-
 
 }

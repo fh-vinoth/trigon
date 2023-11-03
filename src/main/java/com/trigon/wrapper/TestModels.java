@@ -5,30 +5,21 @@ import com.trigon.elements.PerformElementAction;
 import com.trigon.exceptions.RetryOnException;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.MobileBy;
-import io.appium.java_client.MultiTouchAction;
-import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.Activity;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.touch.TouchActions;
+import org.openqa.selenium.interactions.Pause;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.testng.Assert;
 
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static io.appium.java_client.touch.WaitOptions.waitOptions;
-import static io.appium.java_client.touch.offset.ElementOption.element;
-import static io.appium.java_client.touch.offset.PointOption.point;
-import static java.time.Duration.ofMillis;
-import static java.time.Duration.ofSeconds;
-
-@Obfuscation( exclude = false, applyToMembers = false)
+@Obfuscation(exclude = false, applyToMembers = false)
 public class TestModels extends PerformElementAction {
 
     private static final Logger logger = LogManager.getLogger(TestModels.class);
@@ -108,7 +99,7 @@ public class TestModels extends PerformElementAction {
         return performElementsAction(locatorString, "lisofvalues", "NA", null, wait_logReport_isPresent_Up_Down_XpathValues);
     }
 
-    public List<WebElement> findElements(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues){
+    public List<WebElement> findElements(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         return getWebElements(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
     }
 
@@ -137,8 +128,8 @@ public class TestModels extends PerformElementAction {
     }
 
 
-    public void compareText(String actualText, String expectedText, String textAction,String... description) {
-        textVerification(actualText, expectedText, textAction,description);
+    public void compareText(String actualText, String expectedText, String textAction, String... description) {
+        textVerification(actualText, expectedText, textAction, description);
     }
 
 
@@ -429,36 +420,11 @@ public class TestModels extends PerformElementAction {
 
     public void androidScrollToVisibleTextInListAndClick(String elementName) {
         WebElement element = android().findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()"
-                        // +".resourceId(\"android:id/list\")).scrollIntoView("
-                        + ".className(\"android.widget.ListView\")).scrollIntoView("
-                        + "new UiSelector().text(\"" + elementName + "\"));"));
+                // +".resourceId(\"android:id/list\")).scrollIntoView("
+                + ".className(\"android.widget.ListView\")).scrollIntoView("
+                + "new UiSelector().text(\"" + elementName + "\"));"));
         element.click();
         logReport("INFO", "Scrolled to element in list succesfully");
-    }
-
-
-    /**
-     * Generic scroll using send keys Pass in values to be selected as a String
-     * array to the list parameter Method will loop through looking for scroll
-     * wheels based on the number of values you supply For instance Month, Day,
-     * Year for a birthday would have this loop 3 times dynamically selecting
-     * each scroll wheel
-     *
-     * @param list Example : {"Apr","27","1999"}
-     */
-
-    public void setDateInAndroid(String[] list) {
-        for (int i = 0; i < list.length; i++) {
-            By meX = By.xpath("//android.widget.NumberPicker[" + (i + 1)
-                    + "]/android.widget.EditText[1]");
-            WebElement me = android().findElement(meX);
-            TouchAction touchAction6 = new TouchAction(android());
-            // touchAction6.longPress().release();
-            android().performTouchAction(touchAction6);
-            android().getKeyboard().pressKey(getAndroidMonthName(list[i]) + "");
-        }
-        logReport("INFO",
-                "Date setted succesfully");
     }
 
 
@@ -563,7 +529,7 @@ public class TestModels extends PerformElementAction {
     public WebElement androidScrollToTextAndGetElement(String text) {
         return android()
                 .findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView("
-                                + "new UiSelector().text(\"" + text + "\"));"));
+                        + "new UiSelector().text(\"" + text + "\"));"));
     }
 
 
@@ -581,21 +547,9 @@ public class TestModels extends PerformElementAction {
     }
 
 
-    //Tap to an element for 250 milliseconds
-//    public void tapByElement(WebElement element) {
-//        new TouchAction(android())
-//                .tap(tapOptions().withElement(element(element)))
-//                .waitAction(waitOptions(ofMillis(250))).perform();
-//    }
-
-    //Tap by coordinates
-
     public void tapByCoordinates(int x, int y) {
         try {
             if (android() != null) {
-              /*  new TouchAction(android())
-                        .tap(point(x, y))
-                        .waitAction(waitOptions(ofMillis(250))).perform();*/
 
                 Map<String, Object> args = new HashMap<>();
                 args.put("x", x);
@@ -603,9 +557,6 @@ public class TestModels extends PerformElementAction {
                 android().executeScript("mobile: tap", args);
             }
             if (ios() != null) {
-               /* new TouchAction(ios())
-                        .tap(point(x, y))
-                        .waitAction(waitOptions(ofMillis(250))).perform();*/
 
                 Map<String, Object> args = new HashMap<>();
                 args.put("x", x);
@@ -620,41 +571,38 @@ public class TestModels extends PerformElementAction {
 
     //Press by element
 
-    public void pressByElement(WebElement element, long seconds) {
-        if (android() != null) {
-            new TouchAction(android())
-                    .press(element(element))
-                    .waitAction(waitOptions(ofSeconds(seconds)))
-                    .release()
-                    .perform();
+    public void pressByElement(WebElement element) {
+        try {
+            if (browser() == null) {
+                Point sourceLocation = element.getLocation();
+                Dimension sourceSize = element.getSize();
+                int centerX = sourceLocation.getX() + sourceSize.getWidth() / 2;
+                int centerY = sourceLocation.getY() + sourceSize.getHeight() / 2;
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence tap = new Sequence(finger, 1);
+                tap.addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), centerX, centerY));
+                tap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                tap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                Objects.requireNonNullElse(android(), ios()).perform(List.of(tap));
+            }
+        }catch (Exception e){
+            logger.error("pressByElement Failed !!!"+" : "+e);
         }
-        if (ios() != null) {
-            new TouchAction(ios())
-                    .press(element(element))
-                    .waitAction(waitOptions(ofSeconds(seconds)))
-                    .release()
-                    .perform();
-        }
+
 
     }
 
     //Press by coordinates
 
-    public void pressByCoordinates(int x, int y, long seconds) {
+    public void pressByCoordinates(int x, int y) {
         try {
-            if (android() != null) {
-                new TouchAction(android())
-                        .press(point(x, y))
-                        .waitAction(waitOptions(ofSeconds(seconds)))
-                        .release()
-                        .perform();
-            }
-            if (ios() != null) {
-                new TouchAction(ios())
-                        .press(point(x, y))
-                        .waitAction(waitOptions(ofSeconds(seconds)))
-                        .release()
-                        .perform();
+            if (browser() == null) {
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence tap = new Sequence(finger, 1);
+                tap.addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), x, y));
+                tap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                tap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                Objects.requireNonNullElse(android(), ios()).perform(List.of(tap));
             }
         } catch (InvalidArgumentException iae) {
             logger.error("Provide Co-Ordinates with in range. The given Co-Ordinates crossed beyond screen range : " + x + " : " + y);
@@ -666,29 +614,19 @@ public class TestModels extends PerformElementAction {
 
     public void horizontalSwipeByPercentage(double startPercentage, double endPercentage, double anchorPercentage) {
         try {
-            if (android() != null) {
-                Dimension size = android().manage().window().getSize();
+            if (browser() == null) {
+                Dimension size = Objects.requireNonNullElse(android(), ios()).manage().window().getSize();
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence scroll = new Sequence(finger, 0);
                 int anchor = (int) (size.height * anchorPercentage);
                 int startPoint = (int) (size.width * startPercentage);
                 int endPoint = (int) (size.width * endPercentage);
 
-                new TouchAction(android())
-                        .press(point(startPoint, anchor))
-                        .waitAction(waitOptions(ofMillis(1000)))
-                        .moveTo(point(endPoint, anchor))
-                        .release().perform();
-            }
-            if (ios() != null) {
-                Dimension size = ios().manage().window().getSize();
-                int anchor = (int) (size.height * anchorPercentage);
-                int startPoint = (int) (size.width * startPercentage);
-                int endPoint = (int) (size.width * endPercentage);
-
-                new TouchAction(ios())
-                        .press(point(startPoint, anchor))
-                        .waitAction(waitOptions(ofMillis(1000)))
-                        .moveTo(point(endPoint, anchor))
-                        .release().perform();
+                scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startPoint, anchor));
+                scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                scroll.addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), endPoint, anchor));
+                scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                Objects.requireNonNullElse(android(), ios()).perform(List.of(scroll));
             }
         } catch (InvalidArgumentException iae) {
             logger.error("Provide Co-Ordinates with in range. The given Co-Ordinates crossed beyond screen range : " + startPercentage + " : " + endPercentage + " : " + anchorPercentage);
@@ -703,43 +641,24 @@ public class TestModels extends PerformElementAction {
     }
 
 
-    public void swipeToMobileElement(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        System.out.println("Under Construction");
-
-//        WebElement element = null; //relook
-//        int numberOfTimes = 10;
-//        for (int i = 0; i < numberOfTimes; i++) {
-//            verticalSwipeByPercentages(0.6, 0.3, 0.5);
-//            if (element.isDisplayed()) {
-//                break;
-//            }
-//        }
-    }
-
-
     //Swipe by elements
 
     public void swipeByElements(WebElement startElement, WebElement endElement) {
-        int startX = startElement.getLocation().getX() + (startElement.getSize().getWidth() / 2);
-        int startY = startElement.getLocation().getY() + (startElement.getSize().getHeight() / 2);
-
-        int endX = endElement.getLocation().getX() + (endElement.getSize().getWidth() / 2);
-        int endY = endElement.getLocation().getY() + (endElement.getSize().getHeight() / 2);
-
         try {
-            if (android() != null) {
-                new TouchAction(android())
-                        .press(point(startX, startY))
-                        .waitAction(waitOptions(ofMillis(1000)))
-                        .moveTo(point(endX, endY))
-                        .release().perform();
-            }
-            if (ios() != null) {
-                new TouchAction(ios())
-                        .press(point(startX, startY))
-                        .waitAction(waitOptions(ofMillis(1000)))
-                        .moveTo(point(endX, endY))
-                        .release().perform();
+            if(browser()==null) {
+                int startX = startElement.getLocation().getX() + (startElement.getSize().getWidth() / 2);
+                int startY = startElement.getLocation().getY() + (startElement.getSize().getHeight() / 2);
+
+                int endX = endElement.getLocation().getX() + (endElement.getSize().getWidth() / 2);
+                int endY = endElement.getLocation().getY() + (endElement.getSize().getHeight() / 2);
+
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence scroll = new Sequence(finger, 0);
+                scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY));
+                scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                scroll.addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), endX, endY));
+                scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                Objects.requireNonNullElse(android(), ios()).perform(List.of(scroll));
             }
         } catch (InvalidArgumentException iae) {
             logger.error("The given Element Co-Ordinates crossed beyond screen range : Check you have picked correct elements in range ");
@@ -747,99 +666,49 @@ public class TestModels extends PerformElementAction {
 
     }
 
-    //Multitouch action by using an android element
-
-    public void multiTouchByElement(WebElement element) {
-        if (android() != null) {
-            TouchAction press = new TouchAction(android())
-                    .press(element(element))
-                    .waitAction(waitOptions(ofSeconds(1)))
-                    .release();
-
-            new MultiTouchAction(android())
-                    .add(press)
-                    .perform();
-        }
-        if (ios() != null) {
-            TouchAction press = new TouchAction(ios())
-                    .press(element(element))
-                    .waitAction(waitOptions(ofSeconds(1)))
-                    .release();
-
-            new MultiTouchAction(ios())
-                    .add(press)
-                    .perform();
+    public void singleTap(WebElement element) {
+        try {
+            if(browser()==null) {
+                Point sourceLocation = element.getLocation();
+                Dimension sourceSize = element.getSize();
+                int centerX = sourceLocation.getX() + sourceSize.getWidth() / 2;
+                int centerY = sourceLocation.getY() + sourceSize.getHeight() / 2;
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence doubleTap = new Sequence(finger, 1);
+                doubleTap.addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), centerX, centerY));
+                doubleTap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                doubleTap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                Objects.requireNonNullElse(android(), ios()).perform(List.of(doubleTap));
+            }
+        }catch (Exception e){
+            logger.error("Couldn't find the element or Single tap Failed!!!");
         }
 
     }
 
+    public void doubleTap(WebElement element) {
+        try {
+            if(browser()==null) {
+                Point sourceLocation = element.getLocation();
+                Dimension sourceSize = element.getSize();
+                int centerX = sourceLocation.getX() + sourceSize.getWidth() / 2;
+                int centerY = sourceLocation.getY() + sourceSize.getHeight() / 2;
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence doubleTap = new Sequence(finger, 1);
+                doubleTap.addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), centerX, centerY));
+                doubleTap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                doubleTap.addAction(new Pause(finger, Duration.ofMillis(100)));
+                doubleTap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                doubleTap.addAction(new Pause(finger, Duration.ofMillis(50)));
+                doubleTap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                doubleTap.addAction(new Pause(finger, Duration.ofMillis(100)));
+                doubleTap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+               Objects.requireNonNullElse(android(), ios()).perform(List.of(doubleTap));
+            }
+        }catch (Exception e){
+            logger.error("Couldn't find the element or Double tap Failed!!!");
+        }
 
-    public void singleTap(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
-        if (android() != null) {
-            WebElement element = android().findElement(By.xpath(locatorArr[1]));
-            TouchActions action = new TouchActions(android());
-            action.singleTap(element);
-            action.perform();
-        }
-        if (ios() != null) {
-            WebElement element = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1]));
-            TouchActions action = new TouchActions(ios());
-            action.singleTap(element);
-            action.perform();
-        }
-    }
-
-
-    public void doubleTap(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
-        if (android() != null) {
-            WebElement element = android().findElement(By.xpath(locatorArr[1]));
-            TouchActions action = new TouchActions(android());
-            action.doubleTap(element);
-            action.perform();
-        }
-        if (ios() != null) {
-            WebElement element = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1]));
-            TouchActions action = new TouchActions(ios());
-            action.doubleTap(element);
-            action.perform();
-            ios().executeScript("mobile: doubleTap", element);
-        }
-    }
-
-
-    public void longPress(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
-        if (android() != null) {
-            WebElement element = android().findElement(By.xpath(locatorArr[1]));
-            TouchActions action = new TouchActions(android());
-            action.longPress(element);
-            action.perform();
-        }
-        if (ios() != null) {
-            WebElement element = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1]));
-            TouchActions action = new TouchActions(ios());
-            action.longPress(element);
-            action.perform();
-        }
-    }
-
-
-    public void scroll(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
-        if (android() != null) {
-            WebElement element = android().findElement(By.xpath(locatorArr[1]));
-            TouchActions action = new TouchActions(android());
-            action.scroll(element, 10, 100);
-            action.perform();
-        }
-        if (ios() != null) {
-            WebElement element = ios().findElement(AppiumBy.iOSNsPredicateString(locatorArr[1]));
-            TouchActions action = new TouchActions(ios());
-            action.scroll(element, 10, 100);
-            action.perform();
-        }
     }
 
 
@@ -939,8 +808,6 @@ public class TestModels extends PerformElementAction {
     }
 
 
-
-
     public List<Integer> getElementLocation(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         List<Integer> Coordinates = new ArrayList();
         RetryOnException retryHandler = new RetryOnException();
@@ -1032,7 +899,7 @@ public class TestModels extends PerformElementAction {
 
     public void swipeRightUntilLogOutScreen() {
         do {
-            swipeRight();
+            swipeByDirection("right");
         } while (!isElementPresent(By.id("org.wordpress.android:id/me_login_logout_text_view")));
     }
 
@@ -1060,65 +927,62 @@ public class TestModels extends PerformElementAction {
     public void swipeLeftUntilTextExists(String expected) {
         if (ios() != null) {
             do {
-                swipeLeft();
+                swipeByDirection("left");
             } while (!ios().getPageSource().contains(expected));
         }
         if (android() != null) {
             do {
-                swipeLeft();
+                swipeByDirection("left");
             } while (!android().getPageSource().contains(expected));
         }
 
     }
 
     public void horizontalSwipeToElement(String locatorString, String... wait_logReport_isPresent_Up_Down_XpathValues) {
-        horizontalSwipeToElement1(locatorString,wait_logReport_isPresent_Up_Down_XpathValues);
+        horizontalSwipeToElement1(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
     }
 
-    public void swipeRight() {
-        if (ios() != null) {
-            Dimension size = ios().manage().window().getSize();
-            int startx = (int) (size.width * 0.9);
-            int endx = (int) (size.width * 0.20);
-            int starty = size.height / 2;
-            new TouchAction(ios()).press(PointOption.point(startx, starty))
-                    .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(2)))
-                    .moveTo(PointOption.point(endx, starty)).release().perform();
-        }
-        if (android() != null) {
-            Dimension size = ios().manage().window().getSize();
-            int startx = (int) (size.width * 0.9);
-            int endx = (int) (size.width * 0.20);
-            int starty = size.height / 2;
-            new TouchAction(ios()).press(PointOption.point(startx, starty))
-                    .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(2)))
-                    .moveTo(PointOption.point(endx, starty)).release().perform();
+    public void swipeByDirection(String direction) {
+        try {
+            PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+            Sequence scroll = new Sequence(finger, 0);
+            Dimension size = Objects.requireNonNullElse(android(), ios()).manage().window().getSize();
+            if (browser() == null) {
+                int start = (int) (size.width * 0.9);
+                int end = (int) (size.width * 0.2);
+                int anchorHorizontal = size.height / 2;
+                int anchorVertical = size.width / 2;
+                if(direction.equalsIgnoreCase("left")){
+                    scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), start, anchorHorizontal));
+                    scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                    scroll.addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), end, anchorHorizontal));
+                    scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                }else if(direction.equalsIgnoreCase("right")){
+                    scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), end, start));
+                    scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                    scroll.addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), start, anchorHorizontal));
+                    scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                }
+                else if(direction.equalsIgnoreCase("up")){
+                    scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), anchorVertical, end));
+                    scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                    scroll.addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), anchorVertical, start));
+                    scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                }
+                else if(direction.equalsIgnoreCase("down")){
+                    scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), anchorVertical, start));
+                    scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+                    scroll.addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), anchorVertical, end));
+                    scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+                }else{
+                    logger.error("The given direction is not Valid!!!");
+                }
+                Objects.requireNonNullElse(android(), ios()).perform(List.of(scroll));
+            }
+        }catch (Exception e){
+            logger.error("Swipe Right Failed!!!"+" : "+e);
         }
 
     }
-
-    public void swipeLeft() {
-        if (ios() != null) {
-            Dimension size = ios().manage().window().getSize();
-            int startx = (int) (size.width * 0.8);
-            int endx = (int) (size.width * 0.20);
-            int starty = size.height / 2;
-            new TouchAction(ios()).press(PointOption.point(startx, starty))
-                    .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(2)))
-                    .moveTo(PointOption.point(endx, starty)).release();
-        }
-        if (android() != null) {
-            Dimension size = android().manage().window().getSize();
-            int startx = (int) (size.width * 0.8);
-            int endx = (int) (size.width * 0.20);
-            int starty = size.height / 2;
-            new TouchAction(android()).press(PointOption.point(startx, starty))
-                    .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(2)))
-                    .moveTo(PointOption.point(endx, starty)).release();
-        }
-    }
-
-
-
 }
 
