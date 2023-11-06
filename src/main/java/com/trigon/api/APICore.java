@@ -510,6 +510,21 @@ public class APICore extends ReportManager {
         return returnResponse;
     }
 
+    protected Map<String, Object> filterDataToMapWithoutLog(Map<String, Object> actualResponseMap, String contains) {
+        Map<String, Object> returnResponse = new HashMap<>();
+        try {
+            actualResponseMap.entrySet().stream().filter(entry -> entry.getKey().contains(contains))
+                    .forEach(entry -> {
+                        String key = entry.getKey();
+                        returnResponse.put(key, entry.getValue());
+                    });
+        } catch (Exception e) {
+            captureException(e);
+        }
+        return returnResponse;
+    }
+
+
     protected Map<String, Object> filterDataToMap(Map<String, Object> actualResponseMap, String contains, String knownKey, String knownValue) {
         Map<String, Object> returnResponse = new HashMap<>();
         try {
