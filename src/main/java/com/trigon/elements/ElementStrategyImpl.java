@@ -25,11 +25,11 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
         WebElement result = null;
         List<String> locatorFallbacks = new ArrayList<>();
         String locatorsFromJSON = null;
-        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
         try{
             if (android() != null) {
                 RetryOnException retryHandler = new RetryOnException();
                 RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
+                String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                 if (locatorArr[1].contains("{")) {
                     locatorsFromJSON = locatorArr[1];
                     locatorFallbacks = Arrays.stream(StringUtils.substringsBetween(locatorArr[1], "{", "}")).collect(Collectors.toList());
@@ -115,8 +115,9 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 }
                 long endTime5 = System.currentTimeMillis();
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
-                if ((result == null) && (!isPresentStatus) ) {
-                    if(!locatorArr[1].contains("$XpathValue$") && !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))) {
+                if ((result == null) && (!isPresentStatus)) {
+                    String locatorFromJson = locatorString(locatorString);
+                    if (!locatorFromJson.contains("$XpathValue$") && !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))) {
                         String newLocatorFallbacks = "";
                         logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
                         System.out.println("The Primary LOCATOR ELEMENT IS NOT FOUND.");
@@ -156,17 +157,17 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                             // locatorStringRemoveInJSON(locatorString, newLocatorFallbacks);
                             result = beforeAfterElementCheck(locatorString, locatorsFromJSON, action, wait_logReport_isPresent_Up_Down_XpathValues);
                         }
-                    }
-                    else if(locatorArr[1].contains("$XpathValue$")) {
-                        System.out.println("Healing NOT DONE for Dynamic locators containing XpathValue. -"+locatorString);
+                    } else if (!locatorFromJson.contains("$XpathValue$")) {
+                        System.out.println("Healing NOT DONE for Dynamic locators containing XpathValue. -" + locatorString);
                         hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                     }
                 }
+                if ((result == null) && (!isPresentStatus) && !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))) {
+                    System.out.println("Healing Xpaths NOT FOUND for the element through healing process.");
+                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
+                }
             }
-            if ((result == null) && (!isPresentStatus) && !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))) {
-                System.out.println("Healing Xpaths NOT FOUND for the element through healing process.");
-                hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);            }
-        }catch (Exception e){
+        } catch (Exception e){
             captureException(e);
         }
         return result;
@@ -272,11 +273,11 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
         WebElement result = null;
         List<String> locatorFallbacks = new ArrayList<>();
         String locatorsFromJSON = null;
-        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
             try {
                     if (browser() != null) {
                         RetryOnException retryHandler = new RetryOnException();
                         RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
+                        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                         if (locatorArr[1].contains("{")) {
                             locatorsFromJSON = locatorArr[1];
                             locatorFallbacks = Arrays.stream(StringUtils.substringsBetween(locatorArr[1], "{", "}")).collect(Collectors.toList());
@@ -360,7 +361,8 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                         long endTime5 = System.currentTimeMillis();
                         logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
                         if ((result == null) && (!isPresentStatus)) {
-                            if (!locatorArr[1].contains("$XpathValue$")) {
+                            String locatorFromJson = locatorString(locatorString);
+                            if(!locatorFromJson.contains("$XpathValue$") && !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))) {
                                 String newLocatorFallbacks = "";
                                 logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
                                 System.out.println("The Primary LOCATOR ELEMENT IS NOT FOUND.");
@@ -400,14 +402,14 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                                     // locatorStringRemoveInJSON(locatorString, newLocatorFallbacks);
                                     result = beforeAfterElementCheck(locatorString, locatorsFromJSON, action, wait_logReport_isPresent_Up_Down_XpathValues);
                                 }
-                            } else if (locatorArr[1].contains("$XpathValue$")) {
+                            } else if (locatorFromJson.contains("$XpathValue$")) {
                                 System.out.println("Healing NOT DONE for Dynamic locators containing XpathValue. -" + locatorString);
-                        hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
+                                hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                             }
                         }
                         if ((result == null) && (!isPresentStatus)) {
                             System.out.println("Healing Xpaths NOT FOUND for the element through healing process.");
-                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
+                            hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                         }
                     }
                 } catch (Exception e) {
