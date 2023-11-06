@@ -84,8 +84,9 @@ public class TriBot {
 
                             "    public " + jsonFile + "() {\n" +
                             "        tmodel = new TestModels();\n" +
-                            "        tEnv().setPagesJsonFile(new File(\"" + elemPath.replace("../../"+CURRENT_FILE_NAME+"/", "") + "/" + originalname + ".json" + "\"));\n" +
-                            "Gson pGson = new GsonBuilder().setPrettyPrinting().create();\n" +
+                            "        tEnv().setPagesJsonFile(new File(\"" + elemPath.replace("../../"+CURRENT_FILE_NAME+"/", "") + "/" + originalname + ".json" + "\"));\n\n" +
+                            "    if (tEnv().getInitialSelfHeal()!=null && tEnv().getInitialSelfHeal().equalsIgnoreCase(\"true\")) {"+
+                            "        Gson pGson = new GsonBuilder().setPrettyPrinting().create();\n" +
                             "        JsonElement element1 = null;\n" +
                             "        File jsonFilePath = tEnv().getPagesJsonFile();\n" +
                             "        try {\n" +
@@ -116,7 +117,7 @@ public class TriBot {
                             "            });\n" +
                             "        }\n" +
                             "    }\n" +
-                            "\n";
+                            "}\n\n";
 
             bw.write(classCreation);
             bw.write(constructorCreation);
