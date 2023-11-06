@@ -101,6 +101,7 @@ public class TestEnv {
     private String productName;
     private String gps_location;
     private String authorization;
+    private String initialSelfHeal;
 
 
     private String franchiseId;
@@ -746,7 +747,6 @@ public class TestEnv {
         this.unblockToken = unblockToken;
     }
 
-
     public String getNetworkProfile() { return networkProfile; }
 
     public void setNetworkProfile(String networkProfile) { this.networkProfile = networkProfile; }
@@ -754,4 +754,11 @@ public class TestEnv {
     public String getCustomNetwork() { return customNetwork; }
 
     public void setCustomNetwork(String customNetwork) { this.customNetwork = customNetwork; }
+
+    public String getInitialSelfHeal() {
+        return initialSelfHeal;
+    }
+    public void setInitialSelfHeal(String initialSelfHeal) {
+        this.initialSelfHeal = initialSelfHeal;
+    }
 }

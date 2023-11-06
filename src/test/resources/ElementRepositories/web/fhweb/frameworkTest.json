@@ -3,7 +3,7 @@
     "pageTitle": "*************",
     "elements": {
         "btnFindTakeaway": {
-            "Web": "xpath={//button[@id='home-findtakeaway' ]}, {//span[text()='FIND TAKEAWAY' ]}",
+            "Web": "xpath={//button[@id='home-findtakeaway' ]}",
             "Web_beforeElement": "//button[@id='language-menu-nav' ]",
             "Web_afterElement": "",
             "IOS": "",
@@ -25,7 +25,7 @@
             "actionevent": "click,verifyDisplayed"
         },
         "entTextPostcode": {
-            "Web": "xpath={//input[@id='home-postcode' or @name='home-postcode' or @placeholder='Enter your Postcode' ]}",
+            "Web": "xpath={//input[@id='home-postcode']}, {//input[@id='home-postcode' or @name='home-postcode' or @placeholder='Enter your postcode' ]}",
             "Web_beforeElement": "",
             "Web_afterElement": "//input[@id='home-mobilenumber' or @placeholder='Enter Your Mobile Number' ]",
             "IOS": "",

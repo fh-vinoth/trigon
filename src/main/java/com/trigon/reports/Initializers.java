@@ -32,6 +32,7 @@ public class Initializers {
     protected static String gps_location = "false";
     protected static String networkProfile = "Reset";
     protected static String customNetwork = "false";
+    protected static String initialSelfHeal = "false";
     protected static String pipelineExecution = "false";
 
     public static boolean customAPIReportStartFlag = false;

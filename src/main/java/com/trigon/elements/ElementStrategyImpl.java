@@ -1,14 +1,6 @@
 package com.trigon.elements;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.trigon.bean.ElementRepoPojo;
 import com.trigon.constants.Message;
 import com.trigon.exceptions.RetryOnException;
 import io.appium.java_client.AppiumBy;
@@ -19,17 +11,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 
@@ -40,11 +25,11 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
         WebElement result = null;
         List<String> locatorFallbacks = new ArrayList<>();
         String locatorsFromJSON = null;
+        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
         try{
             if (android() != null) {
                 RetryOnException retryHandler = new RetryOnException();
                 RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
-                String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                 if (locatorArr[1].contains("{")) {
                     locatorsFromJSON = locatorArr[1];
                     locatorFallbacks = Arrays.stream(StringUtils.substringsBetween(locatorArr[1], "{", "}")).collect(Collectors.toList());
@@ -287,11 +272,11 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
         WebElement result = null;
         List<String> locatorFallbacks = new ArrayList<>();
         String locatorsFromJSON = null;
-                try {
+        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+            try {
                     if (browser() != null) {
                         RetryOnException retryHandler = new RetryOnException();
                         RetryOnException retryHandler1 = new RetryOnException(elementWaitCheck(wait_logReport_isPresent_Up_Down_XpathValues), 200);
-                        String[] locatorArr = getLocatorTypeAndContent(locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                         if (locatorArr[1].contains("{")) {
                             locatorsFromJSON = locatorArr[1];
                             locatorFallbacks = Arrays.stream(StringUtils.substringsBetween(locatorArr[1], "{", "}")).collect(Collectors.toList());
@@ -417,12 +402,12 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                                 }
                             } else if (locatorArr[1].contains("$XpathValue$")) {
                                 System.out.println("Healing NOT DONE for Dynamic locators containing XpathValue. -" + locatorString);
-                                hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                        hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                             }
                         }
                         if ((result == null) && (!isPresentStatus)) {
                             System.out.println("Healing Xpaths NOT FOUND for the element through healing process.");
-                            hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                    hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                         }
                     }
                 } catch (Exception e) {

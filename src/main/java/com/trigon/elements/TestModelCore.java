@@ -124,37 +124,43 @@ public class TestModelCore extends ReportManager {
     }
 
     protected Set<String> scrapeXpaths(String typeTag)  {
-        List<WebElement> tagElements = browser().findElements(By.tagName(typeTag));
         Set<String> xpaths = new LinkedHashSet<>();
-        String xpath="";
-        for (WebElement currentElement : tagElements) {
-            xpath = writeXpath(currentElement,typeTag);
-            if(!xpath.isEmpty()){
-                xpaths.add(xpath);
-            }
-        }
+        try {
+           List<WebElement> tagElements = browser().findElements(By.tagName(typeTag));
+           String xpath = "";
+           for (WebElement currentElement : tagElements) {
+               xpath = writeXpath(currentElement, typeTag);
+               if (!xpath.isEmpty()) {
+                   xpaths.add(xpath);
+               }
+           }
+       }catch (StaleElementReferenceException e){
+       }
         return xpaths;
     }
 
     protected Set<String> scrapeXpathsForAndroid() {
-        List<WebElement> elements = android().findElements(By.xpath("//*"));
         Set<String> xpaths = new LinkedHashSet<>();
-        for (WebElement currentElement : elements) {
-            String elementText = currentElement.getAttribute("text");
-            String elementID = currentElement.getAttribute("content-desc");
+        try {
+            List<WebElement> elements = android().findElements(By.xpath("//*"));
+            for (WebElement currentElement : elements) {
+                String elementText = currentElement.getAttribute("text");
+                String elementID = currentElement.getAttribute("content-desc");
 
-            if (elementID != null || (!elementText.equals("") && !StringUtils.containsAny(elementText, "<", ">"))) {
-                String xpath = "//*[ ]";
-                if (elementID != null) {
-                    xpath = xpath.replace(" ", "@content-desc='" + elementID + "' ");
-                    xpaths.add(xpath);
-                    xpath = "//*[ ]";
-                }
-                if ((!elementText.equals("") && !StringUtils.containsAny(elementText, "<", ">"))) {
-                    xpath = xpath.replace(" ", "@text='" + elementText + "' ");
-                    xpaths.add(xpath);
+                if (elementID != null || (!elementText.equals("") && !StringUtils.containsAny(elementText, "<", ">"))) {
+                    String xpath = "//*[ ]";
+                    if (elementID != null) {
+                        xpath = xpath.replace(" ", "@content-desc='" + elementID + "' ");
+                        xpaths.add(xpath);
+                        xpath = "//*[ ]";
+                    }
+                    if ((!elementText.equals("") && !StringUtils.containsAny(elementText, "<", ">"))) {
+                        xpath = xpath.replace(" ", "@text='" + elementText + "' ");
+                        xpaths.add(xpath);
+                    }
                 }
             }
+        }catch (StaleElementReferenceException e){
         }
         return xpaths;
     }
@@ -264,16 +270,19 @@ public class TestModelCore extends ReportManager {
     public void selfHealInConstructor(Set<String> xpaths, String locatorString) {
         String newLocatorFallbacks = "" , beforeXpath = "",afterXpath = "" ;
         List<String> selfHealXpaths = new ArrayList<>();
-        String locator = locatorString(locatorString);
-        String compareString = "";
+        String[] locatorArr = getLocatorTypeAndContent(locatorString);
+        String compareString = "", oldValueString ="";
         try {
-            if (locator.contains("accessibilityid=")) {
-                compareString = StringUtils.substringAfter(locator, "=");
-            } else {
-                compareString = !(StringUtils.substringBetween(locator, "='", "'").isEmpty())
-                        ? StringUtils.substringBetween(locator, "='", "'")
-                        : StringUtils.substringBetween(locator, "=\"", "\"");
+            if(locatorArr[1]!=null && !locatorArr[1].isEmpty()) {
+                if (locatorArr[1].contains("'") || locatorArr[1].contains("\"")) {
+                    compareString = !(StringUtils.substringBetween(locatorArr[1], "'", "'").isEmpty())
+                            ? StringUtils.substringBetween(locatorArr[1], "'", "'")
+                            : StringUtils.substringBetween(locatorArr[1], "\"", "\"");
+                } else{
+                    compareString = locatorArr[1];
+                }
             }
+            oldValueString = compareString;
 
             if (compareString != null && !compareString.isEmpty()) {
                 List<String> nameSplit = Arrays.stream(compareString.replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).toList();
@@ -313,6 +322,17 @@ public class TestModelCore extends ReportManager {
                         }
 
                         if (selfHealXpaths.size() == 1) {
+                            if(locatorArr[0].equalsIgnoreCase("accessibilityid")){
+                                locatorArr[1]="//*[@content-desc='"+oldValueString+"']";
+                            }
+                            for (String healXpath: selfHealXpaths) {
+                                if(locatorArr[1].replaceAll("\\s","").equals(healXpath.replaceAll("\\s",""))){
+                                    locatorArr[1]="";
+                                }
+                            }
+                            if(!locatorArr[1].isEmpty()) {
+                                newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(locatorArr[1]).concat("}, ");
+                            }
                             newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(0)).concat("}");
                         } else if (selfHealXpaths.size() > 1) {
                             for (int i = 0; i < selfHealXpaths.size(); i++) {
@@ -368,10 +388,10 @@ public class TestModelCore extends ReportManager {
         List<String> locatorStringMatchArray = Arrays.stream(targetString.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")).collect(Collectors.toList());
         int closest1Count = 0, closest2Count = 0;
         for (String matchStr : locatorStringMatchArray) {
-            if (score1 > 0.60 && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase()) && matchStr.length()>3) {
+            if (score1 > 0.80 && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
                 closest1Count++;
             }
-            if (score2 > 0.60 && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase()) && matchStr.length()>3 ) {
+            if (score2 > 0.80 && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
                 closest2Count++;
             }
         }
@@ -382,13 +402,16 @@ public class TestModelCore extends ReportManager {
         } else if (closest2Count > closest1Count) {
             closest = closest2;
         }
+        if(closest!=null && !closest.isEmpty()){
+            System.out.println("Healing locator Match Score - "+score1);
+        }
         return closest;
     }
 
     protected String[] getLocatorTypeAndContent(String s, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         String[] locArray = new String[2];
+        String rawLocator = locatorString(s);
         try {
-            String rawLocator = locatorString(s);
             if (wait_logReport_isPresent_Up_Down_XpathValues.length == 0) {
 
                 locArray[0] = rawLocator.substring(0, rawLocator.indexOf('='));
@@ -451,8 +474,9 @@ public class TestModelCore extends ReportManager {
                     locArray[1] = rawLocator1.substring(rawLocator1.indexOf('=') + 1);
                 }
             }
-        } catch (Exception e) {
-            captureException(e);
+        } catch (Exception e){
+            locArray[0] = "";
+            locArray[1] = "";
         }
         return locArray;
     }

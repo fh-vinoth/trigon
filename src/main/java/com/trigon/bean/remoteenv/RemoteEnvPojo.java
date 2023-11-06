@@ -19,6 +19,9 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("gps_location")
     @Expose
     private String gps_location;
+    @SerializedName("initialSelfHeal")
+    @Expose
+    private String initialSelfHeal;
     @SerializedName("jenkins_execution")
     @Expose
     private String jenkins_execution;
@@ -184,6 +187,14 @@ public class RemoteEnvPojo implements Serializable {
 
     public void setGps_location(String gps_location) {
         this.gps_location = gps_location;
+    }
+
+    public String getInitialSelfHeal() {
+        return initialSelfHeal;
+    }
+
+    public void setInitialSelfHeal(String initialSelfHeal) {
+        this.initialSelfHeal = initialSelfHeal;
     }
 
     public String getBrowserstack_midSessionInstallApps() { return browserstack_midSessionInstallApps; }

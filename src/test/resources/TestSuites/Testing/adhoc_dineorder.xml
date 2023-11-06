@@ -2,6 +2,7 @@
 
 <suite name="web_adhoc_Dine">
     <test name="Dine">
+        <parameter name="initialSelfHeal" value="true"></parameter>
         <classes>
             <class name="com.fh.adhoc.DineOrder"/>
         </classes>
