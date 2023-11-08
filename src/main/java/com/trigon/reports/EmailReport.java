@@ -61,9 +61,9 @@ public class EmailReport {
 
             String subject;
             if (pipelineExecution.equalsIgnoreCase("true")) {
-                subject = "Pipeline|BVT : " + "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
+                subject = "Pipeline|BVT : " + "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | Skip : "+skipPercentage + "% " + timeTaken + "";
             } else {
-                subject = "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
+                subject = "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | Skip : "+skipPercentage + "% "  + timeTaken + "";
             }
 
             writer.beginObject();
