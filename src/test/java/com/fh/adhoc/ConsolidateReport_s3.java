@@ -47,7 +47,7 @@ public class ConsolidateReport_s3 extends TestController {
             StringBuilder htmlTable = new StringBuilder();
             String[] suitNames = suiteName.split(",");
             for (String suit : suitNames) {
-                initCustomReport(htmlTable, suit, "S.NO", "TotalTC", "Pass% ", "Fail%", "PassedTC", "FailedTC", "SkippedTC", "Execution StartedAt", "Execution Time", "Report");
+                initCustomReport(htmlTable, suit, "S.NO", "TotalTC", "Pass% ", "Fail%","Skip%", "PassedTC", "FailedTC", "SkippedTC", "Execution StartedAt", "Execution Time", "Report");
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MMM/d");
                 String today = sdf.format(DateUtils.addDays(new Date(), 0));
 
@@ -69,12 +69,12 @@ public class ConsolidateReport_s3 extends TestController {
                         String individual = TURL.split("TestResults_2.8")[0];
                         individual = individual + listofReports.get(i);
                         Map<String, String> tMap = capturingReportDetails2(individual);
-                        addRowToCustomReportWithLink(htmlTable, String.valueOf(i + 1), tMap.get("TotalScenarios"), tMap.get("passPer"), tMap.get("failPer"), tMap.get("passedTc"), tMap.get("failedTc"), tMap.get("skippedTc"), tMap.get("ExecutionStartTime"), tMap.get("TestExecutionTime"), tMap.get("URL"));
+                        addRowToCustomReportWithLink(htmlTable, String.valueOf(i + 1), tMap.get("TotalScenarios"), tMap.get("passPer"), tMap.get("failPer"), tMap.get("skipPer"),tMap.get("passedTc"), tMap.get("failedTc"), tMap.get("skippedTc"), tMap.get("ExecutionStartTime"), tMap.get("TestExecutionTime"), tMap.get("URL"));
                     }
                 } else {
                     String YURL = reportAnalyser.getEmailReportOf(previousDay, partialSuiteName);
                     Map<String, String> yMap = capturingReportDetails2(YURL);
-                    addRowToCustomReportWithLink(htmlTable, String.valueOf(1), yMap.get("TotalScenarios"), yMap.get("passPer"), yMap.get("failPer"), yMap.get("passedTc"), yMap.get("failedTc"), yMap.get("skippedTc"), yMap.get("ExecutionStartTime"), yMap.get("TestExecutionTime"), yMap.get("URL"));
+                    addRowToCustomReportWithLink(htmlTable, String.valueOf(1), yMap.get("TotalScenarios"), yMap.get("passPer"), yMap.get("failPer"),yMap.get("skipPer"), yMap.get("passedTc"), yMap.get("failedTc"), yMap.get("skippedTc"), yMap.get("ExecutionStartTime"), yMap.get("TestExecutionTime"), yMap.get("URL"));
                 }
 
             }
@@ -137,6 +137,7 @@ public class ConsolidateReport_s3 extends TestController {
                 failureTriageMap.put("TotalScenarios", "NA");
                 failureTriageMap.put("passPer", "NA");
                 failureTriageMap.put("failPer", "NA");
+                failureTriageMap.put("skipPer", "NA");
                 failureTriageMap.put("TestExecutionTime", "NA");
                 failureTriageMap.put("ExecutionStartTime", "NA");
             } else {
@@ -162,6 +163,8 @@ public class ConsolidateReport_s3 extends TestController {
 
                 String TotalTimeExecution = StringUtils.substringBetween(resp, "\"total-time\": \"", "\",");
                 String ExecutionStartTime = StringUtils.substringBetween(resp, "\"start-time\": \"", "\",");
+                String skipPer = StringUtils.substringBetween(resp, "\"skip-percentage\": ",",");
+
                 URL = URL.replace("testSummary.json", "EmailReport.html");
                 failureTriageMap.put("URL", URL);
                 failureTriageMap.put("passedTc", passedTc);
@@ -170,6 +173,7 @@ public class ConsolidateReport_s3 extends TestController {
                 failureTriageMap.put("TotalScenarios", TotalScenarios);
                 failureTriageMap.put("passPer", passPer + "%");
                 failureTriageMap.put("failPer", failPer + "%");
+                failureTriageMap.put("skipPer", skipPer + "%");
                 failureTriageMap.put("TestExecutionTime", TotalTimeExecution);
                 failureTriageMap.put("ExecutionStartTime", ExecutionStartTime);
             }
@@ -225,7 +229,7 @@ public class ConsolidateReport_s3 extends TestController {
                         "    </th>\n" +
                         "    <tr style=\"background: #797575;height: 40px; font-weight: bold;color: #faf8f8\">\n");
 
-                if (headers.length == 11) {
+                if (headers.length == 12) {
                     htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:2%; background: #6CA6CD;\n\" > " + headers[0] + "</td>\n");
                     htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:7%;background: #6CA6CD;\n\" > " + headers[1] + "</td>\n");
                     htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black; width:3%;background: #6CA6CD; \n\" > " + headers[2] + "</td>\n");
@@ -237,6 +241,8 @@ public class ConsolidateReport_s3 extends TestController {
                     htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:20%;background:#6CA6CD;\n\" > " + headers[8] + "</td>\n");
                     htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:9%;background: #6CA6CD;\n\" > " + headers[9] + "</td>\n");
                     htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:5%;background: #6CA6CD;\n\" > " + headers[10] + "</td>\n");
+                    htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:5%;background: #6CA6CD;\n\" > " + headers[11] + "</td>\n");
+
                 }
 //                for (int i = 0; i < headers.length; i++) {
 //                    htmlTable.append("<td style=\"padding-right: 30px;padding-left: 20px;height: 10px; border-color: black;  width:5%;  border-width: .1px;\" >" + headers[i] + "</td>\n");
@@ -294,7 +300,7 @@ public class ConsolidateReport_s3 extends TestController {
                     "    </th>\n" +
                     "    <tr style=\"background: #797575;height: 40px; font-weight: bold;color: #faf8f8\">\n");
 
-            if (headers.length == 10) {
+            if (headers.length == 11) {
                 htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:2%; background: #6CA6CD;\n\" > " + headers[0] + "</td>\n");
                 htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:7%;background: #6CA6CD;\n\" > " + headers[1] + "</td>\n");
                 htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black; width:3%;background: #6CA6CD; \n\" > " + headers[2] + "</td>\n");
@@ -305,7 +311,7 @@ public class ConsolidateReport_s3 extends TestController {
                 htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:3%;background: #6CA6CD;\n\" > " + headers[7] + "</td>\n");
                 htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:20%;background:#6CA6CD;\n\" > " + headers[8] + "</td>\n");
                 htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:9%;background: #6CA6CD;\n\" > " + headers[9] + "</td>\n");
-//                    htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:5%;background: #6CA6CD;\n\" > " + headers[10] + "</td>\n");
+                htmlTable.append("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:5%;background: #6CA6CD;\n\" > " + headers[10] + "</td>\n");
             }
 //                for (int i = 0; i < headers.length; i++) {
 //                    htmlTable.append("<td style=\"padding-right: 30px;padding-left: 20px;height: 10px; border-color: black;  width:5%;  border-width: .1px;\" >" + headers[i] + "</td>\n");

@@ -44,7 +44,7 @@ public class ConsolidateReport_AllSuitesS3 extends TestController {
         try {
 
 
-            initCustomReport("S.NO", "Module Name", "TotalTC", "Pass% ", "Fail%", "PassedTC", "FailedTC", "SkippedTC", "Execution StartedAt", "Execution Time", "Report");
+            initCustomReport("S.NO", "Module Name", "TotalTC", "Pass% ", "Fail%","Skip%", "PassedTC", "FailedTC", "SkippedTC", "Execution StartedAt", "Execution Time", "Report");
             int num = 1;
             String[] suitNames = suiteName.split(",");
             for (String suit : suitNames) {
@@ -65,11 +65,11 @@ public class ConsolidateReport_AllSuitesS3 extends TestController {
                 if (!TURL.equalsIgnoreCase("no-report")) {
 //                    Map<String, String> tMap = capturingReportDetails(TURL);
                     Map<String, String> tMap = capturingReportDetails2(TURL);
-                    addRowToCustomReportWithLink(String.valueOf(num), suit, tMap.get("TotalScenarios"), tMap.get("passPer"), tMap.get("failPer"), tMap.get("passedTc"), tMap.get("failedTc"), tMap.get("skippedTc"), tMap.get("ExecutionStartTime"), tMap.get("TestExecutionTime"), tMap.get("URL"));
+                    addRowToCustomReportWithLink(String.valueOf(num), suit, tMap.get("TotalScenarios"), tMap.get("passPer"), tMap.get("failPer"),tMap.get("skipPer"), tMap.get("passedTc"), tMap.get("failedTc"), tMap.get("skippedTc"), tMap.get("ExecutionStartTime"), tMap.get("TestExecutionTime"), tMap.get("URL"));
                 } else {
                     String YURL = reportAnalyser.getEmailReportOf(yesterday, partialSuiteName);
                     Map<String, String> yMap = capturingReportDetails2(YURL);
-                    addRowToCustomReportWithLink(String.valueOf(num), suit, yMap.get("TotalScenarios"), yMap.get("passPer"), yMap.get("failPer"), yMap.get("passedTc"), yMap.get("failedTc"), yMap.get("skippedTc"), yMap.get("ExecutionStartTime"), yMap.get("TestExecutionTime"), yMap.get("URL"));
+                    addRowToCustomReportWithLink(String.valueOf(num), suit, yMap.get("TotalScenarios"), yMap.get("passPer"), yMap.get("failPer"),yMap.get("skipPer") ,yMap.get("passedTc"), yMap.get("failedTc"), yMap.get("skippedTc"), yMap.get("ExecutionStartTime"), yMap.get("TestExecutionTime"), yMap.get("URL"));
                 }
                 num = num + 1;
             }
@@ -128,6 +128,7 @@ public class ConsolidateReport_AllSuitesS3 extends TestController {
                 failureTriageMap.put("TotalScenarios", "NA");
                 failureTriageMap.put("passPer", "NA");
                 failureTriageMap.put("failPer", "NA");
+                failureTriageMap.put("skipPer", "NA");
                 failureTriageMap.put("TestExecutionTime", "NA");
                 failureTriageMap.put("ExecutionStartTime", "NA");
             } else {
@@ -154,6 +155,7 @@ public class ConsolidateReport_AllSuitesS3 extends TestController {
 
                 String TotalTimeExecution = StringUtils.substringBetween(resp, "\"total-time\": \"", "\",");
                 String ExecutionStartTime = StringUtils.substringBetween(resp, "\"start-time\": \"", "\",");
+                String skipPer = StringUtils.substringBetween(resp, "\"skip-percentage\": ",",");
                 URL = URL.replace("testSummary.json", "EmailReport.html");
                 failureTriageMap.put("URL", URL);
                 failureTriageMap.put("passedTc", passedTc);
@@ -162,6 +164,7 @@ public class ConsolidateReport_AllSuitesS3 extends TestController {
                 failureTriageMap.put("TotalScenarios", TotalScenarios);
                 failureTriageMap.put("passPer", passPer + "%");
                 failureTriageMap.put("failPer", failPer + "%");
+                failureTriageMap.put("skipPer", skipPer + "%");
                 failureTriageMap.put("TestExecutionTime", TotalTimeExecution);
                 failureTriageMap.put("ExecutionStartTime", ExecutionStartTime);
             }
@@ -220,7 +223,7 @@ public class ConsolidateReport_AllSuitesS3 extends TestController {
                         "    </th>\n" +
                         "    <tr style=\"background: #797575;height: 40px; font-weight: bold;color: #faf8f8\">\n");
 
-                if (headers.length == 11) {
+                if (headers.length == 12) {
                     htmlWriter.write("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:2%; background: #6CA6CD;\n\" > " + headers[0] + "</td>\n");
                     htmlWriter.write("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:7%;background: #6CA6CD;\n\" > " + headers[1] + "</td>\n");
                     htmlWriter.write("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black; width:3%;background: #6CA6CD; \n\" > " + headers[2] + "</td>\n");
@@ -232,6 +235,8 @@ public class ConsolidateReport_AllSuitesS3 extends TestController {
                     htmlWriter.write("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:20%;background:#6CA6CD;\n\" > " + headers[8] + "</td>\n");
                     htmlWriter.write("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:9%;background: #6CA6CD;\n\" > " + headers[9] + "</td>\n");
                     htmlWriter.write("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:5%;background: #6CA6CD;\n\" > " + headers[10] + "</td>\n");
+                    htmlWriter.write("<td style=\"border: 1px solid #000; padding-right: 20px;padding-left: 20px;height: 40px; border-color: black;color: black;width:5%;background: #6CA6CD;\n\" > " + headers[11] + "</td>\n");
+
                 }
 //                for (int i = 0; i < headers.length; i++) {
 //                    htmlWriter.write("<td style=\"padding-right: 30px;padding-left: 20px;height: 10px; border-color: black;  width:5%;  border-width: .1px;\" >" + headers[i] + "</td>\n");
