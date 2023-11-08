@@ -157,7 +157,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                             // locatorStringRemoveInJSON(locatorString, newLocatorFallbacks);
                             result = beforeAfterElementCheck(locatorString, locatorsFromJSON, action, wait_logReport_isPresent_Up_Down_XpathValues);
                         }
-                    } else if (!locatorFromJson.contains("$XpathValue$")) {
+                    } else if (locatorFromJson.contains("$XpathValue$")) {
                         System.out.println("Healing NOT DONE for Dynamic locators containing XpathValue. -" + locatorString);
                         hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
                     }
