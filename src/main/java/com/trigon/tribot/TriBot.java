@@ -111,7 +111,7 @@ public class TriBot {
                             "            }\n" +
                             "            Set<String> scrapedXpaths = xpaths;\n" +
                             "            eRepo.getElements().keySet().forEach(keyStr -> {\n" +
-                        "                if (!locatorString(keyStr).contains(\"XpathValue\")) {\n" +
+                            "                    if (!locatorString(keyStr).contains(\"XpathValue\")) {\n" +
                             "                    selfHealInConstructor(scrapedXpaths, keyStr);\n" +
                             "                }\n"+
                             "            });\n" +

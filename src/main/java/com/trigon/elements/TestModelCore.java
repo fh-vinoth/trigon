@@ -214,18 +214,18 @@ public class TestModelCore extends ReportManager {
             for (String tag : tags) {
                 Set<String> xpaths = new LinkedHashSet<>();
                 xpaths = scrapeXpaths(tag);
-                String match = getClosestMatch(xpaths, compareString);
+                List<String> match = getClosestMatch(xpaths, compareString);
                 if (match != null) {
-                    selfHealXpaths.add(match);
+                    selfHealXpaths.addAll(match);
                     System.out.println("New healing xpath for "+locatorString+"= with <" + tag + "> = " + match);
                 }
             }
         }else if(tEnv().getElementLocator().equalsIgnoreCase("Android")){
             Set<String> xpaths = new LinkedHashSet<>();
             xpaths = scrapeXpathsForAndroid();
-            String match = getClosestMatch(xpaths, compareString);
+            List<String> match = getClosestMatch(xpaths, compareString);
             if (match != null) {
-                selfHealXpaths.add(match);
+                selfHealXpaths.addAll(match);
                 System.out.println("New healing xpath for "+locatorString+" = " + match);
             }
         }
@@ -274,8 +274,14 @@ public class TestModelCore extends ReportManager {
         String compareString = "", oldValueString ="";
         try {
             if(locatorArr[1]!=null && !locatorArr[1].isEmpty()) {
+//                System.out.println(locatorArr[1]+" ---- value");
+//                System.out.println((locatorArr[1].contains("'") || locatorArr[1].contains("\"")) +" ------- contains condition");
                 if (locatorArr[1].contains("'") || locatorArr[1].contains("\"")) {
-                    compareString = !(StringUtils.substringBetween(locatorArr[1], "'", "'").isEmpty())
+//                    System.out.println(compareString);
+//                    System.out.println((StringUtils.substringBetween(locatorArr[1], "'", "'")!=null && StringUtils.substringBetween(locatorArr[1], "'", "'").isEmpty())+ " ----if result");
+//                    System.out.println(StringUtils.substringBetween(locatorArr[1], "'", "'") + " ---1 ");
+//                    System.out.println(StringUtils.substringBetween(locatorArr[1], "\"", "\"")+ " ---2 ");
+                    compareString = !(StringUtils.substringBetween(locatorArr[1], "'", "'")!=null && StringUtils.substringBetween(locatorArr[1], "'", "'").isEmpty())
                             ? StringUtils.substringBetween(locatorArr[1], "'", "'")
                             : StringUtils.substringBetween(locatorArr[1], "\"", "\"");
                 } else{
@@ -283,6 +289,7 @@ public class TestModelCore extends ReportManager {
                 }
             }
             oldValueString = compareString;
+            System.out.println(compareString);
 
             if (compareString != null && !compareString.isEmpty()) {
                 List<String> nameSplit = Arrays.stream(compareString.replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).toList();
@@ -295,10 +302,11 @@ public class TestModelCore extends ReportManager {
                         compareString = compareString.concat(name);
                     }
                 }
+                System.out.println(compareString);
                 compareString = StringUtils.uncapitalize(compareString);
-                String match = getClosestMatch(xpaths, compareString);
+                List<String> match = getClosestMatch(xpaths, compareString);
                 if (match != null) {
-                    selfHealXpaths.add(match);
+                    selfHealXpaths.addAll(match);
 
                     if (selfHealXpaths.size() > 0) {
                         String primaryLocator = selfHealXpaths.get(0);
@@ -365,8 +373,9 @@ public class TestModelCore extends ReportManager {
         return tagsList;
     }
 
-    protected String getClosestMatch(Set<String> xpaths, String targetString) {
-        String closest = null, closest1 = null, closest2 = null;
+    protected List<String> getClosestMatch(Set<String> xpaths, String targetString) {
+        List<String> closest = new ArrayList<>();
+        String closest1 = null, closest2 = null;
         double score1 = 0, score2 = 0;
         for (String xpath : xpaths) {
             double maxLength = Double.max(xpath.length(), targetString.length());
@@ -395,12 +404,17 @@ public class TestModelCore extends ReportManager {
                 closest2Count++;
             }
         }
+        System.out.println("Closest 1 - suggestion -"+closest1);
+        System.out.println("Closest 2 - suggestion -"+closest2);
+        System.out.println("Closest 1 - score "+score1);
+        System.out.println("Closest 2 - score "+score1);
         if (closest1Count == closest2Count) {
-            closest = null;
+            closest.add(closest1);
+            closest.add(closest2);
         } else if (closest1Count > closest2Count) {
-            closest = closest1;
+            closest.add(closest1);
         } else if (closest2Count > closest1Count) {
-            closest = closest2;
+            closest.add(closest2);
         }
         if(closest!=null && !closest.isEmpty()){
             System.out.println("Healing locator Match Score - "+score1);
