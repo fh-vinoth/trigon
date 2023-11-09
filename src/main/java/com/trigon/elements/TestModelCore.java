@@ -347,8 +347,8 @@ public class TestModelCore extends ReportManager {
                     locatorStringReplaceInJSON(locatorString, newLocatorFallbacks, beforeXpath, afterXpath);
                 }
             }
-        }catch (Exception ex){
-            hardFail("Issue healing for compareString" + compareString);
+        } catch (Exception ex){
+            hardFail("Issue healing for compareString using " + locatorString);
         }
     }
 
