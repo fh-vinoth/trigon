@@ -13,6 +13,7 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -29,18 +30,19 @@ public class ConsolidateReport_AllSuitesS3 extends TestController {
 
 
     @AfterSuite(alwaysRun = true, dependsOnMethods = {"suiteClosure"})
-    public void KibanaAutomationSendOfflineEmail() {
+    @Parameters({"recipients"})
+    public void sendOfflineEmail(String recipients) {
         try {
             ITriggerEmail emailObject = new TriggerEmailImpl();
-            emailObject.triggerCustomEmail(TestInitialization.trigonPaths.getTestResultsPath().toString(), "sandhyarani.m@foodhub.com");
+            emailObject.triggerCustomEmail(TestInitialization.trigonPaths.getTestResultsPath().toString(), recipients);
         } catch (Exception e) {
             hardFail(e);
         }
     }
 
     @Test()
-    @Parameters({"suiteName"})
-    public void triageFailureReport(String suiteName) throws IOException {
+    @Parameters({"suiteName","date"})
+    public void triageFailureReport(String suiteName,@Optional String date) throws IOException {
         try {
 
 
@@ -50,8 +52,14 @@ public class ConsolidateReport_AllSuitesS3 extends TestController {
             for (String suit : suitNames) {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MMM/d");
-                String today = sdf.format(DateUtils.addDays(new Date(), 0));
+                String today =null;
+                if(date==null) {
+                    today = sdf.format(DateUtils.addDays(new Date(), 0));
+                }else{
+                    today=date;
+                }
                 String yesterday = sdf.format(DateUtils.addDays(new Date(), -1));
+
 //                if (today.split("-")[1].length() == 4) {
 //                    today = today.replace(today.split("-")[1], today.split("-")[1].substring(0, 3));
 //                }

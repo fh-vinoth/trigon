@@ -11,6 +11,7 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -27,31 +28,35 @@ import java.util.TreeMap;
 public class ConsolidateReport_s3 extends TestController {
 
     @AfterSuite(alwaysRun = true, dependsOnMethods = {"suiteClosure"})
-    public void KibanaAutomationSendOfflineEmail() {
+    @Parameters({"recipients"})
+    public void SendOfflineEmail(String recipients) {
         try {
             ITriggerEmail emailObject = new TriggerEmailImpl();
-            emailObject.triggerCustomEmail(trigonPaths.getTestResultsPath().toString(), "sandhyarani.m@foodhub.com");
+            emailObject.triggerCustomEmail(TestInitialization.trigonPaths.getTestResultsPath().toString(), recipients);
         } catch (Exception e) {
+            hardFail(e);
         }
     }
-
     @Test()
-    @Parameters({"suiteName"})
-    public void triageFailureReport(String suiteName) throws IOException {
+    @Parameters({"suiteName","date"})
+    public void triageFailureReport(String suiteName,@Optional String date) throws IOException {
         try {
 
 
             String var3 = TestInitialization.trigonPaths.getTestResultsPath() + "/CustomReport.html";
-
+            String today=null;
             BufferedWriter var10 = new BufferedWriter(new FileWriter(var3));
             StringBuilder htmlTable = new StringBuilder();
             String[] suitNames = suiteName.split(",");
             for (String suit : suitNames) {
                 initCustomReport(htmlTable, suit, "S.NO", "TotalTC", "Pass% ", "Fail%","Skip%", "PassedTC", "FailedTC", "SkippedTC", "Execution StartedAt", "Execution Time", "Report");
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MMM/d");
-                String today = sdf.format(DateUtils.addDays(new Date(), 0));
-
-                String previousDay = sdf.format(DateUtils.addDays(new Date(), -1));
+                if(date==null) {
+                     today = sdf.format(DateUtils.addDays(new Date(), -1));
+                }else{
+                    today=date;
+                }
+//                String previousDay = sdf.format(DateUtils.addDays(new Date(), -1));
 //                if (today.split("-")[1].length() == 4) {
 //                    today = today.replace(today.split("-")[1], today.split("-")[1].substring(0, 3));
 //                }
@@ -72,10 +77,13 @@ public class ConsolidateReport_s3 extends TestController {
                         addRowToCustomReportWithLink(htmlTable, String.valueOf(i + 1), tMap.get("TotalScenarios"), tMap.get("passPer"), tMap.get("failPer"), tMap.get("skipPer"),tMap.get("passedTc"), tMap.get("failedTc"), tMap.get("skippedTc"), tMap.get("ExecutionStartTime"), tMap.get("TestExecutionTime"), tMap.get("URL"));
                     }
                 } else {
-                    String YURL = reportAnalyser.getEmailReportOf(previousDay, partialSuiteName);
-                    Map<String, String> yMap = capturingReportDetails2(YURL);
-                    addRowToCustomReportWithLink(htmlTable, String.valueOf(1), yMap.get("TotalScenarios"), yMap.get("passPer"), yMap.get("failPer"),yMap.get("skipPer"), yMap.get("passedTc"), yMap.get("failedTc"), yMap.get("skippedTc"), yMap.get("ExecutionStartTime"), yMap.get("TestExecutionTime"), yMap.get("URL"));
+                    addRowToCustomReportWithLink(htmlTable,"NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA");
+
+//                    String YURL = reportAnalyser.getEmailReportOf(previousDay, partialSuiteName);
+//                    Map<String, String> yMap = capturingReportDetails2(YURL);
+//                    addRowToCustomReportWithLink(htmlTable, String.valueOf(1), yMap.get("TotalScenarios"), yMap.get("passPer"), yMap.get("failPer"),yMap.get("skipPer"), yMap.get("passedTc"), yMap.get("failedTc"), yMap.get("skippedTc"), yMap.get("ExecutionStartTime"), yMap.get("TestExecutionTime"), yMap.get("URL"));
                 }
+                addSpaceBetweenTables(htmlTable);
 
             }
 
