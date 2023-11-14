@@ -24,7 +24,7 @@ public class DineOrder extends FrameworkTestController {
 
 //        AUTO-HEALING -> hardly happens only after some time period from previous scrapping process
        // tFH().btnFindTakeaway_click();
-        tFH().btnLogIn_click("isPresent");
+        tFH().btnLogIn_click();
 
         TimeUnit.SECONDS.sleep(15);
 

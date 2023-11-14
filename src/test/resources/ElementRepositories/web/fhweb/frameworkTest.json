@@ -3,17 +3,13 @@
     "pageTitle": "*************",
     "elements": {
         "btnFindTakeaway": {
-            "Web": "xpath={//button[@id='home-findtakeaway' ]}",
-            "Web_beforeElement": "//button[@id='language-menu-nav' ]",
-            "Web_afterElement": "",
+            "Web": "xpath=//button[@id='home-findtakeaway']",
             "IOS": "",
             "Android": "",
             "actionevent": "click"
         },
         "btnLogIn": {
-            "Web": "xpath={//a[@id='logIn' ]}, {//span[text()='Log In' ]}",
-            "Web_beforeElement": "//a[@id='becomePartner-menu-nav' ]",
-            "Web_afterElement": "//a[@id='home-appinvite d-flex align-items-center' ]",
+            "Web": "xpath=//a[@id='log In' ]",
             "IOS": "",
             "Android": "",
             "actionevent": "click"
@@ -25,10 +21,8 @@
             "actionevent": "click,verifyDisplayed"
         },
         "entTextPostcode": {
-            "Web": "xpath={//input[@id='home-postcode']}, {//input[@id='home-postcode' or @name='home-postcode' or @placeholder='Enter your postcode' ]}",
-            "Web_beforeElement": "",
-            "Web_afterElement": "//input[@id='home-mobilenumber' or @placeholder='Enter Your Mobile Number' ]",
-            "IOS": "",
+            "Web": "xpath=//input[@id='home-postcode']",
+             "IOS": "",
             "Android": "",
             "actionevent": "enterText"
         }
