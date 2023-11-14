@@ -13,6 +13,7 @@
   "error_email_recipients":"",
   "failure_email_recipients":"",
   "healingMatchScore": "0.85",
+  "initialSelfHeal" : "false",
   "products": {
     "D2S": {
       "android": {
