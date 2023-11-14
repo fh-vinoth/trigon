@@ -407,7 +407,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                                 hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                             }
                         }
-                        if ((result == null) && (!isPresentStatus)) {
+                        if ((result == null) && (!isPresentStatus) && !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))) {
                             System.out.println("Healing Xpaths NOT FOUND for the element through healing process.");
                             hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                         }
