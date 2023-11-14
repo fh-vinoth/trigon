@@ -215,7 +215,7 @@ public class TestModelCore extends ReportManager {
                 Set<String> xpaths = new LinkedHashSet<>();
                 xpaths = scrapeXpaths(tag);
                 List<String> match = getClosestMatch(xpaths, compareString);
-                if (match != null) {
+                if (match!= null && match.size()>0) {
                     selfHealXpaths.addAll(match);
                     System.out.println("New healing xpath for "+locatorString+"= with <" + tag + "> = " + match);
                 }
@@ -224,7 +224,7 @@ public class TestModelCore extends ReportManager {
             Set<String> xpaths = new LinkedHashSet<>();
             xpaths = scrapeXpathsForAndroid();
             List<String> match = getClosestMatch(xpaths, compareString);
-            if (match != null) {
+            if (match!= null && match.size()>0) {
                 selfHealXpaths.addAll(match);
                 System.out.println("New healing xpath for "+locatorString+" = " + match);
             }
@@ -305,7 +305,7 @@ public class TestModelCore extends ReportManager {
                 System.out.println(compareString);
                 compareString = StringUtils.uncapitalize(compareString);
                 List<String> match = getClosestMatch(xpaths, compareString);
-                if (match != null) {
+                if (match!= null && match.size()>0) {
                     selfHealXpaths.addAll(match);
 
                     if (selfHealXpaths.size() > 0) {
@@ -394,30 +394,29 @@ public class TestModelCore extends ReportManager {
                 }
             }
         }
+        Double matchScoreLimit = Double.parseDouble(tEnv().getHealingMatchScore());
         List<String> locatorStringMatchArray = Arrays.stream(targetString.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")).collect(Collectors.toList());
         int closest1Count = 0, closest2Count = 0;
         for (String matchStr : locatorStringMatchArray) {
-            if (score1 > 0.85 && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
+            if (score1 > matchScoreLimit && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
                 closest1Count++;
             }
-            if (score2 > 0.85 && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
+            if (score2 > matchScoreLimit && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
                 closest2Count++;
             }
         }
-        System.out.println("Closest 1 - suggestion -"+closest1);
-        System.out.println("Closest 2 - suggestion -"+closest2);
-        System.out.println("Closest 1 - score "+score1);
-        System.out.println("Closest 2 - score "+score1);
-        if (closest1Count == closest2Count) {
-            closest.add(closest1);
-            closest.add(closest2);
-        } else if (closest1Count > closest2Count) {
-            closest.add(closest1);
-        } else if (closest2Count > closest1Count) {
-            closest.add(closest2);
-        }
-        if(closest!=null && !closest.isEmpty()){
-            System.out.println("Healing locator Match Score - "+score1);
+        if(score1 > matchScoreLimit || score2 > matchScoreLimit) {
+            if (closest1Count == closest2Count) {
+                closest.add(closest1);
+                closest.add(closest2);
+            } else if (closest1Count > closest2Count) {
+                closest.add(closest1);
+            } else if (closest2Count > closest1Count) {
+                closest.add(closest2);
+            }
+            if (closest != null && !closest.isEmpty()) {
+                System.out.println("Healing locator Match Score - " + score1);
+            }
         }
         return closest;
     }

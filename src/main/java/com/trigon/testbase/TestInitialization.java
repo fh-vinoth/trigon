@@ -569,7 +569,7 @@ public class TestInitialization extends Browsers {
                                       String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
                                       String accessToken, String isJWT, String endpointPrefix, String authorization, String franchiseId, String dbType, String serviceType, String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames, String test_email_recipients, String test_error_email_recipients, String test_failure_email_recipients, String browserstack_midSessionInstallApps, String unblockToken, String networkProfile, String customNetwork, String initialSelfHeal) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames, String test_email_recipients, String test_error_email_recipients, String test_failure_email_recipients, String browserstack_midSessionInstallApps, String unblockToken, String networkProfile, String customNetwork, String initialSelfHeal, String healingMatchScore) {
         try {
             Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -598,6 +598,7 @@ public class TestInitialization extends Browsers {
             tEnv().setGps_location(tRemoteEnv.getGps_location());
             tEnv().setInitialSelfHeal(tRemoteEnv.getInitialSelfHeal());
             tEnv().setCustomNetwork(tRemoteEnv.getCustomNetwork());
+            tEnv().setHealingMatchScore(tRemoteEnv.getHealingMatchScore());
             tEnv().setNetworkProfile(tRemoteEnv.getNetworkProfile());
             tEnv().setJenkins_execution(tRemoteEnv.getJenkins_execution());
             tEnv().setPipeline_execution(tRemoteEnv.getPipeline_execution());
@@ -953,6 +954,9 @@ public class TestInitialization extends Browsers {
             }
             if(customNetwork!=null){
                 tEnv().setCustomNetwork(customNetwork);
+            }
+            if(healingMatchScore!=null){
+                tEnv().setHealingMatchScore(healingMatchScore);
             }
             if(browserstack_midSessionInstallApps!=null)
             {

@@ -64,7 +64,9 @@ public class RemoteEnvPojo implements Serializable {
     @SerializedName("customNetwork")
     @Expose
     private String customNetwork;
-
+    @SerializedName("healingMatchScore")
+    @Expose
+    private String healingMatchScore;
     @SerializedName("networkProfile")
     @Expose
     private String networkProfile;
@@ -207,6 +209,10 @@ public class RemoteEnvPojo implements Serializable {
 
     public void setCustomNetwork(String customNetwork){
         this.customNetwork = customNetwork;
+    } public String getHealingMatchScore() { return healingMatchScore; }
+
+    public void setHealingMatchScore(String healingMatchScore){
+        this.healingMatchScore = healingMatchScore;
     }
 
     public JsonObject getProductName() {

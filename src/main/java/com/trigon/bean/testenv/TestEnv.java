@@ -110,9 +110,7 @@ public class TestEnv {
     private String moduleNames;
     private String networkProfile;
     private String customNetwork;
-
-
-
+    private String healingMatchScore;
     private String unblockToken;
 
     public String getTestType() {
@@ -760,5 +758,11 @@ public class TestEnv {
     }
     public void setInitialSelfHeal(String initialSelfHeal) {
         this.initialSelfHeal = initialSelfHeal;
+    }
+    public String getHealingMatchScore() {
+        return healingMatchScore;
+    }
+    public void setHealingMatchScore(String healingMatchScore) {
+        this.healingMatchScore = healingMatchScore;
     }
 }
