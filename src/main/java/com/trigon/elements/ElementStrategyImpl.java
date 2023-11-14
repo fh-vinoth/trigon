@@ -544,7 +544,8 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                         } else if (tEnv().getElementLocator().equalsIgnoreCase("Android")) {
                             result = android().findElement(By.xpath(selfHealxpath));
                         }
-                        System.out.println("New heal Xpath {" + selfHealxpath + "} is used. .");
+                        logReport("PASS","New heal Xpath {" + selfHealxpath + "} is used.");
+                        System.out.println("New heal Xpath {" + selfHealxpath + "} is used.");
                         return result;
                     } catch (Exception ex) {
                         System.out.println("New heal Xpath {" + selfHealxpath + "} was found to be incorrect.");

@@ -262,6 +262,7 @@ public class TestModelCore extends ReportManager {
                 }
             }
             locatorStringReplaceInJSON(locatorString, newLocatorFallbacks,beforeXpath,afterXpath);
+            logReport("PASS","New healing xpaths replaced for locator " + locatorString + " in JSON.");
             System.out.println("New healing xpaths replaced for locator " + locatorString + " in JSON.");
         }
         return newLocatorFallbacks;

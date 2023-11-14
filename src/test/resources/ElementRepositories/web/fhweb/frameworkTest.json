@@ -9,7 +9,9 @@
             "actionevent": "click"
         },
         "btnLogIn": {
-            "Web": "xpath=//a[@id='log In' ]",
+            "Web": "xpath={//a[@id='logIn' ]}, {//span[text()='Log In' ]}",
+            "Web_beforeElement": "//a[@id='becomePartner-menu-nav' ]",
+            "Web_afterElement": "//a[@id='home-appinvite d-flex align-items-center' ]",
             "IOS": "",
             "Android": "",
             "actionevent": "click"
@@ -22,7 +24,7 @@
         },
         "entTextPostcode": {
             "Web": "xpath=//input[@id='home-postcode']",
-             "IOS": "",
+            "IOS": "",
             "Android": "",
             "actionevent": "enterText"
         }
