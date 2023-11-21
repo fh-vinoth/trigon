@@ -237,7 +237,7 @@ public class Browsers extends Android {
         androidCaps.setCapability("browserstack:networkLogsOptions", networkLogsOptions);
         //browserstackOptions.put("seleniumVersion", "4.0.0");
         browserstackOptions.put("consoleLogs", "errors");
-        browserstackOptions.put("idleTimeout", "300");
+        browserstackOptions.put("idleTimeout", "600");
         browserstackOptions.put("autoWait", "30");
         if(tEnv().getGps_location()!=null){
             browserstackOptions.put("gpsLocation", tEnv().getGps_location());

@@ -6,8 +6,6 @@
   "grid_execution_local" : "false",
   "test_region": "MYT-UK8",
   "app_reset": "NA",
-  "customNetwork": "true",
-  "networkProfile": "true",
   "random_device": "",
   "email_recipients":"kanna.v@foodhub.com",
   "error_email_recipients":"kanna.v@foodhub.com",
@@ -51,7 +49,7 @@
         "build_number": "Dev_Core_Testing"
       },
       "ios": {
-        "bs_app_path": "bs://7dbb616bdc7ed7048156267bbf56c6bcf70ca284",
+        "bs_app_path": "bs://79999c223695217206b5a7251eb8a7f79ce9857d",
         "build_number": "Dev_Core_Testing"
       }
     },
