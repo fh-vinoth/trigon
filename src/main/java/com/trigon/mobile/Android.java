@@ -72,7 +72,7 @@ public class Android extends IOS {
                 androidCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
                 androidCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
 //                browserstackOptions.put("networkProfile", "reset");
-                browserstackOptions.put("idleTimeout", "300");
+                browserstackOptions.put("idleTimeout", "600");
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
                 browserstackOptions.put("appiumLogs", "true");

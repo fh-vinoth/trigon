@@ -64,7 +64,7 @@ public class IOS extends ReportManager {
                     iosCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
                 }
 
-                browserstackOptions.put("idleTimeout", "300");
+                browserstackOptions.put("idleTimeout", "600");
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
                 browserstackOptions.put("appiumLogs", "true");
