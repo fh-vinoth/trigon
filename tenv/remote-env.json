@@ -6,10 +6,12 @@
   "grid_execution_local" : "false",
   "test_region": "MYT-UK8",
   "app_reset": "NA",
+  "customNetwork": "true",
+  "networkProfile": "true",
   "random_device": "",
-  "email_recipients":"kanna.v@foodhub.com",
-  "error_email_recipients":"kanna.v@foodhub.com",
-  "failure_email_recipients":"kanna.v@foodhub.com",
+  "email_recipients":"",
+  "error_email_recipients":"",
+  "failure_email_recipients":"",
   "products": {
     "D2S": {
       "android": {
