@@ -269,7 +269,7 @@ public class Browsers extends Android {
         options.setExperimentalOption("excludeSwitches",Arrays.asList("disable-popup-blocking"));
 
         androidCaps.setCapability("browserstack:ie:enablePopups", "true");
-        androidCaps.setCapability(ChromeOptions.CAPABILITY, options);
+//        androidCaps.setCapability(ChromeOptions.CAPABILITY, options);
         androidCaps.setCapability(CapabilityType.UNHANDLED_PROMPT_BEHAVIOUR, UnhandledPromptBehavior.ACCEPT);
         if (tEnv().getBrowserstack_execution_local().equalsIgnoreCase("true")) {
             browserstackOptions.put("local", "true");
