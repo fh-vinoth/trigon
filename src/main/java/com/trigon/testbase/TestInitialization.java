@@ -22,6 +22,7 @@ import com.trigon.security.AES;
 import com.trigon.testrail.APIException;
 import com.trigon.testrail.Runs;
 import com.trigon.web.Browsers;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -45,7 +46,7 @@ public class TestInitialization extends Browsers {
     protected static long suiteStartTime;
 
 
-    public void reportsInitialization(String suiteName) {
+    public void reportsInitialization(String suiteName) throws IOException {
         trigonPaths = new TrigonPaths();
         String suiteNameReplaced = suiteName.replaceAll("-", "_").replaceAll(" ", "_").trim();
         String[] tType = suiteNameReplaced.split("_");
@@ -88,6 +89,7 @@ public class TestInitialization extends Browsers {
         String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
         trigonPaths.setSupportFilePath(supportFilePath);
         trigonPaths.setSupportFileHTMLPath(cUtils().createFolder(supportFilePath, "HTML", ""));
+
 
         if (!suiteName.contains("adhoc")) {
             trigonPaths.setLogsPath(cUtils().createFolder(testResultsPath, "RunTimeLogs", ""));
