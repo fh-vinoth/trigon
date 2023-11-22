@@ -189,7 +189,7 @@ public class RemoteEnvPojo implements Serializable {
     public String getBrowserstack_midSessionInstallApps() { return browserstack_midSessionInstallApps; }
 
     public void setBrowserstack_midSessionInstallApps(String browserstack_midSessionInstallApps){
-        this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
+        this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps.trim();
         }
 
     public String getCustomNetwork() { return customNetwork; }

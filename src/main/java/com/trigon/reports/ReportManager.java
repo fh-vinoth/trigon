@@ -463,6 +463,14 @@ public class ReportManager extends CustomReport {
        analyseTCs(testCaseID);
     }
 
+    public void logReportAction(String message) {
+        if (extentScenarioNode.get() != null) {
+            extentScenarioNode.get().info("<span class=\"stepSpan\"> REPORT STEP : </span>" + message);
+        } else {
+            extentMethodNode.get().info("<span class=\"stepSpan\"> REPORT STEP : </span>" + message);
+        }
+    }
+
     public void updateHashMapWithTCDetails(String tcId, String status, String className, String methodName) {
         if (status.equalsIgnoreCase("PASS")) {
             passedTCs.get().add(tcId.trim());

@@ -152,6 +152,7 @@ public class PerformElementAction extends ElementStrategyImpl {
                     if (iOSElement != null) {
                         iOSElement.clear();
                     }
+                    hardWait(3000);
                     logReportWithScreenShot("PASS",
                             navigation + Message.CLEAR_TEXT + locatorString);
                 } catch (WebDriverException e) {

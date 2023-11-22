@@ -285,6 +285,10 @@ public class APICore extends ReportManager {
                     }
                 }
             } else {
+                flattenMap = JsonFlattener.flattenAsMap(response.asString());
+                flattenMap.put("actualStatusCode", response.getStatusCode());
+                flattenMap.put("actualResponseTime", response.time());
+                dataToJSON("responseJSON", response.getBody().asString());
                 dataToJSON("apiTestStatus", "PASSED");
             }
 

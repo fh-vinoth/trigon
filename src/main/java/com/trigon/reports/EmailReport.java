@@ -14,15 +14,14 @@ import static com.trigon.reports.Initializers.*;
 
 
 public class EmailReport {
-    static String name="";
+    static String name = "";
 
     public static void createEmailReport(String reportPath, ExtentReports report, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
-            System.out.println("########### In the create EMAIL Report");
             BufferedWriter bw = new BufferedWriter(new FileWriter(reportPath + "/EmailReport.html"));
             StringBuffer bf = new StringBuffer();
             StringBuffer bfFailure = new StringBuffer();
-            name=suiteName.toUpperCase();
+            name = suiteName.toUpperCase();
             String headers = header(report, suiteName);
             String reportLinks = reportLinks(report);
             String failureData = failureData(report);
@@ -50,22 +49,21 @@ public class EmailReport {
 
     private static void generateEmailBody(String reportPath, ExtentReports stats, String body, String failedData, String suiteName, String testType, String executionType, String pipelineExecution) {
         try {
-            System.out.println("########### in the email body ###############");
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(reportPath + "/SupportFiles/HTML/emailBody.json", false)));
             int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
             int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
             int skipPercentage = stats.getStats().getGrandchildPercentage().get(Status.SKIP).intValue();
 
-            if(passPercentage+failPercentage+skipPercentage<100){
-                failPercentage+=1;
+            if (passPercentage + failPercentage + skipPercentage < 100) {
+                failPercentage += 1;
             }
             String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
 
             String subject;
             if (pipelineExecution.equalsIgnoreCase("true")) {
-                subject = "Pipeline|BVT : " + "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
+                subject = "Pipeline|BVT : " + "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | Skip : "+skipPercentage + "% |" + timeTaken + "";
             } else {
-                subject = "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | " + timeTaken + "";
+                subject = "" + suiteName + " | Pass : " + passPercentage + "% | Fail : " + failPercentage + "% | Skip : "+skipPercentage + "% |"  + timeTaken + "";
             }
 
             writer.beginObject();
@@ -81,7 +79,7 @@ public class EmailReport {
             writer.endObject().flush();
             writer.close();
 
-            generateTestSummary(stats,reportPath, suiteName);
+            generateTestSummary(stats, reportPath, suiteName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,8 +97,8 @@ public class EmailReport {
         int failPercentage = stats.getStats().getGrandchildPercentage().get(Status.FAIL).intValue();
         int skipPercentage = stats.getStats().getGrandchildPercentage().get(Status.SKIP).intValue();
 
-        if(passPercentage+failPercentage+skipPercentage<100){
-            failPercentage+=1;
+        if (passPercentage + failPercentage + skipPercentage < 100) {
+            failPercentage += 1;
         }
 
         String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
@@ -148,8 +146,8 @@ public class EmailReport {
                 "                                <tr>\n" +
                 "                                <tr>\n" +
                 "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/build.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
-                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">"+getBuildNumber()+"</td>"+
-                "                                <tr>\n"+
+                "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + getBuildNumber() + "</td>" +
+                "                                <tr>\n" +
                 "                                <tr>\n" +
                 "                                    <td><img src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/Icon_FrameWorkVersion.png\" height=\"15\" width=\"15\" alt=\"OS\"></td>\n" +
                 "                                    <td style=\"padding-bottom: 5px;padding-left: 10px;text-align: left\">" + executedGitBranch + "</td>\n" +
@@ -243,21 +241,23 @@ public class EmailReport {
 
     private static String getBuildNumber() {
         String buildNumber = "";
-        try {
-            if (name.contains("ANDROID") && !name.contains("ANDROIDBROWSER")) {
-                buildNumber = tEnv().getAndroidBuildNumber();
-            } else if (name.contains("IOS") && !name.contains("IOSBROWSER")) {
-                buildNumber = tEnv().getIosBuildNumber();
-            } else {
-                buildNumber = tEnv().getWebBuildNumber();
-            }
-        } catch (Exception e) {
-           buildNumber = "null";
-        }
-        System.out.println("#################### build Number ################ _>>>> "+ buildNumber);
-        return  buildNumber;
-    }
+        if (!name.toLowerCase().startsWith("api")) {
+            try {
+                if (name.contains("ANDROID") && !name.contains("ANDROIDBROWSER")) {
+                    buildNumber = tEnv().getAndroidBuildNumber();
+                } else if (name.contains("IOS") && !name.contains("IOSBROWSER")) {
+                    buildNumber = tEnv().getIosBuildNumber();
+                } else {
+                    buildNumber = tEnv().getWebBuildNumber();
+                }
 
+            } catch (Exception e) {
+                buildNumber = "null";
+            }
+            System.out.println("#################### build Number ################ _>>>> " + buildNumber);
+        }
+        return buildNumber;
+    }
 
     private static String reportLinks(ExtentReports stats) {
 
@@ -332,19 +332,23 @@ public class EmailReport {
 
                         String StatusImageURL = "https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/pass.png";
 
+                        String alertMessage = null;
                         if (method.getStatus().getName().equals("Pass")) {
                             StatusImageURL = "https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/pass.png";
+                            alertMessage = "pass";
                         } else if (method.getStatus().getName().equals("Fail")) {
                             StatusImageURL = "https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/fail.png";
+                            alertMessage = "fail";
                         } else if (method.getStatus().getName().equals("Skip")) {
                             StatusImageURL = "https://fh-qa-automation.s3.amazonaws.com/Docs/report_result/skip.png";
+                            alertMessage = "skip";
                         }
 
 
                         bf.append("<tr style=\"text-align: left;border-top: 0.2px solid #ce8c8c;\">\n" +
                                 "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
                                 "                            <div>\n" +
-                                "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"pass\">\n" +
+                                "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"" + alertMessage + "\">\n" +
                                 "                            </div>\n" +
                                 "                        </td>\n" +
                                 "                        <td style=\"padding-top:10px\">\n" +
@@ -360,19 +364,15 @@ public class EmailReport {
                                 "                                <b>Scenario :</b> " + description + "\n" +
                                 "                            </div>\n");
                         // Adds Log Steps if the suite is Sanity or Smoke
-                        if (suiteName.toLowerCase().contains("sanity") || suiteName.toLowerCase().contains("smoke")) {
-                            AtomicInteger count = new AtomicInteger(1);
-                            bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
-
-                            method.getLogs().forEach(log -> {
-                                // System.out.println(log.getDetails());
-                                if (log.getDetails().contains("STEP ")) {
-                                    bf.append("                            <div style=\"word-break:break-all\">" + log.getDetails().replaceAll("STEP", "STEP " + count) + "</div>\n");
-                                    count.getAndIncrement();
-                                }
-
-                            });
-                        }
+                        AtomicInteger count = new AtomicInteger(1);
+                        bf.append("                            <div style=\"word-break:break-all\"><b>Test Steps :</b></div>\n");
+                        method.getLogs().forEach(log -> {
+                            // System.out.println(log.getDetails());
+                            if (log.getDetails().contains("REPORT STEP")) {
+                                bf.append("                            <div style=\"word-break:break-all\">" + log.getDetails().replaceAll("REPORT STEP ", "STEP " + count) + "</div>\n");
+                                count.getAndIncrement();
+                            }
+                        });
                         method.getLogs().forEach(log -> {
                             if (log.getDetails().startsWith("<b>BS Video:</b>")) {
                                 bf.append("                                <div style=\"word-break:break-all;padding-top: 10px\">\n" +
@@ -387,7 +387,7 @@ public class EmailReport {
                             method.getLogs().forEach(log -> {
                                 if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
                                     if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
-                                        bf.append("<div>" + log.getDetails() + "</div>");
+                                        bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                     }
                                 }
                             });
@@ -396,7 +396,7 @@ public class EmailReport {
                                     child.getLogs().forEach(log -> {
                                         if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
                                             if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
-                                                bf.append("<div>" + log.getDetails() + "</div>");
+                                                bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                             }
                                         }
                                     });
@@ -474,7 +474,7 @@ public class EmailReport {
                         bf.append("<tr style=\"text-align: left;border-top: 0.2px solid #ce8c8c;\">\n" +
                                 "                        <td style=\"padding-top:10px;padding-left: 20px\">\n" +
                                 "                            <div>\n" +
-                                "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"pass\">\n" +
+                                "                                <img src=\"" + StatusImageURL + "\" height=\"50\" width=\"50\" alt=\"fail\">\n" +
                                 "                            </div>\n" +
                                 "                        </td>\n" +
                                 "                        <td style=\"padding-top:10px\">\n" +
@@ -493,7 +493,7 @@ public class EmailReport {
                         method.getLogs().forEach(log -> {
                             if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
                                 if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
-                                    bf.append("<div>" + log.getDetails() + "</div>");
+                                    bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                 }
                             }
                         });
@@ -502,7 +502,7 @@ public class EmailReport {
                                 child.getLogs().forEach(log -> {
                                     if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
                                         if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
-                                            bf.append("<div>" + log.getDetails() + "</div>");
+                                            bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                         }
                                     }
                                 });
@@ -527,7 +527,7 @@ public class EmailReport {
         return bf.toString();
     }
 
-    private static void generateTestSummary(ExtentReports stats, String reportPath,String suiteName) {
+    private static void generateTestSummary(ExtentReports stats, String reportPath, String suiteName) {
         JsonWriter jsonWriter = null;
 
         int passPercentage = stats.getStats().getGrandchildPercentage().get(Status.PASS).intValue();
@@ -536,8 +536,8 @@ public class EmailReport {
         String timeTaken = cUtils().getRunDuration(stats.getReport().timeTaken());
         String suiteWithTime = stats.getReport().getSystemEnvInfo().get(1).getValue();
 
-        if(passPercentage+failPercentage+skipPercentage<100){
-            failPercentage+=1;
+        if (passPercentage + failPercentage + skipPercentage < 100) {
+            failPercentage += 1;
         }
         try {
             jsonWriter = new JsonWriter(new FileWriter(reportPath + "testSummary.json", false));
@@ -608,7 +608,7 @@ public class EmailReport {
                                 }
                                 finalJsonWriter.name("failure-reason").value(sb.toString());
                                 finalJsonWriter.name("status").value("fail");
-                            }else{
+                            } else {
                                 finalJsonWriter.name("status").value("pass");
                             }
 
