@@ -942,7 +942,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setBrowserstack_execution_local(browserstack_execution_local);
             }
             if(tRemoteEnv.getBrowserstack_midSessionInstallApps()!=null){
-                tEnv().setBrowserstack_midSessionInstallApps((tRemoteEnv.getBrowserstack_midSessionInstallApps()));
+                tEnv().setBrowserstack_midSessionInstallApps((tRemoteEnv.getBrowserstack_midSessionInstallApps().trim()));
             }
             if(networkProfile!=null){
                 tEnv().setNetworkProfile(networkProfile);
@@ -952,7 +952,7 @@ public class TestInitialization extends Browsers {
             }
             if(browserstack_midSessionInstallApps!=null)
             {
-                tEnv().setBrowserstack_midSessionInstallApps(browserstack_midSessionInstallApps);
+                tEnv().setBrowserstack_midSessionInstallApps(browserstack_midSessionInstallApps.trim());
             }
             if (productName != null) {
                 tEnv().setProductName(productName);

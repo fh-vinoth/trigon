@@ -38,7 +38,7 @@ public class IOS extends ReportManager {
                     logger.info("Setting IOS Native capabilities in BrowserStack Device : " + tEnv().getIosDevice());
                     iosCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getIosOSVersion());
                     iosCaps.setCapability(MobileCapabilityType.DEVICE_NAME, tEnv().getIosDevice());
-                    iosCaps.setCapability(MobileCapabilityType.APP, tEnv().getIosBSAppPath());
+                    iosCaps.setCapability(MobileCapabilityType.APP, tEnv().getIosBSAppPath().trim());
                     browserstackOptions.put("buildName", tEnv().getIosBuildNumber() + "_" + tEnv().getTest_region());
                 }
                 browserstackOptions.put("projectName", context.getSuite().getName());
