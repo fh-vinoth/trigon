@@ -25,10 +25,11 @@ public class ReportAnalyser {
 
 
     private String listBucketObjects(String date_DMMMYYYY, String partialSuiteName) {
-        String amazonaws_url = "https://s3.amazonaws.com/";
+        //https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/2023/Sep/15/API_BFT_2023-09-15-094415/API_BFT_2023-09-15-094415.html
+        String amazonaws_url = "https://fh-qa-automation.s3.amazonaws.com/";
         String bucketName = "fh-qa-automation";
         String prefix = "TestResults_2.8/" + date_DMMMYYYY;
-        String reportUrl = amazonaws_url + bucketName + "/";
+        String reportUrl = amazonaws_url ;
         List<String> reportUrlList = new LinkedList<>();
         try {
             AWSCredentials credentials = new BasicAWSCredentials(
@@ -59,5 +60,47 @@ public class ReportAnalyser {
             e.printStackTrace();
         }
         return reportUrl;
+    }
+
+
+
+
+
+    public List<String> getEmailReportOf1(String date_DMMMYYYY, String partialSuiteName) {
+        return listBucketObjects1(date_DMMMYYYY, partialSuiteName);
+    }
+
+
+
+    private List<String> listBucketObjects1(String date_DMMMYYYY, String partialSuiteName) {
+        //https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/2023/Sep/15/API_BFT_2023-09-15-094415/API_BFT_2023-09-15-094415.html
+        String amazonaws_url = "https://fh-qa-automation.s3.amazonaws.com/";
+        String bucketName = "fh-qa-automation";
+        String prefix = "TestResults_2.8/" + date_DMMMYYYY;
+        String reportUrl = amazonaws_url ;
+        List<String> reportUrlList = new LinkedList<>();
+        try {
+            AWSCredentials credentials = new BasicAWSCredentials(
+                    AES.decrypt("OriNxlLJ6ngVCYi/qCBSy1kBwPag3XyxfDiGrXfUUUg=", "t2sautomation"),
+                    AES.decrypt("hij44vD5DKQY+nlkxoB+BT/wXXofuDwJTNtl7eCMaaE8ZJVrkJ2exWcFBnVn9p/G", "t2sautomation")
+            );
+            final AmazonS3 s3 = AmazonS3ClientBuilder
+                    .standard()
+                    .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                    .withRegion("eu-west-2")
+                    .build();
+            ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName)
+                    .withPrefix(prefix + "/").withDelimiter("/");
+            List<String> res = s3.listObjects(listObjectsRequest).getCommonPrefixes();
+            res.forEach(v -> {
+                if (v.contains(partialSuiteName)) {
+                    reportUrlList.add(v);
+                }
+            });
+            Collections.sort(reportUrlList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return reportUrlList;
     }
 }

@@ -38,7 +38,7 @@ public class IOS extends ReportManager {
                     logger.info("Setting IOS Native capabilities in BrowserStack Device : " + tEnv().getIosDevice());
                     iosCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getIosOSVersion());
                     iosCaps.setCapability(MobileCapabilityType.DEVICE_NAME, tEnv().getIosDevice());
-                    iosCaps.setCapability(MobileCapabilityType.APP, tEnv().getIosBSAppPath());
+                    iosCaps.setCapability(MobileCapabilityType.APP, tEnv().getIosBSAppPath().trim());
                     browserstackOptions.put("buildName", tEnv().getIosBuildNumber() + "_" + tEnv().getTest_region());
                 }
                 browserstackOptions.put("projectName", context.getSuite().getName());
@@ -57,10 +57,14 @@ public class IOS extends ReportManager {
                 iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
                 browserstackOptions.put("networkProfile", "reset");
                 iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
-                iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
-                iosCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
+                if(tEnv().getNetworkProfile()!=null) {
+                    iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
+                }
+                if(tEnv().getCustomNetwork()!=null) {
+                    iosCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
+                }
 
-                browserstackOptions.put("idleTimeout", "300");
+                browserstackOptions.put("idleTimeout", "600");
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
                 browserstackOptions.put("appiumLogs", "true");

@@ -614,7 +614,7 @@ public class TestEnv {
     }
 
     public void setBrowserstack_midSessionInstallApps(String browserstack_midSessionInstallApps) {
-        this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps;
+        this.browserstack_midSessionInstallApps = browserstack_midSessionInstallApps.trim();
     }
 
     public String getIsJWT() {
