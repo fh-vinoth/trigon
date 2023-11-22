@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="API_ZohoDriveUpload">
+    <!-- Don't Include Sub folder path in reportsPath-->
+    <test name="ZohoDriveUpload">
+
+        <parameter name="recipients" value="kanna.v@foodhub.com"/>
+        <parameter name="sendFailedReport" value="true"/>
+        <parameter name="reportPath" value="src/test/resources/TestResults/2023/Oct/27/API_Check_2023-10-27-181830"/>
+
+        <classes>
+            <class name="com.trigon.email.ZohoDriveUpload"/>
+        </classes>
+
+    </test>
+</suite>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" monitorInterval="30">
+
+    <!-- Logging Properties -->
+    <Properties>
+        <Property name="LOG_PATTERN">%highlight{[%d][%-5level][%c{1}:%L]:%msg%n}{FATAL=Red Bright, ERROR=red,
+            WARN=Yellow, INFO=Magenta Bright, DEBUG=green, TRACE=blue}
+        </Property>
+        <Property name="htmllog">${sys:loghtmlfile}</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+        </Console>
+        <File name="htmllogger" fileName="${htmllog}">
+            <HTMLLayout charset="UTF-8" title="FoodHub Automation Runtime Logs" locationInfo="true"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="htmllogger"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

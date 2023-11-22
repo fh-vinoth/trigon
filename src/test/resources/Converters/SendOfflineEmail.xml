@@ -2,9 +2,9 @@
 <suite name="SendOfflineReports">
     <test name="SendOfflineReportsToEmail">
         <!-- Add recipients as comma separated -->
-        <parameter name="recipients" value="kanna.v@foodhub.com"></parameter>
+        <parameter name="recipients" value="kanna.v@foodhub.com,gayathri.adhikrishnan@foodhub.com"></parameter>
                 <!-- Dont Include Sub folder path in reportsPath-->
-        <parameter name="reportPath" value="src/test/resources/TestResults/2023/Aug/30/API_Check_2023-08-30-155151"/>
+        <parameter name="reportPath" value="src/test/resources/TestResults/2023/Oct/30/API_Check_2023-10-30-130912"/>
 <!--        <parameter name="uploadToAWS" value="false"/>-->
         <parameter name="sendFailedReport" value="true"/>
         <parameter name="uploadToAWS" value="true"/>
