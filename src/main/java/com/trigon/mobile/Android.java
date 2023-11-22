@@ -45,7 +45,7 @@ public class Android extends IOS {
                 } else {
                     androidCaps.setCapability(MobileCapabilityType.PLATFORM_VERSION, tEnv().getAndroidOSVersion());
                     androidCaps.setCapability(MobileCapabilityType.DEVICE_NAME, tEnv().getAndroidDevice());
-                    androidCaps.setCapability(MobileCapabilityType.APP, tEnv().getAndroidBSAppPath());
+                    androidCaps.setCapability(MobileCapabilityType.APP, tEnv().getAndroidBSAppPath().trim());
                     browserstackOptions.put("buildName", tEnv().getAndroidBuildNumber() + "_" + tEnv().getTest_region());
                 }
                 browserstackOptions.put("projectName", context.getSuite().getName());

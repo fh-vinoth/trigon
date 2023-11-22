@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web_Consolidated_Report">
+    <parameter name="browserstack_execution_local" value="false"></parameter>
+    <parameter name="browser" value="chrome"></parameter>
+    <parameter name="isJWT" value="false"></parameter>
+
+
+<!--    <test name="SingleSuite">-->
+<!--        <parameter name="suiteName" value="msweb_MytModules_Prod,msweb_MytModules_Prod"></parameter>-->
+<!--&lt;!&ndash;        <parameter name="date" value="yyyy/MMM/d"></parameter>&ndash;&gt;-->
+<!--        <parameter name="recipients" value="sandhyarani.m@foodhub.com,Syed.hannan@foodhub.com"></parameter>-->
+<!--        <classes>-->
+<!--            <class name="com.fh.adhoc.ConsolidateReport_s3"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+    <test name="MultipleSuits">
+        <parameter name="suiteName" value="API_msweb_UK_SIT,msweb_AddTickets_UK_SIT,msweb_config_UK_SIT,msweb_MytModules_UK_SIT,msweb_features_UK_SIT"></parameter>
+        <parameter name="recipients" value="sandhyarani.m@foodhub.com,Syed.hannan@foodhub.com"></parameter>
+<!--        <parameter name="date" value="yyyy/MMM/d"></parameter>-->
+        <classes>
+            <class name="com.fh.adhoc.ConsolidateReport_AllSuitesS3"/>
+        </classes>
+    </test>
+</suite>
