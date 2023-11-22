@@ -1451,16 +1451,16 @@ public class ReportManager extends CustomReport {
                     String actualVal = (String)actMap.get(k);
                     if (expVal != null) {
                         if(expVal.equalsIgnoreCase(actualVal)){
-                            logStepAction("Validation Passed for the key : "+k+"<br>  Actual Value : "+actualVal+" equals Expected value : "+expVal);
+                            logStepAction("Key : "+k+"<br>  Actual Value : "+actualVal+" equals Expected value : "+expVal);
                         }else{
-                            logStepAction("Validation Failed for the key : "+k+"<br>  Actual Value : "+actualVal+" not equals  Expected value : "+expVal);
+                            logStepAction("Key : "+k+"<br>  Actual Value : "+actualVal+" not equals  Expected value : "+expVal);
                         }
                     }else{
                         if(expVal==actualVal){
                             if(expVal.equalsIgnoreCase(actualVal)){
-                                logStepAction("Validation Passed for the key : "+k+"<br>   Actual Value : "+actualVal+" equals Expected value : "+expVal);
+                                logStepAction("Key : "+k+"<br>   Actual Value : "+actualVal+" equals Expected value : "+expVal);
                             }else{
-                                logStepAction("Validation Failed for the key : "+k+"<br>  Actual Value : "+actualVal+" not equals Expected value : "+expVal);
+                                logStepAction("Key : "+k+"<br>  Actual Value : "+actualVal+" not equals Expected value : "+expVal);
                             }
                         }
                     }
