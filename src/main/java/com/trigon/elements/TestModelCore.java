@@ -1,28 +1,34 @@
 package com.trigon.elements;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.trigon.bean.ElementRepoPojo;
 import com.trigon.exceptions.RetryOnException;
 import com.trigon.exceptions.ThrowableTypeAdapter;
 import com.trigon.reports.ReportManager;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.Dimension;
+import org.json.JSONObject;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.awt.*;
+import org.openqa.selenium.Dimension;
 import java.awt.event.KeyEvent;
-import java.io.FileReader;
+import java.io.*;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static io.appium.java_client.touch.WaitOptions.waitOptions;
+import static io.appium.java_client.touch.offset.PointOption.point;
+import static java.time.Duration.ofMillis;
 import java.util.Objects;
 
 public class TestModelCore extends ReportManager {
@@ -32,7 +38,7 @@ public class TestModelCore extends ReportManager {
     protected long endTime;
     protected WebDriverWait webDriverWait;
 
-    private String locatorString(String s) {
+    protected String locatorString(String s) {
         String locator = s;
         try {
             //s.startsWith("name")||s.startsWith("xpath")||s.startsWith("classname")||s.startsWith("partiallinktext")||s.startsWith("linktext")||s.startsWith("tagname")||s.startsWith("css")||s.startsWith("id")
@@ -48,15 +54,386 @@ public class TestModelCore extends ReportManager {
         return locator;
     }
 
+    protected void locatorStringReplaceInJSON(String locatorObject, String newLocatorsMatched,String beforeXpath,String afterXpath) {
+        try {
+            if (!locatorObject.contains("=")) {
+                Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+                JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
+                ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
+                if(tEnv().getElementLocator().equalsIgnoreCase("Web")){
+                    eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty("Web_beforeElement",beforeXpath);
+                    eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty("Web_afterElement",afterXpath);
+                    eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty(tEnv().getElementLocator(),"xpath="+newLocatorsMatched);
+                } else if(tEnv().getElementLocator().equalsIgnoreCase("Android")) {
+                    eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty("App_beforeElement",beforeXpath);
+                    eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty("App_afterElement",afterXpath);
+                    eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty(tEnv().getElementLocator(),"xpath="+newLocatorsMatched);
+                }
+                JsonElement newJsonElement = JsonParser.parseString(eRepo.getElements().toString());
+                element1.getAsJsonObject().add("elements",newJsonElement);
+                try (PrintWriter out = new PrintWriter(new FileWriter(tEnv().getPagesJsonFile()))) {
+                    out.write(new JSONObject(pGson.toJson(element1)).toString(4));
+                    System.out.println("Modified object -> "+locatorObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            captureException(e);
+        }
+    }
+
+    protected void locatorStringRemoveInJSON(String locatorObject, String newLocatorsMatched) {
+        try {
+            if (!locatorObject.contains("=")) {
+                Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+                JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
+                ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
+
+                eRepo.getElements().get(locatorObject).getAsJsonObject().addProperty(tEnv().getElementLocator(),"xpath="+newLocatorsMatched);
+
+                JsonElement newJsonElement = JsonParser.parseString(eRepo.getElements().toString());
+                element1.getAsJsonObject().add("elements",newJsonElement);
+                try (PrintWriter out = new PrintWriter(new FileWriter(tEnv().getPagesJsonFile()))) {
+                    out.write(new JSONObject(pGson.toJson(element1)).toString(4));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            captureException(e);
+        }
+    }
+
+    protected String[] fetchBeforeAfterLocators(String locatorObject) {
+        String[] beforeAfter = new String[2];
+        try {
+            //s.startsWith("name")||s.startsWith("xpath")||s.startsWith("classname")||s.startsWith("partiallinktext")||s.startsWith("linktext")||s.startsWith("tagname")||s.startsWith("css")||s.startsWith("id")
+            if (!locatorObject.contains("=")) {
+                Gson pGson = new GsonBuilder().setPrettyPrinting().create();
+                JsonElement element1 = JsonParser.parseReader(new FileReader(tEnv().getPagesJsonFile()));
+                ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);
+                beforeAfter[0] = eRepo.getElements().get(locatorObject).getAsJsonObject().get("Web_beforeElement").getAsString();
+                beforeAfter[1] = eRepo.getElements().get(locatorObject).getAsJsonObject().get("Web_afterElement").getAsString();
+            }
+        } catch (Exception e) {
+            beforeAfter[0] = "";
+            beforeAfter[1] = "";
+        }
+        return beforeAfter;
+    }
+
+    protected Set<String> scrapeXpaths(String typeTag)  {
+        Set<String> xpaths = new LinkedHashSet<>();
+        try {
+           List<WebElement> tagElements = browser().findElements(By.tagName(typeTag));
+           String xpath = "";
+           for (WebElement currentElement : tagElements) {
+               xpath = writeXpath(currentElement, typeTag);
+               if (!xpath.isEmpty()) {
+                   xpaths.add(xpath);
+               }
+           }
+       }catch (StaleElementReferenceException e){
+       }
+        return xpaths;
+    }
+
+    protected Set<String> scrapeXpathsForAndroid() {
+        Set<String> xpaths = new LinkedHashSet<>();
+        try {
+            List<WebElement> elements = android().findElements(By.xpath("//*"));
+            for (WebElement currentElement : elements) {
+                String elementText = currentElement.getAttribute("text");
+                String elementID = currentElement.getAttribute("content-desc");
+
+                if (elementID != null || (!elementText.equals("") && !StringUtils.containsAny(elementText, "<", ">"))) {
+                    String xpath = "//*[ ]";
+                    if (elementID != null) {
+                        xpath = xpath.replace(" ", "@content-desc='" + elementID + "' ");
+                        xpaths.add(xpath);
+                        xpath = "//*[ ]";
+                    }
+                    if ((!elementText.equals("") && !StringUtils.containsAny(elementText, "<", ">"))) {
+                        xpath = xpath.replace(" ", "@text='" + elementText + "' ");
+                        xpaths.add(xpath);
+                    }
+                }
+            }
+        }catch (StaleElementReferenceException e){
+        }
+        return xpaths;
+    }
+
+    protected String writeXpath(WebElement element,String typeTag) {
+        String xpath = "";
+        String elementText = element.getAttribute("innerHTML");
+        String elementID = element.getDomAttribute("id");
+        String elementName = element.getDomAttribute("name");
+        String elementPlaceholder = element.getDomAttribute("placeholder");
+        String elementDataTestID1 = element.getDomAttribute("data-testid");
+        String elementDataTestID2 = element.getDomAttribute("testID");
+
+        if (elementID != null || elementName != null || elementPlaceholder != null
+                ||elementDataTestID1 != null ||elementDataTestID2 != null ||
+                (!elementText.equals("") && !StringUtils.containsAny(elementText, "<", ">"))) {
+            xpath = "//" + typeTag + "[ ]";
+            if (elementID != null) {
+                xpath = xpath.replace(" ", "@id='" + elementID + "' ");
+            }
+            if (elementDataTestID1 != null) {
+                xpath = xpath.replace(" ", "@data-testid='" + elementDataTestID1 + "' ");
+            }
+            if (elementDataTestID2 != null) {
+                xpath = xpath.replace(" ", "@testID='" + elementDataTestID2 + "' ");
+            }
+            if (elementName != null) {
+                xpath = xpath.replace(" ", "@name='" + elementName + "' ");
+            }
+            if (elementPlaceholder != null) {
+                xpath = xpath.replace(" ", "@placeholder='" + elementPlaceholder + "' ");
+            }
+            if ((!elementText.equals("") && !StringUtils.containsAny(elementText, "<", ">"))) {
+                xpath = xpath.replace(" ", "text()='" + elementText + "' ");
+            }
+            if ((StringUtils.countMatches(xpath, "@")) >= 2 ){
+                xpath = StringUtils.replace(xpath, "'@", "' or @");
+            }
+            if ((xpath.contains("@") && xpath.contains("text()"))) {
+                xpath = StringUtils.replace(xpath, "'text()", "' or text()");
+            }
+        }
+        return xpath;
+    }
+
+    public String selfHeal(String locatorString, String compareString ,String action) {
+        List<String> tags = readConfigFileForTags(action);
+        List<String> selfHealXpaths = new ArrayList<>();
+        String newLocatorFallbacks = "" , beforeXpath = "",afterXpath = "" ;
+        if(tEnv().getElementLocator().equalsIgnoreCase("Web")){
+            for (String tag : tags) {
+                Set<String> xpaths = new LinkedHashSet<>();
+                xpaths = scrapeXpaths(tag);
+                List<String> match = getClosestMatch(xpaths, compareString);
+                if (match!= null && match.size()>0) {
+                    selfHealXpaths.addAll(match);
+                    System.out.println("New healing xpath for "+locatorString+"= with <" + tag + "> = " + match);
+                }
+            }
+        }else if(tEnv().getElementLocator().equalsIgnoreCase("Android")){
+            Set<String> xpaths = new LinkedHashSet<>();
+            xpaths = scrapeXpathsForAndroid();
+            List<String> match = getClosestMatch(xpaths, compareString);
+            if (match!= null && match.size()>0) {
+                selfHealXpaths.addAll(match);
+                System.out.println("New healing xpath for "+locatorString+" = " + match);
+            }
+        }
+
+        if (selfHealXpaths.size()>0) {
+            String primaryLocator = selfHealXpaths.get(0);
+            try{
+                List<WebElement> beforeElements = browser().findElements(By.xpath(primaryLocator + "//preceding::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
+                if(beforeElements.size()>1){
+                    beforeXpath = writeXpath(beforeElements.get(beforeElements.size() - 1), beforeElements.get(beforeElements.size() - 1).getTagName());
+                }if(beforeElements.size()==1){
+                    beforeXpath = writeXpath(beforeElements.get(0), beforeElements.get(0).getTagName());
+                }
+            }catch(Exception ex){
+                beforeXpath="";
+            }
+
+            try{
+                WebElement afterElement = browser().findElement(By.xpath(primaryLocator + "//following::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
+                afterXpath = writeXpath(afterElement, afterElement.getTagName());
+            }catch(Exception ex){
+                afterXpath="";
+            }
+
+            if (selfHealXpaths.size() == 1) {
+                newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(0)).concat("}");
+            }else if(selfHealXpaths.size() > 1) {
+                for (int i = 0; i < selfHealXpaths.size(); i++) {
+                    if (i == selfHealXpaths.size() - 1) {
+                        newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}");
+                    } else {
+                        newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}, ");
+                    }
+                }
+            }
+            locatorStringReplaceInJSON(locatorString, newLocatorFallbacks,beforeXpath,afterXpath);
+            logReport("PASS","New healing xpaths replaced for locator " + locatorString + " in JSON.");
+            System.out.println("New healing xpaths replaced for locator " + locatorString + " in JSON.");
+        }
+        return newLocatorFallbacks;
+    }
+
+    public void selfHealInConstructor(Set<String> xpaths, String locatorString) {
+        String newLocatorFallbacks = "" , beforeXpath = "",afterXpath = "" ;
+        List<String> selfHealXpaths = new ArrayList<>();
+        String[] locatorArr = getLocatorTypeAndContent(locatorString);
+        String compareString = "", oldValueString ="";
+        try {
+            if(locatorArr[1]!=null && !locatorArr[1].isEmpty()) {
+//                System.out.println(locatorArr[1]+" ---- value");
+//                System.out.println((locatorArr[1].contains("'") || locatorArr[1].contains("\"")) +" ------- contains condition");
+                if (locatorArr[1].contains("'") || locatorArr[1].contains("\"")) {
+//                    System.out.println(compareString);
+//                    System.out.println((StringUtils.substringBetween(locatorArr[1], "'", "'")!=null && StringUtils.substringBetween(locatorArr[1], "'", "'").isEmpty())+ " ----if result");
+//                    System.out.println(StringUtils.substringBetween(locatorArr[1], "'", "'") + " ---1 ");
+//                    System.out.println(StringUtils.substringBetween(locatorArr[1], "\"", "\"")+ " ---2 ");
+                    compareString = !(StringUtils.substringBetween(locatorArr[1], "'", "'")!=null && StringUtils.substringBetween(locatorArr[1], "'", "'").isEmpty())
+                            ? StringUtils.substringBetween(locatorArr[1], "'", "'")
+                            : StringUtils.substringBetween(locatorArr[1], "\"", "\"");
+                } else{
+                    compareString = locatorArr[1];
+                }
+            }
+            oldValueString = compareString;
+            System.out.println(compareString);
+
+            if (compareString != null && !compareString.isEmpty()) {
+                List<String> nameSplit = Arrays.stream(compareString.replaceAll("[^A-Za-z0-9]", " ").trim().split(" ")).toList();
+                compareString = "";
+                for (String name : nameSplit) {
+                    if (name.isEmpty()) {
+                        continue;
+                    } else {
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                        compareString = compareString.concat(name);
+                    }
+                }
+                System.out.println(compareString);
+                compareString = StringUtils.uncapitalize(compareString);
+                List<String> match = getClosestMatch(xpaths, compareString);
+                if (match!= null && match.size()>0) {
+                    selfHealXpaths.addAll(match);
+
+                    if (selfHealXpaths.size() > 0) {
+                        String primaryLocator = selfHealXpaths.get(0);
+                        try {
+                            List<WebElement> beforeElements = browser().findElements(By.xpath(primaryLocator + "//preceding::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
+                            if (beforeElements.size() > 1) {
+                                beforeXpath = writeXpath(beforeElements.get(beforeElements.size() - 1), beforeElements.get(beforeElements.size() - 1).getTagName());
+                            }
+                            if (beforeElements.size() == 1) {
+                                beforeXpath = writeXpath(beforeElements.get(0), beforeElements.get(0).getTagName());
+                            }
+                        } catch (Exception ex) {
+                            beforeXpath = "";
+                        }
+
+                        try {
+                            WebElement afterElement = browser().findElement(By.xpath(primaryLocator + "//following::" + StringUtils.substringBetween(primaryLocator, "//", "=") + "]"));
+                            afterXpath = writeXpath(afterElement, afterElement.getTagName());
+                        } catch (Exception ex) {
+                            afterXpath = "";
+                        }
+
+                        if (selfHealXpaths.size() == 1) {
+                            if(locatorArr[0].equalsIgnoreCase("accessibilityid")){
+                                locatorArr[1]="//*[@content-desc='"+oldValueString+"']";
+                            }
+                            for (String healXpath: selfHealXpaths) {
+                                if(locatorArr[1].replaceAll("\\s","").equals(healXpath.replaceAll("\\s",""))){
+                                    locatorArr[1]="";
+                                }
+                            }
+                            if(!locatorArr[1].isEmpty()) {
+                                newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(locatorArr[1]).concat("}, ");
+                            }
+                            newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(0)).concat("}");
+                        } else if (selfHealXpaths.size() > 1) {
+                            for (int i = 0; i < selfHealXpaths.size(); i++) {
+                                if (i == selfHealXpaths.size() - 1) {
+                                    newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}");
+                                } else {
+                                    newLocatorFallbacks = newLocatorFallbacks.concat("{").concat(selfHealXpaths.get(i)).concat("}, ");
+                                }
+                            }
+                        }
+                    }
+                    locatorStringReplaceInJSON(locatorString, newLocatorFallbacks, beforeXpath, afterXpath);
+                }
+            }
+        } catch (Exception ex){
+            hardFail("Issue healing for compareString using " + locatorString);
+        }
+    }
+
+    protected List<String> readConfigFileForTags(String action) {
+        Properties prop = new Properties();
+        List<String> tagsList = new ArrayList<>();
+        try {
+            FileInputStream fis = new FileInputStream("src/test/resources/Configuration/web_selfhealing.properties");
+            prop.load(fis);
+            String tags = prop.getProperty(action);
+            tagsList = Arrays.stream(tags.split(",")).collect(Collectors.toList());
+        } catch (Exception ex) {
+        }
+        return tagsList;
+    }
+
+    protected List<String> getClosestMatch(Set<String> xpaths, String targetString) {
+        List<String> closest = new ArrayList<>();
+        String closest1 = null, closest2 = null;
+        double score1 = 0, score2 = 0;
+        for (String xpath : xpaths) {
+            double maxLength = Double.max(xpath.length(), targetString.length());
+            if (maxLength > 0) {
+                double newScore = (maxLength - StringUtils.getLevenshteinDistance((StringUtils.substringBetween(xpath,"'","'")).replaceAll("\\s","").replaceAll("[^a-zA-Z0-9]", "").toLowerCase(), targetString.toLowerCase())) / maxLength;
+                if (newScore > score2) {
+                    if(newScore > score1){
+                        score2 = score1;
+                        score1 = newScore;
+                        closest2 = closest1;
+                        closest1 = xpath;
+                    }else{
+                        score2 = newScore;
+                        closest2 = xpath;
+                    }
+                }
+            }
+        }
+        Double matchScoreLimit = Double.parseDouble(tEnv().getHealingMatchScore());
+        List<String> locatorStringMatchArray = Arrays.stream(targetString.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")).collect(Collectors.toList());
+        int closest1Count = 0, closest2Count = 0;
+        for (String matchStr : locatorStringMatchArray) {
+            if (score1 > matchScoreLimit && (StringUtils.substringBetween(closest1,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
+                closest1Count++;
+            }
+            if (score2 > matchScoreLimit && (StringUtils.substringBetween(closest2,"'","'")).replaceAll("\\s", "").toLowerCase().contains(matchStr.toLowerCase())) {
+                closest2Count++;
+            }
+        }
+        if(score1 > matchScoreLimit || score2 > matchScoreLimit) {
+            if (closest1Count == closest2Count) {
+                closest.add(closest1);
+                closest.add(closest2);
+            } else if (closest1Count > closest2Count) {
+                closest.add(closest1);
+            } else if (closest2Count > closest1Count) {
+                closest.add(closest2);
+            }
+            if (closest != null && !closest.isEmpty()) {
+                System.out.println("Healing locator Match Score - " + score1);
+            }
+        }
+        return closest;
+    }
+
     protected String[] getLocatorTypeAndContent(String s, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         String[] locArray = new String[2];
+        String rawLocator = locatorString(s);
         try {
-            String rawLocator = locatorString(s);
             if (wait_logReport_isPresent_Up_Down_XpathValues.length == 0) {
 
                 locArray[0] = rawLocator.substring(0, rawLocator.indexOf('='));
-                locArray[1] = rawLocator.substring(rawLocator.indexOf('=') + 1);
-
+                if (!rawLocator.contains("{")) {
+                    locArray[1] = rawLocator.substring(rawLocator.indexOf('=') + 1);
+                } else {
+                    locArray[1] = rawLocator.substring(rawLocator.indexOf("{"));
+                }
             } else {
                 String[] result = rawLocator.split("\\$");
                 StringBuffer sb = new StringBuffer();
@@ -102,13 +479,18 @@ public class TestModelCore extends ReportManager {
                 String rawLocator1 = sb.toString();
                 locArray[0] = rawLocator1.substring(0, rawLocator1.indexOf('='));
                 if (wait_logReport_isPresent_Up_Down_XpathValues == null) {
-                    locArray[1] = rawLocator1.substring(rawLocator1.indexOf('=') + 1);
+                    if (!rawLocator.contains("{")) {
+                        locArray[1] = rawLocator1.substring(rawLocator.indexOf('=') + 1);
+                    } else {
+                        locArray[1] = rawLocator1.substring(rawLocator.indexOf("{"));
+                    }
                 } else {
                     locArray[1] = rawLocator1.substring(rawLocator1.indexOf('=') + 1);
                 }
             }
-        } catch (Exception e) {
-            captureException(e);
+        } catch (Exception e){
+            locArray[0] = "";
+            locArray[1] = "";
         }
         return locArray;
     }

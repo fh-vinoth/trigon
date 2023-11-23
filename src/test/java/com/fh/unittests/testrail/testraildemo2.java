@@ -34,7 +34,7 @@ public class testraildemo2 extends TestLocalController {
         } catch (Exception e) {
 
         } finally {
-            testTearDown(tcIDs);
+//            testTearDown(tcIDs);
         }
     }
         @Test
@@ -68,7 +68,7 @@ public class testraildemo2 extends TestLocalController {
 
             }
             finally {
-                testTearDown(tcIDs);
+//                testTearDown(tcIDs);
             }
     }
 

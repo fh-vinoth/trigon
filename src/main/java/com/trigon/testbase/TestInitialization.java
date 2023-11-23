@@ -22,6 +22,7 @@ import com.trigon.security.AES;
 import com.trigon.testrail.APIException;
 import com.trigon.testrail.Runs;
 import com.trigon.web.Browsers;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -45,7 +46,7 @@ public class TestInitialization extends Browsers {
     protected static long suiteStartTime;
 
 
-    public void reportsInitialization(String suiteName) {
+    public void reportsInitialization(String suiteName) throws IOException {
         trigonPaths = new TrigonPaths();
         String suiteNameReplaced = suiteName.replaceAll("-", "_").replaceAll(" ", "_").trim();
         String[] tType = suiteNameReplaced.split("_");
@@ -88,6 +89,7 @@ public class TestInitialization extends Browsers {
         String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
         trigonPaths.setSupportFilePath(supportFilePath);
         trigonPaths.setSupportFileHTMLPath(cUtils().createFolder(supportFilePath, "HTML", ""));
+
 
         if (!suiteName.contains("adhoc")) {
             trigonPaths.setLogsPath(cUtils().createFolder(testResultsPath, "RunTimeLogs", ""));
@@ -569,7 +571,7 @@ public class TestInitialization extends Browsers {
                                       String URI, String envType, String appSycURI, String appSycAuth, String version, String partnerURI, String token,
                                       String accessToken, String isJWT, String endpointPrefix, String authorization, String franchiseId, String dbType, String serviceType, String store, String host, String locale,
                                       String region, String country, String currency,
-                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames, String test_email_recipients, String test_error_email_recipients, String test_failure_email_recipients, String browserstack_midSessionInstallApps, String unblockToken, String networkProfile, String customNetwork) {
+                                      String timezone, String phoneNumber, String emailId, String test_region, String browserstack_execution_local, String class_name, String bs_app_path, String productName, String grid_Hub_IP, String gps_location, String moduleNames, String test_email_recipients, String test_error_email_recipients, String test_failure_email_recipients, String browserstack_midSessionInstallApps, String unblockToken, String networkProfile, String customNetwork, String initialSelfHeal, String healingMatchScore) {
         try {
             Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
             JsonElement testEnvElement = null;
@@ -596,7 +598,9 @@ public class TestInitialization extends Browsers {
             tEnv().setExecution_type(tRemoteEnv.getExecution_type());
             tEnv().setGridExecution_type(tRemoteEnv.getGrid_execution_local());
             tEnv().setGps_location(tRemoteEnv.getGps_location());
+            tEnv().setInitialSelfHeal(tRemoteEnv.getInitialSelfHeal());
             tEnv().setCustomNetwork(tRemoteEnv.getCustomNetwork());
+            tEnv().setHealingMatchScore(tRemoteEnv.getHealingMatchScore());
             tEnv().setNetworkProfile(tRemoteEnv.getNetworkProfile());
             tEnv().setJenkins_execution(tRemoteEnv.getJenkins_execution());
             tEnv().setPipeline_execution(tRemoteEnv.getPipeline_execution());
@@ -759,6 +763,9 @@ public class TestInitialization extends Browsers {
             }
             if (gps_location != null) {
                 tEnv().setGps_location(gps_location);
+            }
+            if (initialSelfHeal != null) {
+                tEnv().setInitialSelfHeal(initialSelfHeal);
             }
             if (browserVersion != null) {
                 tEnv().setWebBrowserVersion(browserVersion);
@@ -949,6 +956,9 @@ public class TestInitialization extends Browsers {
             }
             if(customNetwork!=null){
                 tEnv().setCustomNetwork(customNetwork);
+            }
+            if(healingMatchScore!=null){
+                tEnv().setHealingMatchScore(healingMatchScore);
             }
             if(browserstack_midSessionInstallApps!=null)
             {

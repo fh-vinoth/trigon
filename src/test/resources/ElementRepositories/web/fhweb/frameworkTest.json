@@ -1,13 +1,32 @@
 {
-  "AuthorName": "Bhaskar",
-  "pageTitle": "*************",
-  "elements": {
-    "searchTextBox": {
-      "Web": "xpath=(//*[@type=\"text\"])[1]",
-      "Android": "",
-      "IOS": "",
-      "actionevent": "enterText"
+    "AuthorName": "VAISSHNAVI",
+    "pageTitle": "*************",
+    "elements": {
+        "btnFindTakeaway": {
+            "Web": "xpath=//button[@id='home-findtakeaway']",
+            "IOS": "",
+            "Android": "",
+            "actionevent": "click"
+        },
+        "btnLogIn": {
+            "Web": "xpath={//a[@id='logIn' ]}, {//span[text()='Log In' ]}",
+            "Web_beforeElement": "//a[@id='becomePartner-menu-nav' ]",
+            "Web_afterElement": "//a[@id='home-appinvite d-flex align-items-center' ]",
+            "IOS": "",
+            "Android": "",
+            "actionevent": "click"
+        },
+        "logInLink": {
+            "Web": "xpath=//span[text()='Log In']",
+            "IOS": "",
+            "Android": "xpath=//*[@resource-id='com.fh.foodhub:id/logInTxt']",
+            "actionevent": "click,verifyDisplayed"
+        },
+        "entTextPostcode": {
+            "Web": "xpath=//input[@id='home-postcode']",
+            "IOS": "",
+            "Android": "",
+            "actionevent": "enterText"
+        }
     }
-
-  }
 }

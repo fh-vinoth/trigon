@@ -77,16 +77,47 @@ public class TriBot {
             }
             setCurrentFolderName(folderName);
             bw.write(packages());
-            String classCreation = "public class" + " " + jsonFile + " {\n";
+            String classCreation = "public class" + " " + jsonFile + " extends TestModelCore {\n";
             String constructorCreation =
                     "    \n" + "    private TestModels tmodel;\n\n" +
                             "    //Page Constructor\n" +
 
                             "    public " + jsonFile + "() {\n" +
                             "        tmodel = new TestModels();\n" +
-                            "        tEnv().setPagesJsonFile(new File(\"" + elemPath.replace("../../"+CURRENT_FILE_NAME+"/", "") + "/" + originalname + ".json" + "\"));\n" +
-                            "    }" +
-                            "\n";
+                            "        tEnv().setPagesJsonFile(new File(\"" + elemPath.replace("../../"+CURRENT_FILE_NAME+"/", "") + "/" + originalname + ".json" + "\"));\n\n" +
+                            "    if (tEnv().getInitialSelfHeal()!=null && tEnv().getInitialSelfHeal().equalsIgnoreCase(\"true\")) {"+
+                            "        Gson pGson = new GsonBuilder().setPrettyPrinting().create();\n" +
+                            "        JsonElement element1 = null;\n" +
+                            "        File jsonFilePath = tEnv().getPagesJsonFile();\n" +
+                            "        try {\n" +
+                            "            element1 = JsonParser.parseReader(new FileReader(jsonFilePath));\n" +
+                            "        } catch (FileNotFoundException e) {\n" +
+                            "            e.printStackTrace();\n" +
+                            "        }\n" +
+                            "        ElementRepoPojo eRepo = pGson.fromJson(element1, ElementRepoPojo.class);\n" +
+                            "        boolean jsonVisited = eRepo.getElements().keySet().stream().anyMatch(keyStr -> (eRepo.getElements().get(keyStr).getAsJsonObject().has(\"Web_beforeElement\")\n" +
+                            "                || eRepo.getElements().get(keyStr).getAsJsonObject().has(\"App_beforeElement\")));\n" +
+                            "\n" +
+                            "        if(!jsonVisited) {\n" +
+                            "            System.out.println(\"Checking  -> \" + new File(jsonFilePath.getName()) + \" for setting Fallbacks to all elements.\");\n" +
+                            "            List<String> tags = readConfigFileForTags(\"isEnabled\");\n" +
+                            "            Set<String> xpaths = new LinkedHashSet<>();\n" +
+                            "            if (tEnv().getElementLocator().equalsIgnoreCase(\"Web\")) {\n" +
+                            "                for (String tag : tags) {\n" +
+                            "                    xpaths = scrapeXpaths(tag);\n" +
+                            "                }\n" +
+                            "            } else if (tEnv().getElementLocator().equalsIgnoreCase(\"Android\")) {\n" +
+                            "                xpaths = scrapeXpathsForAndroid();\n" +
+                            "            }\n" +
+                            "            Set<String> scrapedXpaths = xpaths;\n" +
+                            "            eRepo.getElements().keySet().forEach(keyStr -> {\n" +
+                            "                    if (!locatorString(keyStr).contains(\"XpathValue\")) {\n" +
+                            "                    selfHealInConstructor(scrapedXpaths, keyStr);\n" +
+                            "                }\n"+
+                            "            });\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "}\n\n";
 
             bw.write(classCreation);
             bw.write(constructorCreation);
@@ -149,7 +180,7 @@ public class TriBot {
             AtomicBoolean actionflag = new AtomicBoolean(false);
             map1.forEach((key, value) -> {
 
-                        if (key.toString().trim().contains("actionevent")) {
+                        if (key.toString().trim().contains("actionevent") && String.valueOf(value)!=null && !String.valueOf(value).isEmpty()) {
                             actionflag.set(true);
                             String actionValue = String.valueOf(value);
                             String[] jsonKeyValue = actionValue.split(",");
@@ -180,13 +211,13 @@ public class TriBot {
                             }
 
                         } else {
-
                             if (key.toString().trim().equals("Web")) {
                                 locatorValidation(value, methodName, "Web", jsonFilename);
                             } else if (key.toString().trim().equals("Android")) {
                                 locatorValidation(value, methodName, "Android", jsonFilename);
                             } else if (key.toString().trim().equals("IOS")) {
                                 locatorValidation(value, methodName, "IOS", jsonFilename);
+                            } else if(key.toString().trim().equals("actionevent") || key.toString().trim().equals("Web_beforeElement") || key.toString().trim().equals("Web_afterElement") || key.toString().trim().equals("App_beforeElement") || key.toString().trim().equals("App_afterElement")){
                             } else {
                                 System.err.println("Error in TestType!!Add testType Like Web/Android/IOS !! check any additional Spaces!!: " + methodName + " : JSON FILE NAME :" + jsonFilename);
                                 errorCollection.add("Error in TestType!!Add testType Like Web/Android/IOS !! check any additional Spaces!!: " + methodName + " : JSON FILE NAME :" + jsonFilename);
@@ -196,10 +227,10 @@ public class TriBot {
 
                     }
             );
-            if (!actionflag.get()) {
-                System.err.println("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
-                errorCollection.add("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
-            }
+//            if (!actionflag.get()) {
+//                System.err.println("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
+//                errorCollection.add("Please add actionevent for element : " + methodName + " : JSON FILE NAME :" + jsonFilename);
+//            }
         });
         long t2 = System.currentTimeMillis();
         //System.out.println("Filter Time Taken?= " + (t2 - t1) + "\n");
@@ -217,6 +248,7 @@ public class TriBot {
 
         CURRENT_FILE_NAME = projectFile.getName();
         AUTOGEN_PATH = "../../" +CURRENT_FILE_NAME + "/src/test/";
+        //AUTOGEN_PATH = directory + "/src/test/";
 
         String elementRepoPath = AUTOGEN_PATH + "resources/ElementRepositories/";
         String javaClassPath = AUTOGEN_PATH + "java/autogenerated/pages/";
@@ -333,11 +365,20 @@ public class TriBot {
                 "/////////////////////////////////////////////////////////////////////////////////////\n\n" +
                 "package autogenerated.pages." + getCurrentFolderName() + ";\n" + "\n" +
                 "import com.controllers.models.TestModels;\n" +
+                "import com.trigon.elements.TestModelCore;\n" +
                 "import static com.trigon.reports.ReportManager.tEnv;\n" +
                 "\n" +
+                "import com.google.gson.Gson;\n" +
+                "import com.google.gson.GsonBuilder;\n" +
+                "import com.google.gson.JsonElement;\n" +
+                "import com.google.gson.JsonParser;\n" +
+                "import com.trigon.bean.ElementRepoPojo;\n" +
+                "\n" +
                 "import java.io.File;\n" +
+                "import java.io.FileNotFoundException;\n" +
+                "import java.io.FileReader;\n" +
                 "import java.util.HashMap;\n" +
-                "import java.util.*;\n" +
+                "import java.util.*;"+
                 "\n";
     }
 

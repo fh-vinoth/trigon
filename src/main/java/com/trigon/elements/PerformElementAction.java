@@ -4,12 +4,14 @@ import com.trigon.constants.Message;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,8 +25,8 @@ public class PerformElementAction extends ElementStrategyImpl {
         String returnvalue = null;
         long startTime5 = System.currentTimeMillis();
         WebElement iOSElement = getIOSElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
-        WebElement androidElement = getAndroidElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
-        WebElement webElement = getWebElement(locatorString, false, wait_logReport_isPresent_Up_Down_XpathValues);
+        WebElement androidElement = getAndroidElement(locatorString, action,false, wait_logReport_isPresent_Up_Down_XpathValues);
+        WebElement webElement = getWebElement(locatorString, action,false, wait_logReport_isPresent_Up_Down_XpathValues);
         String navigation = Message.NAVIGATED_TO_PAGE + Thread.currentThread().getStackTrace()[3].getFileName().replace(".java", "");
 
         switch (action) {
@@ -261,7 +263,7 @@ public class PerformElementAction extends ElementStrategyImpl {
         boolean returnvalue = false;
         WebElement iOSElement1 = getIOSElement(locatorString, true, wait_logReport_isPresent_Up_Down_XpathValues);
         WebElement androidElement1 = getAndroidElement(locatorString, true, wait_logReport_isPresent_Up_Down_XpathValues);
-        WebElement webElement1 = getWebElement(locatorString, true, wait_logReport_isPresent_Up_Down_XpathValues);
+        WebElement webElement1 = getWebElement(locatorString, action, true, wait_logReport_isPresent_Up_Down_XpathValues);
         long startTime5 = System.currentTimeMillis();
 
         switch (action) {
@@ -369,7 +371,6 @@ public class PerformElementAction extends ElementStrategyImpl {
         return returnvalue;
     }
 
-
     protected List<String> performElementsAction(String locatorString, String action, String expected, String textAction, String... wait_logReport_isPresent_Up_Down_XpathValues) {
         long startTime5 = System.currentTimeMillis();
         List<String> Values = new ArrayList<>();
@@ -455,7 +456,6 @@ public class PerformElementAction extends ElementStrategyImpl {
             logger.error("The given element visibility is beyond screen range : Make sure you have taken correct element : " + locatorString);
         }
     }
-
 
     public void hideKeyBorad() {
         try {

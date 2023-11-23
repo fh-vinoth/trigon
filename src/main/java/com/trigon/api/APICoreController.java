@@ -258,6 +258,10 @@ public class APICoreController extends APICore {
         return filterDataToMap(actualResponseMap, contains);
     }
 
+    protected Map<String, Object> filterStaticDataFromActualResponseWithoutLog(Map<String, Object> actualResponseMap, String contains) {
+        return filterDataToMapWithoutLog(actualResponseMap, contains);
+    }
+
     protected Map<String, Object> filterDynamicDataFromActualResponseImpl(Map<String, Object> actualResponseMap, String knownKey, String knownValue, String... requiredKeys) {
         return filterDynamicDataToMapImpl(actualResponseMap, knownKey, knownValue, requiredKeys);
     }

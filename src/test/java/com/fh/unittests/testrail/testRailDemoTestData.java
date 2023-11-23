@@ -107,7 +107,7 @@ public class testRailDemoTestData extends TestLocalController {
 
         }
         finally {
-            testTearDown(tcIDs);
+//            testTearDown(tcIDs);
         }
     }
   // @Test
@@ -132,7 +132,7 @@ public class testRailDemoTestData extends TestLocalController {
 
         }
         finally {
-            testTearDown(tcIDs);
+//            testTearDown(tcIDs);
         }
     }
 

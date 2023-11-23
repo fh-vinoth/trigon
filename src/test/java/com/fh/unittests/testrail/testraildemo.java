@@ -45,7 +45,7 @@ public class testraildemo extends TestLocalController {
 
         }
         finally {
-            testTearDown(tcIDs);
+//            testTearDown(tcIDs);
         }
     }
     @Test
@@ -70,7 +70,7 @@ public class testraildemo extends TestLocalController {
 
         }
         finally {
-            testTearDown(tcIDs);
+//            testTearDown(tcIDs);
         }
     }
     @Test
@@ -95,7 +95,7 @@ public class testraildemo extends TestLocalController {
 
         }
         finally {
-            testTearDown(tcIDs);
+//            testTearDown(tcIDs);
         }
     }
 

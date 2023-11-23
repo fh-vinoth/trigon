@@ -1,0 +1,14 @@
+{
+  "AuthorName": "Vaisshnavi",
+  "pageTitle": "*************",
+  "elements": {
+    "btnPostcodeManual": {
+      "Web": "",
+      "App_afterElement": "",
+      "IOS": "",
+      "Android": "xpath={//*[@text='Enter your Postcode' ]}",
+      "actionevent": "click",
+      "App_beforeElement": ""
+    }
+  }
+}
