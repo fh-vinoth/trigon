@@ -1,7 +1,6 @@
 package com.trigon.mobile;
 
 import com.trigon.appcenter.AppCenterBS;
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +12,6 @@ import org.testng.xml.XmlTest;
 import java.net.URL;
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 
 public class Android extends IOS {
@@ -25,6 +23,7 @@ public class Android extends IOS {
         MutableCapabilities androidCaps = new MutableCapabilities();
         HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
         long startTime = System.currentTimeMillis();
+        boolean deviceLocation = true;
         try {
             if (extentTestNode.get() != null) {
                 extentClassNode.get().assignDevice(tEnv().getAndroidDevice());
@@ -38,7 +37,7 @@ public class Android extends IOS {
                     androidCaps.setCapability("autoAcceptAlerts", true);
                     androidCaps.setCapability("unicodeKeyboard", true);
                     androidCaps.setCapability("resetKeyboard", true);
-                    androidCaps.setCapability("autoGrantPermissions",true);
+                    androidCaps.setCapability("autoGrantPermissions", true);
                     androidCaps.setCapability("browserVersion", tEnv().getWebBrowserVersion());
                     browserstackOptions.put("buildName", tEnv().getWebBuildNumber() + "_" + tEnv().getTest_region());
 
@@ -58,17 +57,21 @@ public class Android extends IOS {
                 androidCaps.setCapability("browserstack.networkLogs", true);
                 androidCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
                 androidCaps.setCapability("browserstack.realMobileInteraction", "true");
-                if(tEnv().getNetworkProfile()!=null) {
+                if (tEnv().getNetworkProfile() != null) {
                     androidCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
                 }
-                if(tEnv().getCustomNetwork()!=null) {
+                if (tEnv().getCustomNetwork() != null) {
                     androidCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
                 }
                 browserstackOptions.put("networkProfile", "reset");
                 androidCaps.setCapability("autoAcceptAlerts", true);
                 androidCaps.setCapability("unicodeKeyboard", true);
                 androidCaps.setCapability("resetKeyboard", true);
-                androidCaps.setCapability("autoGrantPermissions",true);
+                if (tEnv().getDeviceLocation() != null && tEnv().getDeviceLocation().equalsIgnoreCase("false")) {
+                    deviceLocation = false;
+                }
+                androidCaps.setCapability("autoGrantPermissions", deviceLocation);
+
                 androidCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
                 androidCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
 //                browserstackOptions.put("networkProfile", "reset");
@@ -76,17 +79,16 @@ public class Android extends IOS {
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
                 browserstackOptions.put("appiumLogs", "true");
-                browserstackOptions.put("interactiveDebugging","true");
+                browserstackOptions.put("interactiveDebugging", "true");
 
-                if(tEnv().getGps_location()!=null){
+                if (tEnv().getGps_location() != null) {
                     browserstackOptions.put("gpsLocation", tEnv().getGps_location());
                 }
-                if(tEnv().getCustomNetwork()!=null){
+                if (tEnv().getCustomNetwork() != null) {
                     browserstackOptions.put("customNetwork", tEnv().getCustomNetwork());
                 }
 
-                if(tEnv().getBrowserstack_midSessionInstallApps()!=null)
-                {
+                if (tEnv().getBrowserstack_midSessionInstallApps() != null) {
                     try {
                         String obj[] = tEnv().getBrowserstack_midSessionInstallApps().split(",", 3);
                         switch (obj.length) {
@@ -102,10 +104,8 @@ public class Android extends IOS {
                             case 0:
                                 logStepAction("No valid BS apppaths param provided for browserstack_midSessionInstallApps");
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        hardFail(e+"\nNote : In case of multiple app BS paths, use commas(,) to separate. Maximum 3 apps allowed to install mid session by BS");
+                    } catch (Exception e) {
+                        hardFail(e + "\nNote : In case of multiple app BS paths, use commas(,) to separate. Maximum 3 apps allowed to install mid session by BS");
                     }
                 }
 
@@ -123,18 +123,16 @@ public class Android extends IOS {
                 androidCaps.setCapability("autoGrantPermissions","true");*/
 
                 String location = tEnv().getApiCountry();
-                if(location.equalsIgnoreCase("AUS")){
+                if (location.equalsIgnoreCase("AUS")) {
                     location = "AU";
-                }
-                else if(location.equalsIgnoreCase("IRE")){
+                } else if (location.equalsIgnoreCase("IRE")) {
                     location = "IE";
-                }
-                else if(location.equalsIgnoreCase("UK") || location.equalsIgnoreCase("GT")){
+                } else if (location.equalsIgnoreCase("UK") || location.equalsIgnoreCase("GT")) {
                     location = "GB";
                 }
-                logger.info("Setting location to :: "+location);
+                logger.info("Setting location to :: " + location);
                 //androidCaps.setCapability("browserstack.geoLocation",location);
-                browserstackOptions.put("geoLocation",location);
+                browserstackOptions.put("geoLocation", location);
                 if (tEnv().getTestType().equalsIgnoreCase("digitalboard")) {
                     browserstackOptions.put("deviceOrientation", "landscape");
                 }
