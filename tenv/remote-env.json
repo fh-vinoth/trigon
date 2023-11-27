@@ -6,8 +6,6 @@
   "grid_execution_local" : "false",
   "test_region": "MYT-UK8",
   "app_reset": "NA",
-  "customNetwork": "true",
-  "networkProfile": "true",
   "random_device": "",
   "email_recipients":"",
   "error_email_recipients":"",
@@ -49,7 +47,7 @@
     },
     "FHApp": {
       "android": {
-        "bs_app_path": "bs://0c95fff21904eee811dda3f2ab8e4ccd7854295e",
+        "bs_app_path": "bs://ec151214a1f621c8a2165d821ace5b9c9d45a815",
         "build_number": "Dev_Core_Testing"
       },
       "ios": {

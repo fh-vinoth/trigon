@@ -58,7 +58,6 @@ public class IOS extends ReportManager {
                 networkLogsOptions.put("captureContent", true);
                 iosCaps.setCapability("browserstack.networkLogs", true);
                 iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
-                iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
                 browserstackOptions.put("networkProfile", "reset");
                 iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
                 if(tEnv().getNetworkProfile()!=null) {
