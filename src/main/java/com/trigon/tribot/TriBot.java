@@ -85,7 +85,7 @@ public class TriBot {
                             "    public " + jsonFile + "() {\n" +
                             "        tmodel = new TestModels();\n" +
                             "        tEnv().setPagesJsonFile(new File(\"" + elemPath.replace("../../"+CURRENT_FILE_NAME+"/", "") + "/" + originalname + ".json" + "\"));\n\n" +
-                            "    if (tEnv().getInitialSelfHeal()!=null && tEnv().getInitialSelfHeal().equalsIgnoreCase(\"true\")) {"+
+                            "    if (tEnv().getInitialSelfHeal()!=null && tEnv().getInitialSelfHeal().equalsIgnoreCase(\"true\") && tEnv().getPagesJsonFile().toString().contains(\"NewScreen.json\")) {"+
                             "        Gson pGson = new GsonBuilder().setPrettyPrinting().create();\n" +
                             "        JsonElement element1 = null;\n" +
                             "        File jsonFilePath = tEnv().getPagesJsonFile();\n" +
