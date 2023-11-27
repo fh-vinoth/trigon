@@ -213,7 +213,11 @@ public class ZohoDriveUpload extends ZohoCommonMethods {
     @Parameters({"reportPath"})
     public void zohoTestEmail(@Optional String reportPath){
         Map<String,Object> response = new HashMap<>();
+        long startTime;
+        long endTime;
+        String duration = null;
         try {
+            startTime = System.currentTimeMillis();
 
             String refreshToken = AES.decrypt("nQwHnPBoPi0QTHgEDRk0m4Am08l20U7LiNIHEI+jwUipaeJbRXevcqADDN6AtDFu+g7uuSN816f04TJ7r9zLjHT9WdvYGyRbqy0LoJsD8bE=","t2sautomation");
             String clientSecretId = AES.decrypt("hRCEDxQzc+2SGRnUFwOpdUoeetvkM09VD1KYSF1sGV/urnBYuA1H+s6RVX+ue/J7","t2sautomation");
@@ -221,11 +225,9 @@ public class ZohoDriveUpload extends ZohoCommonMethods {
 
             /** Upload Process */
 
-            // Convert folder to zip
-            File file = new File(reportPath+".zip");
-            if(! file.exists()){
-                folderToZip(reportPath,reportPath+".zip");
-            }
+            String[] splitPath = reportPath.split("/");
+            String concatPath = splitPath[4] +"/"+ splitPath[5] +"/"+ splitPath[6] +"/"+ splitPath[7] +"/"+"TestRailReport.html";
+            String fileName = splitPath[7];
 
             // Access token generation for zoho
             response = getZohoAccessToken(refreshToken,clientSecretId,clientId);
@@ -233,26 +235,16 @@ public class ZohoDriveUpload extends ZohoCommonMethods {
             response.clear();
 
             // Upload zip file to Zoho work drive
-            response = UploadFileInZoho(reportPath+".zip",accessToken);
+            response = UploadFileInZoho(reportPath+"/"+fileName+".html",accessToken);
             String fileId = response.get("data[0].attributes.resource_id").toString();
             String parenFolderId = response.get("data[0].attributes.parent_id").toString();
             response.clear();
 
-            // Unzip the file to folder
-            String unzipFolder = AES.decrypt("+tDLW4T3xpLdSyRML4OCubhFrSh/TggEOwOaDgLaNALKUarvKFuaKS9GvwptSg4o","t2sautomation");
-            response = unZipFileInZoho(unzipFolder,fileId,accessToken);
-            String unZipId = response.get("data.id").toString();
-
             // Link to view the upload test results folder
-            String replaceHtml = "https://drive.foodhub.com/folder/"+unZipId;
+            String replaceHtml = "https://drive.foodhub.com/file/"+fileId;
             System.out.println("\n" + "Drive Link for Test Report : "+replaceHtml);
 
-            trashZohoFile(fileId,accessToken);
-
             /** Email Body generation */
-
-            String[] splitPath = reportPath.split("/");
-            String concatPath = splitPath[4] +"/"+ splitPath[5] +"/"+ splitPath[6] +"/"+ splitPath[7] +"/"+"TestRailReport.html";
 
             StringBuilder html = new StringBuilder();
             FileReader fr = new FileReader(reportPath+"/SupportFiles/HTML/emailBody.json");
@@ -272,19 +264,17 @@ public class ZohoDriveUpload extends ZohoCommonMethods {
             byte[] arr = htm.getBytes();
             Files.write(path, arr);
 
-            /** Send email to recepients */
+            endTime = System.currentTimeMillis();
+            duration = cUtils().getRunDuration(startTime,endTime);
 
+            System.out.println("\nTime taken to upload report to ZOHO - " + duration +"\n");
 
 
         }
         catch (Exception e) {
             hardFail("The Zoho email creation process failed due to ",e);
         } finally {
-            File file = new File(reportPath+".zip");
-            if (file.exists()) {
-                file.delete();
-                System.out.println("Deleted compressed report successfully"+"\n");
-            }
+
         }
     }
 
