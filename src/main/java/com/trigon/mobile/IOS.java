@@ -21,6 +21,7 @@ public class IOS extends ReportManager {
         MutableCapabilities iosCaps = new MutableCapabilities();
         HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
         long startTime = System.currentTimeMillis();
+        boolean deviceLocation = true;
         try {
             if (extentTestNode.get() != null) {
                 extentClassNode.get().assignDevice(tEnv().getIosDevice());
@@ -49,12 +50,14 @@ public class IOS extends ReportManager {
                 iosCaps.setCapability("autoAcceptAlerts", true);
                 iosCaps.setCapability("unicodeKeyboard", true);
                 iosCaps.setCapability("resetKeyboard", true);
-                iosCaps.setCapability("autoGrantPermissions",true);
+                if (tEnv().getDeviceLocation() != null && tEnv().getDeviceLocation().equalsIgnoreCase("false")) {
+                    deviceLocation = false;
+                }
+                iosCaps.setCapability("autoGrantPermissions", deviceLocation);
                 HashMap<String, Boolean> networkLogsOptions = new HashMap<>();
                 networkLogsOptions.put("captureContent", true);
                 iosCaps.setCapability("browserstack.networkLogs", true);
                 iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
-                iosCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
                 browserstackOptions.put("networkProfile", "reset");
                 iosCaps.setCapability("browserstack.networkLogsOptions", networkLogsOptions);
                 if(tEnv().getNetworkProfile()!=null) {

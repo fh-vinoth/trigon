@@ -112,6 +112,7 @@ public class TestEnv {
     private String customNetwork;
     private String healingMatchScore;
     private String unblockToken;
+    private String device_location;
 
     public String getTestType() {
         return testType;
@@ -764,5 +765,11 @@ public class TestEnv {
     }
     public void setHealingMatchScore(String healingMatchScore) {
         this.healingMatchScore = healingMatchScore;
+    }
+    public String getDeviceLocation() {
+        return device_location;
+    }
+    public void setDeviceLocation(String device_location) {
+        this.device_location = device_location;
     }
 }
