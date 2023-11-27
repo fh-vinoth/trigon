@@ -71,10 +71,6 @@ public class Android extends IOS {
                     deviceLocation = false;
                 }
                 androidCaps.setCapability("autoGrantPermissions", deviceLocation);
-
-                androidCaps.setCapability("browserstack.networkProfile", tEnv().getNetworkProfile());
-                androidCaps.setCapability("browserstack.customNetwork", tEnv().getCustomNetwork());
-//                browserstackOptions.put("networkProfile", "reset");
                 browserstackOptions.put("idleTimeout", "600");
                 browserstackOptions.put("autoWait", "50");
                 browserstackOptions.put("debug", "true");
@@ -83,9 +79,6 @@ public class Android extends IOS {
 
                 if (tEnv().getGps_location() != null) {
                     browserstackOptions.put("gpsLocation", tEnv().getGps_location());
-                }
-                if (tEnv().getCustomNetwork() != null) {
-                    browserstackOptions.put("customNetwork", tEnv().getCustomNetwork());
                 }
 
                 if (tEnv().getBrowserstack_midSessionInstallApps() != null) {
