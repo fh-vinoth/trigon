@@ -458,7 +458,7 @@ public class EmailReport {
 
                             bf.append("<tr style=\"background: #f24354;height: 40px\">\n" +
                                     "                        <td colspan=\"3\" style=\"color: #fff;\">\n" +
-                                    "                            Test Failures Summary \n" +
+                                    "                            Test Failures Summary \n<br> <b>The below testcases are only Cash scenarios and yet to be onboarded as Card Scenarios</b>" +
                                     "                        </td>\n" +
                                     "                    </tr>\n");
                             bf.append("                    <tr style=\"background: #F3F3F3;height: 40px;text-align: left\">\n" +

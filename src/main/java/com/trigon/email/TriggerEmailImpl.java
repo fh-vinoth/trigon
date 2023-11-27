@@ -44,6 +44,7 @@ public class TriggerEmailImpl implements ITriggerEmail {
     @Override
     public void triggerEmail(String reportPath, String recipients, String uploadToAWS, String sendFailedReport) {
 
+        System.out.println("Reports are Picked from " + reportPath);
         ZohoDriveUpload driveUpload = new ZohoDriveUpload();
         driveUpload.zohoTestEmail(reportPath);
 
@@ -137,10 +138,9 @@ public class TriggerEmailImpl implements ITriggerEmail {
                 String[] folderName = reportPath.split("/");
                 String folderPath = folderName[4] +"/" + folderName[5]+"/" + folderName[6]+"/" + folderName[7];
                 System.out.println("Uploading to S3 Bucket !! It takes a while depending on your network and depending on size of report !! Please, Wait.... ");
-                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("fh-qa-automation/TestResults_2.8",folderPath, new File(reportPath), true);
+                MultipleFileUpload xfer = xfer_mgr.uploadDirectory("fh-qa-automation","TestResults_2.8/"+folderPath, new File(reportPath), true);
                 XferMgrProgress.showTransferProgress(xfer);
                 XferMgrProgress.waitForCompletion(xfer);
-                System.out.println("Reports are Picked from " + reportPath);
                 System.out.println("Pushed Reports to S3 Bucket successfully....");
                 System.out.println("Started Sending Email to " + recipients + " !! Please wait.. It takes a while based on your Network");
                 Transport.send(message);

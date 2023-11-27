@@ -63,7 +63,8 @@ public class ZohoCommonMethods extends TrigonUtils {
         Map<String, Object> formParams = new HashMap<>();
         try {
             System.out.println("Uploading to ZOHO Drive !! It takes a while depending on your network and depending on size of report !! Please, Wait.... ");
-            String folderPath = AES.decrypt("NJII0Igp9JMEnGZv3gzX9PflbJQhsNhdRsYun3X89nV5uiE3eZlN2YXyBYRun+bo","t2sautomation");
+//            String folderPath = AES.decrypt("NJII0Igp9JMEnGZv3gzX9PflbJQhsNhdRsYun3X89nV5uiE3eZlN2YXyBYRun+bo","t2sautomation");
+            String folderPath = AES.decrypt("+tDLW4T3xpLdSyRML4OCubhFrSh/TggEOwOaDgLaNALKUarvKFuaKS9GvwptSg4o","t2sautomation");
             String[] file = filePath.split("/");
             int size = file.length;
             String filename = file[size-1];
@@ -76,6 +77,8 @@ public class ZohoCommonMethods extends TrigonUtils {
 
             Response resp = requestHandling("https://www.zohoapis.com", "POST", "workdrive/api/v1/upload",headers,null,null,formParams,null,null,multiFormMap);
             response = JsonFlattener.flattenAsMap(resp.asString());
+            System.out.println("Test results Uploaded in ZOHO Drive");
+            System.out.println("[########################################]: Completed");
 
         } catch (Exception e) {
             hardFail("Failed to upload file in zoho" ,e);
@@ -208,6 +211,7 @@ public class ZohoCommonMethods extends TrigonUtils {
      * @Description: Folder to zip file
      */
     public void folderToZip(String sourceDirPath, String zipFilePath) throws IOException {
+        System.out.println("Entered folder to zip stage");
         Path p = Files.createFile(Paths.get(zipFilePath));
         try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
             Path pp = Paths.get(sourceDirPath);
