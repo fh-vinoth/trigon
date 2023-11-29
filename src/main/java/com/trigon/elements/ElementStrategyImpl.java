@@ -115,11 +115,10 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                 }
                 long endTime5 = System.currentTimeMillis();
                 logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
-                if ((result == null) && (!isPresentStatus)) {
+                if ((result == null) && (!isPresentStatus) && !tEnv().getPagesJsonFile().toString().contains("NewScreen.json")) {
                     String locatorFromJson = locatorString(locatorString);
                     if (!locatorFromJson.contains("$XpathValue$") &&
-                            !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))
-                                && tEnv().getPagesJsonFile().toString().contains("NewScreen.json")) {
+                            !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))) {
                         String newLocatorFallbacks = "";
                         logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
                         System.out.println("The Primary LOCATOR ELEMENT IS NOT FOUND.");
@@ -362,11 +361,10 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                         }
                         long endTime5 = System.currentTimeMillis();
                         logger.info(Message.TIME_TAKEN_TO_IDENTIFY_ELEMENT + locatorString + " : " + cUtils().getRunDuration(startTime5, endTime5));
-                        if ((result == null) && (!isPresentStatus)) {
+                        if ((result == null) && (!isPresentStatus) && !tEnv().getPagesJsonFile().toString().contains("NewScreen.json")) {
                             String locatorFromJson = locatorString(locatorString);
                             if(!locatorFromJson.contains("$XpathValue$")
-                                    && !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))
-                                        && tEnv().getPagesJsonFile().toString().contains("NewScreen.json")) {
+                                    && !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))) {
                                 String newLocatorFallbacks = "";
                                 logReport("WARN", "Performing " + locatorString + " : " + locatorArr[0] + "=" + locatorArr[1] + " JSON File : " + tEnv().getPagesJsonFile());
                                 System.out.println("The Primary LOCATOR ELEMENT IS NOT FOUND.");
