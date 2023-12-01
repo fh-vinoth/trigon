@@ -160,7 +160,7 @@ public class ElementStrategyImpl extends TestModelCore implements IElementStrate
                         }
                     } else if (locatorFromJson.contains("$XpathValue$")) {
                         System.out.println("Healing NOT DONE for Dynamic locators containing XpathValue. -" + locatorString);
-                        hardFail(Message.ELEMENT_NOT_FOUND, locatorString, wait_logReport_isPresent_Up_Down_XpathValues);
+                        hardFail(Message.ELEMENT_NOT_FOUND, locatorString + " - " + locatorArr[1], wait_logReport_isPresent_Up_Down_XpathValues);
                     }
                 }
                 if ((result == null) && (!isPresentStatus) && !Arrays.stream(wait_logReport_isPresent_Up_Down_XpathValues).anyMatch(key -> key.equals("isPresent"))) {
