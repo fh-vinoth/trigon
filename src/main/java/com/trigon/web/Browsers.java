@@ -22,8 +22,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
@@ -167,13 +165,13 @@ public class Browsers extends Android {
             case "opera":
                 try {
                     if (executionType.equalsIgnoreCase("local")) {
-                        OperaOptions options = new OperaOptions();
-                        //options.setAutomaticInspection(true);
-                        if(grid_execution_local.equalsIgnoreCase("true")){
-                            webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP), options));
-                        }else {
-                            webDriverThreadLocal.set(new OperaDriver());
-                        }
+//                        OperaOptions options = new OperaOptions();
+//                        //options.setAutomaticInspection(true);
+//                        if(grid_execution_local.equalsIgnoreCase("true")){
+//                            webDriverThreadLocal.set(new RemoteWebDriver(new URL(grid_Hub_IP), options));
+//                        }else {
+//                            webDriverThreadLocal.set(new OperaDriver());
+//                        }
                     } else {
                         remoteExecution(context, xmlTest);
                     }
