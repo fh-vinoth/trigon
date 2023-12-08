@@ -828,7 +828,7 @@ public class TestModelCore extends ReportManager {
             if (browser() == null) {
                 PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
                 Sequence scroll = new Sequence(finger, 0);
-                Dimension size= Objects.requireNonNullElse(android(), ios()).manage().window().getSize();
+                Dimension size= tEnv().getDeviceDimension();
 
                 int anchor = (int) (size.width * anchorPercentage);
                 int startPoint = (int) (size.height * startPercentage);

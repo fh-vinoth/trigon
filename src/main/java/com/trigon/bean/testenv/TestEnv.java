@@ -2,6 +2,7 @@ package com.trigon.bean.testenv;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.openqa.selenium.Dimension;
 import org.testng.ITestContext;
 
 import java.io.File;
@@ -113,6 +114,8 @@ public class TestEnv {
     private String healingMatchScore;
     private String unblockToken;
     private String device_location;
+    private Dimension device_dimension;
+
 
     public String getTestType() {
         return testType;
@@ -771,5 +774,11 @@ public class TestEnv {
     }
     public void setDeviceLocation(String device_location) {
         this.device_location = device_location;
+    }
+    public Dimension getDeviceDimension() {
+        return device_dimension;
+    }
+    public void setDeviceDimension(Dimension device_dimension) {
+        this.device_dimension = device_dimension;
     }
 }
