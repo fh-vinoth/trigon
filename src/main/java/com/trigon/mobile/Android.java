@@ -176,6 +176,7 @@ public class Android extends IOS {
             }
             android().manage().timeouts().implicitlyWait(Duration.ofSeconds(8));
             android().manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+            tEnv().setDeviceDimension(android().manage().window().getSize());
             String AndroidType = "Native App";
             if (tEnv().getAppType().equalsIgnoreCase("AndroidBrowser")) {
                 android().navigate().to(tEnv().getWebUrl());

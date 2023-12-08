@@ -177,6 +177,7 @@ public class IOS extends ReportManager {
             }
             ios().manage().timeouts().implicitlyWait(Duration.ofSeconds(8));
             ios().manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+            tEnv().setDeviceDimension(ios().manage().window().getSize());
             String iOSType = "Native App";
             if (tEnv().getAppType().equalsIgnoreCase("iOSBrowser")) {
                 ios().navigate().to(tEnv().getWebUrl());

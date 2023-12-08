@@ -615,7 +615,7 @@ public class TestModels extends PerformElementAction {
     public void horizontalSwipeByPercentage(double startPercentage, double endPercentage, double anchorPercentage) {
         try {
             if (browser() == null) {
-                Dimension size = Objects.requireNonNullElse(android(), ios()).manage().window().getSize();
+                Dimension size = tEnv().getDeviceDimension();
                 PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
                 Sequence scroll = new Sequence(finger, 0);
                 int anchor = (int) (size.height * anchorPercentage);
@@ -946,7 +946,7 @@ public class TestModels extends PerformElementAction {
         try {
             PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
             Sequence scroll = new Sequence(finger, 0);
-            Dimension size = Objects.requireNonNullElse(android(), ios()).manage().window().getSize();
+            Dimension size = tEnv().getDeviceDimension();
             if (browser() == null) {
                 int start = (int) (size.width * 0.9);
                 int end = (int) (size.width * 0.2);
