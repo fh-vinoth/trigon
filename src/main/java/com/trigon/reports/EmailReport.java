@@ -217,20 +217,68 @@ public class EmailReport {
                 "                            <div style=\"font-size: 25px;padding: 2.45rem .20rem;\"></div>\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
-//                "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
-//                "                        <td colspan=\"5\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>API Endpoints Covered : ( " + totalEndpoints + " )</b></div> </td>\n" +
-////                "                       <td colspan=\"3\"><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
-////                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
-//                "                    </tr>" +
-//                "                    <tr style=\"background: #8c9b9d;height: 40px\">\n" +
-//                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>GET Request : </b>("+ getRequest +")</div> </td>\n" +
-//                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>PUT Request : </b>("+ putRequest +")</div> </td>\n" +
-//                "                        <td colspan=\"1\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>POST Request : </b>("+ postRequest +")</div> </td>\n" +
-//                "                        <td colspan=\"2\"> <div style=\"font-size: 15px;color: #fcf8f8\"><b>DELETE Request : </b>("+ deleteRequest +")</div> </td>\n" +
-//
-////                "                       <td colspan=\"3\"><a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/"+suiteWithTime+"/APICoverage.html\"\n" +
-////                "                               style=\"width:50%;color: #fff;text-decoration: none;background-color: #536550;cursor: pointer;display: inline-block;font-weight: 400;text-align: center;vertical-align: middle;padding: .25rem .5rem;font-size: .875rem;line-height: 1.5;border-radius: .5rem;\">View API Coverage</a></td>\n"+
-//                "                    </tr>" +
+                "                     <tr style=\"background: #8c9xb9d; height: 40px\">\n" +
+                "                        <style>\n" +
+                "                            /* Additional CSS styles */\n" +
+                "                            .link-container a {\n" +
+                "                            width: 50%;\n" +
+                "                            color: #fff;\n" +
+                "                            text-decoration: none;\n" +
+                "                            cursor: pointer;\n" +
+                "                            display: inline-block;\n" +
+                "                            font-weight: 400;\n" +
+                "                            text-align: center;\n" +
+                "                            vertical-align: middle;\n" +
+                "                            padding: .25rem .5rem;\n" +
+                "                            font-size: .875rem;\n" +
+                "                            line-height: 1.5;\n" +
+                "                            border-radius: .5rem;\n" +
+                "                            transition: background-color 0.8s, transform 0.8s;\n" +
+                "                            }\n" +
+                "                            .link-container a {\n" +
+                "                            background-color: #4c5a5c;\n" +
+                "                            transform: scale(1.03);\n" +
+                "                            }\n" +
+                "                            /* Popup styles */\n" +
+                "                            .popup {\n" +
+                "                            display: none;\n" +
+                "                            position: fixed;\n" +
+                "                            top: 52%;\n" +
+                "                            left: 50%;\n" +
+                "                            transform: translate(-50%, -50%);\n" +
+                "                            background-color: #f9f9f9;\n" +
+                "                            padding: 10px;\n" +
+                "                            border: 1px solid #ccc;\n" +
+                "                            border-radius: 5px;\n" +
+                "                            z-index: 1;\n" +
+                "                            text-align: center;\n" +
+                "                            }\n" +
+                "                            .link-container:hover .popup {\n" +
+                "                            display: none;\n" +
+                "                            }\n" +
+                "                            .hover-trigger {\n" +
+                "                            cursor: pointer;\n" +
+                "                            }\n" +
+                "                            .link-container {\n" +
+                "                            position: relative;\n" +
+                "                            }\n" +
+                "                            }\n" +
+                "                        </style>\n" +
+                "                        <td colspan=\"5\" class=\"link-container\">" +
+                "  <div style=\"background-color: #808f91; border: 1px solid #EEEEEE; width: 100%; height: 40px; border-radius: 10px; margin-left: auto; margin-right: auto; display: flex; align-items: center; justify-content: center;\">\n" +
+                "                                <div style=\"background-color: #4c5a5c; border-radius: 10px; width: 60%; overflow: hidden;\">\n" +
+                "                                    <a href=\"https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/" + reportPath + "/" + suiteWithTime + "/updatedLogs.html\"\n" +
+                " style=\"color: #fff; text-decoration: none; cursor: pointer; display: inline-block; font-weight: 200; text-align: center; vertical-align: middle; padding: .25rem .5rem; font-size: .875rem; line-height: 1.5; border-radius: .5rem;\">\n" +
+                "Endpoints Consumed : (" + apiCallsTotal + ") | Unique Endpoints : (" + apiCallsUnique + ")\n" +
+                "                                    </a>\n" +
+                "                                </div>\n" +
+                "                            </div>" +
+                " <div class=\"popup\"\n" +
+                "                                 style=\"background-color: #f9f9f9; padding: 10px; border: 1px solid #ccc; border-radius: 5px; z-index: 1; text-align: center; cursor: pointer;\">\n" +
+                "                                <div style=\"color: gray; font-size: 12px;\">This is a clickable link!</div>\n" +
+                "                            </div>" +
+                "                        </td>" +
+                "                    </tr>" +
                 "                    </tbody>\n" +
                 "                </table>\n" +
                 "            </div>\n" +
@@ -458,7 +506,7 @@ public class EmailReport {
 
                             bf.append("<tr style=\"background: #f24354;height: 40px\">\n" +
                                     "                        <td colspan=\"3\" style=\"color: #fff;\">\n" +
-                                    "                            Test Failures Summary \n<br> <b>The below testcases are only Cash scenarios and yet to be onboarded as Card Scenarios</b>" +
+                                    "                            Test Failures Summary \n" +
                                     "                        </td>\n" +
                                     "                    </tr>\n");
                             bf.append("                    <tr style=\"background: #F3F3F3;height: 40px;text-align: left\">\n" +

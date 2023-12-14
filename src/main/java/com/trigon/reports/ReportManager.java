@@ -10,6 +10,8 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.model.Log;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
@@ -22,6 +24,7 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.Assert;
@@ -60,28 +63,29 @@ public class ReportManager extends CustomReport {
     }
 
     public void testTearDown() {
-        if(failAnalysisThread.get().size()>0) {
+        if (failAnalysisThread.get().size() > 0) {
             Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
         }
     }
 
     public void testTearDown(ArrayList<String> allTestCaseIDs) {
 
-        if (failedTCs.get().size()>0) {
+        if (failedTCs.get().size() > 0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
-                if(!failedTCs.get().containsKey(tcID))
+                if (!failedTCs.get().containsKey(tcID))
+                    updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
+        } else if (failAnalysisThread.get().size() == 0) {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
                 updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
-        } else if(failAnalysisThread.get().size()==0) {
-            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
-            updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
-        }}
+        }
 
-           allTestCaseIDs.removeAll(passedTCs.get());
-            allTestCaseIDs.removeAll(failedTCs.get().keySet());
-            for (String testCaseID : allTestCaseIDs) {
-                updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
-            }
+        allTestCaseIDs.removeAll(passedTCs.get());
+        allTestCaseIDs.removeAll(failedTCs.get().keySet());
+        for (String testCaseID : allTestCaseIDs) {
+            updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+        }
 
         passedTCs.get().removeAll(failedTCs.get().keySet());
         resultTCs.get().put("Passed", passedTCs.get().stream().distinct().collect(Collectors.toList()));
@@ -90,21 +94,22 @@ public class ReportManager extends CustomReport {
         resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName(), new HashMap(resultTCs.get()));
         testCaseIDThread.remove();
 
-        if(failAnalysisThread.get().size() > 0)
-        Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+        if (failAnalysisThread.get().size() > 0)
+            Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
 
-    public void testTearDown(ArrayList<String> allTestCaseIDs,String dataProviderKey) {
+    public void testTearDown(ArrayList<String> allTestCaseIDs, String dataProviderKey) {
 
-        if (failedTCs.get().size()>0) {
+        if (failedTCs.get().size() > 0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
-                if(!failedTCs.get().containsKey(tcID))
+                if (!failedTCs.get().containsKey(tcID))
                     updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
-        } else if(failAnalysisThread.get().size()==0) {
+        } else if (failAnalysisThread.get().size() == 0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
                 updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
-            }}
+            }
+        }
 
         allTestCaseIDs.removeAll(passedTCs.get());
         allTestCaseIDs.removeAll(failedTCs.get().keySet());
@@ -119,7 +124,7 @@ public class ReportManager extends CustomReport {
         resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName() + "_" + dataProviderKey, new HashMap(resultTCs.get()));
         testCaseIDThread.remove();
 
-        if(failAnalysisThread.get().size() > 0)
+        if (failAnalysisThread.get().size() > 0)
             Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
 
@@ -145,20 +150,20 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void getBSVideoSession(){
-        logReport("INFO", "<b>BS Video:</b> <a href=\""+bsVideo().get("public_url").toString()+"\" target=\"_blank\"> View Recorded Video </a>");
+    public void getBSVideoSession() {
+        logReport("INFO", "<b>BS Video:</b> <a href=\"" + bsVideo().get("public_url").toString() + "\" target=\"_blank\"> View Recorded Video </a>");
     }
 
-    public JSONObject bsVideo(){
+    public JSONObject bsVideo() {
         Object response = null;
-        if(ios()!=null) {
-            response  = ios().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        if (ios() != null) {
+            response = ios().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
-        if(android()!=null) {
-            response  = android().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        if (android() != null) {
+            response = android().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
-        if(browser()!=null) {
-            response  = browser().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        if (browser() != null) {
+            response = browser().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
 
         JSONObject bsResponse = new JSONObject(response.toString());
@@ -166,25 +171,26 @@ public class ReportManager extends CustomReport {
     }
 
     public void logMultipleJSON(String status, LinkedHashMap message, Object responseJSON, String curl, LinkedHashMap responseValidation) {
-        String apiName = "API : "+getAPIMethodName();
+        String apiName = "API : " + getAPIMethodName();
 
         Gson pGson1 = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).create();
         Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
-        String m = apiCard(status,apiName,pGson1.toJson(message),String.valueOf(responseJSON),curl,pGson1.toJson(responseValidation));
+        String apiStatus = null;
+
+        synchronized (lock) {
+
+            apiStatus = apiCard(status, apiName, pGson1.toJson(message), String.valueOf(responseJSON), curl, pGson1.toJson(responseValidation));
+
+        }
+
         try {
             if (status.equalsIgnoreCase("PASS")) {
-                if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
-                     //m = apiName + " is PASSED";
-                     m = "<b>"+apiName+ "</b> is PASSED";
-                     if(responseValidation.containsKey("expectedResponse")){
-                         responseValidation(responseValidation);
-                     }
-                }
+
                 if (extentScenarioNode.get() != null) {
-                    extentScenarioNode.get().pass(m);
+                    extentScenarioNode.get().pass(apiStatus);
 
                 } else if (extentMethodNode.get() != null) {
-                    extentMethodNode.get().pass(m);
+                    extentMethodNode.get().pass(apiStatus);
                 }
                 if (tEnv().getTestType().equalsIgnoreCase("api")) {
                     logger.info(pGson.toJson(message));
@@ -198,16 +204,16 @@ public class ReportManager extends CustomReport {
                 logger.info(pGson.toJson(message));
                 logger.info(pGson.toJson(responseValidation));
                 if (extentScenarioNode.get() != null) {
-                    extentScenarioNode.get().fail(m);
+                    extentScenarioNode.get().fail(apiStatus);
                 } else if (extentMethodNode.get() != null) {
-                    extentMethodNode.get().fail(m);
+                    extentMethodNode.get().fail(apiStatus);
                 }
                 if (failAnalysisThread.get() != null) {
                     failAnalysisThread.get().add(pGson.toJson(message));
                 }
                 logger.error(apiName + " is FAILED !! Check your API Parameters ");
                 logger.info("*******************************************************************************");
-                logger.info("Failed curl : \n"+curl);
+                logger.info("Failed curl : \n" + curl);
                 logger.info("*******************************************************************************");
             }
         } catch (Exception e) {
@@ -296,22 +302,37 @@ public class ReportManager extends CustomReport {
     }
 
     private String apiCard(String status, String apiName, String request, String response, String curl, String responseValidation) {
-        int random = commonUtils.getRandomNumber(100, 100000);
-        String jsonRequestId = "json-request-" + random + "";
-        String jsonResponseValidationId = "json-response-validation-" + random + "";
-        String jsonResponseId = "json-response-" + random + "";
-        String curlId = "json-curl-" + random + "";
+        /*synchronized*/
+        int integer = commonUtils.getRandomNumber(1000000, 999999999);
+        int random = commonUtils.getRandomNumber(1001, 10900) + integer;
+        String jsonRequestId = "json-request-" + random;
+        String jsonResponseValidationId = "json-response-validation-" + random;
+        String jsonResponseId = "json-response-" + random;
+        String curlId = "string-curl-" + random;
+
+
+        StringBuilder RequestScript = loadData(request, jsonRequestId, status, "req");
+        StringBuilder responseValidationScript = loadData(responseValidation, jsonResponseValidationId, status, "respVal");
+        StringBuilder ResponseScript;
+        StringBuilder curlScript;
+        ResponseScript = loadData(response, jsonResponseId, status, "resp");
+        curlScript = loadData(curl, curlId, status, "curl");
+
+        if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && status.equalsIgnoreCase("FAIL")) {
+            ResponseScript = dataToVariable(response, jsonResponseId, "response");
+            curlScript = dataToVariable(curl, curlId, "curl");
+        }
+
         String bColor = "#efebeb";
         if (status.equalsIgnoreCase("FAIL")) {
             bColor = "#e47373";
         }
+        String apiFormat = "NA";
 
-        String apiFormat = "<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color: " + bColor + "\">\n" +
-                "               <div class=\"card-header\">\n" +
-                "                   <div class=\"card-title\">\n" +
+        apiFormat = "<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color: " + bColor + "\">\n" +
+                "               <div class=\"card-header\">\n" + "                   <div class=\"card-title\">\n" +
                 "                       <a class=\"node\" ><span class=\"apiSpan\">" + apiName + "</span></a>\n" +
-                "                   </div>\n" +
-                "               </div>\n" +
+                "                   </div>\n" + "               </div>\n" +
                 "               <div class=\"collapse\">\n" +
                 "                   <div class=\"card-body\">\n" +
                 "                       <p>\n" +
@@ -339,11 +360,7 @@ public class ReportManager extends CustomReport {
                 "                               </div>\n" +
                 "                               <div>\n" +
                 "                                   <pre class=\"preCode\"><code  id=\"" + jsonRequestId + "\"></code></pre>\n" +
-                "                               </div>\n" +
-                "                               <script>\n" +
-                "                                   document.getElementById('" + jsonRequestId + "').innerHTML = JSON.stringify(JSON.parse('" + request + "'), undefined, 4);\n" +
-                "                               </script>\n" +
-                "                           </div>\n" +
+                "                               </div>\n" + RequestScript + "                           </div>\n" +
                 "                       </div>\n" +
                 "                       <div class=\"collapse\" id=\"collapse_response_" + random + "\">\n" +
                 "                           <div class=\"card card-body\">\n" +
@@ -356,10 +373,8 @@ public class ReportManager extends CustomReport {
                 "                               </div>\n" +
                 "                               <div>\n" +
                 "                                   <pre class=\"preCode\"><code  id=\"" + jsonResponseId + "\"></code></pre>\n" +
-                "                               </div>\n" +
-                "                               <script>\n" +
-                "                                   document.getElementById('" + jsonResponseId + "').innerHTML = JSON.stringify(JSON.parse('" + response + "'), undefined, 4);\n" +
-                "                               </script>\n" +
+                "                               </div>\n"
+                + ResponseScript +
                 "                           </div>\n" +
                 "                       </div>\n" +
                 "                       <div class=\"collapse\" id=\"collapse_response-validation_" + random + "\">\n" +
@@ -367,19 +382,13 @@ public class ReportManager extends CustomReport {
                 "                               <div class=\"bd-clipboard\">\n" +
                 "                                   <button type=\"button\"\n" +
                 "                                           onclick=\"copy('" + jsonResponseValidationId + "')\"\n" +
-                "                                           class=\"btn-clipboard\">\n" +
-                "                                       Copy\n" +
+                "                                           class=\"btn-clipboard\">\n" + "                                       Copy\n" +
                 "                                   </button>\n" +
                 "                               </div>\n" +
                 "                               <div>\n" +
                 "                                   <pre class=\"preCode\"><code  id=\"" + jsonResponseValidationId + "\"></code></pre>\n" +
-                "                               </div>\n" +
-                "                               <script>\n" +
-                "                                   document.getElementById('" + jsonResponseValidationId + "').innerHTML = JSON.stringify(JSON.parse('" + responseValidation + "'), undefined, 4);\n" +
-                "                               </script>\n" +
-                "                           </div>\n" +
-                "                       </div>\n" +
-                "                       <div class=\"collapse\" id=\"collapse_curl_" + random + "\">\n" +
+                "                               </div>\n" + responseValidationScript + "                           </div>\n" +
+                "                       </div>\n" + "                       <div class=\"collapse\" id=\"collapse_curl_" + random + "\">\n" +
                 "                           <div class=\"card card-body\">\n" +
                 "                               <div class=\"bd-clipboard\">\n" +
                 "                                   <button type=\"button\"\n" +
@@ -389,8 +398,8 @@ public class ReportManager extends CustomReport {
                 "                                   </button>\n" +
                 "                               </div>\n" +
                 "                               <div>\n" +
-                "                                   <pre class=\"preCode\"><code  id=\"" + curlId + "\">" + curl + "</code></pre>\n" +
-                "                               </div>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\"" + curlId + "\"></code></pre>\n" +
+                "                               </div>\n" + curlScript +
                 "                           </div>\n" +
                 "                       </div>\n" +
                 "                   </div>\n" +
@@ -477,7 +486,7 @@ public class ReportManager extends CustomReport {
         } else if (status.equalsIgnoreCase("FAIL")) {
             List<Log> failureLog = extent.getReport().getTestList().stream().filter(modules -> tEnv().getContext().getCurrentXmlTest().getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0, modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
                     className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("FAIL")).collect(Collectors.toList());
-            String failureReason = failureLog.get(failureLog.size()-1).getDetails();
+            String failureReason = failureLog.get(failureLog.size() - 1).getDetails();
             failedTCs.get().put(tcId.trim(), failureReason);
         } else {
             skippedTCs.get().add(tcId.trim());
@@ -494,24 +503,22 @@ public class ReportManager extends CustomReport {
 //        }
 //    }
 
-    protected void customAssertEquals(String actual, String expected,String... description) {
+    protected void customAssertEquals(String actual, String expected, String... description) {
         try {
 
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
 
             if (expected.equals(actual)) {
-                if(description.length > 0){
-                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("PASS", "Comparison for : " + description[0] + "<br>  Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
+                } else {
                     logReport("PASS", "Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
                 }
             } else {
                 sAssert.assertEquals(actual, expected);
-                if(description.length > 0){
-                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("FAIL", "Comparison for : " + description[0] + "<br>  Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
+                } else {
                     logReport("FAIL", "Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
                 }
             }
@@ -520,23 +527,21 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    protected void customAssertNotEquals(String actual, String expected,String... description) {
+    protected void customAssertNotEquals(String actual, String expected, String... description) {
         try {
 
             logger.info("Verifying NOT Equals Actual : " + actual + " with Expected : " + expected + "");
 
             if (!(expected.equals(actual))) {
-                if(description.length > 0){
-                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text: " + actual + "<br> Expected NOT EQUALS Text: " + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("PASS", "Comparison for : " + description[0] + "<br>  Actual Text: " + actual + "<br> Expected NOT EQUALS Text: " + expected);
+                } else {
                     logReport("PASS", "Actual Text: " + actual + "<br> Expected NOT EQUALS Text: " + expected);
                 }
             } else {
-                if(description.length > 0){
-                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text:" + actual + "<br> Expected NOT EQUALS Text:" + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("FAIL", "Comparison for : " + description[0] + "<br>  Actual Text:" + actual + "<br> Expected NOT EQUALS Text:" + expected);
+                } else {
                     logReport("FAIL", "Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
                 }
             }
@@ -545,23 +550,21 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    protected void customAssertPartialEquals(String actual, String expected,String... description) {
+    protected void customAssertPartialEquals(String actual, String expected, String... description) {
 
         logger.info("Verifying Partial Equals Actual : " + actual + " with Expected : " + expected + "");
         try {
             if (actual.contains(expected)) {
-                if(description.length > 0){
-                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("PASS", "Comparison for : " + description[0] + "<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
+                } else {
                     logReport("PASS", "Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
                 }
             } else {
                 sAssert.assertEquals(actual, expected);
-                if(description.length > 0){
-                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("FAIL", "Comparison for : " + description[0] + "<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
+                } else {
                     logReport("FAIL", "Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
                 }
             }
@@ -896,12 +899,12 @@ public class ReportManager extends CustomReport {
     }
 
     protected void hardFail(String message, Exception e) {
-        logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
+        logReport("FAIL", "The exception occurred line " + e.getStackTrace()[0].getLineNumber() + " in method - " + e.getStackTrace()[0].getMethodName());
         Assert.fail(message + e.getMessage());
     }
 
     protected void hardFail(Exception e) {
-        logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
+        logReport("FAIL", "The exception occurred line " + e.getStackTrace()[0].getLineNumber() + " in method - " + e.getStackTrace()[0].getMethodName());
         Assert.fail(e.getMessage());
     }
 
@@ -939,7 +942,7 @@ public class ReportManager extends CustomReport {
         try {
             double seconds = ((double) delay / 1000);
             if (delay > 0) {
-                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + seconds + " Seconds" + "\u001b[34m");
+                logger.info("\u001b[34m" + "Proceeding with Hard wait !! Please wait for : " + seconds + " Seconds" + "\u001b[34m");
             }
             Thread.sleep(delay);
         } catch (InterruptedException e) {
@@ -1028,15 +1031,15 @@ public class ReportManager extends CustomReport {
     }
 
     private void captureScenarioAndAuthor(String author, String scenario) {
-        if(extentMethodNode.get()!=null){
+        if (extentMethodNode.get() != null) {
             extentMethodNode.get().assignAuthor(author);
             extentMethodNode.get().getModel().setDescription(scenario);
-            extentMethodNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>"+scenario);
+            extentMethodNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
         }
-        if(extentScenarioNode.get()!=null){
+        if (extentScenarioNode.get() != null) {
             extentScenarioNode.get().assignAuthor(author);
             extentScenarioNode.get().getModel().setDescription(scenario);
-            extentScenarioNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>"+scenario);
+            extentScenarioNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
         }
     }
 
@@ -1128,10 +1131,10 @@ public class ReportManager extends CustomReport {
 
     private void logInfo(String message, boolean screenshotMode) {
         String replacedMessage = message;
-        logger.info(replacedMessage.replace("<br>",""));
-        if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
+        logger.info(replacedMessage.replace("<br>", ""));
+        if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")) {
 
-        }else{
+        } else {
             if (extentScenarioNode.get() != null) {
                 screenshotInfo(extentScenarioNode.get(), message, screenshotMode);
             } else if (extentMethodNode.get() != null) {
@@ -1152,7 +1155,7 @@ public class ReportManager extends CustomReport {
 
     private void logFail(String message, boolean screenshotMode) {
         String replacedMessage = message;
-        logger.error(replacedMessage.replace("<br>",""));
+        logger.error(replacedMessage.replace("<br>", ""));
         Thread.dumpStack();
         if (extentScenarioNode.get() != null) {
             screenshotFail(extentScenarioNode.get(), message, screenshotMode);
@@ -1178,10 +1181,10 @@ public class ReportManager extends CustomReport {
 
     private void logPass(String message, boolean screenshotMode) {
         String replacedMessage = message;
-        logger.info(replacedMessage.replace("<br>",""));
-        if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
+        logger.info(replacedMessage.replace("<br>", ""));
+        if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")) {
 
-        }else{
+        } else {
             if (extentScenarioNode.get() != null) {
                 screenshotPass(extentScenarioNode.get(), message, screenshotMode);
             } else if (extentMethodNode.get() != null) {
@@ -1200,24 +1203,25 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public  void tearDownGenerateTCStatusJson(){
+    public void tearDownGenerateTCStatusJson() {
         Gson gson = new Gson();
-        String val = gson.toJson(resultTCCollectionMap,LinkedHashMap.class);
+        String val = gson.toJson(resultTCCollectionMap, LinkedHashMap.class);
         try {
             String path = getTestStatusPath();
             writer = new JsonWriter(new BufferedWriter(new FileWriter(path)));
             writer.jsonValue(val);
             writer.flush();
-            getJsonToUploadResult(path,true);
+            getJsonToUploadResult(path, true);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public String getTestStatusPath(){
-        String path =trigonPaths.getTestResultsPath()+"/TestStatus.json";
+    public String getTestStatusPath() {
+        String path = trigonPaths.getTestResultsPath() + "/TestStatus.json";
         return path;
     }
+
     public void uploadSingleTestResultToTestRail(String testRunId, String path) {
         TestRailManager t = new TestRailManager();
         Gson gson = new Gson();
@@ -1228,14 +1232,14 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         System.out.println(String.valueOf(passedCase.getAsNumber()).substring(1));
-                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS,"Executed Test got passed after test execution");
+                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS, "Executed Test got passed after test execution");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
                 class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
                     try {
-                        t.addTestResultForTestCase(testRunId, failedCase.getKey().substring(1), TestRailManager.TEST_CASE_FAILED_STATUS,failedCase.getValue().toString());
+                        t.addTestResultForTestCase(testRunId, failedCase.getKey().substring(1), TestRailManager.TEST_CASE_FAILED_STATUS, failedCase.getValue().toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1243,7 +1247,7 @@ public class ReportManager extends CustomReport {
 
                 class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
                     try {
-                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS,"Test got skipped due to some error occured in previous tests");
+                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS, "Test got skipped due to some error occured in previous tests");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1275,10 +1279,10 @@ public class ReportManager extends CustomReport {
         return runId[0];
     }
 
-    public void getJsonToUploadResult(String path,boolean ... testRailReport) {
+    public void getJsonToUploadResult(String path, boolean... testRailReport) {
         Gson gson = new Gson();
         TestRailReport r = new TestRailReport();
-        if(testRailReport.length>0 && testRailReport[0]==true){
+        if (testRailReport.length > 0 && testRailReport[0] == true) {
             r.initTestRailReport(extent);
         }
 
@@ -1293,11 +1297,11 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         String testCaseId = String.valueOf(passedCase.getAsNumber()).substring(1);
-                        addTestCase(testCaseId,"1","Executed Test got passed after test execution");
-                        if(passedTest[0].length()>0){
-                            passedTest[0] = passedTest[0]+", C"+ testCaseId+"_Passed";
-                        }else{
-                            passedTest[0] = passedTest[0]+ "C"+testCaseId+"_Passed";
+                        addTestCase(testCaseId, "1", "Executed Test got passed after test execution");
+                        if (passedTest[0].length() > 0) {
+                            passedTest[0] = passedTest[0] + ", C" + testCaseId + "_Passed";
+                        } else {
+                            passedTest[0] = passedTest[0] + "C" + testCaseId + "_Passed";
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1307,11 +1311,11 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
                     try {
                         String testCaseId = failedCase.getKey().substring(1);
-                        addTestCase(testCaseId,"4",failedCase.getValue().toString());
-                        if(failedTest[0].length()>0){
-                            failedTest[0] =failedTest[0]+", C"+ testCaseId+"_Failed";
-                        }else{
-                            failedTest[0] =failedTest[0]+ "C"+testCaseId+"_Failed";
+                        addTestCase(testCaseId, "4", failedCase.getValue().toString());
+                        if (failedTest[0].length() > 0) {
+                            failedTest[0] = failedTest[0] + ", C" + testCaseId + "_Failed";
+                        } else {
+                            failedTest[0] = failedTest[0] + "C" + testCaseId + "_Failed";
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1320,18 +1324,18 @@ public class ReportManager extends CustomReport {
 
                 class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
                     try {
-                        String testCaseId =  String.valueOf(skippedCase.getAsNumber()).substring(1);
-                        addTestCase(testCaseId,"5","Test got skipped due to some error occured in previous tests");
-                        if(skippedTest[0].length()>0){
-                            skippedTest[0] =skippedTest[0]+", C"+ testCaseId+"_Skipped";
-                        }else{
-                            skippedTest[0] =skippedTest[0]+ "C"+testCaseId+"_Skipped";
+                        String testCaseId = String.valueOf(skippedCase.getAsNumber()).substring(1);
+                        addTestCase(testCaseId, "5", "Test got skipped due to some error occured in previous tests");
+                        if (skippedTest[0].length() > 0) {
+                            skippedTest[0] = skippedTest[0] + ", C" + testCaseId + "_Skipped";
+                        } else {
+                            skippedTest[0] = skippedTest[0] + "C" + testCaseId + "_Skipped";
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                if(testRailReport.length>0 && testRailReport[0]==true) {
+                if (testRailReport.length > 0 && testRailReport[0] == true) {
                     r.addRowToTestRailReport(methodName, String.valueOf(passedTest[0]), String.valueOf(failedTest[0]), String.valueOf(skippedTest[0]));
                 }
                 passedTest[0] = "";
@@ -1344,26 +1348,26 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void addTestCase(String testCaseId, String statusId, String comment){
+    public void addTestCase(String testCaseId, String statusId, String comment) {
         resultMap = new HashMap<>();
-        resultMap.put("case_id",testCaseId);
+        resultMap.put("case_id", testCaseId);
         resultMap.put("status_id", statusId);
         resultMap.put("comment", comment);
         resultList.add(resultMap);
     }
 
-    public void uploadBulkTestResultToTestRail(String testRunId, String path){
+    public void uploadBulkTestResultToTestRail(String testRunId, String path) {
         TestRailManager trm = new TestRailManager();
         getJsonToUploadResult(path);
         try {
             trm.addTestResultForTestCases(resultList, testRunId);
-        }catch ( Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public String readS3BucketContent(String bucketName,String keyName){
+    public String readS3BucketContent(String bucketName, String keyName) {
         AWSCredentials credentials = new BasicAWSCredentials(
                 AES.decrypt("OriNxlLJ6ngVCYi/qCBSy1kBwPag3XyxfDiGrXfUUUg=", "t2sautomation"),
                 AES.decrypt("hij44vD5DKQY+nlkxoB+BT/wXXofuDwJTNtl7eCMaaE8ZJVrkJ2exWcFBnVn9p/G", "t2sautomation")
@@ -1374,7 +1378,7 @@ public class ReportManager extends CustomReport {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion("eu-west-2")
                 .build();
-        S3Object object = s3Client.getObject(bucketName,keyName);
+        S3Object object = s3Client.getObject(bucketName, keyName);
 
         InputStream objectData = object.getObjectContent();
         String testResultFile = "src/test/resources/TestResults/s3TestResults.json";
@@ -1394,17 +1398,17 @@ public class ReportManager extends CustomReport {
         return testResultFile;
     }
 
-    public ArrayList<String> getTestIdsInArray(String testIds){
-        ArrayList<String> tcIDs= new ArrayList<>();
+    public ArrayList<String> getTestIdsInArray(String testIds) {
+        ArrayList<String> tcIDs = new ArrayList<>();
         String[] i = testIds.split(",");
-        for(String s : i){
+        for (String s : i) {
             tcIDs.add(s);
         }
         return tcIDs;
 
     }
 
-//    public void analyseTCs(String ...testCaseID){
+    //    public void analyseTCs(String ...testCaseID){
 //        String testCaseIDs = "";
 //        if(testCaseID.length>0) {
 //            if (testCaseID.length == 1) {
@@ -1435,62 +1439,237 @@ public class ReportManager extends CustomReport {
 //        }
 //
 //    }
-    public void responseValidation(LinkedHashMap<String,Object> responseValidation){
+    public void responseValidation(LinkedHashMap<String, Object> responseValidation) {
         responseValidation.remove("statusCode");
         responseValidation.remove("responseTime");
         responseValidation.remove("apiTestStatus");
         String actVal = responseValidation.get("actualResponse").toString();
         String expecVal = responseValidation.get("expectedResponse").toString();
-        if(expecVal.length()>2){
-            if(actVal.length()>2){
-                Map<String,Object> actMap =  getExpMap(actVal);
-                Map<String,Object> expMap = getExpMap(expecVal);
-                for(Map.Entry<String,Object> s : expMap.entrySet()){
+        if (expecVal.length() > 2) {
+            if (actVal.length() > 2) {
+                Map<String, Object> actMap = getExpMap(actVal);
+                Map<String, Object> expMap = getExpMap(expecVal);
+                for (Map.Entry<String, Object> s : expMap.entrySet()) {
                     String k = s.getKey();
-                    String expVal = (String)s.getValue();
-                    String actualVal = (String)actMap.get(k);
+                    String expVal = (String) s.getValue();
+                    String actualVal = (String) actMap.get(k);
                     if (expVal != null) {
-                        if(expVal.equalsIgnoreCase(actualVal)){
-                            logStepAction("Key : "+k+"<br>  Actual Value : "+actualVal+" equals Expected value : "+expVal);
-                        }else{
-                            logStepAction("Key : "+k+"<br>  Actual Value : "+actualVal+" not equals  Expected value : "+expVal);
+                        if (expVal.equalsIgnoreCase(actualVal)) {
+                            logStepAction("Key : " + k + "<br>  Actual Value : " + actualVal + " equals Expected value : " + expVal);
+                        } else {
+                            logStepAction("Key : " + k + "<br>  Actual Value : " + actualVal + " not equals  Expected value : " + expVal);
                         }
-                    }else{
-                        if(expVal==actualVal){
-                            if(expVal.equalsIgnoreCase(actualVal)){
-                                logStepAction("Key : "+k+"<br>   Actual Value : "+actualVal+" equals Expected value : "+expVal);
-                            }else{
-                                logStepAction("Key : "+k+"<br>  Actual Value : "+actualVal+" not equals Expected value : "+expVal);
+                    } else {
+                        if (expVal == actualVal) {
+                            if (expVal.equalsIgnoreCase(actualVal)) {
+                                logStepAction("Key : " + k + "<br>   Actual Value : " + actualVal + " equals Expected value : " + expVal);
+                            } else {
+                                logStepAction("Key : " + k + "<br>  Actual Value : " + actualVal + " not equals Expected value : " + expVal);
                             }
                         }
                     }
 
                 }
-            }else{
+            } else {
                 logStepAction("Actual Response contains no data");
             }
         }
     }
 
-    public Map<String,Object> getExpMap(String value){
-        Map<String,Object> map = new LinkedHashMap<>();
+    public Map<String, Object> getExpMap(String value) {
+        Map<String, Object> map = new LinkedHashMap<>();
         String key[] = value.split(",");
-        for(String keys : key){
+        for (String keys : key) {
             String keyToMap[] = keys.split("=");
             String addKeyToMap = keyToMap[0];
             String addValueToMap = keyToMap[1];
-            if(addValueToMap.contains("}")){
-                addValueToMap=  addValueToMap.replace("}","");
+            if (addValueToMap.contains("}")) {
+                addValueToMap = addValueToMap.replace("}", "");
             }
-            if(addKeyToMap.contains("{")){
-                addKeyToMap = addKeyToMap.replace("{","");
+            if (addKeyToMap.contains("{")) {
+                addKeyToMap = addKeyToMap.replace("{", "");
             }
-            if(addKeyToMap.contains(" ")){
-                addKeyToMap = addKeyToMap.replace(" ","");
+            if (addKeyToMap.contains(" ")) {
+                addKeyToMap = addKeyToMap.replace(" ", "");
             }
-            map.put(addKeyToMap,addValueToMap);
+            map.put(addKeyToMap, addValueToMap);
         }
         return map;
     }
+    /*Started*/
 
+    public static StringBuilder loadData(String inputString, String id, String status, String paramName) {
+        StringBuilder data = new StringBuilder();
+        try {
+            String json = beautifyJson(inputString);
+            String jsId = id.replaceAll("-", "_");
+            DataToJs(jsonCorrection(json, paramName), jsId, status, paramName);
+            data.append(" <script>\n                                                                                                        ");
+            try {
+                /*Started*/
+                new JSONObject(inputString);
+                data.append(" document.getElementById('").append(id).append("').textContent = ").append(jsId).append(";\n");
+            } catch (org.json.JSONException jsonError) {
+                if (inputString.toLowerCase().contains("doctype html") || inputString.contains("<title>Error</title>") || inputString.matches("\\[[^\\]]*\\]\n")) {
+                    data.append("document.getElementById('").append(id).append("'").append("').innerHTML = ").append(jsId).append("\n");
+                } else {
+                    try {
+                        new JSONArray(inputString);
+                        data.append(" document.getElementById('").append(id).append("').textContent = ").append(jsId).append(";\n");
+                    } catch (Exception e) {
+                        try {
+                            new String(inputString);
+                            data.append(" document.getElementById('").append(id).append("').textContent = ").append(jsId).append(";\n");
+                        } catch (Exception err) {
+                            logger.warn("Input format is not recognized" + inputString);
+                        }
+
+                    }
+                }
+            }
+            data.append("</script>");
+        } catch (Exception e1) {
+            logger.warn(e1);
+        }
+        return data;
+    }
+
+    public static StringBuilder dataToVariable(String inputString, String id, String paramName) {
+        StringBuilder data = new StringBuilder();
+        try {
+            /*Started*/
+            String jsId = id.replaceAll("-", "_");
+            String json = beautifyJson(inputString);
+            data.append(" <script>\n");
+            data.append("var request").append(jsId).append("=`").append(jsonCorrection(json, paramName)).append("`;\n");
+            data.append("document.getElementById('").append(id).append("').textContent = request").append(jsId).append(";");
+            data.append("</script>");
+        } catch (Exception e1) {
+            logger.error(e1);
+        }
+        return data;
+    }
+
+    private static String jsonCorrection(String json, String paramName) {
+
+        try {
+            if (json.contains("`")) {
+                String value = json.replace("`", "\\`");
+                return value;
+            }
+            if (paramName.contains("curl")) {
+                String value = json.substring(1, json.length() - 1).replace("'", "\\'");
+                return value;
+            }
+        } catch (Exception e) {
+            logger.error(ExceptionUtils.getStackTrace(e));
+        }
+        return json;
+    }
+
+    private static void DataToJs(String data, String id, String status, String paramName) throws IOException {
+        try {
+            if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api") && status.equalsIgnoreCase("PASS")) {
+                if (paramName.toLowerCase().equals("respval")) {
+                    fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/respValidations.js", true)));
+                    String file = "var " + id + "=`" + data + "`;\n";
+                    fw.get().append(file);
+                    fw.get().flush();
+                    fw.get().close();
+                }
+                if (paramName.toLowerCase().equals("curl")) {
+                    fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/curl.js", true)));
+                    String file = "var " + id + "='" + data + "';\n";
+                    fw.get().append(file);
+                    fw.get().flush();
+                    fw.get().close();
+                }
+            } else {
+                switch (paramName.toLowerCase()) {
+                    case ("req") -> {
+                        fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/requests.js", true)));
+                        String file = "var " + id + "=`" + data + "`;\n";
+                        fw.get().append(file);
+                        fw.get().flush();
+                        fw.get().close();
+                    }
+                    case ("resp") -> {
+                        fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/responses.js", true)));
+                        String file = "var " + id + "=`" + data + "`;\n";
+                        fw.get().append(file);
+                        fw.get().flush();
+                        fw.get().close();
+                    }
+                    case ("respval") -> {
+                        fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/respValidations.js", true)));
+                        String file = "var " + id + "=`" + data + "`;\n";
+                        fw.get().append(file);
+                        fw.get().flush();
+                        fw.get().close();
+                    }
+                    case ("curl") -> {
+                        fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/curl.js", true)));
+                        /*fw = new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/respValidations.js", true));*/
+                        String file = "var " + id + "='" + data + "';\n";
+                        fw.get().append(file);
+                        fw.get().flush();
+                        fw.get().close();
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            fw.get().flush();
+            fw.get().close();
+            fw.get().append(null);
+            logger.error(e);
+        }
+    }
+
+//    public static StringBuilder detectFormatreq(String inputString, String request) {
+//        StringBuilder data = new StringBuilder();
+//        try {
+//            /*Started*/
+//            String json = beautifyJson(inputString);
+//            data.append(" <script>\n");
+//            data.append("var requestData" + random + "=`").append(json).append("`;\n");
+//            data.append("    function displayStringData(data) {\n" +
+//                    "        var element = document.getElementById('json-request-" + random + "');\n" +
+//                    "        if (element) {\n" +
+//                    "            element.textContent = data; // Use textContent to display the data as-is\n" +
+//                    "        } else {\n" +
+//                    "            console.error('Element with ID \"json-request-" + random + "\" not found.');\n" +
+//                    "        }\n" +
+//                    "    }\n" +
+//                    "\n" +
+//                    "    displayStringData(requestData" + random + ");");
+//            data.append("</script>");
+//        } catch (Exception e1) {
+//            logger.error(e1);
+//        }
+//        return data;
+//    }
+
+    public static String beautifyJson(String jsonString) {
+        String Json = null;
+        try {
+            try {
+                new JSONObject(jsonString);
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+                Object json = objectMapper.readValue(jsonString, Object.class);
+                Json = objectWriter.writeValueAsString(json);
+                return Json;
+           /* JSONObject jsonObject = new JSONObject(jsonString);
+            return jsonObject.toString(); // Fixed indentation of 2 spaces*/
+            } catch (org.json.JSONException jsonError) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Json = objectMapper.writeValueAsString(jsonString);
+                return Json;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonString;
+    }
 }

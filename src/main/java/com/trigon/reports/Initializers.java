@@ -16,6 +16,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.BufferedWriter;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Initializers {
     public static PropertiesPojo propertiesPojo = new PropertiesPojo();
@@ -51,7 +54,6 @@ public class Initializers {
     public static ThreadLocal<ExtentTest> extentClassNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentScenarioNode = new ThreadLocal<>();
-    public static List<String> apiCoverage = new ArrayList<>();
 
     public static int totalEndpoints = 0;
 
@@ -115,12 +117,23 @@ public class Initializers {
     public static GenerateSuiteForModules gs = new GenerateSuiteForModules();
 
     protected static int executionCount = 0;
-
-    protected LinkedHashMap<String, Object> headersNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> pathParamsNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> queryParamsNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> formParamsNew = new LinkedHashMap<>();
-    protected LinkedHashMap<String, Object> cookiesNew = new LinkedHashMap<>();
+    protected static ConcurrentMap<String, Object> headersNew = new ConcurrentHashMap<>();
+    protected static ConcurrentMap<String, Object> cookiesNew = new ConcurrentHashMap<>();
+    protected static ConcurrentMap<String, Object> queryParamsNew = new ConcurrentHashMap<>();
+    protected static ConcurrentMap<String, Object> formParamsNew = new ConcurrentHashMap<>();
+    protected static ConcurrentMap<String, Object> pathParamsNew = new ConcurrentHashMap<>();
+    protected static ConcurrentMap<String, Object> expectedresponseNew = new ConcurrentHashMap<>();
     protected String requestBodyNew = null;
+    public static Map<String, Integer> methodData = new LinkedHashMap<>();
+    public static ThreadLocal<BufferedWriter> fw;
+    public static final Object lock = new Object();
+    protected static String buildId = "";
+    public static int apiCallsUnique =0;
+    public static int apiCallsTotal =0;
 
+    public static List apiHttp = new LinkedList();
+    public static AtomicInteger tempEndpointVariable = new AtomicInteger(0);
+    public static AtomicInteger methodIdentifier = new AtomicInteger(2);
+    protected static ThreadLocal<List<String>> apiCoverage = ThreadLocal.withInitial(ArrayList::new);
+    protected static String siteName;
 }

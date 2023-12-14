@@ -32,6 +32,9 @@ import org.testng.xml.XmlTest;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -82,9 +85,9 @@ public class TestInitialization extends Browsers {
         String year = dateSplit[2];
         String datePath = cUtils().createFolder("src/test/resources", "TestResults", year);
         String finalPath = cUtils().createFolder(datePath, month, day);
-        String testResultsPath = cUtils().createFolder(finalPath,getSuiteNameWithTime,"");
+        String testResultsPath = cUtils().createFolder(finalPath, getSuiteNameWithTime, "");
         String[] folderName = testResultsPath.split("/");
-        reportPath = folderName[4] +"/" + folderName[5]+"/" + folderName[6];
+        reportPath = folderName[4] + "/" + folderName[5] + "/" + folderName[6];
         trigonPaths.setTestResultsPath(testResultsPath);
         String supportFilePath = cUtils().createFolder(testResultsPath, "SupportFiles", "");
         trigonPaths.setSupportFilePath(supportFilePath);
@@ -97,24 +100,18 @@ public class TestInitialization extends Browsers {
                 trigonPaths.setScreenShotsPath(cUtils().createFolder(testResultsPath, "ScreenShots", ""));
             }
             trigonPaths.setSupportSubSuiteFilePath(cUtils().createFolder(supportFilePath, "TestResultJSON", ""));
-
-//            File file2 = new File("reports-path.json");
-//            if (file2.exists()) {
-//                file2.delete();
-//            }
-//            try {
-//                JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter("reports-path.json", false)));
-//                writer.beginObject().name("path").value(testResultsPath);
-//                writer.name("testType").value(platformType);
-//                writer.name("platformType").value(appType).endObject().flush();
-//                writer.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
             initializeExtentReport(testResultsPath, suiteNameWithTime);
         }
-
+/*        if (platformType.equalsIgnoreCase("api")) {
+            try {
+                logger.info("searching for js plugins");
+                File dest = new File(trigonPaths.getSupportFilePath() + "/plugins/");
+                String source = listMatchingDirectories(System.getProperty("user.dir"), "plugins");
+                copyFiles(source, String.valueOf(dest));
+            } catch (Exception e) {
+                logApiReport("WARN", "Exception was captured while copying \".js\" files for endpoint's Data with an error -->" + e);
+            }
+        }*/
 
     }
 
@@ -122,7 +119,7 @@ public class TestInitialization extends Browsers {
         try {
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/TestResultJSON/apiCoverage.json", false)));
             TreeSet<String> listOfEndpoints = new TreeSet<>(apiCoverage);
-          //  totalEndpoints = listOfEndpoints.size();
+            //  totalEndpoints = listOfEndpoints.size();
             Map<String, Long> getEndpointCount = apiCoverage.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
             writer.beginArray();
             getEndpointCount.forEach((k, v) -> {
@@ -153,7 +150,23 @@ public class TestInitialization extends Browsers {
         sparkFail.config().setTimelineEnabled(false);
         sparkAll.config().setReportName(suiteNameWithTime);
         sparkAll.config().setTimelineEnabled(false);
-
+        String lineToInsert = "undefined";
+/*     if (tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")){
+            String s3="https://fh-qa-automation.s3.amazonaws.com/TestResults_2.8/"+reportPath+"/"+suiteNameWithTime;
+            lineToInsert = "<script src=\""+s3+"/requests.js\" ></script>\n" +
+                    "<script src=\""+s3+"/responses.js\" ></script>\n" +
+                    "<script src=\""+s3+"/curl.js\" ></script>\n" +
+                    "<script src=\""+s3+"/respValidations.js\" ></script>\n";
+        }else {
+            lineToInsert = "<script src=\"SupportFiles/requests.js\" ></script>\n" +
+                    "<script src=\"SupportFiles/responses.js\" ></script>\n" +
+                    "<script src=\"SupportFiles/curl.js\" ></script>\n" +
+                    "<script src=\"SupportFiles/respValidations.js\" ></script>\n";
+        }*/
+        lineToInsert = "<script src=\"SupportFiles/requests.js\" ></script>\n" +
+                "<script src=\"SupportFiles/responses.js\" ></script>\n" +
+                "<script src=\"SupportFiles/curl.js\" ></script>\n" +
+                "<script src=\"SupportFiles/respValidations.js\" ></script>\n";
         sparkAll.config().setCss(" .card {\n" +
                 "        border-radius: 13px;\n" +
                 "    }\n" +
@@ -165,7 +178,7 @@ public class TestInitialization extends Browsers {
                 "    }\n" +
                 "\n" +
                 "    .btn-clipboard {\n" +
-                "        position: absolute;\n" +
+                "        float: left;\n" +
                 "        top: 0.65rem;\n" +
                 "        right: 0.65rem;\n" +
                 "        z-index: 10;\n" +
@@ -209,7 +222,11 @@ public class TestInitialization extends Browsers {
                 "        max-width: 90%;\n" +
                 "        background-color: #ffffff;\n" +
                 "        border: none;\n" +
-                "    }");
+                "    }\n" +
+                "</style>" +
+                lineToInsert +
+                "<style>"
+        );
         sparkAll.config().setJs("$('.test-item').click(function() {\n" +
                 "    $('.test-content').scrollTop(0);\n" +
                 "});</script>\n" +
@@ -251,13 +268,13 @@ public class TestInitialization extends Browsers {
         }
     }
 
-    public void createExtentMethod(ITestContext context, XmlTest xmlTest, Method method) {
+    public void createExtentMethod(ITestContext context, XmlTest xmlTest, String method) {
         if (extent != null) {
             if (extentClassNode.get() == null) {
                 createExtentClassName(xmlTest);
             }
             if (extentClassNode.get() != null) {
-                extentMethodNode.set(extentClassNode.get().createNode(method.getName()));
+                extentMethodNode.set(extentClassNode.get().createNode(method));
             }
             if (tEnv().getContext().getIncludedGroups().length > 0) {
                 for (String cat : context.getIncludedGroups()) {
@@ -612,7 +629,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiVersion(tLocalEnv.getApi().getVersion());
                 tEnv().setApiEnvType(tLocalEnv.getApi().getEnvType());
                 tEnv().setApiAppSycURI(tLocalEnv.getApi().getAppSycURI());
-                tEnv().setApiAppSycAuth(AES.decrypt(tLocalEnv.getApi().getAppSycAuth(),"t2sautomation"));
+                tEnv().setApiAppSycAuth(AES.decrypt(tLocalEnv.getApi().getAppSycAuth(), "t2sautomation"));
                 tEnv().setApiPartnerURI(tLocalEnv.getApi().getApiPartnerURI());
                 tEnv().setProductName(tLocalEnv.getApi().getproductName());
                 tEnv().setModuleNames(tLocalEnv.getApi().getModuleNames());
@@ -798,7 +815,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiAppSycURI(appSycURI);
             }
             if (appSycAuth != null) {
-                tEnv().setApiAppSycAuth(AES.decrypt(appSycAuth,"t2sautomation"));
+                tEnv().setApiAppSycAuth(AES.decrypt(appSycAuth, "t2sautomation"));
             }
 
             if (version != null) {
@@ -808,7 +825,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setApiPartnerURI(partnerURI);
             }
             if (token != null) {
-                tEnv().setApiToken(AES.decrypt(token,"t2sautomation"));
+                tEnv().setApiToken(AES.decrypt(token, "t2sautomation"));
             }
             if (accessToken != null) {
                 tEnv().setApiAccessToken(accessToken);
@@ -867,7 +884,7 @@ public class TestInitialization extends Browsers {
                 tEnv().setModuleNames(moduleNames);
             }
 
-            if (unblockToken !=null){
+            if (unblockToken != null) {
                 tEnv().setUnblockToken(unblockToken);
             }
 
@@ -939,32 +956,31 @@ public class TestInitialization extends Browsers {
             } else if (tRemoteEnv.getError_email_recipients() != null) {
                 error_email_recipients = tRemoteEnv.getError_email_recipients();
             }
-            if(test_failure_email_recipients !=null){
+            if (test_failure_email_recipients != null) {
                 failure_email_recipients = test_failure_email_recipients;
             } else if (tRemoteEnv.getFailure_email_recipients() != null) {
                 failure_email_recipients = tRemoteEnv.getFailure_email_recipients();
             }
-            
+
             if (tRemoteEnv.getBrowserstack_execution_local() != null) {
                 tEnv().setBrowserstack_execution_local(tRemoteEnv.getBrowserstack_execution_local());
             }
             if (browserstack_execution_local != null) {
                 tEnv().setBrowserstack_execution_local(browserstack_execution_local);
             }
-            if(tRemoteEnv.getBrowserstack_midSessionInstallApps()!=null){
+            if (tRemoteEnv.getBrowserstack_midSessionInstallApps() != null) {
                 tEnv().setBrowserstack_midSessionInstallApps((tRemoteEnv.getBrowserstack_midSessionInstallApps().trim()));
             }
-            if(networkProfile!=null){
+            if (networkProfile != null) {
                 tEnv().setNetworkProfile(networkProfile);
             }
-            if(customNetwork!=null){
+            if (customNetwork != null) {
                 tEnv().setCustomNetwork(customNetwork);
             }
-            if(healingMatchScore!=null){
+            if (healingMatchScore != null) {
                 tEnv().setHealingMatchScore(healingMatchScore);
             }
-            if(browserstack_midSessionInstallApps!=null)
-            {
+            if (browserstack_midSessionInstallApps != null) {
                 tEnv().setBrowserstack_midSessionInstallApps(browserstack_midSessionInstallApps.trim());
             }
             if (productName != null) {
@@ -983,7 +999,7 @@ public class TestInitialization extends Browsers {
             tEnv().setApiRegion(tLocalEnv.getRegion().getAsJsonObject(test_region).get("region").getAsString());
             tEnv().setApiStore(tLocalEnv.getRegion().getAsJsonObject(test_region).get("store").getAsString());
             tEnv().setApiHost(tLocalEnv.getRegion().getAsJsonObject(test_region).get("host").getAsString());
-            tEnv().setApiToken(AES.decrypt(tLocalEnv.getRegion().getAsJsonObject(test_region).get("token").getAsString(),"t2sautomation"));
+            tEnv().setApiToken(AES.decrypt(tLocalEnv.getRegion().getAsJsonObject(test_region).get("token").getAsString(), "t2sautomation"));
             tEnv().setApiAccessToken(tLocalEnv.getRegion().getAsJsonObject(test_region).get("accessToken").getAsString());
             tEnv().setApiCountry(tLocalEnv.getRegion().getAsJsonObject(test_region).get("country").getAsString());
             tEnv().setApiCurrency(tLocalEnv.getRegion().getAsJsonObject(test_region).get("currency").getAsString());
@@ -991,7 +1007,7 @@ public class TestInitialization extends Browsers {
             tEnv().setApiPhoneNumber(tLocalEnv.getRegion().getAsJsonObject(test_region).get("phoneNumber").getAsString());
             tEnv().setApiEmailID(tLocalEnv.getRegion().getAsJsonObject(test_region).get("emailId").getAsString());
         } catch (Exception e) {
-            logApiReport("WARN",test_region+"Test Region Not present in Test-env.json");
+            logApiReport("WARN", test_region + "Test Region Not present in Test-env.json");
         }
     }
 
@@ -1036,5 +1052,55 @@ public class TestInitialization extends Browsers {
         return fVersion;
     }
 
+    public void copyFiles(String sourceDir, String destinationDir) {
 
+        File source = new File(sourceDir);
+        File destination = new File(destinationDir);
+
+        if (!destination.exists()) {
+            destination.mkdirs();
+        }
+
+        if (source.isDirectory()) {
+            File[] files = source.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    Path sourcePath = file.toPath();
+                    Path destinationPath = Paths.get(destinationDir, file.getName());
+
+                    try {
+                        Files.copy(sourcePath, destinationPath);
+                        /*System.out.println("File copied: " + file.getName());*/
+                    } catch (IOException e) {
+                        System.err.println("Failed to copy " + file.getName() + ": " + e.getMessage());
+                    }
+                }
+            }
+        } else {
+            System.err.println("Source is not a directory.");
+        }
+    }
+
+    static String filepath = null;
+
+    public static String listMatchingDirectories(String directoryPath, String targetDirectoryName) {
+        File directory = new File(directoryPath);
+
+        if (directory.isDirectory()) {
+            if (directory.getName().equals(targetDirectoryName)) {
+                String path = directory.getAbsolutePath();
+                if (!path.contains("TestResults/") && !path.contains("build/resources")) {
+                    filepath = directory.getAbsolutePath();
+//                    System.out.println(directory.getAbsolutePath());
+                }
+            }
+            File[] subDirectories = directory.listFiles(File::isDirectory);
+            if (subDirectories != null) {
+                for (File subDirectory : subDirectories) {
+                    listMatchingDirectories(subDirectory.getAbsolutePath(), targetDirectoryName);
+                }
+            }
+        }
+        return filepath;
+    }
 }

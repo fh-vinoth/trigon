@@ -25,7 +25,12 @@ public class Category_SEARCH extends TestLocalController {
             logReportAction("loginewrewtfg");
 
             hardWait(5000);
-            String category_id = createCategory();
+
+            deleteCategory(createCategory());
+            deleteCategory(createCategory());
+            deleteCategory(createCategory());
+            deleteCategory(createCategory());
+            deleteCategory(createCategory());
             author_ScenarioName("Bhaskar", "Searching the new testcase");
 
 //            hardWait(5000);

@@ -93,7 +93,7 @@ public class APICore extends ReportManager {
                         pathParams.put(key, entry.getValue());
                     });
 
-            requestPreparation(headers, cookies, queryParams, formParams, pathParams, null, requestSpecification);
+            requestPreparation(headers, cookies, queryParams, formParams, pathParams, null, requestSpecification,null);
             response = executeHttpMethod(tData, requestSpecification);
         } catch (Exception e) {
             captureException(e);
@@ -124,28 +124,15 @@ public class APICore extends ReportManager {
             executionCount = 0;
             String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, multiPartMap);
             dataToJSON("curl", curl);
-            requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
-            if (CollectionUtils.hasElements(multiPartMap)) {
-                dataToJSON("multiPart", multiPartMap);
-                for (Map.Entry<String, Object> entry : multiPartMap.entrySet()) {
-                    String k = entry.getKey();
-                    Object v = entry.getValue();
-                    requestSpecification.multiPart(k, new File(v.toString()));
-                }
-            }
-            if (requestBody != null) {
-                if (CollectionUtils.hasElements(Collections.singleton(requestBody))) {
-                    dataToJSON("requestBody", requestBody);
-                    requestSpecification.body(requestBody);
-                }
-            }
+            requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification,multiPartMap);
+
         } catch (Exception e) {
             captureException(e);
         }
         return executeHttpMethod(HttpMethod, Endpoint, requestSpecification);
     }
 
-    private void requestPreparation(Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, RequestSpecification requestSpecification) {
+    private void requestPreparation(Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, RequestSpecification requestSpecification,  Map<String, Object> multiPartMap) {
         try {
             if (headers != null && headers.size() > 0) {
                 dataToJSON("headers", new LinkedHashMap<>(headers));
@@ -184,6 +171,20 @@ public class APICore extends ReportManager {
             if ((cookies != null && cookies.size() > 0)) {
                 dataToJSON("cookies", new LinkedHashMap<>(cookies));
                 requestSpecification.cookies(new LinkedHashMap<>(cookies));
+            }
+            if (CollectionUtils.hasElements(multiPartMap)) {
+                dataToJSON("multiPart", multiPartMap);
+                for (Map.Entry<String, Object> entry : multiPartMap.entrySet()) {
+                    String k = entry.getKey();
+                    Object v = entry.getValue();
+                    requestSpecification.multiPart(k, new File(v.toString()));
+                }
+            }
+            if (requestBody != null) {
+                if (CollectionUtils.hasElements(Collections.singleton(requestBody))) {
+                    dataToJSON("requestBody", requestBody);
+                    requestSpecification.body(requestBody);
+                }
             }
         } catch (Exception e) {
             captureException(e);
@@ -367,18 +368,21 @@ public class APICore extends ReportManager {
                         break;
                 }
             } catch (Exception e) {
+                logApiReport("WARN","exception occurred : "+e);
                 dataToJSON("apiTestStatus", "FAILED");
                 failAnalysisThread.get().add("Please check your Internet Connection or Host URL");
             }
             if (response == null && executionCount < 2) {
-                logApiReport("WARN","Trying for second time !! with recursive call for this endpoint :"+ Endpoint+"_"+HttpMethod);
+                logApiReport("WARN","Trying for second time !! with recursive call for this endpoint :"+ Endpoint+" :: "+HttpMethod);
                 RequestSpecification requestSpecification1 = null;
                 requestSpecification1 = RestAssured.given().request().urlEncodingEnabled(false);
                 RestAssuredConfig restAssuredConfig1 = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig()
                         .setParam("http.connection.timeout", 60000)
                         .setParam("http.socket.timeout", 60000));
                 requestSpecification1.config(restAssuredConfig1);
-                requestPreparation(headersNew, cookiesNew, queryParamsNew, formParamsNew, pathParamsNew, requestBodyNew, requestSpecification1);
+                String curl = getCurl(HttpMethod, Endpoint, headersNew, cookiesNew, queryParamsNew, formParamsNew, pathParamsNew, requestBodyNew, null);
+                dataToJSON("curl", curl);
+                requestPreparation(headersNew, cookiesNew, queryParamsNew, formParamsNew, pathParamsNew, requestBodyNew, requestSpecification1,null);
                 response = executeAPIMethod(HttpMethod, Endpoint, requestSpecification1);
             }
             if (response != null) {
@@ -404,7 +408,7 @@ public class APICore extends ReportManager {
             dataMap.put("Expected Status Code", expectedStatusCode);
             String curl = getCurl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, null);
             dataToJSON("curl", curl);
-            requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
+            requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification,null);
             if (requestBody != null) {
                 if (CollectionUtils.hasElements(Collections.singleton(requestBody))) {
                     requestSpecification.body(requestBody);
@@ -456,7 +460,7 @@ public class APICore extends ReportManager {
             dataMap.put("Endpoint", Endpoint);
             dataMap.put("Expected Status Code", expectedStatusCode);
 
-            requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification);
+            requestPreparation(headers, cookies, queryParams, formParams, pathParams, requestBody, requestSpecification,null);
             if (requestBody != null) {
                 if (CollectionUtils.hasElements(Collections.singleton(requestBody))) {
                     requestSpecification.body(requestBody);
@@ -804,7 +808,7 @@ public class APICore extends ReportManager {
                 sb.append(queryParams.toString().replace("{", "").replace("}", "").replaceAll(", ", "&"));
                 //sb.append("' ");
             } //else if (pathParamFlag) {
-                //sb.append("'");
+            //sb.append("'");
             //}
             if(!sb.toString().trim().endsWith("'")){
                 sb.append("' ");
