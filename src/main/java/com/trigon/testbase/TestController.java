@@ -307,14 +307,21 @@ public class TestController extends TestInitialization {
                     extent.setSystemInfo("API Endpoints Covered", String.valueOf(totalEndpoints));
                     extent.flush();
                 }
+
+                try {
+                    getEndpointCount();
+                } catch (Exception e) {
+                    captureException(e);
+                }
+
+                EmailReport.createEmailReport(trigonPaths.getTestResultsPath(), extent, iTestContext.getSuite().getName(), platformType, executionType, pipelineExecution);
+
                 try {
                     parseExtent();
                     getAPICoverage(apiCoverage.get());
                 } catch (Exception e) {
                     captureException(e);
                 }
-
-                EmailReport.createEmailReport(trigonPaths.getTestResultsPath(), extent, iTestContext.getSuite().getName(), platformType, executionType, pipelineExecution);
 
                 if (executionType.equalsIgnoreCase("remote")) {
                     execute = true;
@@ -501,24 +508,7 @@ public class TestController extends TestInitialization {
 
     private void parseExtent() {
         try {
-            extent.getReport().getTestList().stream().forEach(test -> {
-                test.getChildren().stream().forEach(classToLoad -> {
-                    classToLoad.getChildren().stream().forEach(method -> {
-                        method.getLogs().stream().forEach(log -> {
-                            if (!log.getStatus().getName().toLowerCase().contains("info") && !log.getDetails().contains("Actual Text") && !log.getDetails().contains("Failed API")) {
-                                if (log.getDetails().contains("<pre class=\"preCode\"><code  id=\"string-curl")) {
-                                    String curlCommand = extractCurlCommand(log.getDetails());
-                                    apicard.add(curlCommand);
-                                    fetchFromHtml(log.getDetails(), method.getName(), curlCommand);
-                                }
 
-                            }
-                        });
-                    });
-                });
-            });
-            getEndpointCount();
-            apiCallsTotal = apiHttp.size();
             String piechart = piechart(apiHttp);
             List<Test> tests = extent.getReport().getTestList();
 
@@ -1400,6 +1390,26 @@ public class TestController extends TestInitialization {
 
     /********************proccessDone*************************/
     private void getEndpointCount() {
+        try {
+            extent.getReport().getTestList().stream().forEach(test -> {
+                test.getChildren().stream().forEach(classToLoad -> {
+                    classToLoad.getChildren().stream().forEach(method -> {
+                        method.getLogs().stream().forEach(log -> {
+                            if (!log.getStatus().getName().toLowerCase().contains("info") && !log.getDetails().contains("Actual Text") && !log.getDetails().contains("Failed API")) {
+                                if (log.getDetails().contains("<pre class=\"preCode\"><code  id=\"string-curl")) {
+                                    String curlCommand = extractCurlCommand(log.getDetails());
+                                    apicard.add(curlCommand);
+                                    fetchFromHtml(log.getDetails(), method.getName(), curlCommand);
+                                }
+
+                            }
+                        });
+                    });
+                });
+            });
+        } catch (Exception e) {
+            captureException(e);
+        }
         Set<String> endpoint = new LinkedHashSet<>();
         List actualEndpoints = apiCoverage.get();
         String addedendpoint = "";
@@ -1446,6 +1456,7 @@ public class TestController extends TestInitialization {
             }
         }
         apiCallsUnique = endpoint.size();
+        apiCallsTotal = apiHttp.size();
 
         //System.out.println("API Endpoints Covered :" + totalEndpoints);
     }

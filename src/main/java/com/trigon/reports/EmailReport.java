@@ -434,7 +434,7 @@ public class EmailReport {
                             bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
                             method.getLogs().forEach(log -> {
                                 if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                    if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\">")) {
+                                    if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                         bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                     }
                                 }
@@ -443,7 +443,7 @@ public class EmailReport {
                                 method.getChildren().forEach(child -> {
                                     child.getLogs().forEach(log -> {
                                         if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                            if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\">")) {
+                                            if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                                 bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                             }
                                         }
@@ -540,7 +540,7 @@ public class EmailReport {
                         bf.append("                            <div style=\"word-break:break-all;padding-top: 10px\"><b>Failure Reason :</b>");
                         method.getLogs().forEach(log -> {
                             if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\">")) {
+                                if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                     bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                 }
                             }
@@ -549,7 +549,7 @@ public class EmailReport {
                             method.getChildren().forEach(child -> {
                                 child.getLogs().forEach(log -> {
                                     if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                        if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\">")) {
+                                        if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                             bf.append("<div style=\"color: #e50909;font-weight:bold;\">" + log.getDetails() + "</div>");
                                         }
                                     }
@@ -638,7 +638,7 @@ public class EmailReport {
                                 StringBuffer sb = new StringBuffer();
                                 method.getLogs().forEach(log -> {
                                     if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                        if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\">")) {
+                                        if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                             sb.append(log.getDetails());
                                         }
                                     }
@@ -647,7 +647,7 @@ public class EmailReport {
                                     method.getChildren().forEach(child -> {
                                         child.getLogs().forEach(log -> {
                                             if (log.getStatus().getName().equalsIgnoreCase("Fail")) {
-                                                if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\">")) {
+                                                if (!log.getDetails().startsWith("<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color")) {
                                                     sb.append(log.getDetails());
                                                 }
                                             }

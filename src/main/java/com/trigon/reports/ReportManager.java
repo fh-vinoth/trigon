@@ -329,7 +329,7 @@ public class ReportManager extends CustomReport {
         }
         String apiFormat = "NA";
 
-        apiFormat = "<div class=\"accordion\" role=\"tablist\"> \n <div class=\"card\" style=\"background-color: " + bColor + "\">\n" +
+        apiFormat = "<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color: " + bColor + "\">\n" +
                 "               <div class=\"card-header\">\n" + "                   <div class=\"card-title\">\n" +
                 "                       <a class=\"node\" ><span class=\"apiSpan\">" + apiName + "</span></a>\n" +
                 "                   </div>\n" + "               </div>\n" +
