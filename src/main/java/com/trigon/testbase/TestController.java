@@ -1163,9 +1163,9 @@ public class TestController extends TestInitialization {
                 "        </div>\n" +
                 "    </div>\n" +
                 "</section>\n" +
-                "<script src=\"SupportFiles/plugins/jquery-2.2.4.min.js\"></script>\n" +
-                "<script src=\"SupportFiles/plugins/jquery.appear.min.js\"></script>\n" +
-                "<script src=\"SupportFiles/plugins/jquery.easypiechart.min.js\"></script>\n" +
+                "<script src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/plugins/jquery-2.2.4.min.js\"></script>\n" +
+                "<script src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/plugins/jquery.appear.min.js\"></script>\n" +
+                "<script src=\"https://fh-qa-automation.s3.amazonaws.com/Docs/plugins/jquery.easypiechart.min.js\"></script>\n" +
                /* "<script>\n" +
                 "    function copyCurlFromId(id) {\n" +
                 "           const curlCommand = document.getElementById(id).innerText;\n" +

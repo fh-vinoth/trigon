@@ -102,7 +102,7 @@ public class TestInitialization extends Browsers {
             trigonPaths.setSupportSubSuiteFilePath(cUtils().createFolder(supportFilePath, "TestResultJSON", ""));
             initializeExtentReport(testResultsPath, suiteNameWithTime);
         }
-        if (platformType.equalsIgnoreCase("api")) {
+/*        if (platformType.equalsIgnoreCase("api")) {
             try {
                 logger.info("searching for js plugins");
                 File dest = new File(trigonPaths.getSupportFilePath() + "/plugins/");
@@ -111,7 +111,7 @@ public class TestInitialization extends Browsers {
             } catch (Exception e) {
                 logApiReport("WARN", "Exception was captured while copying \".js\" files for endpoint's Data with an error -->" + e);
             }
-        }
+        }*/
 
     }
 
