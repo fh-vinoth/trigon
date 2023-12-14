@@ -124,7 +124,7 @@ public class Category_SEARCH extends TestLocalController {
         String endpoint = "category";
         formparams.put("name", "TestCateg" + cUtils().generateRandomString(4));
         try {
-            Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "2070", null);
+            Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
             System.out.println(postresponse);
 //            String s = db.sendQuery("select * from config where host = 'automation-uk1.t2scdn.com'", 1);
 //            System.out.println(s);
