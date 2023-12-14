@@ -63,28 +63,29 @@ public class ReportManager extends CustomReport {
     }
 
     public void testTearDown() {
-        if(failAnalysisThread.get().size()>0) {
+        if (failAnalysisThread.get().size() > 0) {
             Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
         }
     }
 
     public void testTearDown(ArrayList<String> allTestCaseIDs) {
 
-        if (failedTCs.get().size()>0) {
+        if (failedTCs.get().size() > 0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
-                if(!failedTCs.get().containsKey(tcID))
+                if (!failedTCs.get().containsKey(tcID))
+                    updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+            }
+        } else if (failAnalysisThread.get().size() == 0) {
+            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
                 updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
-        } else if(failAnalysisThread.get().size()==0) {
-            for (String tcID : testCaseIDThread.get().get(0).split(",")) {
-            updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
-        }}
+        }
 
-           allTestCaseIDs.removeAll(passedTCs.get());
-            allTestCaseIDs.removeAll(failedTCs.get().keySet());
-            for (String testCaseID : allTestCaseIDs) {
-                updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
-            }
+        allTestCaseIDs.removeAll(passedTCs.get());
+        allTestCaseIDs.removeAll(failedTCs.get().keySet());
+        for (String testCaseID : allTestCaseIDs) {
+            updateHashMapWithTCDetails(testCaseID, "NOT EXECUTED", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
+        }
 
         passedTCs.get().removeAll(failedTCs.get().keySet());
         resultTCs.get().put("Passed", passedTCs.get().stream().distinct().collect(Collectors.toList()));
@@ -93,21 +94,22 @@ public class ReportManager extends CustomReport {
         resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName(), new HashMap(resultTCs.get()));
         testCaseIDThread.remove();
 
-        if(failAnalysisThread.get().size() > 0)
-        Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+        if (failAnalysisThread.get().size() > 0)
+            Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
 
-    public void testTearDown(ArrayList<String> allTestCaseIDs,String dataProviderKey) {
+    public void testTearDown(ArrayList<String> allTestCaseIDs, String dataProviderKey) {
 
-        if (failedTCs.get().size()>0) {
+        if (failedTCs.get().size() > 0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
-                if(!failedTCs.get().containsKey(tcID))
+                if (!failedTCs.get().containsKey(tcID))
                     updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
             }
-        } else if(failAnalysisThread.get().size()==0) {
+        } else if (failAnalysisThread.get().size() == 0) {
             for (String tcID : testCaseIDThread.get().get(0).split(",")) {
                 updateHashMapWithTCDetails(tcID, "PASS", tEnv().getCurrentTestClassName(), tEnv().getCurrentTestMethodName());
-            }}
+            }
+        }
 
         allTestCaseIDs.removeAll(passedTCs.get());
         allTestCaseIDs.removeAll(failedTCs.get().keySet());
@@ -122,7 +124,7 @@ public class ReportManager extends CustomReport {
         resultTCCollectionMap.put(tEnv().getCurrentTestClassName() + "_" + tEnv().getCurrentTestMethodName() + "_" + dataProviderKey, new HashMap(resultTCs.get()));
         testCaseIDThread.remove();
 
-        if(failAnalysisThread.get().size() > 0)
+        if (failAnalysisThread.get().size() > 0)
             Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
     }
 
@@ -148,20 +150,20 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void getBSVideoSession(){
-        logReport("INFO", "<b>BS Video:</b> <a href=\""+bsVideo().get("public_url").toString()+"\" target=\"_blank\"> View Recorded Video </a>");
+    public void getBSVideoSession() {
+        logReport("INFO", "<b>BS Video:</b> <a href=\"" + bsVideo().get("public_url").toString() + "\" target=\"_blank\"> View Recorded Video </a>");
     }
 
-    public JSONObject bsVideo(){
+    public JSONObject bsVideo() {
         Object response = null;
-        if(ios()!=null) {
-            response  = ios().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        if (ios() != null) {
+            response = ios().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
-        if(android()!=null) {
-            response  = android().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        if (android() != null) {
+            response = android().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
-        if(browser()!=null) {
-            response  = browser().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
+        if (browser() != null) {
+            response = browser().executeScript("browserstack_executor: {\"action\": \"getSessionDetails\"}");
         }
 
         JSONObject bsResponse = new JSONObject(response.toString());
@@ -169,7 +171,7 @@ public class ReportManager extends CustomReport {
     }
 
     public void logMultipleJSON(String status, LinkedHashMap message, Object responseJSON, String curl, LinkedHashMap responseValidation) {
-        String apiName = "API : "+getAPIMethodName();
+        String apiName = "API : " + getAPIMethodName();
 
         Gson pGson1 = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).create();
         Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
@@ -211,7 +213,7 @@ public class ReportManager extends CustomReport {
                 }
                 logger.error(apiName + " is FAILED !! Check your API Parameters ");
                 logger.info("*******************************************************************************");
-                logger.info("Failed curl : \n"+curl);
+                logger.info("Failed curl : \n" + curl);
                 logger.info("*******************************************************************************");
             }
         } catch (Exception e) {
@@ -317,8 +319,8 @@ public class ReportManager extends CustomReport {
         curlScript = loadData(curl, curlId, status, "curl");
 
         if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && status.equalsIgnoreCase("FAIL")) {
-            ResponseScript = dataToVariable(response, jsonResponseId);
-            curlScript = dataToVariable(curl, curlId);
+            ResponseScript = dataToVariable(response, jsonResponseId, "response");
+            curlScript = dataToVariable(curl, curlId, "curl");
         }
 
         String bColor = "#efebeb";
@@ -484,7 +486,7 @@ public class ReportManager extends CustomReport {
         } else if (status.equalsIgnoreCase("FAIL")) {
             List<Log> failureLog = extent.getReport().getTestList().stream().filter(modules -> tEnv().getContext().getCurrentXmlTest().getName().replaceAll("-", "_").replaceAll(" ", "_").trim().equalsIgnoreCase(modules.getName().substring(0, modules.getName().indexOf('<')))).findAny().get().getChildren().stream().filter(classes ->
                     className.equalsIgnoreCase(classes.getName())).findAny().get().getChildren().stream().filter(methods -> methodName.equalsIgnoreCase(methods.getName())).findAny().get().getLogs().stream().filter(logs -> logs.getStatus().toString().equalsIgnoreCase("FAIL")).collect(Collectors.toList());
-            String failureReason = failureLog.get(failureLog.size()-1).getDetails();
+            String failureReason = failureLog.get(failureLog.size() - 1).getDetails();
             failedTCs.get().put(tcId.trim(), failureReason);
         } else {
             skippedTCs.get().add(tcId.trim());
@@ -501,24 +503,22 @@ public class ReportManager extends CustomReport {
 //        }
 //    }
 
-    protected void customAssertEquals(String actual, String expected,String... description) {
+    protected void customAssertEquals(String actual, String expected, String... description) {
         try {
 
             logger.info("Verifying  Actual : " + actual + " with Expected : " + expected + "");
 
             if (expected.equals(actual)) {
-                if(description.length > 0){
-                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("PASS", "Comparison for : " + description[0] + "<br>  Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
+                } else {
                     logReport("PASS", "Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
                 }
             } else {
                 sAssert.assertEquals(actual, expected);
-                if(description.length > 0){
-                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("FAIL", "Comparison for : " + description[0] + "<br>  Actual Text :" + actual + "<br> Expected Exact Text:" + expected);
+                } else {
                     logReport("FAIL", "Actual Text : " + actual + "<br> Expected Exact Text: " + expected);
                 }
             }
@@ -527,23 +527,21 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    protected void customAssertNotEquals(String actual, String expected,String... description) {
+    protected void customAssertNotEquals(String actual, String expected, String... description) {
         try {
 
             logger.info("Verifying NOT Equals Actual : " + actual + " with Expected : " + expected + "");
 
             if (!(expected.equals(actual))) {
-                if(description.length > 0){
-                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text: " + actual + "<br> Expected NOT EQUALS Text: " + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("PASS", "Comparison for : " + description[0] + "<br>  Actual Text: " + actual + "<br> Expected NOT EQUALS Text: " + expected);
+                } else {
                     logReport("PASS", "Actual Text: " + actual + "<br> Expected NOT EQUALS Text: " + expected);
                 }
             } else {
-                if(description.length > 0){
-                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text:" + actual + "<br> Expected NOT EQUALS Text:" + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("FAIL", "Comparison for : " + description[0] + "<br>  Actual Text:" + actual + "<br> Expected NOT EQUALS Text:" + expected);
+                } else {
                     logReport("FAIL", "Actual Text :" + actual + "<br> Expected NOT EQUALS Text:" + expected);
                 }
             }
@@ -552,23 +550,21 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    protected void customAssertPartialEquals(String actual, String expected,String... description) {
+    protected void customAssertPartialEquals(String actual, String expected, String... description) {
 
         logger.info("Verifying Partial Equals Actual : " + actual + " with Expected : " + expected + "");
         try {
             if (actual.contains(expected)) {
-                if(description.length > 0){
-                    logReport("PASS", "Comparison for : " +  description[0] +"<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("PASS", "Comparison for : " + description[0] + "<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
+                } else {
                     logReport("PASS", "Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
                 }
             } else {
                 sAssert.assertEquals(actual, expected);
-                if(description.length > 0){
-                    logReport("FAIL", "Comparison for : " +  description[0] +"<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
-                }
-                else {
+                if (description.length > 0) {
+                    logReport("FAIL", "Comparison for : " + description[0] + "<br>  Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
+                } else {
                     logReport("FAIL", "Actual Text: " + actual + "<br> Expected Partial Text: " + expected);
                 }
             }
@@ -903,12 +899,12 @@ public class ReportManager extends CustomReport {
     }
 
     protected void hardFail(String message, Exception e) {
-        logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
+        logReport("FAIL", "The exception occurred line " + e.getStackTrace()[0].getLineNumber() + " in method - " + e.getStackTrace()[0].getMethodName());
         Assert.fail(message + e.getMessage());
     }
 
     protected void hardFail(Exception e) {
-        logReport("FAIL", "The exception occurred line "+e.getStackTrace()[0].getLineNumber()+ " in method - "+e.getStackTrace()[0].getMethodName());
+        logReport("FAIL", "The exception occurred line " + e.getStackTrace()[0].getLineNumber() + " in method - " + e.getStackTrace()[0].getMethodName());
         Assert.fail(e.getMessage());
     }
 
@@ -946,7 +942,7 @@ public class ReportManager extends CustomReport {
         try {
             double seconds = ((double) delay / 1000);
             if (delay > 0) {
-                logger.info("\u001b[34m"+ "Proceeding with Hard wait !! Please wait for : " + seconds + " Seconds" + "\u001b[34m");
+                logger.info("\u001b[34m" + "Proceeding with Hard wait !! Please wait for : " + seconds + " Seconds" + "\u001b[34m");
             }
             Thread.sleep(delay);
         } catch (InterruptedException e) {
@@ -1035,15 +1031,15 @@ public class ReportManager extends CustomReport {
     }
 
     private void captureScenarioAndAuthor(String author, String scenario) {
-        if(extentMethodNode.get()!=null){
+        if (extentMethodNode.get() != null) {
             extentMethodNode.get().assignAuthor(author);
             extentMethodNode.get().getModel().setDescription(scenario);
-            extentMethodNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>"+scenario);
+            extentMethodNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
         }
-        if(extentScenarioNode.get()!=null){
+        if (extentScenarioNode.get() != null) {
             extentScenarioNode.get().assignAuthor(author);
             extentScenarioNode.get().getModel().setDescription(scenario);
-            extentScenarioNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>"+scenario);
+            extentScenarioNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
         }
     }
 
@@ -1135,10 +1131,10 @@ public class ReportManager extends CustomReport {
 
     private void logInfo(String message, boolean screenshotMode) {
         String replacedMessage = message;
-        logger.info(replacedMessage.replace("<br>",""));
-        if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
+        logger.info(replacedMessage.replace("<br>", ""));
+        if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")) {
 
-        }else{
+        } else {
             if (extentScenarioNode.get() != null) {
                 screenshotInfo(extentScenarioNode.get(), message, screenshotMode);
             } else if (extentMethodNode.get() != null) {
@@ -1159,7 +1155,7 @@ public class ReportManager extends CustomReport {
 
     private void logFail(String message, boolean screenshotMode) {
         String replacedMessage = message;
-        logger.error(replacedMessage.replace("<br>",""));
+        logger.error(replacedMessage.replace("<br>", ""));
         Thread.dumpStack();
         if (extentScenarioNode.get() != null) {
             screenshotFail(extentScenarioNode.get(), message, screenshotMode);
@@ -1185,10 +1181,10 @@ public class ReportManager extends CustomReport {
 
     private void logPass(String message, boolean screenshotMode) {
         String replacedMessage = message;
-        logger.info(replacedMessage.replace("<br>",""));
-        if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
+        logger.info(replacedMessage.replace("<br>", ""));
+        if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")) {
 
-        }else{
+        } else {
             if (extentScenarioNode.get() != null) {
                 screenshotPass(extentScenarioNode.get(), message, screenshotMode);
             } else if (extentMethodNode.get() != null) {
@@ -1207,24 +1203,25 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public  void tearDownGenerateTCStatusJson(){
+    public void tearDownGenerateTCStatusJson() {
         Gson gson = new Gson();
-        String val = gson.toJson(resultTCCollectionMap,LinkedHashMap.class);
+        String val = gson.toJson(resultTCCollectionMap, LinkedHashMap.class);
         try {
             String path = getTestStatusPath();
             writer = new JsonWriter(new BufferedWriter(new FileWriter(path)));
             writer.jsonValue(val);
             writer.flush();
-            getJsonToUploadResult(path,true);
+            getJsonToUploadResult(path, true);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public String getTestStatusPath(){
-        String path =trigonPaths.getTestResultsPath()+"/TestStatus.json";
+    public String getTestStatusPath() {
+        String path = trigonPaths.getTestResultsPath() + "/TestStatus.json";
         return path;
     }
+
     public void uploadSingleTestResultToTestRail(String testRunId, String path) {
         TestRailManager t = new TestRailManager();
         Gson gson = new Gson();
@@ -1235,14 +1232,14 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         System.out.println(String.valueOf(passedCase.getAsNumber()).substring(1));
-                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS,"Executed Test got passed after test execution");
+                        t.addTestResultForTestCase(testRunId, String.valueOf(passedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_PASSED_STATUS, "Executed Test got passed after test execution");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
                 class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
                     try {
-                        t.addTestResultForTestCase(testRunId, failedCase.getKey().substring(1), TestRailManager.TEST_CASE_FAILED_STATUS,failedCase.getValue().toString());
+                        t.addTestResultForTestCase(testRunId, failedCase.getKey().substring(1), TestRailManager.TEST_CASE_FAILED_STATUS, failedCase.getValue().toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1250,7 +1247,7 @@ public class ReportManager extends CustomReport {
 
                 class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
                     try {
-                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS,"Test got skipped due to some error occured in previous tests");
+                        t.addTestResultForTestCase(testRunId, String.valueOf(skippedCase.getAsNumber()).substring(1), TestRailManager.TEST_CASE_SKIPPED_STATUS, "Test got skipped due to some error occured in previous tests");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1282,10 +1279,10 @@ public class ReportManager extends CustomReport {
         return runId[0];
     }
 
-    public void getJsonToUploadResult(String path,boolean ... testRailReport) {
+    public void getJsonToUploadResult(String path, boolean... testRailReport) {
         Gson gson = new Gson();
         TestRailReport r = new TestRailReport();
-        if(testRailReport.length>0 && testRailReport[0]==true){
+        if (testRailReport.length > 0 && testRailReport[0] == true) {
             r.initTestRailReport(extent);
         }
 
@@ -1300,11 +1297,11 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Passed").getAsJsonArray().forEach(passedCase -> {
                     try {
                         String testCaseId = String.valueOf(passedCase.getAsNumber()).substring(1);
-                        addTestCase(testCaseId,"1","Executed Test got passed after test execution");
-                        if(passedTest[0].length()>0){
-                            passedTest[0] = passedTest[0]+", C"+ testCaseId+"_Passed";
-                        }else{
-                            passedTest[0] = passedTest[0]+ "C"+testCaseId+"_Passed";
+                        addTestCase(testCaseId, "1", "Executed Test got passed after test execution");
+                        if (passedTest[0].length() > 0) {
+                            passedTest[0] = passedTest[0] + ", C" + testCaseId + "_Passed";
+                        } else {
+                            passedTest[0] = passedTest[0] + "C" + testCaseId + "_Passed";
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1314,11 +1311,11 @@ public class ReportManager extends CustomReport {
                 class_methodName.getValue().getAsJsonObject().get("Failed").getAsJsonObject().entrySet().forEach(failedCase -> {
                     try {
                         String testCaseId = failedCase.getKey().substring(1);
-                        addTestCase(testCaseId,"4",failedCase.getValue().toString());
-                        if(failedTest[0].length()>0){
-                            failedTest[0] =failedTest[0]+", C"+ testCaseId+"_Failed";
-                        }else{
-                            failedTest[0] =failedTest[0]+ "C"+testCaseId+"_Failed";
+                        addTestCase(testCaseId, "4", failedCase.getValue().toString());
+                        if (failedTest[0].length() > 0) {
+                            failedTest[0] = failedTest[0] + ", C" + testCaseId + "_Failed";
+                        } else {
+                            failedTest[0] = failedTest[0] + "C" + testCaseId + "_Failed";
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1327,18 +1324,18 @@ public class ReportManager extends CustomReport {
 
                 class_methodName.getValue().getAsJsonObject().get("Skipped").getAsJsonArray().forEach(skippedCase -> {
                     try {
-                        String testCaseId =  String.valueOf(skippedCase.getAsNumber()).substring(1);
-                        addTestCase(testCaseId,"5","Test got skipped due to some error occured in previous tests");
-                        if(skippedTest[0].length()>0){
-                            skippedTest[0] =skippedTest[0]+", C"+ testCaseId+"_Skipped";
-                        }else{
-                            skippedTest[0] =skippedTest[0]+ "C"+testCaseId+"_Skipped";
+                        String testCaseId = String.valueOf(skippedCase.getAsNumber()).substring(1);
+                        addTestCase(testCaseId, "5", "Test got skipped due to some error occured in previous tests");
+                        if (skippedTest[0].length() > 0) {
+                            skippedTest[0] = skippedTest[0] + ", C" + testCaseId + "_Skipped";
+                        } else {
+                            skippedTest[0] = skippedTest[0] + "C" + testCaseId + "_Skipped";
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                if(testRailReport.length>0 && testRailReport[0]==true) {
+                if (testRailReport.length > 0 && testRailReport[0] == true) {
                     r.addRowToTestRailReport(methodName, String.valueOf(passedTest[0]), String.valueOf(failedTest[0]), String.valueOf(skippedTest[0]));
                 }
                 passedTest[0] = "";
@@ -1351,26 +1348,26 @@ public class ReportManager extends CustomReport {
         }
     }
 
-    public void addTestCase(String testCaseId, String statusId, String comment){
+    public void addTestCase(String testCaseId, String statusId, String comment) {
         resultMap = new HashMap<>();
-        resultMap.put("case_id",testCaseId);
+        resultMap.put("case_id", testCaseId);
         resultMap.put("status_id", statusId);
         resultMap.put("comment", comment);
         resultList.add(resultMap);
     }
 
-    public void uploadBulkTestResultToTestRail(String testRunId, String path){
+    public void uploadBulkTestResultToTestRail(String testRunId, String path) {
         TestRailManager trm = new TestRailManager();
         getJsonToUploadResult(path);
         try {
             trm.addTestResultForTestCases(resultList, testRunId);
-        }catch ( Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public String readS3BucketContent(String bucketName,String keyName){
+    public String readS3BucketContent(String bucketName, String keyName) {
         AWSCredentials credentials = new BasicAWSCredentials(
                 AES.decrypt("OriNxlLJ6ngVCYi/qCBSy1kBwPag3XyxfDiGrXfUUUg=", "t2sautomation"),
                 AES.decrypt("hij44vD5DKQY+nlkxoB+BT/wXXofuDwJTNtl7eCMaaE8ZJVrkJ2exWcFBnVn9p/G", "t2sautomation")
@@ -1381,7 +1378,7 @@ public class ReportManager extends CustomReport {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion("eu-west-2")
                 .build();
-        S3Object object = s3Client.getObject(bucketName,keyName);
+        S3Object object = s3Client.getObject(bucketName, keyName);
 
         InputStream objectData = object.getObjectContent();
         String testResultFile = "src/test/resources/TestResults/s3TestResults.json";
@@ -1401,17 +1398,17 @@ public class ReportManager extends CustomReport {
         return testResultFile;
     }
 
-    public ArrayList<String> getTestIdsInArray(String testIds){
-        ArrayList<String> tcIDs= new ArrayList<>();
+    public ArrayList<String> getTestIdsInArray(String testIds) {
+        ArrayList<String> tcIDs = new ArrayList<>();
         String[] i = testIds.split(",");
-        for(String s : i){
+        for (String s : i) {
             tcIDs.add(s);
         }
         return tcIDs;
 
     }
 
-//    public void analyseTCs(String ...testCaseID){
+    //    public void analyseTCs(String ...testCaseID){
 //        String testCaseIDs = "";
 //        if(testCaseID.length>0) {
 //            if (testCaseID.length == 1) {
@@ -1442,60 +1439,60 @@ public class ReportManager extends CustomReport {
 //        }
 //
 //    }
-    public void responseValidation(LinkedHashMap<String,Object> responseValidation){
+    public void responseValidation(LinkedHashMap<String, Object> responseValidation) {
         responseValidation.remove("statusCode");
         responseValidation.remove("responseTime");
         responseValidation.remove("apiTestStatus");
         String actVal = responseValidation.get("actualResponse").toString();
         String expecVal = responseValidation.get("expectedResponse").toString();
-        if(expecVal.length()>2){
-            if(actVal.length()>2){
-                Map<String,Object> actMap =  getExpMap(actVal);
-                Map<String,Object> expMap = getExpMap(expecVal);
-                for(Map.Entry<String,Object> s : expMap.entrySet()){
+        if (expecVal.length() > 2) {
+            if (actVal.length() > 2) {
+                Map<String, Object> actMap = getExpMap(actVal);
+                Map<String, Object> expMap = getExpMap(expecVal);
+                for (Map.Entry<String, Object> s : expMap.entrySet()) {
                     String k = s.getKey();
-                    String expVal = (String)s.getValue();
-                    String actualVal = (String)actMap.get(k);
+                    String expVal = (String) s.getValue();
+                    String actualVal = (String) actMap.get(k);
                     if (expVal != null) {
-                        if(expVal.equalsIgnoreCase(actualVal)){
-                            logStepAction("Key : "+k+"<br>  Actual Value : "+actualVal+" equals Expected value : "+expVal);
-                        }else{
-                            logStepAction("Key : "+k+"<br>  Actual Value : "+actualVal+" not equals  Expected value : "+expVal);
+                        if (expVal.equalsIgnoreCase(actualVal)) {
+                            logStepAction("Key : " + k + "<br>  Actual Value : " + actualVal + " equals Expected value : " + expVal);
+                        } else {
+                            logStepAction("Key : " + k + "<br>  Actual Value : " + actualVal + " not equals  Expected value : " + expVal);
                         }
-                    }else{
-                        if(expVal==actualVal){
-                            if(expVal.equalsIgnoreCase(actualVal)){
-                                logStepAction("Key : "+k+"<br>   Actual Value : "+actualVal+" equals Expected value : "+expVal);
-                            }else{
-                                logStepAction("Key : "+k+"<br>  Actual Value : "+actualVal+" not equals Expected value : "+expVal);
+                    } else {
+                        if (expVal == actualVal) {
+                            if (expVal.equalsIgnoreCase(actualVal)) {
+                                logStepAction("Key : " + k + "<br>   Actual Value : " + actualVal + " equals Expected value : " + expVal);
+                            } else {
+                                logStepAction("Key : " + k + "<br>  Actual Value : " + actualVal + " not equals Expected value : " + expVal);
                             }
                         }
                     }
 
                 }
-            }else{
+            } else {
                 logStepAction("Actual Response contains no data");
             }
         }
     }
 
-    public Map<String,Object> getExpMap(String value){
-        Map<String,Object> map = new LinkedHashMap<>();
+    public Map<String, Object> getExpMap(String value) {
+        Map<String, Object> map = new LinkedHashMap<>();
         String key[] = value.split(",");
-        for(String keys : key){
+        for (String keys : key) {
             String keyToMap[] = keys.split("=");
             String addKeyToMap = keyToMap[0];
             String addValueToMap = keyToMap[1];
-            if(addValueToMap.contains("}")){
-                addValueToMap=  addValueToMap.replace("}","");
+            if (addValueToMap.contains("}")) {
+                addValueToMap = addValueToMap.replace("}", "");
             }
-            if(addKeyToMap.contains("{")){
-                addKeyToMap = addKeyToMap.replace("{","");
+            if (addKeyToMap.contains("{")) {
+                addKeyToMap = addKeyToMap.replace("{", "");
             }
-            if(addKeyToMap.contains(" ")){
-                addKeyToMap = addKeyToMap.replace(" ","");
+            if (addKeyToMap.contains(" ")) {
+                addKeyToMap = addKeyToMap.replace(" ", "");
             }
-            map.put(addKeyToMap,addValueToMap);
+            map.put(addKeyToMap, addValueToMap);
         }
         return map;
     }
@@ -1537,14 +1534,14 @@ public class ReportManager extends CustomReport {
         return data;
     }
 
-    public static StringBuilder dataToVariable(String inputString, String id) {
+    public static StringBuilder dataToVariable(String inputString, String id, String paramName) {
         StringBuilder data = new StringBuilder();
         try {
             /*Started*/
             String jsId = id.replaceAll("-", "_");
             String json = beautifyJson(inputString);
             data.append(" <script>\n");
-            data.append("var request").append(jsId).append("=`").append(json).append("`;\n");
+            data.append("var request").append(jsId).append("=`").append(jsonCorrection(json, paramName)).append("`;\n");
             data.append("document.getElementById('").append(id).append("').textContent = request").append(jsId).append(";");
             data.append("</script>");
         } catch (Exception e1) {
@@ -1561,7 +1558,7 @@ public class ReportManager extends CustomReport {
                 return value;
             }
             if (paramName.contains("curl")) {
-                String value = json.substring(1,json.length()-1).replace("'","\\'");
+                String value = json.substring(1, json.length() - 1).replace("'", "\\'");
                 return value;
             }
         } catch (Exception e) {
