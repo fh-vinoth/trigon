@@ -71,6 +71,7 @@ public class LocalAPIController extends APICoreController {
      * @return
      */
     public Map<String, Object> validateMultiPartResponse(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse,Map<String, Object> multiPartMap) {
+        loadRequestData(headers, cookies, formParams, pathParams, expectedResponse, queryParams, requestBody);
         return validateMultiPartResponseImpl(HttpMethod, Endpoint, headers,  cookies,  queryParams, formParams, pathParams,  requestBody, expectedStatusCode,expectedResponse, multiPartMap) ;
     }
 
