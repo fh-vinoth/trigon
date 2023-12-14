@@ -10,6 +10,8 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.model.Log;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
@@ -22,6 +24,7 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.Assert;
@@ -170,21 +173,22 @@ public class ReportManager extends CustomReport {
 
         Gson pGson1 = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).create();
         Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
-        String m = apiCard(status,apiName,pGson1.toJson(message),String.valueOf(responseJSON),curl,pGson1.toJson(responseValidation));
+        String apiStatus = null;
+
+        synchronized (lock) {
+
+            apiStatus = apiCard(status, apiName, pGson1.toJson(message), String.valueOf(responseJSON), curl, pGson1.toJson(responseValidation));
+
+        }
+
         try {
             if (status.equalsIgnoreCase("PASS")) {
-                if((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api")){
-                     //m = apiName + " is PASSED";
-                     m = "<b>"+apiName+ "</b> is PASSED";
-                     if(responseValidation.containsKey("expectedResponse")){
-                         responseValidation(responseValidation);
-                     }
-                }
+
                 if (extentScenarioNode.get() != null) {
-                    extentScenarioNode.get().pass(m);
+                    extentScenarioNode.get().pass(apiStatus);
 
                 } else if (extentMethodNode.get() != null) {
-                    extentMethodNode.get().pass(m);
+                    extentMethodNode.get().pass(apiStatus);
                 }
                 if (tEnv().getTestType().equalsIgnoreCase("api")) {
                     logger.info(pGson.toJson(message));
@@ -198,9 +202,9 @@ public class ReportManager extends CustomReport {
                 logger.info(pGson.toJson(message));
                 logger.info(pGson.toJson(responseValidation));
                 if (extentScenarioNode.get() != null) {
-                    extentScenarioNode.get().fail(m);
+                    extentScenarioNode.get().fail(apiStatus);
                 } else if (extentMethodNode.get() != null) {
-                    extentMethodNode.get().fail(m);
+                    extentMethodNode.get().fail(apiStatus);
                 }
                 if (failAnalysisThread.get() != null) {
                     failAnalysisThread.get().add(pGson.toJson(message));
@@ -296,22 +300,37 @@ public class ReportManager extends CustomReport {
     }
 
     private String apiCard(String status, String apiName, String request, String response, String curl, String responseValidation) {
-        int random = commonUtils.getRandomNumber(100, 100000);
-        String jsonRequestId = "json-request-" + random + "";
-        String jsonResponseValidationId = "json-response-validation-" + random + "";
-        String jsonResponseId = "json-response-" + random + "";
-        String curlId = "json-curl-" + random + "";
+        /*synchronized*/
+        int integer = commonUtils.getRandomNumber(1000000, 999999999);
+        int random = commonUtils.getRandomNumber(1001, 10900) + integer;
+        String jsonRequestId = "json-request-" + random;
+        String jsonResponseValidationId = "json-response-validation-" + random;
+        String jsonResponseId = "json-response-" + random;
+        String curlId = "string-curl-" + random;
+
+
+        StringBuilder RequestScript = loadData(request, jsonRequestId, status, "req");
+        StringBuilder responseValidationScript = loadData(responseValidation, jsonResponseValidationId, status, "respVal");
+        StringBuilder ResponseScript;
+        StringBuilder curlScript;
+        ResponseScript = loadData(response, jsonResponseId, status, "resp");
+        curlScript = loadData(curl, curlId, status, "curl");
+
+        if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && status.equalsIgnoreCase("FAIL")) {
+            ResponseScript = dataToVariable(response, jsonResponseId);
+            curlScript = dataToVariable(curl, curlId);
+        }
+
         String bColor = "#efebeb";
         if (status.equalsIgnoreCase("FAIL")) {
             bColor = "#e47373";
         }
+        String apiFormat = "NA";
 
-        String apiFormat = "<div class=\"accordion\" role=\"tablist\"><div class=\"card\" style=\"background-color: " + bColor + "\">\n" +
-                "               <div class=\"card-header\">\n" +
-                "                   <div class=\"card-title\">\n" +
+        apiFormat = "<div class=\"accordion\" role=\"tablist\"> \n <div class=\"card\" style=\"background-color: " + bColor + "\">\n" +
+                "               <div class=\"card-header\">\n" + "                   <div class=\"card-title\">\n" +
                 "                       <a class=\"node\" ><span class=\"apiSpan\">" + apiName + "</span></a>\n" +
-                "                   </div>\n" +
-                "               </div>\n" +
+                "                   </div>\n" + "               </div>\n" +
                 "               <div class=\"collapse\">\n" +
                 "                   <div class=\"card-body\">\n" +
                 "                       <p>\n" +
@@ -339,11 +358,7 @@ public class ReportManager extends CustomReport {
                 "                               </div>\n" +
                 "                               <div>\n" +
                 "                                   <pre class=\"preCode\"><code  id=\"" + jsonRequestId + "\"></code></pre>\n" +
-                "                               </div>\n" +
-                "                               <script>\n" +
-                "                                   document.getElementById('" + jsonRequestId + "').innerHTML = JSON.stringify(JSON.parse('" + request + "'), undefined, 4);\n" +
-                "                               </script>\n" +
-                "                           </div>\n" +
+                "                               </div>\n" + RequestScript + "                           </div>\n" +
                 "                       </div>\n" +
                 "                       <div class=\"collapse\" id=\"collapse_response_" + random + "\">\n" +
                 "                           <div class=\"card card-body\">\n" +
@@ -356,10 +371,8 @@ public class ReportManager extends CustomReport {
                 "                               </div>\n" +
                 "                               <div>\n" +
                 "                                   <pre class=\"preCode\"><code  id=\"" + jsonResponseId + "\"></code></pre>\n" +
-                "                               </div>\n" +
-                "                               <script>\n" +
-                "                                   document.getElementById('" + jsonResponseId + "').innerHTML = JSON.stringify(JSON.parse('" + response + "'), undefined, 4);\n" +
-                "                               </script>\n" +
+                "                               </div>\n"
+                + ResponseScript +
                 "                           </div>\n" +
                 "                       </div>\n" +
                 "                       <div class=\"collapse\" id=\"collapse_response-validation_" + random + "\">\n" +
@@ -367,19 +380,13 @@ public class ReportManager extends CustomReport {
                 "                               <div class=\"bd-clipboard\">\n" +
                 "                                   <button type=\"button\"\n" +
                 "                                           onclick=\"copy('" + jsonResponseValidationId + "')\"\n" +
-                "                                           class=\"btn-clipboard\">\n" +
-                "                                       Copy\n" +
+                "                                           class=\"btn-clipboard\">\n" + "                                       Copy\n" +
                 "                                   </button>\n" +
                 "                               </div>\n" +
                 "                               <div>\n" +
                 "                                   <pre class=\"preCode\"><code  id=\"" + jsonResponseValidationId + "\"></code></pre>\n" +
-                "                               </div>\n" +
-                "                               <script>\n" +
-                "                                   document.getElementById('" + jsonResponseValidationId + "').innerHTML = JSON.stringify(JSON.parse('" + responseValidation + "'), undefined, 4);\n" +
-                "                               </script>\n" +
-                "                           </div>\n" +
-                "                       </div>\n" +
-                "                       <div class=\"collapse\" id=\"collapse_curl_" + random + "\">\n" +
+                "                               </div>\n" + responseValidationScript + "                           </div>\n" +
+                "                       </div>\n" + "                       <div class=\"collapse\" id=\"collapse_curl_" + random + "\">\n" +
                 "                           <div class=\"card card-body\">\n" +
                 "                               <div class=\"bd-clipboard\">\n" +
                 "                                   <button type=\"button\"\n" +
@@ -389,8 +396,8 @@ public class ReportManager extends CustomReport {
                 "                                   </button>\n" +
                 "                               </div>\n" +
                 "                               <div>\n" +
-                "                                   <pre class=\"preCode\"><code  id=\"" + curlId + "\">" + curl + "</code></pre>\n" +
-                "                               </div>\n" +
+                "                                   <pre class=\"preCode\"><code  id=\"" + curlId + "\"></code></pre>\n" +
+                "                               </div>\n" + curlScript +
                 "                           </div>\n" +
                 "                       </div>\n" +
                 "                   </div>\n" +
@@ -1492,5 +1499,180 @@ public class ReportManager extends CustomReport {
         }
         return map;
     }
+    /*Started*/
 
+    public static StringBuilder loadData(String inputString, String id, String status, String paramName) {
+        StringBuilder data = new StringBuilder();
+        try {
+            String json = beautifyJson(inputString);
+            String jsId = id.replaceAll("-", "_");
+            DataToJs(jsonCorrection(json, paramName), jsId, status, paramName);
+            data.append(" <script>\n                                                                                                        ");
+            try {
+                /*Started*/
+                new JSONObject(inputString);
+                data.append(" document.getElementById('").append(id).append("').textContent = ").append(jsId).append(";\n");
+            } catch (org.json.JSONException jsonError) {
+                if (inputString.toLowerCase().contains("doctype html") || inputString.contains("<title>Error</title>") || inputString.matches("\\[[^\\]]*\\]\n")) {
+                    data.append("document.getElementById('").append(id).append("'").append("').innerHTML = ").append(jsId).append("\n");
+                } else {
+                    try {
+                        new JSONArray(inputString);
+                        data.append(" document.getElementById('").append(id).append("').textContent = ").append(jsId).append(";\n");
+                    } catch (Exception e) {
+                        try {
+                            new String(inputString);
+                            data.append(" document.getElementById('").append(id).append("').textContent = ").append(jsId).append(";\n");
+                        } catch (Exception err) {
+                            logger.warn("Input format is not recognized" + inputString);
+                        }
+
+                    }
+                }
+            }
+            data.append("</script>");
+        } catch (Exception e1) {
+            logger.warn(e1);
+        }
+        return data;
+    }
+
+    public static StringBuilder dataToVariable(String inputString, String id) {
+        StringBuilder data = new StringBuilder();
+        try {
+            /*Started*/
+            String jsId = id.replaceAll("-", "_");
+            String json = beautifyJson(inputString);
+            data.append(" <script>\n");
+            data.append("var request").append(jsId).append("=`").append(json).append("`;\n");
+            data.append("document.getElementById('").append(id).append("').textContent = request").append(jsId).append(";");
+            data.append("</script>");
+        } catch (Exception e1) {
+            logger.error(e1);
+        }
+        return data;
+    }
+
+    private static String jsonCorrection(String json, String paramName) {
+
+        try {
+            if (json.contains("`")) {
+                String value = json.replace("`", "\\`");
+                return value;
+            }
+            if (paramName.contains("curl")) {
+                String value = json.substring(1,json.length()-1).replace("'","\\'");
+                return value;
+            }
+        } catch (Exception e) {
+            logger.error(ExceptionUtils.getStackTrace(e));
+        }
+        return json;
+    }
+
+    private static void DataToJs(String data, String id, String status, String paramName) throws IOException {
+        try {
+            if ((tEnv().getJenkins_execution().equalsIgnoreCase("true") || tEnv().getPipeline_execution().equalsIgnoreCase("true")) && tEnv().getTestType().equalsIgnoreCase("api") && status.equalsIgnoreCase("PASS")) {
+                if (paramName.toLowerCase().equals("respval")) {
+                    fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/respValidations.js", true)));
+                    String file = "var " + id + "=`" + data + "`;\n";
+                    fw.get().append(file);
+                    fw.get().flush();
+                    fw.get().close();
+                }
+                if (paramName.toLowerCase().equals("curl")) {
+                    fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/curl.js", true)));
+                    String file = "var " + id + "='" + data + "';\n";
+                    fw.get().append(file);
+                    fw.get().flush();
+                    fw.get().close();
+                }
+            } else {
+                switch (paramName.toLowerCase()) {
+                    case ("req") -> {
+                        fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/requests.js", true)));
+                        String file = "var " + id + "=`" + data + "`;\n";
+                        fw.get().append(file);
+                        fw.get().flush();
+                        fw.get().close();
+                    }
+                    case ("resp") -> {
+                        fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/responses.js", true)));
+                        String file = "var " + id + "=`" + data + "`;\n";
+                        fw.get().append(file);
+                        fw.get().flush();
+                        fw.get().close();
+                    }
+                    case ("respval") -> {
+                        fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/respValidations.js", true)));
+                        String file = "var " + id + "=`" + data + "`;\n";
+                        fw.get().append(file);
+                        fw.get().flush();
+                        fw.get().close();
+                    }
+                    case ("curl") -> {
+                        fw.set(new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/curl.js", true)));
+                        /*fw = new BufferedWriter(new FileWriter(trigonPaths.getSupportFilePath() + "/respValidations.js", true));*/
+                        String file = "var " + id + "='" + data + "';\n";
+                        fw.get().append(file);
+                        fw.get().flush();
+                        fw.get().close();
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            fw.get().flush();
+            fw.get().close();
+            fw.get().append(null);
+            logger.error(e);
+        }
+    }
+
+//    public static StringBuilder detectFormatreq(String inputString, String request) {
+//        StringBuilder data = new StringBuilder();
+//        try {
+//            /*Started*/
+//            String json = beautifyJson(inputString);
+//            data.append(" <script>\n");
+//            data.append("var requestData" + random + "=`").append(json).append("`;\n");
+//            data.append("    function displayStringData(data) {\n" +
+//                    "        var element = document.getElementById('json-request-" + random + "');\n" +
+//                    "        if (element) {\n" +
+//                    "            element.textContent = data; // Use textContent to display the data as-is\n" +
+//                    "        } else {\n" +
+//                    "            console.error('Element with ID \"json-request-" + random + "\" not found.');\n" +
+//                    "        }\n" +
+//                    "    }\n" +
+//                    "\n" +
+//                    "    displayStringData(requestData" + random + ");");
+//            data.append("</script>");
+//        } catch (Exception e1) {
+//            logger.error(e1);
+//        }
+//        return data;
+//    }
+
+    public static String beautifyJson(String jsonString) {
+        String Json = null;
+        try {
+            try {
+                new JSONObject(jsonString);
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+                Object json = objectMapper.readValue(jsonString, Object.class);
+                Json = objectWriter.writeValueAsString(json);
+                return Json;
+           /* JSONObject jsonObject = new JSONObject(jsonString);
+            return jsonObject.toString(); // Fixed indentation of 2 spaces*/
+            } catch (org.json.JSONException jsonError) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Json = objectMapper.writeValueAsString(jsonString);
+                return Json;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonString;
+    }
 }

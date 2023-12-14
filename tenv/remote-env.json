@@ -1,6 +1,6 @@
 {
   "execution_type": "remote",
-  "jenkins_execution": "true",
+  "jenkins_execution": "false",
   "pipeline_execution": "false",
   "browserstack_execution_local": "false",
   "grid_execution_local" : "false",

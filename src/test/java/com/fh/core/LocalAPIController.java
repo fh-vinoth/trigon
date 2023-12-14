@@ -98,6 +98,7 @@ public class LocalAPIController extends APICoreController {
      * @return
      */
     public Map<String, Object> validateStaticResponse(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse) {
+        loadRequestData(headers, cookies, formParams, pathParams, expectedResponse, queryParams, requestBody);
         return validateStaticResponseImpl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, expectedStatusCode, expectedResponse);
     }
     public Response validateStaticResponse() {
@@ -249,5 +250,25 @@ public class LocalAPIController extends APICoreController {
      */
     public Response sendRequest(String HttpMethod, String Endpoint, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> queryParams, Map<String, Object> formParams, Map<String, Object> pathParams, String requestBody, String expectedStatusCode, Map<String, Object> expectedResponse) {
         return validateStaticRespImpl(HttpMethod, Endpoint, headers, cookies, queryParams, formParams, pathParams, requestBody, expectedStatusCode, expectedResponse);
+    }
+    private void loadRequestData(Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> formParams, Map<String, Object> pathParams, Map<String, Object> expectedResponse, Map<String, Object> queryParams, String requestBody) {
+        try {
+            if (headers != null)
+                headersNew.putAll(headers);
+            if (cookies != null)
+                cookiesNew.putAll(cookies);
+            if (formParams != null)
+                formParamsNew.putAll(formParams);
+            if (pathParams != null)
+                pathParamsNew.putAll(pathParams);
+            if (expectedResponse != null)
+                expectedresponseNew.putAll(expectedResponse);
+            if (queryParams != null)
+                queryParamsNew.putAll(queryParams);
+            if (requestBody != null)
+                requestBodyNew = requestBody;
+        } catch (Exception e) {
+            hardFail();
+        }
     }
 }

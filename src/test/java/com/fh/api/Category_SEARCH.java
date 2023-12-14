@@ -25,7 +25,12 @@ public class Category_SEARCH extends TestLocalController {
             logReportAction("loginewrewtfg");
 
             hardWait(5000);
-            String category_id = createCategory();
+
+            deleteCategory(createCategory());
+            deleteCategory(createCategory());
+            deleteCategory(createCategory());
+            deleteCategory(createCategory());
+            deleteCategory(createCategory());
             author_ScenarioName("Bhaskar", "Searching the new testcase");
 
 //            hardWait(5000);
@@ -119,7 +124,7 @@ public class Category_SEARCH extends TestLocalController {
         String endpoint = "category";
         formparams.put("name", "TestCateg" + cUtils().generateRandomString(4));
         try {
-            Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "201", null);
+            Map<String, Object> postresponse = api().validateStaticResponse("POST", endpoint, headers, null, queryparams, formparams, null, null, "2070", null);
             System.out.println(postresponse);
 //            String s = db.sendQuery("select * from config where host = 'automation-uk1.t2scdn.com'", 1);
 //            System.out.println(s);
