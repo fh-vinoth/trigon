@@ -2,8 +2,8 @@
 
 <suite name="web_adhoc_Dine">
     <test name="Dine">
-        <!--<classes>
+        <classes>
             <class name="com.fh.adhoc.DineOrder"/>
-        </classes>-->
+        </classes>
     </test>
 </suite>
